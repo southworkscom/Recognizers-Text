@@ -8,7 +8,7 @@ namespace Microsoft.Recognizers.Text.NumberWithUnit
         private static ModelFactory<NumberWithUnitOptions> factory = new ModelFactory<NumberWithUnitOptions>()
         {
             {
-                (Culture.English, typeof(CurrencyModel)),
+                ModelFactoryKeyGenerator.Generate<CurrencyModel>(Culture.English),
                 (options) => new CurrencyModel(new Dictionary<IExtractor, IParser>
                             {
                                 {
@@ -18,7 +18,7 @@ namespace Microsoft.Recognizers.Text.NumberWithUnit
                             })
             },
             {
-                (Culture.English, typeof(TemperatureModel)),
+                ModelFactoryKeyGenerator.Generate<TemperatureModel>(Culture.English),
                 (options) => new TemperatureModel(new Dictionary<IExtractor, IParser>
                             {
                                 {
@@ -28,7 +28,7 @@ namespace Microsoft.Recognizers.Text.NumberWithUnit
                             })
             },
             {
-                (Culture.English, typeof(DimensionModel)),
+                ModelFactoryKeyGenerator.Generate<DimensionModel>(Culture.English),
                 (options) => new DimensionModel(new Dictionary<IExtractor, IParser>
                             {
                                 {
@@ -38,7 +38,7 @@ namespace Microsoft.Recognizers.Text.NumberWithUnit
                             })
             },
             {
-                (Culture.English, typeof(AgeModel)),
+                ModelFactoryKeyGenerator.Generate<AgeModel>(Culture.English),
                 (options) => new AgeModel(new Dictionary<IExtractor, IParser>
                             {
                                 {
@@ -48,7 +48,7 @@ namespace Microsoft.Recognizers.Text.NumberWithUnit
                             })
             },
             {
-                (Culture.Chinese, typeof (CurrencyModel)),
+                ModelFactoryKeyGenerator.Generate<CurrencyModel>(Culture.Chinese),
                 (options) => new CurrencyModel(new Dictionary<IExtractor, IParser>
                             {
                                 {
@@ -62,8 +62,8 @@ namespace Microsoft.Recognizers.Text.NumberWithUnit
                             })
             },
             {
-                (Culture.Chinese, typeof (TemperatureModel)),
-                 (options) => new TemperatureModel(new Dictionary<IExtractor, IParser>
+                ModelFactoryKeyGenerator.Generate<TemperatureModel>(Culture.Chinese),
+                (options) => new TemperatureModel(new Dictionary<IExtractor, IParser>
                             {
                                 {
                                     new NumberWithUnitExtractor(new Chinese.TemperatureExtractorConfiguration()),
@@ -76,8 +76,8 @@ namespace Microsoft.Recognizers.Text.NumberWithUnit
                             })
             },
             {
-                (Culture.Chinese, typeof (DimensionModel)),
-                 (options) => new DimensionModel(new Dictionary<IExtractor, IParser>
+                ModelFactoryKeyGenerator.Generate<DimensionModel>(Culture.Chinese),
+                (options) => new DimensionModel(new Dictionary<IExtractor, IParser>
                             {
                                 {
                                     new NumberWithUnitExtractor(new Chinese.DimensionExtractorConfiguration()),
@@ -90,7 +90,7 @@ namespace Microsoft.Recognizers.Text.NumberWithUnit
                             })
             },
             {
-                (Culture.Chinese, typeof (AgeModel)),
+                ModelFactoryKeyGenerator.Generate<AgeModel>(Culture.Chinese),
                 (options) => new AgeModel(new Dictionary<IExtractor, IParser>
                             {
                                 {
@@ -104,7 +104,7 @@ namespace Microsoft.Recognizers.Text.NumberWithUnit
                             })
             },
             {
-                (Culture.Spanish, typeof(CurrencyModel)),
+                ModelFactoryKeyGenerator.Generate<CurrencyModel>(Culture.Spanish),
                 (options) => new CurrencyModel(new Dictionary<IExtractor, IParser>
                             {
                                 {
@@ -114,7 +114,7 @@ namespace Microsoft.Recognizers.Text.NumberWithUnit
                             })
             },
             {
-                (Culture.Spanish, typeof(TemperatureModel)),
+                ModelFactoryKeyGenerator.Generate<TemperatureModel>(Culture.Spanish),
                 (options) => new TemperatureModel(new Dictionary<IExtractor, IParser>
                             {
                                 {
@@ -124,7 +124,7 @@ namespace Microsoft.Recognizers.Text.NumberWithUnit
                             })
             },
             {
-                (Culture.Spanish, typeof(DimensionModel)),
+                ModelFactoryKeyGenerator.Generate<DimensionModel>(Culture.Spanish),
                 (options) => new DimensionModel(new Dictionary<IExtractor, IParser>
                             {
                                 {
@@ -134,7 +134,7 @@ namespace Microsoft.Recognizers.Text.NumberWithUnit
                             })
             },
             {
-                (Culture.Spanish, typeof(AgeModel)),
+                ModelFactoryKeyGenerator.Generate<AgeModel>(Culture.Spanish),
                 (options) => new AgeModel(new Dictionary<IExtractor, IParser>
                             {
                                 {
@@ -144,7 +144,7 @@ namespace Microsoft.Recognizers.Text.NumberWithUnit
                             })
             },
             {
-                (Culture.Portuguese, typeof(CurrencyModel)),
+                ModelFactoryKeyGenerator.Generate<CurrencyModel>(Culture.Portuguese),
                 (options) => new CurrencyModel(new Dictionary<IExtractor, IParser>
                             {
                                 {
@@ -154,7 +154,7 @@ namespace Microsoft.Recognizers.Text.NumberWithUnit
                             })
             },
             {
-                (Culture.Portuguese, typeof(TemperatureModel)),
+                ModelFactoryKeyGenerator.Generate<TemperatureModel>(Culture.Portuguese),
                 (options) => new TemperatureModel(new Dictionary<IExtractor, IParser>
                             {
                                 {
@@ -164,7 +164,7 @@ namespace Microsoft.Recognizers.Text.NumberWithUnit
                             })
             },
             {
-                (Culture.Portuguese, typeof(DimensionModel)),
+                ModelFactoryKeyGenerator.Generate<DimensionModel>(Culture.Portuguese),
                 (options) => new DimensionModel(new Dictionary<IExtractor, IParser>
                             {
                                 {
@@ -174,7 +174,7 @@ namespace Microsoft.Recognizers.Text.NumberWithUnit
                             })
             },
             {
-                (Culture.Portuguese, typeof(AgeModel)),
+                ModelFactoryKeyGenerator.Generate<AgeModel>(Culture.Portuguese),
                 (options) => new AgeModel(new Dictionary<IExtractor, IParser>
                             {
                                 {
@@ -184,7 +184,7 @@ namespace Microsoft.Recognizers.Text.NumberWithUnit
                             })
             },
             {
-                (Culture.French, typeof(CurrencyModel)),
+                ModelFactoryKeyGenerator.Generate<CurrencyModel>(Culture.French),
                 (options) => new CurrencyModel(new Dictionary<IExtractor, IParser>
                             {
                                 {
@@ -194,7 +194,7 @@ namespace Microsoft.Recognizers.Text.NumberWithUnit
                             })
             },
             {
-                (Culture.French, typeof(TemperatureModel)),
+                ModelFactoryKeyGenerator.Generate<TemperatureModel>(Culture.French),
                 (options) => new TemperatureModel(new Dictionary<IExtractor, IParser>
                             {
                                 {
@@ -204,7 +204,7 @@ namespace Microsoft.Recognizers.Text.NumberWithUnit
                             })
             },
             {
-                (Culture.French, typeof(DimensionModel)),
+                ModelFactoryKeyGenerator.Generate<DimensionModel>(Culture.French),
                 (options) => new DimensionModel(new Dictionary<IExtractor, IParser>
                             {
                                 {
@@ -214,7 +214,7 @@ namespace Microsoft.Recognizers.Text.NumberWithUnit
                             })
             },
             {
-                (Culture.French, typeof(AgeModel)),
+                ModelFactoryKeyGenerator.Generate<AgeModel>(Culture.French),
                 (options) => new AgeModel(new Dictionary<IExtractor, IParser>
                             {
                                 {

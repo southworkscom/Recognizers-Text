@@ -12,37 +12,37 @@ namespace Microsoft.Recognizers.Text.DateTime
         private static ModelFactory<DateTimeOptions> factory = new ModelFactory<DateTimeOptions>()
         {
             {
-                (Culture.English, typeof(DateTimeModel)),
+                ModelFactoryKeyGenerator.Generate<DateTimeModel>(Culture.English),
                 (options) => new DateTimeModel(
                             new BaseMergedParser(new EnglishMergedParserConfiguration(options)),
                             new BaseMergedExtractor(new EnglishMergedExtractorConfiguration(options)))
             },
             {
-                (Culture.Chinese, typeof(DateTimeModel)),
+                ModelFactoryKeyGenerator.Generate<DateTimeModel>(Culture.Chinese),
                 (options) => new DateTimeModel(
                             new FullDateTimeParser(new ChineseDateTimeParserConfiguration(options)),
                             new MergedExtractorChs(options))
             },
             {
-                (Culture.Spanish, typeof(DateTimeModel)),
+                ModelFactoryKeyGenerator.Generate<DateTimeModel>(Culture.Spanish),
                 (options) => new DateTimeModel(
                             new BaseMergedParser(new SpanishMergedParserConfiguration(options)),
                             new BaseMergedExtractor(new SpanishMergedExtractorConfiguration(options)))
             },
             {
-                (Culture.French, typeof(DateTimeModel)),
+                ModelFactoryKeyGenerator.Generate<DateTimeModel>(Culture.French),
                 (options) => new DateTimeModel(
                             new BaseMergedParser(new FrenchMergedParserConfiguration(options)),
                             new BaseMergedExtractor(new FrenchMergedExtractorConfiguration(options)))
             },
             {
-                (Culture.Portuguese, typeof(DateTimeModel)),
+                ModelFactoryKeyGenerator.Generate<DateTimeModel>(Culture.Portuguese),
                 (options) => new DateTimeModel(
                             new BaseMergedParser(new PortugueseMergedParserConfiguration(options)),
                             new BaseMergedExtractor(new PortugueseMergedExtractorConfiguration(options)))
             },
             {
-                (Culture.German, typeof(DateTimeModel)),
+                ModelFactoryKeyGenerator.Generate<DateTimeModel>(Culture.German),
                 (options) => new DateTimeModel(
                             new BaseMergedParser(new GermanMergedParserConfiguration(options)),
                             new BaseMergedExtractor(new GermanMergedExtractorConfiguration(options)))
