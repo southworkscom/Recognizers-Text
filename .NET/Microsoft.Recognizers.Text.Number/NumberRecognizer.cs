@@ -12,109 +12,109 @@ namespace Microsoft.Recognizers.Text.Number
         private static ModelFactory<NumberOptions> factory = new ModelFactory<NumberOptions>()
         {
             {
-                (Culture.English, typeof(NumberModel)),
+                ModelFactoryKeyGenerator.Generate<NumberModel>(Culture.English),
                 (options) => new NumberModel(
                     AgnosticNumberParserFactory.GetParser(AgnosticNumberParserType.Number, new EnglishNumberParserConfiguration()),
                     English.NumberExtractor.GetInstance(NumberMode.PureNumber))
             },
             {
-                (Culture.English, typeof(OrdinalModel)),
+                ModelFactoryKeyGenerator.Generate<OrdinalModel>(Culture.English),
                 (options) => new OrdinalModel(
                     AgnosticNumberParserFactory.GetParser(AgnosticNumberParserType.Ordinal, new EnglishNumberParserConfiguration()),
                     English.OrdinalExtractor.GetInstance())
             },
             {
-                (Culture.English, typeof(PercentModel)),
+                ModelFactoryKeyGenerator.Generate<PercentModel>(Culture.English),
                 (options) => new PercentModel(
                     AgnosticNumberParserFactory.GetParser(AgnosticNumberParserType.Percentage, new EnglishNumberParserConfiguration()),
                     new English.PercentageExtractor())
             },
             {
-                (Culture.Chinese, typeof(NumberModel)),
+                ModelFactoryKeyGenerator.Generate<NumberModel>(Culture.Chinese),
                 (options) => new NumberModel(
                     AgnosticNumberParserFactory.GetParser(AgnosticNumberParserType.Number, new ChineseNumberParserConfiguration()),
                     new Chinese.NumberExtractor())
             },
             {
-                (Culture.Chinese, typeof(OrdinalModel)),
+                ModelFactoryKeyGenerator.Generate<OrdinalModel>(Culture.Chinese),
                 (options) => new OrdinalModel(
                     AgnosticNumberParserFactory.GetParser(AgnosticNumberParserType.Ordinal, new ChineseNumberParserConfiguration()),
                     new Chinese.OrdinalExtractor())
             },
             {
-                (Culture.Chinese, typeof(PercentModel)),
+                ModelFactoryKeyGenerator.Generate<PercentModel>(Culture.Chinese),
                 (options) => new PercentModel(
                     AgnosticNumberParserFactory.GetParser(AgnosticNumberParserType.Percentage, new ChineseNumberParserConfiguration()),
                     new Chinese.PercentageExtractor())
             },
             {
-                (Culture.Spanish, typeof(NumberModel)),
+                ModelFactoryKeyGenerator.Generate<NumberModel>(Culture.Spanish),
                 (options) => new NumberModel(
                     AgnosticNumberParserFactory.GetParser(AgnosticNumberParserType.Number, new SpanishNumberParserConfiguration()),
                     new Spanish.NumberExtractor(NumberMode.PureNumber))
             },
             {
-                (Culture.Spanish, typeof(OrdinalModel)),
+                ModelFactoryKeyGenerator.Generate<OrdinalModel>(Culture.Spanish),
                 (options) => new OrdinalModel(
                     AgnosticNumberParserFactory.GetParser(AgnosticNumberParserType.Ordinal, new SpanishNumberParserConfiguration()),
                     new Spanish.OrdinalExtractor())
             },
             {
-                (Culture.Spanish, typeof(PercentModel)),
+                ModelFactoryKeyGenerator.Generate<PercentModel>(Culture.Spanish),
                 (options) => new PercentModel(
                     AgnosticNumberParserFactory.GetParser(AgnosticNumberParserType.Percentage, new SpanishNumberParserConfiguration()),
                     new Spanish.PercentageExtractor())
             },
             {
-                (Culture.Portuguese, typeof(NumberModel)),
+                ModelFactoryKeyGenerator.Generate<NumberModel>(Culture.Portuguese),
                 (options) => new NumberModel(
                     AgnosticNumberParserFactory.GetParser(AgnosticNumberParserType.Number, new PortugueseNumberParserConfiguration()),
                     new Portuguese.NumberExtractor(NumberMode.PureNumber))
             },
             {
-                (Culture.Portuguese, typeof(OrdinalModel)),
+                ModelFactoryKeyGenerator.Generate<OrdinalModel>(Culture.Portuguese),
                 (options) => new OrdinalModel(
                     AgnosticNumberParserFactory.GetParser(AgnosticNumberParserType.Ordinal, new PortugueseNumberParserConfiguration()),
                     new Portuguese.OrdinalExtractor())
             },
             {
-                (Culture.Portuguese, typeof(PercentModel)),
+                ModelFactoryKeyGenerator.Generate<PercentModel>(Culture.Portuguese),
                 (options) => new PercentModel(
                     AgnosticNumberParserFactory.GetParser(AgnosticNumberParserType.Percentage, new PortugueseNumberParserConfiguration()),
                     new Portuguese.PercentageExtractor())
             },
             {
-                (Culture.French, typeof(NumberModel)),
+                ModelFactoryKeyGenerator.Generate<NumberModel>(Culture.French),
                 (options) => new NumberModel(
                     AgnosticNumberParserFactory.GetParser(AgnosticNumberParserType.Number, new FrenchNumberParserConfiguration()),
                     new French.NumberExtractor(NumberMode.PureNumber))
             },
             {
-                (Culture.French, typeof(OrdinalModel)),
+                ModelFactoryKeyGenerator.Generate<OrdinalModel>(Culture.French),
                 (options) => new OrdinalModel(
                     AgnosticNumberParserFactory.GetParser(AgnosticNumberParserType.Ordinal, new FrenchNumberParserConfiguration()),
                     new French.OrdinalExtractor())
             },
             {
-                (Culture.French, typeof(PercentModel)),
+                ModelFactoryKeyGenerator.Generate<PercentModel>(Culture.French),
                 (options) => new PercentModel(
                     AgnosticNumberParserFactory.GetParser(AgnosticNumberParserType.Percentage, new FrenchNumberParserConfiguration()),
                     new French.PercentageExtractor())
             },
             {
-                (Culture.German, typeof(NumberModel)),
+                ModelFactoryKeyGenerator.Generate<NumberModel>(Culture.German),
                 (options) => new NumberModel(
                     AgnosticNumberParserFactory.GetParser(AgnosticNumberParserType.Number, new GermanNumberParserConfiguration()),
                     German.NumberExtractor.GetInstance(NumberMode.PureNumber))
             },
             {
-                (Culture.German, typeof(OrdinalModel)),
+                ModelFactoryKeyGenerator.Generate<OrdinalModel>(Culture.German),
                 (options) => new OrdinalModel(
                     AgnosticNumberParserFactory.GetParser(AgnosticNumberParserType.Ordinal, new GermanNumberParserConfiguration()),
                     German.OrdinalExtractor.GetInstance())
             },
             {
-                (Culture.German, typeof(PercentModel)),
+                ModelFactoryKeyGenerator.Generate<PercentModel>(Culture.German),
                 (options) => new PercentModel(
                     AgnosticNumberParserFactory.GetParser(AgnosticNumberParserType.Percentage, new GermanNumberParserConfiguration()),
                     new German.PercentageExtractor())
