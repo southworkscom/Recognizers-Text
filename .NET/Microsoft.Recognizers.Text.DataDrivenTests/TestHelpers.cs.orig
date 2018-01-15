@@ -131,9 +131,13 @@ namespace Microsoft.Recognizers.Text.DataDrivenTests
                     return DateTimeRecognizer.GetDateTimeModel(language, DateTimeOptions.CalendarMode);
                 // DateTimeAlt function is only activated when ExtendedTypes is enabled
                 case Models.DateTimeExtendedTypes:
-                    return DateTimeRecognizer.GetDateTimeModel(language, DateTimeOptions.ExtendedTypes);
+<<<<<<< HEAD
+                    return DateTimeRecognizer.GetInstance(DateTimeOptions.ExtendedTypes).GetDateTimeModel(language);
                 case Models.PhoneNumber:
-                    return SequenceRecognizer.GetPhoneNumberModel(language);
+                    return SequenceRecognizer.Instance.GetPhoneNumberModel(language);
+=======
+                    return DateTimeRecognizer.GetDateTimeModel(language, DateTimeOptions.ExtendedTypes);
+>>>>>>> Update Recognizers Signature
             }
 
             throw new Exception($"Model '{modelName}' for '{language}' not supported");

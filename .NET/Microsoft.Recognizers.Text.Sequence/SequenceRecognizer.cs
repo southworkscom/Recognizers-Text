@@ -5,21 +5,19 @@ using Microsoft.Recognizers.Text.Sequence.English;
 
 namespace Microsoft.Recognizers.Text.Sequence
 {
-    public class SequenceRecognizer : Recognizer
+    public class SequenceRecognizer
     {
-        public static readonly SequenceRecognizer Instance = new SequenceRecognizer(SequenceOptions.None);
-
-        private SequenceRecognizer(SequenceOptions options)
+        private static ModelFactory<SequenceOptions> factory = new ModelFactory<SequenceOptions>()
         {
-            RegisterModel(Culture.English, options.ToString(), new Dictionary<Type, IModel>
-            {
-                [typeof(PhoneNumberModel)] = new PhoneNumberModel(new PhoneNumberParser(), new PhoneNumberExtractor())
-            });
-        }
+             {
+                (Culture.English, typeof(PhoneNumberModel)),
+                (options) => new PhoneNumberModel(new PhoneNumberParser(), new PhoneNumberExtractor())
+            }
+        };
 
-        public IModel GetPhoneNumberModel(string culture, bool fallbackToDefaultCulture = true)
+        public static IModel GetPhoneNumberModel(string culture, SequenceOptions options = SequenceOptions.None)
         {
-            return GetModel<PhoneNumberModel>(Culture.English, fallbackToDefaultCulture, SequenceOptions.None.ToString());
+            return factory.GetModel<PhoneNumberModel>(culture, options);
         }
 
     }

@@ -8,7 +8,7 @@ namespace Microsoft.Recognizers.Text.DateTime.Tests
     [TestClass]
     public class TestSingleCultureDateTimeRecognizer
     {
-        private readonly IModel model = DateTimeRecognizer.GetSingleCultureInstance(Culture.English).GetDateTimeModel();
+        private readonly IModel model = DateTimeRecognizer.GetDateTimeModel(Culture.English);
 
         public void BasicTest(string text, string expected)
         {
