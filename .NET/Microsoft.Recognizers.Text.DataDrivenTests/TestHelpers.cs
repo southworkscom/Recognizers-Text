@@ -102,27 +102,27 @@ namespace Microsoft.Recognizers.Text.DataDrivenTests
             switch (modelName)
             {
                 case Models.Number:
-                    return NumberRecognizer.Instance.GetNumberModel(language);
+                    return NumberRecognizer.GetNumberModel(language);
                 case Models.Ordinal:
-                    return NumberRecognizer.Instance.GetOrdinalModel(language);
+                    return NumberRecognizer.GetOrdinalModel(language);
                 case Models.Percent:
-                    return NumberRecognizer.Instance.GetPercentageModel(language);
+                    return NumberRecognizer.GetPercentageModel(language);
                 case Models.Age:
-                    return NumberWithUnitRecognizer.Instance.GetAgeModel(language);
+                    return NumberWithUnitRecognizer.GetAgeModel(language);
                 case Models.Currency:
-                    return NumberWithUnitRecognizer.Instance.GetCurrencyModel(language);
+                    return NumberWithUnitRecognizer.GetCurrencyModel(language);
                 case Models.Dimension:
-                    return NumberWithUnitRecognizer.Instance.GetDimensionModel(language);
+                    return NumberWithUnitRecognizer.GetDimensionModel(language);
                 case Models.Temperature:
-                    return NumberWithUnitRecognizer.Instance.GetTemperatureModel(language);
+                    return NumberWithUnitRecognizer.GetTemperatureModel(language);
                 case Models.DateTime:
-                    return DateTimeRecognizer.GetInstance(DateTimeOptions.None).GetDateTimeModel(language);
+                    return DateTimeRecognizer.GetDateTimeModel(language, DateTimeOptions.None);
                 case Models.DateTimeSplitDateAndTime:
-                    return DateTimeRecognizer.GetInstance(DateTimeOptions.SplitDateAndTime).GetDateTimeModel(language);
+                    return DateTimeRecognizer.GetDateTimeModel(language, DateTimeOptions.SplitDateAndTime);
                 case Models.CustomNumber:
                     return GetCustomModelFor(language);
                 case Models.DateTimeCalendarMode:
-                    return DateTimeRecognizer.GetInstance(DateTimeOptions.CalendarMode).GetDateTimeModel(language);
+                    return DateTimeRecognizer.GetDateTimeModel(language, DateTimeOptions.CalendarMode);
             }
 
             throw new Exception($"Model '{modelName}' for '{language}' not supported");

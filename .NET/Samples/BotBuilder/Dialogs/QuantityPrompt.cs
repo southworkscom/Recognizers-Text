@@ -30,7 +30,7 @@ namespace BotBuilderRecognizerSample
             result = 0;
 
             // Get Number model for the specified culture
-            var model = NumberRecognizer.Instance.GetNumberModel(this.culture);
+            var model = NumberRecognizer.GetNumberModel(this.culture);
             var results = model.Parse(message.Text);
             if (results.Count > 0)
             {
