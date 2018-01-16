@@ -31,7 +31,7 @@ namespace Microsoft.Recognizers.Text
 
         protected void RegisterModel<T>(string culture, Func<TModelOptions, IModel> modelCreator)
         {
-            this.factory.Add(ModelFactoryKeyGenerator.Generate(culture, typeof(T)), modelCreator);
+            this.factory.Add((culture, typeof(T)), modelCreator);
         }
 
         protected abstract void InitializeConfiguration();
