@@ -8,7 +8,7 @@ namespace Microsoft.Recognizers.Text
     {
         private static ConcurrentDictionary<(string culture, Type modelType, string modelOptions), IModel> cache = new ConcurrentDictionary<(string culture, Type modelType, string modelOptions), IModel>();
 
-        public IModel GetModel<T>(string culture, TModelOptions options)
+        public T GetModel<T>(string culture, TModelOptions options) where T : IModel
         {
             if (string.IsNullOrEmpty(culture))
             {
@@ -16,16 +16,16 @@ namespace Microsoft.Recognizers.Text
             }
 
             var cacheKey = (culture.ToLowerInvariant(), typeof(T), options.ToString());
-            if(cache.ContainsKey(cacheKey))
+            if (cache.ContainsKey(cacheKey))
             {
-                return cache[cacheKey];
+                return (T)cache[cacheKey];
             }
 
-            var key = ModelFactoryKeyGenerator.Generate<T>(culture);
+            var key = ModelFactoryKeyGenerator.Generate(culture, typeof(T));
             if (this.ContainsKey(key))
             {
                 var factoryMethod = this[key];
-                var model = factoryMethod(options);
+                var model = (T)factoryMethod(options);
 
                 cache[cacheKey] = model;
 
@@ -38,9 +38,9 @@ namespace Microsoft.Recognizers.Text
 
     public static class ModelFactoryKeyGenerator
     {
-        public static (string culture, Type modelType) Generate<T>(string culture)
+        public static (string culture, Type modelType) Generate(string culture, Type modelType)
         {
-            return (culture.ToLowerInvariant(), typeof(T));
+            return (culture.ToLowerInvariant(), modelType);
         }
     }
 }

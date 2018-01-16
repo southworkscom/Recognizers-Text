@@ -5,20 +5,24 @@ using Microsoft.Recognizers.Text.Sequence.English;
 
 namespace Microsoft.Recognizers.Text.Sequence
 {
-    public class SequenceRecognizer
+    public class SequenceRecognizer : Recognizer<SequenceOptions>
     {
-        private static ModelFactory<SequenceOptions> factory = new ModelFactory<SequenceOptions>()
+        public SequenceRecognizer(string culture, SequenceOptions options = SequenceOptions.None)
+        :base(culture, options)
         {
-             {
-                (Culture.English, typeof(PhoneNumberModel)),
-                (options) => new PhoneNumberModel(new PhoneNumberParser(), new PhoneNumberExtractor())
-            }
-        };
 
-        public static IModel GetPhoneNumberModel(string culture, SequenceOptions options = SequenceOptions.None)
-        {
-            return factory.GetModel<PhoneNumberModel>(culture, options);
         }
 
+        protected override void InitializeConfiguration()
+        {
+            RegisterModel<PhoneNumberModel>(
+                Culture.English,
+                (options) => new PhoneNumberModel(new PhoneNumberParser(), new PhoneNumberExtractor()));
+        }
+
+        public IModel GetPhoneNumberModel()
+        {
+            return GetModel<PhoneNumberModel>();
+        }
     }
 }
