@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Recognizers.Text.Number;
+﻿using Microsoft.Recognizers.Text.Number;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Microsoft.Recognizers.Text.DataDrivenTests.Number
+namespace Microsoft.Recognizers.Text.DataDrivenTests.Tests
 {
     [TestClass]
-    public class TestNumber_English_Static
+    public class TestNumberRecognizer_English
     {
         [TestMethod]
         public void RecognizeNumber()
