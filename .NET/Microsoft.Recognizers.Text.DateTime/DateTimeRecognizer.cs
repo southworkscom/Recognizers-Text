@@ -1,9 +1,10 @@
 ﻿using Microsoft.Recognizers.Text.DateTime.Chinese;
 using Microsoft.Recognizers.Text.DateTime.English;
 using Microsoft.Recognizers.Text.DateTime.French;
+using Microsoft.Recognizers.Text.DateTime.German;
 using Microsoft.Recognizers.Text.DateTime.Portuguese;
 using Microsoft.Recognizers.Text.DateTime.Spanish;
-using Microsoft.Recognizers.Text.DateTime.German;
+using System.Collections.Generic;
 
 namespace Microsoft.Recognizers.Text.DateTime
 {
@@ -12,6 +13,13 @@ namespace Microsoft.Recognizers.Text.DateTime
         public DateTimeRecognizer(string culture, DateTimeOptions options = DateTimeOptions.None)
             : base(culture, options)
         {
+        }
+
+        public static List<ModelResult> RecognizeDateTime(string query, string culture, DateTimeOptions options)
+        {
+            var recognizer = new DateTimeRecognizer(culture, options);
+            var model = recognizer.GetDateTimeModel();
+            return model.Parse(query);
         }
 
         public DateTimeModel GetDateTimeModel()
