@@ -1,4 +1,6 @@
-﻿using Microsoft.Recognizers.Text.Number.Chinese;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.Recognizers.Text.Number.Chinese;
 using Microsoft.Recognizers.Text.Number.English;
 using Microsoft.Recognizers.Text.Number.French;
 using Microsoft.Recognizers.Text.Number.German;
@@ -32,6 +34,33 @@ namespace Microsoft.Recognizers.Text.Number
         public NumberRangeModel GetNumberRangeModel()
         {
             return GetModel<NumberRangeModel>();
+        }
+
+        public static List<ModelResult> RecognizeNumber(string query, string culture, NumberOptions options = NumberOptions.None)
+        {
+            return RecognizeByModel(recognizer => recognizer.GetNumberModel(), query, culture, options);
+        }
+
+        public static List<ModelResult> RecognizeOrdinal(string query, string culture, NumberOptions options = NumberOptions.None)
+        {
+            return RecognizeByModel(recognizer => recognizer.GetOrdinalModel(), query, culture, options);
+        }
+
+        public static List<ModelResult> RecognizePercentage(string query, string culture, NumberOptions options = NumberOptions.None)
+        {
+            return RecognizeByModel(recognizer => recognizer.GetPercentageModel(), query, culture, options);
+        }
+
+        public static List<ModelResult> RecognizeNumberRange(string query, string culture, NumberOptions options = NumberOptions.None)
+        {
+            return RecognizeByModel(recognizer => recognizer.GetNumberRangeModel(), query, culture, options);
+        }
+
+        private static List<ModelResult> RecognizeByModel(Func<NumberRecognizer, IModel> getModelFunc,  string query, string culture, NumberOptions options)
+        {
+            var recognizer = new NumberRecognizer(culture, options);
+            var model = getModelFunc(recognizer);
+            return model.Parse(query);
         }
 
         protected override void InitializeConfiguration()
