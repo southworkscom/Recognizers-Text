@@ -5,8 +5,6 @@ import { BooleanParser } from "./parsers";
 import { EnglishBooleanExtractorConfiguration } from "./english/boolean";
 
 export default class OptionsRecognizer extends Recognizer {
-    static readonly instance: OptionsRecognizer = new OptionsRecognizer();
-
     private constructor() {
         super();
 

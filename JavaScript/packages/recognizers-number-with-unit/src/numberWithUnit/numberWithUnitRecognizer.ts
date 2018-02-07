@@ -25,8 +25,6 @@ import { FrenchDimensionExtractorConfiguration, FrenchDimensionParserConfigurati
 import { FrenchAgeExtractorConfiguration, FrenchAgeParserConfiguration } from "./french/age";
 
 export default class NumberWithUnitRecognizer extends Recognizer {
-    static readonly instance: NumberWithUnitRecognizer = new NumberWithUnitRecognizer();
-
     private constructor() {
         super();
 
