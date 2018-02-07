@@ -4,11 +4,11 @@ var NumberRecognizer = require('@microsoft/recognizers-text-number').NumberRecog
 var SupportedCultures = require('./cultures.js');
 
 var modelGetters = {
-    'NumberModel': NumberRecognizer.instance.getNumberModel,
-    'OrdinalModel': NumberRecognizer.instance.getOrdinalModel,
-    'PercentModel': NumberRecognizer.instance.getPercentageModel,
+    'NumberModel': new NumberRecognizer().getNumberModel,
+    'OrdinalModel': new NumberRecognizer().getOrdinalModel,
+    'PercentModel': new NumberRecognizer().getPercentageModel,
     // TODO: Implement number range model in javascript
-    'NumberRangeModel': NumberRecognizer.instance.getNumberModel,
+    'NumberRangeModel': new NumberRecognizer().getNumberModel,
     'CustomNumberModel': getCustomNumberModel
 };
 
@@ -53,5 +53,5 @@ function getNumberModel(config) {
         throw new Error(`Number model of ${config.subType} with culture ${config.language} not supported.`);
     }
 
-    return getModel.bind(NumberRecognizer.instance)(culture, false);
+    return getModel.bind(new NumberRecognizer)(culture, false);
 }

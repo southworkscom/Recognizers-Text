@@ -56,15 +56,15 @@ function getModels() {
     return [
         // Add Number recognizer - This recognizer will find any number from the input
         // E.g "I have two apples" will return "2".
-        Recognizers.NumberRecognizer.instance.getNumberModel(defaultCulture),
+        new Recognizers.NumberRecognizer().getNumberModel(defaultCulture),
 
         // Add Ordinal number recognizer - This recognizer will find any ordinal number
         // E.g "eleventh" will return "11".
-        Recognizers.NumberRecognizer.instance.getOrdinalModel(defaultCulture),
+        new Recognizers.NumberRecognizer().getOrdinalModel(defaultCulture),
 
         // Add Percentage recognizer - This recognizer will find any number presented as percentage
         // E.g "one hundred percents" will return "100%"
-        Recognizers.NumberRecognizer.instance.getPercentageModel(defaultCulture),
+        new Recognizers.NumberRecognizer().getPercentageModel(defaultCulture),
 
         // Add Age recognizer - This recognizer will find any age number presented
         // E.g "After ninety five years of age, perspectives change" will return "95 Year"
@@ -84,7 +84,7 @@ function getModels() {
 
         // Add DateTime recognizer - This model will find any Date even if its write in colloquial language -
         // E.g "I'll go back 8pm today" will return "2017-10-04 20:00:00"
-        Recognizers.DateTimeRecognizer.instance.getDateTimeModel(defaultCulture),
+        new Recognizers.DateTimeRecognizer().getDateTimeModel(defaultCulture),
 
         // Add Boolean recognizer - This model will find yes/no like responses, including emoji -
         // E.g "yup, I need that" will return "True"

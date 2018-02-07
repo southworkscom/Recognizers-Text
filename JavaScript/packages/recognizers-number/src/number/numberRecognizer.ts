@@ -15,7 +15,6 @@ import { FrenchNumberExtractor, FrenchOrdinalExtractor, FrenchPercentageExtracto
 import { ChineseNumberExtractor, ChineseOrdinalExtractor, ChinesePercentageExtractor } from "./chinese/extractors";
 
 export default class NumberRecognizer extends Recognizer {
-    static readonly instance: NumberRecognizer = new NumberRecognizer();
 
     private constructor() {
         super();
