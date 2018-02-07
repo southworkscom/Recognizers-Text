@@ -29,9 +29,11 @@ export enum NumberWithUnitOptions {
 }
 
 export default class NumberWithUnitRecognizer extends Recognizer<NumberWithUnitOptions> {
-    private constructor() {
-        super();
+    private constructor(culture: string, options: NumberWithUnitOptions) {
+        super(culture, options);
+    }
 
+    protected InitializeConfiguration() {
         // English models
         this.registerModel("CurrencyModel", Culture.English, new CurrencyModel(new Map<IExtractor, IParser>([
             [new NumberWithUnitExtractor(new EnglishCurrencyExtractorConfiguration()), new NumberWithUnitParser(new EnglishCurrencyParserConfiguration())]

@@ -20,9 +20,11 @@ export enum NumberOptions {
 
 export default class NumberRecognizer extends Recognizer<NumberOptions> {
 
-    private constructor() {
-        super();
+    private constructor(culture: string, options: NumberOptions) {
+        super(culture, options);
+    }
 
+    protected InitializeConfiguration() {
         // English models
         this.registerModel("NumberModel", Culture.English, new NumberModel(
             AgnosticNumberParserFactory.getParser(AgnosticNumberParserType.Number, new EnglishNumberParserConfiguration()),
@@ -44,7 +46,7 @@ export default class NumberRecognizer extends Recognizer<NumberOptions> {
         this.registerModel("PercentModel", Culture.Spanish, new PercentModel(
             AgnosticNumberParserFactory.getParser(AgnosticNumberParserType.Percentage, new SpanishNumberParserConfiguration()),
             new SpanishPercentageExtractor()));
-                
+
         // Portuguese models
         this.registerModel("NumberModel", Culture.Portuguese, new NumberModel(
             AgnosticNumberParserFactory.getParser(AgnosticNumberParserType.Number, new PortugueseNumberParserConfiguration()),

@@ -9,9 +9,11 @@ export enum OptionsOptions {
 }
 
 export default class OptionsRecognizer extends Recognizer<OptionsOptions> {
-    private constructor() {
-        super();
+    private constructor(culture: string, options: OptionsOptions) {
+        super(culture, options);
+    }
 
+    protected InitializeConfiguration() {
         // English models
         this.registerModel("BooleanModel", Culture.English, new BooleanModel(
             new BooleanParser(),

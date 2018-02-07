@@ -13,31 +13,33 @@ export enum DateTimeOptions {
 }
 
 export default class DateTimeRecognizer extends Recognizer<DateTimeOptions> {
-    private constructor(options: DateTimeOptions) {
-        super();
+    constructor(culture: string, options: DateTimeOptions) {
+        super(culture, options);
+    }
 
+    protected InitializeConfiguration() {
         // English models
         this.registerModel("DateTimeModel", Culture.English, new DateTimeModel(
-            new BaseMergedParser(new EnglishMergedParserConfiguration(new EnglishCommonDateTimeParserConfiguration()), options),
-            new BaseMergedExtractor(new EnglishMergedExtractorConfiguration(), options)
+            new BaseMergedParser(new EnglishMergedParserConfiguration(new EnglishCommonDateTimeParserConfiguration()), this.RecognizerOptions),
+            new BaseMergedExtractor(new EnglishMergedExtractorConfiguration(), this.RecognizerOptions)
         ));
 
         // Spanish models
         this.registerModel("DateTimeModel", Culture.Spanish, new DateTimeModel(
-            new BaseMergedParser(new SpanishMergedParserConfiguration(), options),
-            new BaseMergedExtractor(new SpanishMergedExtractorConfiguration(), options)
+            new BaseMergedParser(new SpanishMergedParserConfiguration(), this.RecognizerOptions),
+            new BaseMergedExtractor(new SpanishMergedExtractorConfiguration(), this.RecognizerOptions)
         ));
 
         // Chinese models
         this.registerModel("DateTimeModel", Culture.Chinese, new DateTimeModel(
             new ChineseFullMergedParser(),
-            new ChineseMergedExtractor(options)
+            new ChineseMergedExtractor(this.RecognizerOptions)
         ));
 
         // French models
         this.registerModel("DateTimeModel", Culture.French, new DateTimeModel(
-            new BaseMergedParser(new FrenchMergedParserConfiguration(), options),
-            new BaseMergedExtractor(new FrenchMergedExtractorConfiguration(), options)
+            new BaseMergedParser(new FrenchMergedParserConfiguration(), this.RecognizerOptions),
+            new BaseMergedExtractor(new FrenchMergedExtractorConfiguration(), this.RecognizerOptions)
         ));
     }
 
@@ -46,6 +48,6 @@ export default class DateTimeRecognizer extends Recognizer<DateTimeOptions> {
     }
 
     public static getSingleCultureInstance(cultureCode: string, options: DateTimeOptions = DateTimeOptions.None): DateTimeRecognizer {
-        return new DateTimeRecognizer(options);
+        return new DateTimeRecognizer(cultureCode, options);
     }
 }
