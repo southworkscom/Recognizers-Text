@@ -32,7 +32,7 @@ module.exports = function getNumberTestRunner(config) {
     };
 }
 
-function getCustomNumberModel(culture, fallbackToDefaultCulture) {
+function getCustomNumberModel(culture) {
     switch (culture) {
         case SupportedCultures['Chinese'].cultureCode:
             return new RecognizerTextNumber.NumberModel(

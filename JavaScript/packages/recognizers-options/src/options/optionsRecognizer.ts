@@ -15,7 +15,7 @@ export default class OptionsRecognizer extends Recognizer {
         ));
     }
 
-    getBooleanModel(culture: string, fallbackToDefaultCulture: boolean = true): IModel {
-        return this.getModel("BooleanModel", culture, fallbackToDefaultCulture);
+    getBooleanModel(culture: string): IModel {
+        return this.getModel("BooleanModel", culture);
     }
 }

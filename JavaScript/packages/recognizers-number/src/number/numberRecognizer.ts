@@ -75,15 +75,15 @@ export default class NumberRecognizer extends Recognizer {
             new FrenchPercentageExtractor()));
     }
 
-    getNumberModel(culture: string, fallbackToDefaultCulture: boolean = true): IModel {
-        return this.getModel("NumberModel", culture, fallbackToDefaultCulture);
+    getNumberModel(culture: string): IModel {
+        return this.getModel("NumberModel", culture);
     }
 
-    getOrdinalModel(culture: string, fallbackToDefaultCulture: boolean = true): IModel {
-        return this.getModel("OrdinalModel", culture, fallbackToDefaultCulture);
+    getOrdinalModel(culture: string): IModel {
+        return this.getModel("OrdinalModel", culture);
     }
 
-    getPercentageModel(culture: string, fallbackToDefaultCulture: boolean = true): IModel {
-        return this.getModel("PercentModel", culture, fallbackToDefaultCulture);
+    getPercentageModel(culture: string): IModel {
+        return this.getModel("PercentModel", culture);
     }
 }

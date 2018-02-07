@@ -103,19 +103,19 @@ export default class NumberWithUnitRecognizer extends Recognizer {
         ])));
     }
 
-    getCurrencyModel(culture: string, fallbackToDefaultCulture: boolean = true): IModel {
-        return this.getModel("CurrencyModel", culture, fallbackToDefaultCulture);
+    getCurrencyModel(culture: string): IModel {
+        return this.getModel("CurrencyModel", culture);
     }
 
-    getTemperatureModel(culture: string, fallbackToDefaultCulture: boolean = true): IModel {
-        return this.getModel("TemperatureModel", culture, fallbackToDefaultCulture);
+    getTemperatureModel(culture: string): IModel {
+        return this.getModel("TemperatureModel", culture);
     }
 
-    getDimensionModel(culture: string, fallbackToDefaultCulture: boolean = true): IModel {
-        return this.getModel("DimensionModel", culture, fallbackToDefaultCulture);
+    getDimensionModel(culture: string): IModel {
+        return this.getModel("DimensionModel", culture);
     }
 
-    getAgeModel(culture: string, fallbackToDefaultCulture: boolean = true): IModel {
-        return this.getModel("AgeModel", culture, fallbackToDefaultCulture);
+    getAgeModel(culture: string): IModel {
+        return this.getModel("AgeModel", culture);
     }
 }

@@ -41,8 +41,8 @@ export default class DateTimeRecognizer extends Recognizer {
         ));
     }
 
-    getDateTimeModel(culture: string = "", fallbackToDefaultCulture: boolean = true): IDateTimeModel {
-        return this.getModel("DateTimeModel", culture, fallbackToDefaultCulture);
+    getDateTimeModel(culture: string = ""): IDateTimeModel {
+        return this.getModel("DateTimeModel", culture);
     }
 
     public static getSingleCultureInstance(cultureCode: string, options: DateTimeOptions = DateTimeOptions.None): DateTimeRecognizer {

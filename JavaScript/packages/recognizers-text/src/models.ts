@@ -18,8 +18,8 @@ export class ModelContainer {
 
     private modelInstances: Map<string, IModel> = new Map<string, IModel>();
 
-    getModel(modelTypeName: string, culture: string, fallbackToDefaultCulture: boolean = true): IModel {
-        let result = this.tryGetModel(modelTypeName, culture, fallbackToDefaultCulture);
+    getModel(modelTypeName: string, culture: string): IModel {
+        let result = this.tryGetModel(modelTypeName, culture);
         if (!result.containsModel) {
             throw new Error(`No IModel instance for ${culture}-${modelTypeName}`);
         }
@@ -27,16 +27,11 @@ export class ModelContainer {
         return result.model as IModel;
     }
 
-    tryGetModel(modelTypeName: string, culture: string, fallbackToDefaultCulture: boolean = true): { containsModel: boolean; model?: IModel } {
+    tryGetModel(modelTypeName: string, culture: string): { containsModel: boolean; model?: IModel } {
         let model: IModel;
         let ret: boolean = true;
         let key = this.generateKey(modelTypeName, culture);
         if (!this.modelInstances.has(key)) {
-            if (fallbackToDefaultCulture) {
-                culture = ModelContainer.defaultCulture;
-                key = this.generateKey(modelTypeName, culture);
-            }
-
             if (!this.modelInstances.has(key)) {
                 ret = false;
             }
@@ -49,8 +44,8 @@ export class ModelContainer {
         return { containsModel: false };
     }
 
-    containsModel(modelTypeName: string, culture: string, fallbackToDefaultCulture: boolean = true): boolean {
-        return this.tryGetModel(modelTypeName, culture, fallbackToDefaultCulture).containsModel;
+    containsModel(modelTypeName: string, culture: string): boolean {
+        return this.tryGetModel(modelTypeName, culture).containsModel;
     }
 
     registerModel(modelTypeName: string, culture: string, model: IModel) {
