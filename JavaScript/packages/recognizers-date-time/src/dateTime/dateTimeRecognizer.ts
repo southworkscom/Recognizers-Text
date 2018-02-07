@@ -13,8 +13,6 @@ export enum DateTimeOptions {
 }
 
 export default class DateTimeRecognizer extends Recognizer {
-    static readonly instance: DateTimeRecognizer = new DateTimeRecognizer(DateTimeOptions.None);
-
     private constructor(options: DateTimeOptions) {
         super();
 
