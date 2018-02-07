@@ -7,14 +7,6 @@ export abstract class Recognizer {
     return this.modelContainer.getModel(modelTypeName, culture);
   }
 
-  tryGetModel(modelTypeName: string, culture: string): { containsModel: boolean; model?: IModel } {
-    return this.modelContainer.tryGetModel(modelTypeName, culture);
-  }
-
-  containsModel(modelTypeName: string, culture: string): boolean {
-    return this.modelContainer.containsModel(modelTypeName, culture);
-  }
-
   registerModel(modelTypeName: string, culture: string, model: IModel) {
     this.modelContainer.registerModel(modelTypeName, culture, model);
   }
