@@ -3,12 +3,14 @@ var RecognizerTextNumber = require('@microsoft/recognizers-text-number');
 var NumberRecognizer = require('@microsoft/recognizers-text-number').NumberRecognizer;
 var SupportedCultures = require('./cultures.js');
 
+
+var recognizer = new NumberRecognizer()
 var modelGetters = {
-    'NumberModel': new NumberRecognizer().getNumberModel,
-    'OrdinalModel': new NumberRecognizer().getOrdinalModel,
-    'PercentModel': new NumberRecognizer().getPercentageModel,
+    'NumberModel': recognizer.getNumberModel,
+    'OrdinalModel': recognizer.getOrdinalModel,
+    'PercentModel': recognizer.getPercentageModel,
     // TODO: Implement number range model in javascript
-    'NumberRangeModel': new NumberRecognizer().getNumberModel,
+    'NumberRangeModel': recognizer.getNumberModel,
     'CustomNumberModel': getCustomNumberModel
 };
 
