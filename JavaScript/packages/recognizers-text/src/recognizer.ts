@@ -10,8 +10,4 @@ export abstract class Recognizer {
   registerModel(modelTypeName: string, culture: string, model: IModel) {
     this.modelContainer.registerModel(modelTypeName, culture, model);
   }
-
-  registerModels(models: Map<string, IModel>, culture: string) {
-    this.modelContainer.registerModels(models, culture);
-  }
 }

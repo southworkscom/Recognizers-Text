@@ -57,13 +57,6 @@ export class ModelContainer {
         this.modelInstances.set(key, model);
     }
 
-    registerModels(models: Map<string, IModel>, culture: string) {
-        for (let key in models.keys()) {
-            let model: IModel = models.get(key) as IModel;
-            this.registerModel(key, culture, model);
-        }
-    }
-
     private generateKey(modelTypeName: string, culture: string): string {
         return `${culture.toLowerCase()}-${modelTypeName}`;
     }
