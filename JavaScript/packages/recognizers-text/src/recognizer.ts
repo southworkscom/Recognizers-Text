@@ -1,14 +1,6 @@
 import { IModel, ModelContainer } from "./models"
 
-export interface IRecognizer {
-  getModel(modelTypeName: string, culture: string, fallbackToDefaultCulture: boolean): void
-
-  tryGetModel(modelTypeName: string, culture: string, fallbackToDefaultCulture: boolean): { containsModel: boolean; model?: IModel }
-
-  containsModel(modelTypeName: string, culture: string, fallbackToDefaultCulture: boolean): boolean
-}
-
-export abstract class Recognizer implements IRecognizer {
+export abstract class Recognizer {
   private readonly modelContainer: ModelContainer = new ModelContainer();
 
   getModel(modelTypeName: string, culture: string, fallbackToDefaultCulture: boolean = true): IModel {
