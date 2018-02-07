@@ -24,7 +24,11 @@ import { FrenchTemperatureExtractorConfiguration, FrenchTemperatureParserConfigu
 import { FrenchDimensionExtractorConfiguration, FrenchDimensionParserConfiguration } from "./french/dimension";
 import { FrenchAgeExtractorConfiguration, FrenchAgeParserConfiguration } from "./french/age";
 
-export default class NumberWithUnitRecognizer extends Recognizer {
+export enum NumberWithUnitOptions {
+    None = 0,
+}
+
+export default class NumberWithUnitRecognizer extends Recognizer<NumberWithUnitOptions> {
     private constructor() {
         super();
 

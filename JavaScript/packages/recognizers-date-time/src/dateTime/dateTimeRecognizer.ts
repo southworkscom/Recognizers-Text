@@ -12,7 +12,7 @@ export enum DateTimeOptions {
     None = 0, SkipFromToMerge = 1, SplitDateAndTime = 2, Calendar = 4 
 }
 
-export default class DateTimeRecognizer extends Recognizer {
+export default class DateTimeRecognizer extends Recognizer<DateTimeOptions> {
     private constructor(options: DateTimeOptions) {
         super();
 

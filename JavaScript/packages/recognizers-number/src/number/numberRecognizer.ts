@@ -14,7 +14,11 @@ import { PortugueseNumberExtractor, PortugueseOrdinalExtractor, PortuguesePercen
 import { FrenchNumberExtractor, FrenchOrdinalExtractor, FrenchPercentageExtractor } from "./french/extractors";
 import { ChineseNumberExtractor, ChineseOrdinalExtractor, ChinesePercentageExtractor } from "./chinese/extractors";
 
-export default class NumberRecognizer extends Recognizer {
+export enum NumberOptions {
+    None = 0,
+}
+
+export default class NumberRecognizer extends Recognizer<NumberOptions> {
 
     private constructor() {
         super();

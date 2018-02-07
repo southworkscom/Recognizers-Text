@@ -1,6 +1,6 @@
 import { IModel, ModelContainer } from "./models"
 
-export abstract class Recognizer {
+export abstract class Recognizer<TModelOptions> {
   private readonly modelContainer: ModelContainer = new ModelContainer();
 
   getModel(modelTypeName: string, culture: string): IModel {

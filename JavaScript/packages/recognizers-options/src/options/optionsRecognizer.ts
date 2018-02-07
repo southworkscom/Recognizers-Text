@@ -4,7 +4,11 @@ import { BooleanExtractor } from "./extractors";
 import { BooleanParser } from "./parsers";
 import { EnglishBooleanExtractorConfiguration } from "./english/boolean";
 
-export default class OptionsRecognizer extends Recognizer {
+export enum OptionsOptions {
+    None = 0,
+}
+
+export default class OptionsRecognizer extends Recognizer<OptionsOptions> {
     private constructor() {
         super();
 
