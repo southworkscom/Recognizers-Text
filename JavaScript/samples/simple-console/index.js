@@ -1,5 +1,3 @@
-import OptionsRecognizer from '../../packages/recognizers-options/dist/types/options/optionsRecognizer';
-
 var Recognizers = require('@microsoft/recognizers-text-suite');
 
 // Use English for the Recognizers culture
@@ -55,8 +53,8 @@ function write(message = ""){
 
 // Get all recognizers model instances.
 var numberRecognizer = new Recognizers.NumberRecognizer();
-var numberWithUnitRecognizer = Recognizers.numberWithUnitRecognizer();
-var dateTimeRecognizer= new Recognizers.DateTimeRecognizerR()
+var numberWithUnitRecognizer = new Recognizers.NumberWithUnitRecognizer();
+var dateTimeRecognizer = new Recognizers.DateTimeRecognizer()
 var optionsRecognizer = new Recognizers.OptionsRecognizer();
 
 function getModels() {
