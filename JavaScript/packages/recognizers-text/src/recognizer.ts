@@ -14,8 +14,8 @@ export abstract class Recognizer<TModelOptions> {
 
   protected abstract InitializeConfiguration();
 
-  getModel(modelTypeName: string, culture: string): IModel {
-    return this.modelContainer.getModel(modelTypeName, culture);
+  getModel(modelTypeName: string): IModel {
+    return this.modelContainer.getModel(modelTypeName, this.RecognizerCulture);
   }
 
   registerModel(modelTypeName: string, culture: string, model: IModel) {

@@ -9,7 +9,7 @@ export enum OptionsOptions {
 }
 
 export default class OptionsRecognizer extends Recognizer<OptionsOptions> {
-    private constructor(culture: string, options: OptionsOptions) {
+    private constructor(culture: string, options: OptionsOptions = OptionsOptions.None) {
         super(culture, options);
     }
 
@@ -21,7 +21,7 @@ export default class OptionsRecognizer extends Recognizer<OptionsOptions> {
         ));
     }
 
-    getBooleanModel(culture: string): IModel {
-        return this.getModel("BooleanModel", culture);
+    getBooleanModel(): IModel {
+        return this.getModel("BooleanModel");
     }
 }

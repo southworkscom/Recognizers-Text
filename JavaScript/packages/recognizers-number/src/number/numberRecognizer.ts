@@ -20,7 +20,7 @@ export enum NumberOptions {
 
 export default class NumberRecognizer extends Recognizer<NumberOptions> {
 
-    private constructor(culture: string, options: NumberOptions) {
+    private constructor(culture, options: NumberOptions = NumberOptions.None) {
         super(culture, options);
     }
 
@@ -81,15 +81,15 @@ export default class NumberRecognizer extends Recognizer<NumberOptions> {
             new FrenchPercentageExtractor()));
     }
 
-    getNumberModel(culture: string): IModel {
-        return this.getModel("NumberModel", culture);
+    getNumberModel(): IModel {
+        return this.getModel("NumberModel");
     }
 
-    getOrdinalModel(culture: string): IModel {
-        return this.getModel("OrdinalModel", culture);
+    getOrdinalModel(): IModel {
+        return this.getModel("OrdinalModel");
     }
 
-    getPercentageModel(culture: string): IModel {
-        return this.getModel("PercentModel", culture);
+    getPercentageModel(): IModel {
+        return this.getModel("PercentModel");
     }
 }

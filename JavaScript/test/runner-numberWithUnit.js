@@ -50,5 +50,5 @@ function getNumberWithUnitModel(config) {
         throw new Error(`NumberWithUnit model of ${config.subType} with culture ${config.language} not supported.`);
     }
 
-    return getModel.bind(new NumberWithUnitRecognizer())(culture, false);
+    return getModel.bind(new NumberWithUnitRecognizer(culture))();
 }

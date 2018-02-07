@@ -29,7 +29,7 @@ export enum NumberWithUnitOptions {
 }
 
 export default class NumberWithUnitRecognizer extends Recognizer<NumberWithUnitOptions> {
-    private constructor(culture: string, options: NumberWithUnitOptions) {
+    private constructor(culture: string, options: NumberWithUnitOptions = NumberWithUnitOptions.None) {
         super(culture, options);
     }
 
@@ -109,19 +109,19 @@ export default class NumberWithUnitRecognizer extends Recognizer<NumberWithUnitO
         ])));
     }
 
-    getCurrencyModel(culture: string): IModel {
-        return this.getModel("CurrencyModel", culture);
+    getCurrencyModel(): IModel {
+        return this.getModel("CurrencyModel");
     }
 
-    getTemperatureModel(culture: string): IModel {
-        return this.getModel("TemperatureModel", culture);
+    getTemperatureModel(): IModel {
+        return this.getModel("TemperatureModel");
     }
 
-    getDimensionModel(culture: string): IModel {
-        return this.getModel("DimensionModel", culture);
+    getDimensionModel(): IModel {
+        return this.getModel("DimensionModel");
     }
 
-    getAgeModel(culture: string): IModel {
-        return this.getModel("AgeModel", culture);
+    getAgeModel(): IModel {
+        return this.getModel("AgeModel");
     }
 }

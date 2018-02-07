@@ -35,7 +35,7 @@ module.exports = function getNumberTestRunner(config) {
 function getCustomNumberModel(culture) {
     switch (culture) {
         case SupportedCultures['Chinese'].cultureCode:
-            return new RecognizerTextNumber.NumberModel(
+            return new RecognizerTextNumber(culture).NumberModel(
                 RecognizerTextNumber.AgnosticNumberParserFactory.getParser(RecognizerTextNumber.AgnosticNumberParserType.Number, new RecognizerTextNumber.ChineseNumberParserConfiguration()),
                 new RecognizerTextNumber.ChineseNumberExtractor(1)
             );
@@ -55,5 +55,5 @@ function getNumberModel(config) {
         throw new Error(`Number model of ${config.subType} with culture ${config.language} not supported.`);
     }
 
-    return getModel.bind(new NumberRecognizer)(culture, false);
+    return getModel.bind(new NumberRecognizer(culture))();
 }

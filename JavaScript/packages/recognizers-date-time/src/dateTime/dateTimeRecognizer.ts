@@ -13,7 +13,7 @@ export enum DateTimeOptions {
 }
 
 export default class DateTimeRecognizer extends Recognizer<DateTimeOptions> {
-    constructor(culture: string, options: DateTimeOptions) {
+    constructor(culture: string, options: DateTimeOptions = DateTimeOptions.None) {
         super(culture, options);
     }
 
@@ -43,8 +43,8 @@ export default class DateTimeRecognizer extends Recognizer<DateTimeOptions> {
         ));
     }
 
-    getDateTimeModel(culture: string = ""): IDateTimeModel {
-        return this.getModel("DateTimeModel", culture);
+    getDateTimeModel(): IDateTimeModel {
+        return this.getModel("DateTimeModel");
     }
 
     public static getSingleCultureInstance(cultureCode: string, options: DateTimeOptions = DateTimeOptions.None): DateTimeRecognizer {

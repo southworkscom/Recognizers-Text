@@ -46,5 +46,5 @@ function getOptionsModel(config) {
         throw new Error(`Options model of ${config.subType} with culture ${config.language} not supported.`);
     }
 
-    return getModel.bind(new OptionsRecognizer())(culture, false);
+    return getModel.bind(new OptionsRecognizer(culture))();
 }
