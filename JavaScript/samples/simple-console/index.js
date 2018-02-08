@@ -52,43 +52,48 @@ function write(message = ""){
 }
 
 // Get all recognizers model instances.
+var numberRecognizer = new Recognizers.NumberRecognizer();
+var numberWithUnitRecognizer = new Recognizers.NumberWithUnitRecognizer();
+var dateTimeRecognizer = new Recognizers.DateTimeRecognizer()
+var optionsRecognizer = new Recognizers.OptionsRecognizer();
+
 function getModels() {
     return [
         // Add Number recognizer - This recognizer will find any number from the input
         // E.g "I have two apples" will return "2".
-        Recognizers.NumberRecognizer.instance.getNumberModel(defaultCulture),
+        numberRecognizer.getNumberModel(defaultCulture),
 
         // Add Ordinal number recognizer - This recognizer will find any ordinal number
         // E.g "eleventh" will return "11".
-        Recognizers.NumberRecognizer.instance.getOrdinalModel(defaultCulture),
+        numberRecognizer.getOrdinalModel(defaultCulture),
 
         // Add Percentage recognizer - This recognizer will find any number presented as percentage
         // E.g "one hundred percents" will return "100%"
-        Recognizers.NumberRecognizer.instance.getPercentageModel(defaultCulture),
+        new Recognizers.NumberRecognizer().getPercentageModel(defaultCulture),
 
         // Add Age recognizer - This recognizer will find any age number presented
         // E.g "After ninety five years of age, perspectives change" will return "95 Year"
-        Recognizers.NumberWithUnitRecognizer.instance.getAgeModel(defaultCulture),
+        numberWithUnitRecognizer.getAgeModel(defaultCulture),
 
         // Add Currency recognizer - This recognizer will find any currency presented
         // E.g "Interest expense in the 1988 third quarter was $ 75.3 million" will return "75300000 Dollar"
-        Recognizers.NumberWithUnitRecognizer.instance.getCurrencyModel(defaultCulture),
+        numberWithUnitRecognizer.getCurrencyModel(defaultCulture),
 
         // Add Dimension recognizer - This recognizer will find any dimension presented
         // E.g "The six-mile trip to my airport hotel that had taken 20 minutes earlier in the day took more than three hours." will return "6 Mile"
-        Recognizers.NumberWithUnitRecognizer.instance.getDimensionModel(defaultCulture),
+        numberWithUnitRecognizer.getDimensionModel(defaultCulture),
 
         // Add Temperature recognizer - This recognizer will find any temperature presented
         // E.g "Set the temperature to 30 degrees celsius" will return "30 C"
-        Recognizers.NumberWithUnitRecognizer.instance.getTemperatureModel(defaultCulture),
+        numberWithUnitRecognizer.getTemperatureModel(defaultCulture),
 
         // Add DateTime recognizer - This model will find any Date even if its write in colloquial language -
         // E.g "I'll go back 8pm today" will return "2017-10-04 20:00:00"
-        Recognizers.DateTimeRecognizer.instance.getDateTimeModel(defaultCulture),
+        dateTimeRecognizer.getDateTimeModel(defaultCulture),
 
         // Add Boolean recognizer - This model will find yes/no like responses, including emoji -
         // E.g "yup, I need that" will return "True"
-        Recognizers.OptionsRecognizer.instance.getBooleanModel(defaultCulture)
+        optionsRecognizer.getBooleanModel(defaultCulture)
     ];
 }
 

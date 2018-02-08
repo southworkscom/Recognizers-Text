@@ -17672,10 +17672,11 @@ var RecognizerTextNumber = typeof window !== "undefined" ? window['recognizersTe
 var NumberRecognizer = (typeof window !== "undefined" ? window['recognizersTextNumber'] : typeof global !== "undefined" ? global['recognizersTextNumber'] : null).NumberRecognizer;
 var SupportedCultures = require('./cultures.js');
 
+var recognizer = new NumberRecognizer();
 var modelGetters = {
-    'NumberModel': NumberRecognizer.instance.getNumberModel,
-    'OrdinalModel': NumberRecognizer.instance.getOrdinalModel,
-    'PercentModel': NumberRecognizer.instance.getPercentageModel,
+    'NumberModel': recognizer.getNumberModel,
+    'OrdinalModel': recognizer.getOrdinalModel,
+    'PercentModel': recognizer.getPercentageModel,
     'CustomNumberModel': getCustomNumberModel
 };
 
@@ -17697,7 +17698,7 @@ module.exports = function getNumberTestRunner(config) {
     };
 };
 
-function getCustomNumberModel(culture, fallbackToDefaultCulture) {
+function getCustomNumberModel(culture) {
     switch (culture) {
         case SupportedCultures['Chinese'].cultureCode:
             return new RecognizerTextNumber.NumberModel(RecognizerTextNumber.AgnosticNumberParserFactory.getParser(RecognizerTextNumber.AgnosticNumberParserType.Number, new RecognizerTextNumber.ChineseNumberParserConfiguration()), new RecognizerTextNumber.ChineseNumberExtractor(1));
@@ -17717,7 +17718,7 @@ function getNumberModel(config) {
         throw new Error('Number model of ' + config.subType + ' with culture ' + config.language + ' not supported.');
     }
 
-    return getModel.bind(NumberRecognizer.instance)(culture, false);
+    return getModel.bind(new NumberRecognizer())(culture, false);
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -17730,11 +17731,12 @@ var _ = require('lodash');
 var NumberWithUnitRecognizer = (typeof window !== "undefined" ? window['recognizersTextNumberWithUnit'] : typeof global !== "undefined" ? global['recognizersTextNumberWithUnit'] : null).NumberWithUnitRecognizer;
 var SupportedCultures = require('./cultures.js');
 
+var recognizer = new NumberWithUnitRecognizer();
 var modelGetters = {
-    'AgeModel': NumberWithUnitRecognizer.instance.getAgeModel,
-    'CurrencyModel': NumberWithUnitRecognizer.instance.getCurrencyModel,
-    'TemperatureModel': NumberWithUnitRecognizer.instance.getTemperatureModel,
-    'DimensionModel': NumberWithUnitRecognizer.instance.getDimensionModel
+    'AgeModel': recognizer.getAgeModel,
+    'CurrencyModel': recognizer.getCurrencyModel,
+    'TemperatureModel': recognizer.getTemperatureModel,
+    'DimensionModel':recognizer.getDimensionModel
 };
 
 module.exports = function getNumberWithUnitTestRunner(config) {
@@ -17777,7 +17779,7 @@ function getNumberWithUnitModel(config) {
         throw new Error('NumberWithUnit model of ' + config.subType + ' with culture ' + config.language + ' not supported.');
     }
 
-    return getModel.bind(NumberWithUnitRecognizer.instance)(culture, false);
+    return getModel.bind(new NumberWithUnitRecognizer())(culture, false);
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -17791,7 +17793,7 @@ var OptionsRecognizer = (typeof window !== "undefined" ? window['recognizersText
 var SupportedCultures = require('./cultures.js');
 
 var modelGetters = {
-    'BooleanModel': OptionsRecognizer.instance.getBooleanModel
+    'BooleanModel': new OptionsRecognizer().getBooleanModel
 };
 
 module.exports = function getOptionsTestRunner(config) {
@@ -17834,7 +17836,7 @@ function getOptionsModel(config) {
         throw new Error('Options model of ' + config.subType + ' with culture ' + config.language + ' not supported.');
     }
 
-    return getModel.bind(OptionsRecognizer.instance)(culture, false);
+    return getModel.bind(new OptionsRecognizer())(culture, false);
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})

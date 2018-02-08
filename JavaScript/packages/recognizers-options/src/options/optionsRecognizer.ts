@@ -4,12 +4,16 @@ import { BooleanExtractor } from "./extractors";
 import { BooleanParser } from "./parsers";
 import { EnglishBooleanExtractorConfiguration } from "./english/boolean";
 
-export default class OptionsRecognizer extends Recognizer {
-    static readonly instance: OptionsRecognizer = new OptionsRecognizer();
+export enum OptionsOptions {
+    None = 0,
+}
 
-    private constructor() {
-        super();
+export default class OptionsRecognizer extends Recognizer<OptionsOptions> {
+    private constructor(culture: string, options: OptionsOptions = OptionsOptions.None) {
+        super(culture, options);
+    }
 
+    protected InitializeConfiguration() {
         // English models
         this.registerModel("BooleanModel", Culture.English, new BooleanModel(
             new BooleanParser(),
@@ -17,7 +21,7 @@ export default class OptionsRecognizer extends Recognizer {
         ));
     }
 
-    getBooleanModel(culture: string, fallbackToDefaultCulture: boolean = true): IModel {
-        return this.getModel("BooleanModel", culture, fallbackToDefaultCulture);
+    getBooleanModel(): IModel {
+        return this.getModel("BooleanModel");
     }
 }

@@ -24,12 +24,16 @@ import { FrenchTemperatureExtractorConfiguration, FrenchTemperatureParserConfigu
 import { FrenchDimensionExtractorConfiguration, FrenchDimensionParserConfiguration } from "./french/dimension";
 import { FrenchAgeExtractorConfiguration, FrenchAgeParserConfiguration } from "./french/age";
 
-export default class NumberWithUnitRecognizer extends Recognizer {
-    static readonly instance: NumberWithUnitRecognizer = new NumberWithUnitRecognizer();
+export enum NumberWithUnitOptions {
+    None = 0,
+}
 
-    private constructor() {
-        super();
+export default class NumberWithUnitRecognizer extends Recognizer<NumberWithUnitOptions> {
+    private constructor(culture: string, options: NumberWithUnitOptions = NumberWithUnitOptions.None) {
+        super(culture, options);
+    }
 
+    protected InitializeConfiguration() {
         // English models
         this.registerModel("CurrencyModel", Culture.English, new CurrencyModel(new Map<IExtractor, IParser>([
             [new NumberWithUnitExtractor(new EnglishCurrencyExtractorConfiguration()), new NumberWithUnitParser(new EnglishCurrencyParserConfiguration())]
@@ -105,19 +109,19 @@ export default class NumberWithUnitRecognizer extends Recognizer {
         ])));
     }
 
-    getCurrencyModel(culture: string, fallbackToDefaultCulture: boolean = true): IModel {
-        return this.getModel("CurrencyModel", culture, fallbackToDefaultCulture);
+    getCurrencyModel(): IModel {
+        return this.getModel("CurrencyModel");
     }
 
-    getTemperatureModel(culture: string, fallbackToDefaultCulture: boolean = true): IModel {
-        return this.getModel("TemperatureModel", culture, fallbackToDefaultCulture);
+    getTemperatureModel(): IModel {
+        return this.getModel("TemperatureModel");
     }
 
-    getDimensionModel(culture: string, fallbackToDefaultCulture: boolean = true): IModel {
-        return this.getModel("DimensionModel", culture, fallbackToDefaultCulture);
+    getDimensionModel(): IModel {
+        return this.getModel("DimensionModel");
     }
 
-    getAgeModel(culture: string, fallbackToDefaultCulture: boolean = true): IModel {
-        return this.getModel("AgeModel", culture, fallbackToDefaultCulture);
+    getAgeModel(): IModel {
+        return this.getModel("AgeModel");
     }
 }

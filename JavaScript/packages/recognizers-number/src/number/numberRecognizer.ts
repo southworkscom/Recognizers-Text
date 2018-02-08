@@ -14,12 +14,17 @@ import { PortugueseNumberExtractor, PortugueseOrdinalExtractor, PortuguesePercen
 import { FrenchNumberExtractor, FrenchOrdinalExtractor, FrenchPercentageExtractor } from "./french/extractors";
 import { ChineseNumberExtractor, ChineseOrdinalExtractor, ChinesePercentageExtractor } from "./chinese/extractors";
 
-export default class NumberRecognizer extends Recognizer {
-    static readonly instance: NumberRecognizer = new NumberRecognizer();
+export enum NumberOptions {
+    None = 0,
+}
 
-    private constructor() {
-        super();
+export default class NumberRecognizer extends Recognizer<NumberOptions> {
 
+    private constructor(culture, options: NumberOptions = NumberOptions.None) {
+        super(culture, options);
+    }
+
+    protected InitializeConfiguration() {
         // English models
         this.registerModel("NumberModel", Culture.English, new NumberModel(
             AgnosticNumberParserFactory.getParser(AgnosticNumberParserType.Number, new EnglishNumberParserConfiguration()),
@@ -41,7 +46,7 @@ export default class NumberRecognizer extends Recognizer {
         this.registerModel("PercentModel", Culture.Spanish, new PercentModel(
             AgnosticNumberParserFactory.getParser(AgnosticNumberParserType.Percentage, new SpanishNumberParserConfiguration()),
             new SpanishPercentageExtractor()));
-                
+
         // Portuguese models
         this.registerModel("NumberModel", Culture.Portuguese, new NumberModel(
             AgnosticNumberParserFactory.getParser(AgnosticNumberParserType.Number, new PortugueseNumberParserConfiguration()),
@@ -76,15 +81,15 @@ export default class NumberRecognizer extends Recognizer {
             new FrenchPercentageExtractor()));
     }
 
-    getNumberModel(culture: string, fallbackToDefaultCulture: boolean = true): IModel {
-        return this.getModel("NumberModel", culture, fallbackToDefaultCulture);
+    getNumberModel(): IModel {
+        return this.getModel("NumberModel");
     }
 
-    getOrdinalModel(culture: string, fallbackToDefaultCulture: boolean = true): IModel {
-        return this.getModel("OrdinalModel", culture, fallbackToDefaultCulture);
+    getOrdinalModel(): IModel {
+        return this.getModel("OrdinalModel");
     }
 
-    getPercentageModel(culture: string, fallbackToDefaultCulture: boolean = true): IModel {
-        return this.getModel("PercentModel", culture, fallbackToDefaultCulture);
+    getPercentageModel(): IModel {
+        return this.getModel("PercentModel");
     }
 }

@@ -16,10 +16,6 @@ namespace SimpleConsole
     {
         // Use English for the Recognizers culture
         private const string defaultCulture = Culture.English;
-        private static NumberRecognizer numberRecognizer = new NumberRecognizer(defaultCulture);
-        private static NumberWithUnitRecognizer numberWithUnitRecognizer = new NumberWithUnitRecognizer(defaultCulture);
-        private static DateTimeRecognizer dateTimeRecognizer = new DateTimeRecognizer(defaultCulture);
-        private static SequenceRecognizer sequenceRecognizer = new SequenceRecognizer(defaultCulture);
 
         static void Main(string[] args)
         {
@@ -66,43 +62,47 @@ namespace SimpleConsole
             {
                 // Add Number recognizer - This recognizer will find any number from the input
                 // E.g "I have two apples" will return "2".
-                numberRecognizer.GetNumberModel(),
+                NumberRecognizer.GetNumberModel(defaultCulture),
                 
                 // Add Ordinal number recognizer - This recognizer will find any ordinal number
                 // E.g "eleventh" will return "11".
-                numberRecognizer.GetOrdinalModel(),
+                NumberRecognizer.GetOrdinalModel(defaultCulture),
 
                 // Add Percentage recognizer - This recognizer will find any number presented as percentage
                 // E.g "one hundred percents" will return "100%"
-                numberRecognizer.GetPercentageModel(),
+                NumberRecognizer.GetPercentageModel(defaultCulture),
 
                 // Add Number Range recognizer - This recognizer will find any cardinal or ordinal number range
                 // E.g. "between 2 and 5" will return "(2,5)"
-                numberRecognizer.GetNumberRangeModel(),
+                NumberRecognizer.GetNumberRangeModel(defaultCulture),
 
                 // Add Age recognizer - This recognizer will find any age number presented
                 // E.g "After ninety five years of age, perspectives change" will return "95 Year"
-                numberWithUnitRecognizer.GetAgeModel(),
+                NumberWithUnitRecognizer.GetAgeModel(defaultCulture),
 
                 // Add Currency recognizer - This recognizer will find any currency presented
                 // E.g "Interest expense in the 1988 third quarter was $ 75.3 million" will return "75300000 Dollar"
-                numberWithUnitRecognizer.GetCurrencyModel(),
+                NumberWithUnitRecognizer.GetCurrencyModel(defaultCulture),
 
                 // Add Dimension recognizer - This recognizer will find any dimension presented
                 // E.g "The six-mile trip to my airport hotel that had taken 20 minutes earlier in the day took more than three hours." will return "6 Mile"
-                numberWithUnitRecognizer.GetDimensionModel(),
+                NumberWithUnitRecognizer.GetDimensionModel(defaultCulture),
 
                 // Add Temperature recognizer - This recognizer will find any temperature presented
                 // E.g "Set the temperature to 30 degrees celsius" will return "30 C"
-                numberWithUnitRecognizer.GetTemperatureModel(),
+                NumberWithUnitRecognizer.GetTemperatureModel(defaultCulture),
                 
                 // Add Datetime recognizer - This model will find any Date even if its write in coloquial language - 
                 // E.g "I'll go back 8pm today" will return "2017-10-04 20:00:00"
-                dateTimeRecognizer.GetDateTimeModel(),
+<<<<<<< HEAD
+                DateTimeRecognizer.GetInstance().GetDateTimeModel(defaultCulture),
 
                 // Add PhoneNumber recognizer - This recognizer will find any phone number presented
                 // E.g "My phone number is ( 19 ) 38294427."
-                sequenceRecognizer.GetPhoneNumberModel()
+                SequenceRecognizer.Instance.GetPhoneNumberModel(defaultCulture) 
+=======
+                DateTimeRecognizer.GetDateTimeModel(defaultCulture)
+>>>>>>> Update Recognizers Signature
             };
         }
 

@@ -1,33 +1,24 @@
 import { IModel, ModelContainer } from "./models"
 
-export interface IRecognizer {
-  getModel(modelTypeName: string, culture: string, fallbackToDefaultCulture: boolean): void
+export abstract class Recognizer<TModelOptions> {
+  public readonly RecognizerOptions: TModelOptions;
+  public readonly RecognizerCulture: string;
 
-  tryGetModel(modelTypeName: string, culture: string, fallbackToDefaultCulture: boolean): { containsModel: boolean; model?: IModel }
-
-  containsModel(modelTypeName: string, culture: string, fallbackToDefaultCulture: boolean): boolean
-}
-
-export abstract class Recognizer implements IRecognizer {
   private readonly modelContainer: ModelContainer = new ModelContainer();
 
-  getModel(modelTypeName: string, culture: string, fallbackToDefaultCulture: boolean = true): IModel {
-    return this.modelContainer.getModel(modelTypeName, culture, fallbackToDefaultCulture);
+  protected constructor(culture: string, options: TModelOptions) {
+    this.RecognizerCulture = culture;
+    this.RecognizerOptions = options;
+    this.InitializeConfiguration();
   }
 
-  tryGetModel(modelTypeName: string, culture: string, fallbackToDefaultCulture: boolean = true): { containsModel: boolean; model?: IModel } {
-    return this.modelContainer.tryGetModel(modelTypeName, culture, fallbackToDefaultCulture);
-  }
+  protected abstract InitializeConfiguration();
 
-  containsModel(modelTypeName: string, culture: string, fallbackToDefaultCulture: boolean = true): boolean {
-    return this.modelContainer.containsModel(modelTypeName, culture, fallbackToDefaultCulture);
+  getModel(modelTypeName: string): IModel {
+    return this.modelContainer.getModel(modelTypeName, this.RecognizerCulture);
   }
 
   registerModel(modelTypeName: string, culture: string, model: IModel) {
     this.modelContainer.registerModel(modelTypeName, culture, model);
-  }
-
-  registerModels(models: Map<string, IModel>, culture: string) {
-    this.modelContainer.registerModels(models, culture);
   }
 }
