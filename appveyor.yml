@@ -21,27 +21,17 @@ clone_depth: 1
 branches:
   only:
   - master
-  - feature/*
+  - java-testing
 
 build:
   parallel: true
 
 build_script:
 - cmd: >-
-    cd .NET\
+    cd Java\
 
-    build.ci.cmd
-
-    cd ..\JavaScript\
-
-    build.cmd
-
-    cd ..\Python\
-
-    build.cmd
+    mvn test
 
 # disable automatic tests
 test: off
 
-artifacts:
-    - path : '**\*Microsoft.Recognizers*.nupkg'
