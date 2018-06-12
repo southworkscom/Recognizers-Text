@@ -16,9 +16,7 @@ init:
 # Install Node 8
 install:
   - ps: Install-Product node $env:nodejs_version
-  - cmd:
-      SET PATH=%PYTHON%;%PYTHON%\\Scripts;%JAVA_HOME%\bin;%PATH%
-      javac --version
+  - cmd: SET PATH=%PYTHON%;%PYTHON%\\Scripts;%JAVA_HOME%\bin;%PATH%
 
 # Projects
 clone_depth: 1
