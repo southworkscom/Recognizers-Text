@@ -100,6 +100,10 @@ public class CodeGenerator {
             return new DefaultWriter(tokenName, (String) token);
         }
 
+        if (token instanceof Integer) {
+            return new IntegerWriter(tokenName, (int) token);
+        }
+
         if (token instanceof ArrayList) {
             return new ListWriter(tokenName, "String", (String[]) ((ArrayList) token).stream().map(o -> o.toString()).toArray(size -> new String[size]));
         }
