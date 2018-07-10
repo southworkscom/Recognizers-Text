@@ -120,7 +120,7 @@ public abstract class RegExpUtility {
 
     private static String sanitizeGroups(String source) {
         AtomicInteger index = new AtomicInteger(0);
-        String result = replace(source, matchGroup, (Matcher m) -> m.group(0).replace(m.group(1), m.group(1) + groupNameIndexSep + index.getAndIncrement()));
+        String result = replace(source, matchGroup, (Matcher m) -> m.group(0).replace(m.group(1), m.group(1).replace("_", groupNameIndexSep) + groupNameIndexSep + index.getAndIncrement()));
 
         index.set(0);
         result = replace(result, matchPositiveLookbehind, (Matcher m) -> String.format("(?<plb%s%s>", groupNameIndexSep, index.getAndIncrement()));
