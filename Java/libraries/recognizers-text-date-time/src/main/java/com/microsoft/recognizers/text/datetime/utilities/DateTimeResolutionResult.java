@@ -13,7 +13,7 @@ public class DateTimeResolutionResult {
     private String comment;
 
     private ImmutableMap<String,String> futureResolution;
-    private ImmutableMap<String,String> getPastResolution;
+    private ImmutableMap<String,String> pastResolution;
 
     private Object futureValue;
     private Object pastValue;
@@ -50,7 +50,7 @@ public class DateTimeResolutionResult {
 
     public ImmutableMap<String, String> getFutureResolution() { return this.futureResolution; }
 
-    public ImmutableMap<String, String> getPastResolution() { return this.getPastResolution; }
+    public ImmutableMap<String, String> getPastResolution() { return this.pastResolution; }
 
     public Object getFutureValue() { return this.futureValue; }
 
