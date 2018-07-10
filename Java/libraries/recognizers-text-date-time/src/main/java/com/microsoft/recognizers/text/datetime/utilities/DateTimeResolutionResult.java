@@ -46,11 +46,23 @@ public class DateTimeResolutionResult {
 
     public String getMod() { return this.mod; }
 
+    public void setMod(String mod) {
+        this.mod = mod;
+    }
+
     public String getComment() { return this.comment; }
 
     public ImmutableMap<String, String> getFutureResolution() { return this.futureResolution; }
 
+    public void setFutureResolution(ImmutableMap<String, String> futureResolution) {
+        this.futureResolution = futureResolution;
+    }
+
     public ImmutableMap<String, String> getPastResolution() { return this.pastResolution; }
+
+    public void setPastResolution(ImmutableMap<String, String> pastResolution) {
+        this.pastResolution = pastResolution;
+    }
 
     public Object getFutureValue() { return this.futureValue; }
 
@@ -65,6 +77,10 @@ public class DateTimeResolutionResult {
     }
 
     public List<Object> getSubDateTimeEntities() { return this.subDateTimeEntities; }
+
+    public void setSubDateTimeEntities(List<Object> subDateTimeEntities) {
+        this.subDateTimeEntities = subDateTimeEntities;
+    }
 
     public TimeZoneResolutionResult getTimeZoneResolution() { return this.timeZoneResolution; }
 }
