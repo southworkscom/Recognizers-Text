@@ -34,7 +34,7 @@ public class Token {
 
         tokens.sort((o1, o2) -> {
             if (o1.start != o2.start) return o1.start - o2.start;
-            return o1.getLength() - o2.getLength();
+            return o2.getLength() - o1.getLength();
         });
 
         for (Token token : tokens) {
@@ -52,7 +52,7 @@ public class Token {
                     }
 
                     // It includes one of the tokens and should replace the included one
-                    if (token.start <= mergedTokens.get(i).start && token.end < mergedTokens.get(i).end) {
+                    if (token.start <= mergedTokens.get(i).start && token.end >= mergedTokens.get(i).end) {
                         bAdd = false;
                         mergedTokens.set(i, token);
                     }

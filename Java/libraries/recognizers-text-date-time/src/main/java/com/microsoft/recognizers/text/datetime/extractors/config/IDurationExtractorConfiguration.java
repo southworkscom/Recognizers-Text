@@ -2,10 +2,11 @@ package com.microsoft.recognizers.text.datetime.extractors.config;
 
 import com.google.common.collect.ImmutableMap;
 import com.microsoft.recognizers.text.IExtractor;
+import com.microsoft.recognizers.text.datetime.config.IOptionsConfiguration;
 
 import java.util.regex.Pattern;
 
-public interface IDurationExtractorConfiguration {
+public interface IDurationExtractorConfiguration extends IOptionsConfiguration {
     Pattern getFollowedUnit();
     Pattern getNumberCombinedWithUnit();
     Pattern getAnUnitRegex();
