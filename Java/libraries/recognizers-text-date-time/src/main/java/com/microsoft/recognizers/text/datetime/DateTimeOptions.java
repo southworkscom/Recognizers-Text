@@ -17,4 +17,8 @@ public enum DateTimeOptions {
     public int getValue() {
         return value;
     }
+
+    public boolean match(DateTimeOptions option) {
+        return (this.value & option.value) == option.value;
+    }
 }

@@ -1,91 +1,122 @@
 package com.microsoft.recognizers.text.datetime.utilities;
 
-import com.google.common.collect.ImmutableMap;
-
-
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
+
 public class DurationParsingUtil {
-    public static LocalDateTime shiftDateTime(String timex, LocalDateTime referenceDateTime, Boolean future) {
-        ImmutableMap<String, Double> timexUnitMap = resolveDurationTimex(timex);
-        LocalDateTime ret = getShiftResult(timexUnitMap, referenceDateTime, future);
-        return ret;
+  public static boolean isTimeDurationUnit(String unitStr) {
+    boolean result = false;
+    switch (unitStr) {
+      case "H":
+      result = true;
+      break;
+      case "M":
+      result = true;
+      break;
+      case "S":
+      result = true;
+      break;
     }
-
-    private static LocalDateTime getShiftResult(ImmutableMap<String, Double> timexUnitMap, LocalDateTime referenceDate, Boolean future) {
-        LocalDateTime ret = referenceDate;
-        int futureOrPast = future ? 1 : -1;
-
-        for (Map.Entry<String, Double> pair : timexUnitMap.entrySet()) {
-            String unitStr = pair.getKey();
-            Double number = pair.getValue();
-            switch (unitStr)
-            {
-                case "H":
-                    ret = ret.plusHours(Double.valueOf(number * futureOrPast).longValue());
-                    break;
-                case "M":
-                    ret = ret.plusMinutes(Double.valueOf(number * futureOrPast).longValue());
-                    break;
-                case "S":
-                    ret = ret.plusSeconds(Double.valueOf(number * futureOrPast).longValue());
-                    break;
-                case "D":
-                    ret = ret.plusDays(Double.valueOf(number * futureOrPast).longValue());
-                    break;
-                case "W":
-                    ret = ret.plusDays(Double.valueOf(7 * number * futureOrPast).longValue());
-                    break;
-                case "MON":
-                    ret = ret.plusMonths(Double.valueOf(number).intValue() * futureOrPast);
-                    break;
-                case "Y":
-                    ret = ret.plusYears(Double.valueOf(number).intValue() * futureOrPast);
-                    break;
-                default:
-                    return ret;
+    return result;
+  }
+  
+  public static boolean isMultipleDuration(String timex) {
+    ImmutableMap<String, Double> map = resolveDurationTimex(timex);
+    return map.size() > 1;
+  }
+  
+  public static boolean isDateDuration(String timex) {
+    ImmutableMap<String, Double> map = resolveDurationTimex(timex);
+    
+    for (String unit : map.keySet()) {
+      if (isTimeDurationUnit(unit)) {
+        return false;
+      }
+    }
+    
+    return true;
+  }
+  
+  public static LocalDateTime shiftDateTime(String timex, LocalDateTime reference, boolean future) {
+    ImmutableMap<String, Double> timexUnitMap = resolveDurationTimex(timex);
+    
+    return getShiftResult(timexUnitMap, reference, future);
+  }
+  
+  public static LocalDateTime getShiftResult(ImmutableMap<String, Double> timexUnitMap, LocalDateTime reference, boolean future) {
+    LocalDateTime result = reference;
+    int futureOrPast = future ? 1 : -1;
+    for (Map.Entry<String, Double> pair : timexUnitMap.entrySet()) {
+      String unit = pair.getKey();
+      Double number = pair.getValue();
+      switch (unit) {
+        case "H":
+        result = result.plusHours(Math.round(number * futureOrPast));
+        break;
+        case "M":
+        result = result.plusMinutes(Math.round(number * futureOrPast));
+        break;
+        case "S":
+        result = result.plusSeconds(Math.round(number * futureOrPast));
+        break;
+        case "D":
+        result = result.plusDays(Math.round(number * futureOrPast));
+        break;
+        case "W":
+        result = result.plusWeeks(Math.round(number * futureOrPast));
+        break;
+        case "MON":
+        result = result.plusMonths(Math.round(number * futureOrPast));
+        break;
+        case "Y":
+        result = result.plusYears(Math.round(number * futureOrPast));
+        break;
+        
+        default:
+        return result;
+      }
+    }
+    return result;
+  }
+  
+  private static ImmutableMap<String, Double> resolveDurationTimex(String timex) {
+    Builder<String, Double> resultBuilder = ImmutableMap.builder();
+    
+    // resolve duration timex, such as P21DT2H(21 days 2 hours)
+    String durationStr = timex.replace('P', '\0');
+    int numberStart = 0;
+    boolean isTime = false;
+    
+    for (int i = 0; i < durationStr.length(); i++) {
+      if (Character.isLetter(durationStr.charAt(i))) {
+        if (durationStr.charAt(i) == 'T') {
+          isTime = true;
+        } else {
+          String numStr = durationStr.substring(numberStart, i);
+          
+          try {
+            Double number = Double.parseDouble(numStr);
+            String srcTimexUnit = durationStr.substring(i, i + 1);
+            
+            if (!isTime && srcTimexUnit == "M") {
+              srcTimexUnit = "MON";
             }
+            
+            resultBuilder.put(srcTimexUnit, number);
+            
+          } catch (NumberFormatException e) {
+            return resultBuilder.build();
+          }
+          
         }
-
-        return ret;
+        numberStart = i + 1;
+      }
     }
-
-    private static ImmutableMap<String, Double> resolveDurationTimex(String timexStr) {
-        ImmutableMap.Builder<String, Double> ret = ImmutableMap.builder();
-        // resolve duration timex, such as P21DT2H(21 days 2 hours)
-        String durationStr = timexStr.replace("P", "");
-        int numberStart = 0;
-        Boolean isTime = false;
-        for (int idx = 0; idx < durationStr.length(); idx++)
-        {
-            if (Character.isLetter(durationStr.indexOf(idx)))
-            {
-                if (durationStr.indexOf(idx) == 'T')
-                {
-                    isTime = true;
-                }
-                else
-                {
-                    String numStr = durationStr.substring(numberStart, idx - numberStart);
-                    double number;
-
-                    try {
-                        number = Double.parseDouble(numStr);
-                    } catch(NumberFormatException ex) {
-                        return (ImmutableMap.<String, Double>builder()).build();
-                    }
-
-                    String srcTimexUnit = durationStr.substring(idx, 1);
-                    if (!isTime && srcTimexUnit == "M")
-                    {
-                        srcTimexUnit = "MON";
-                    }
-                    ret.put(srcTimexUnit, number);
-                }
-                numberStart = idx + 1;
-            }
-        }
-        return ret.build();
-    }
+    
+    return resultBuilder.build();
+  }
 }
