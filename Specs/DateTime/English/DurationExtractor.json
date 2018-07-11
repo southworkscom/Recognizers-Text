@@ -584,7 +584,7 @@
   },
   {
     "Input": "I'll leave for 1 year 1 month 21 days",
-    "NotSupported": "javascript, python, java",
+    "NotSupported": "javascript, python",
     "Results": [
       {
         "Text": "1 year 1 month 21 days",
@@ -596,7 +596,7 @@
   },
   {
     "Input": "I'll leave for 2 days 1 month",
-    "NotSupported": "javascript, python, java",
+    "NotSupported": "javascript, python",
     "Results": [
       {
         "Text": "2 days 1 month",
