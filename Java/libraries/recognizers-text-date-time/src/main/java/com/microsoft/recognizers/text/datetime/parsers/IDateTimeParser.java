@@ -4,7 +4,6 @@ import com.microsoft.recognizers.text.ExtractResult;
 import com.microsoft.recognizers.text.IParser;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 public interface IDateTimeParser extends IParser {

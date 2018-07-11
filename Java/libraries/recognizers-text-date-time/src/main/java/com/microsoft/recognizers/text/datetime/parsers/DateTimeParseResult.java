@@ -3,6 +3,8 @@ package com.microsoft.recognizers.text.datetime.parsers;
 import com.microsoft.recognizers.text.ExtractResult;
 import com.microsoft.recognizers.text.ParseResult;
 
+import java.util.Optional;
+
 public class DateTimeParseResult extends ParseResult {
     //TimexStr is only used in extractors related with date and time
     //It will output the TIMEX representation of a time string.
