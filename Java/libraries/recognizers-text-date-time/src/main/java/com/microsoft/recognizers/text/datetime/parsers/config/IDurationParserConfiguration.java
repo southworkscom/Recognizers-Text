@@ -2,6 +2,7 @@ package com.microsoft.recognizers.text.datetime.parsers.config;
 
 import com.google.common.collect.ImmutableMap;
 import com.microsoft.recognizers.text.IExtractor;
+import com.microsoft.recognizers.text.IParser;
 import com.microsoft.recognizers.text.datetime.config.IOptionsConfiguration;
 
 import java.util.regex.Pattern;
@@ -9,7 +10,7 @@ import java.util.regex.Pattern;
 public interface IDurationParserConfiguration extends IOptionsConfiguration {
     IExtractor getCardinalExtractor();
     IExtractor getDurationExtractor();
-    Pattern getNumberParser();
+    IParser getNumberParser();
     Pattern getNumberCombinedWithUnit();
     Pattern getAnUnitRegex();
     Pattern getDuringRegex();
