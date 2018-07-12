@@ -38,7 +38,7 @@ public class DictionaryWriter implements ICodeWriter {
             hasList = true;
             valueQuote1 = "{";
             valueQuote2 = "}";
-        } else if(valueType.equals("Long") || valueType.equals("Double")) {
+        } else if(valueType.equals("Integer") || valueType.equals("Long") || valueType.equals("Double")) {
             valueQuote1 = valueQuote2 = "";
         } else if(valueType.equals("Character")) {
             valueQuote1 = valueQuote2 = "'";
@@ -57,7 +57,7 @@ public class DictionaryWriter implements ICodeWriter {
                 .toArray(size -> new String[size]);
 
         return String.format(
-                "    public static final Map<%s, %s> %s = ImmutableMap.<%s, %s>builder()%s\n        .build();",
+                "    public static final ImmutableMap<%s, %s> %s = ImmutableMap.<%s, %s>builder()%s\n        .build();",
                 keyType,
                 valueType,
                 this.name,
@@ -80,8 +80,9 @@ public class DictionaryWriter implements ICodeWriter {
             case "char":
                 return "Character";
             case "long":
-            case "int":
                 return "Long";
+            case "int":
+                return "Integer";
             case "double":
                 return "Double";
             case "string[]":

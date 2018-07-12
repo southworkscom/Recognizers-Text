@@ -280,7 +280,7 @@ public class EnglishNumeric {
 
     public static final String DigitalNumberRegex = "((?<=\\b)(hundred|thousand|million|billion|trillion|dozen(s)?)(?=\\b))|((?<=(\\d|\\b))(k|t|m|g|b)(?=\\b))";
 
-    public static final Map<String, Long> CardinalNumberMap = ImmutableMap.<String, Long>builder()
+    public static final ImmutableMap<String, Long> CardinalNumberMap = ImmutableMap.<String, Long>builder()
         .put("a", 1L)
         .put("zero", 0L)
         .put("an", 1L)
@@ -320,7 +320,7 @@ public class EnglishNumeric {
         .put("trillion", 1000000000000L)
         .build();
 
-    public static final Map<String, Long> OrdinalNumberMap = ImmutableMap.<String, Long>builder()
+    public static final ImmutableMap<String, Long> OrdinalNumberMap = ImmutableMap.<String, Long>builder()
         .put("first", 1L)
         .put("second", 2L)
         .put("secondary", 2L)
@@ -391,7 +391,7 @@ public class EnglishNumeric {
         .put("trillionths", 1000000000000L)
         .build();
 
-    public static final Map<String, Long> RoundNumberMap = ImmutableMap.<String, Long>builder()
+    public static final ImmutableMap<String, Long> RoundNumberMap = ImmutableMap.<String, Long>builder()
         .put("hundred", 100L)
         .put("thousand", 1000L)
         .put("million", 1000000L)

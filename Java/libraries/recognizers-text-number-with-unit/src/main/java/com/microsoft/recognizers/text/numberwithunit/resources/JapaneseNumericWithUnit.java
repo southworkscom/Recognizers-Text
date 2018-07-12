@@ -18,7 +18,7 @@ public class JapaneseNumericWithUnit {
 
     public static final List<String> AgeAmbiguousValues = Arrays.asList("歳");
 
-    public static final Map<String, String> AgeSuffixList = ImmutableMap.<String, String>builder()
+    public static final ImmutableMap<String, String> AgeSuffixList = ImmutableMap.<String, String>builder()
         .put("Year", "歳")
         .put("Month", "ヶ月")
         .put("Week", "週間|週")
@@ -31,7 +31,7 @@ public class JapaneseNumericWithUnit {
 
     public static final String ConnectorToken = "";
 
-    public static final Map<String, String> CurrencySuffixList = ImmutableMap.<String, String>builder()
+    public static final ImmutableMap<String, String> CurrencySuffixList = ImmutableMap.<String, String>builder()
         .put("Afghan afghani", "アフガニ")
         .put("Pul", "プル")
         .put("Euro", "ユーロ")
@@ -243,7 +243,7 @@ public class JapaneseNumericWithUnit {
         .put("Penni", "ペニー")
         .build();
 
-    public static final Map<String, String> CurrencyNameToIsoCodeMap = ImmutableMap.<String, String>builder()
+    public static final ImmutableMap<String, String> CurrencyNameToIsoCodeMap = ImmutableMap.<String, String>builder()
         .put("Afghan afghani", "AFN")
         .put("Euro", "EUR")
         .put("Albanian lek", "ALL")
@@ -431,7 +431,7 @@ public class JapaneseNumericWithUnit {
         .put("Abkhazian apsar", "_AA")
         .build();
 
-    public static final Map<String, String> FractionalUnitNameToCodeMap = ImmutableMap.<String, String>builder()
+    public static final ImmutableMap<String, String> FractionalUnitNameToCodeMap = ImmutableMap.<String, String>builder()
         .put("Jiao", "JIAO")
         .put("Kopek", "KOPEK")
         .put("Pul", "PUL")
@@ -509,7 +509,7 @@ public class JapaneseNumericWithUnit {
 
     public static final String CompoundUnitConnectorRegex = "(?<spacer>と)";
 
-    public static final Map<String, String> CurrencyPrefixList = ImmutableMap.<String, String>builder()
+    public static final ImmutableMap<String, String> CurrencyPrefixList = ImmutableMap.<String, String>builder()
         .put("Dollar", "$")
         .put("United States dollar", "us$")
         .put("British Virgin Islands dollar", "bvi$")
