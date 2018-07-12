@@ -16,6 +16,14 @@ public class DateUtil {
         return datetime;
     }
 
+    public static LocalDateTime safeCreateFromMinValue(int year, int month, int day) {
+        return safeCreateFromValue(minValue(), year, month, day);
+    }
+
+    public static LocalDateTime minValue() {
+        return LocalDateTime.of(1, 1, 1, 0, 0, 0, 0);
+    }
+
     public static Boolean isValidDate(int year, int month, int day) {
         if (year < 1 || year > 9999) {
             return false;

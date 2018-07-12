@@ -135,6 +135,20 @@ public class AgoLaterUtil {
         return ret;
     }
 
+    public static List<Token> extractorDurationWithBeforeAndAfter(String text, ExtractResult er, List<Token> result, IDateTimeUtilityConfiguration utilityConfiguration) {
+        int pos = er.start + er.length;
+        if (pos <= text.length()) {
+            String afterString = text.substring(pos);
+            String beforeString = text.substring(0, er.start);
+            int index = -1;
+            boolean isTimeDuration = RegExpUtility.getMatches(utilityConfiguration.getTimeUnitRegex(), er.text).length != 0;
+
+            //TODO implement
+        }
+
+        return result;
+    }
+
     public enum AgoLaterMode
     {
         DATE,
