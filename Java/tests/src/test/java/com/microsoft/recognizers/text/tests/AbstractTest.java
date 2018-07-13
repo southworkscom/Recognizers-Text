@@ -7,6 +7,8 @@ import com.microsoft.recognizers.text.Culture;
 import com.microsoft.recognizers.text.ExtractResult;
 import com.microsoft.recognizers.text.ModelResult;
 import com.microsoft.recognizers.text.ResolutionKey;
+import com.microsoft.recognizers.text.datetime.parsers.DateTimeParseResult;
+import com.microsoft.recognizers.text.tests.helpers.DateTimeParseResultMixIn;
 import com.microsoft.recognizers.text.tests.helpers.ExtractResultMixIn;
 import com.microsoft.recognizers.text.tests.helpers.ModelResultMixIn;
 import org.apache.commons.io.FileUtils;
@@ -145,6 +147,26 @@ public abstract class AbstractTest {
         }
     }
 
+    public static <T extends DateTimeParseResult> T parseDateTimeParseResult(Class<T> dateTimeParseResultClass, Object result) {
+        // Deserializer
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+        mapper.addMixIn(DateTimeParseResult.class, DateTimeParseResultMixIn.class);
+
+        try {
+            String json = mapper.writeValueAsString(result);
+            return mapper.readValue(json, dateTimeParseResultClass);
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public static <T extends ModelResult> T parseResult(Class<T> modelResultClass, Object result) {
         // Deserializer
         ObjectMapper mapper = new ObjectMapper();
@@ -172,6 +194,11 @@ public abstract class AbstractTest {
 
     public static <T extends ExtractResult> List<T> readExpectedExtractResults(Class<T> extractorResultClass, List<Object> results) {
         return results.stream().map(r -> parseExtractResult(extractorResultClass, r))
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public static <T extends DateTimeParseResult> List<T> readExpectedDateTimeParseResults(Class<T> dateTimeParseResultClass, List<Object> results) {
+        return results.stream().map(r -> parseDateTimeParseResult(dateTimeParseResultClass, r))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 

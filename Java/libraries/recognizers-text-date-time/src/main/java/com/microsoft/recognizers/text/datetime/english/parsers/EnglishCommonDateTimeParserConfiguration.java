@@ -56,7 +56,7 @@ public class EnglishCommonDateTimeParserConfiguration extends BaseDateParserConf
     private final IDateTimeParser dateTimePeriodParser;
     private final IDateTimeParser dateTimeAltParser;
 
-    protected EnglishCommonDateTimeParserConfiguration(DateTimeOptions options) {
+    public EnglishCommonDateTimeParserConfiguration(DateTimeOptions options) {
         super(options);
         utilityConfiguration = new EnglishDatetimeUtilityConfiguration();
 

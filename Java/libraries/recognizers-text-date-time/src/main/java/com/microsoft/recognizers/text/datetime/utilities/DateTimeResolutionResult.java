@@ -3,6 +3,7 @@ package com.microsoft.recognizers.text.datetime.utilities;
 import com.google.common.collect.ImmutableMap;
 
 import java.util.List;
+import java.util.Map;
 
 public class DateTimeResolutionResult {
 
@@ -12,8 +13,8 @@ public class DateTimeResolutionResult {
     private String mod;
     private String comment;
 
-    private ImmutableMap<String,String> futureResolution;
-    private ImmutableMap<String,String> pastResolution;
+    private Map<String,String> futureResolution;
+    private Map<String,String> pastResolution;
 
     private Object futureValue;
     private Object pastValue;
@@ -23,7 +24,7 @@ public class DateTimeResolutionResult {
     private TimeZoneResolutionResult timeZoneResolution;
 
     public DateTimeResolutionResult() {
-
+        success = false;
     }
 
     public Boolean getSuccess() { return this.success; }
@@ -52,15 +53,15 @@ public class DateTimeResolutionResult {
 
     public String getComment() { return this.comment; }
 
-    public ImmutableMap<String, String> getFutureResolution() { return this.futureResolution; }
+    public Map<String, String> getFutureResolution() { return this.futureResolution; }
 
-    public void setFutureResolution(ImmutableMap<String, String> futureResolution) {
+    public void setFutureResolution(Map<String, String> futureResolution) {
         this.futureResolution = futureResolution;
     }
 
-    public ImmutableMap<String, String> getPastResolution() { return this.pastResolution; }
+    public Map<String, String> getPastResolution() { return this.pastResolution; }
 
-    public void setPastResolution(ImmutableMap<String, String> pastResolution) {
+    public void setPastResolution(Map<String, String> pastResolution) {
         this.pastResolution = pastResolution;
     }
 

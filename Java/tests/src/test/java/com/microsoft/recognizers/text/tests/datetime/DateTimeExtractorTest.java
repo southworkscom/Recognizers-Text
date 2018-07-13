@@ -67,13 +67,16 @@ public class DateTimeExtractorTest extends AbstractTest {
 				});
 	}
 
-  private IDateTimeExtractor getExtractor(TestCase currentCase) {
+	public static IDateTimeExtractor getExtractor(TestCase currentCase) {
+		return getExtractor(currentCase.language, currentCase.modelName);
+	}
+
+  	public static IDateTimeExtractor getExtractor(String language, String modelName) {
 		try {
-			String culture = getCultureCode(currentCase.language);
-			String name = currentCase.modelName;
+			String culture = getCultureCode(language);
 			switch (culture) {
 				case Culture.English:
-					return getEnglishExtractor(name);
+					return getEnglishExtractor(modelName);
 				default:
 					throw new AssumptionViolatedException("Extractor Type/Name not supported.");
 			}
@@ -82,7 +85,7 @@ public class DateTimeExtractorTest extends AbstractTest {
 		}
 	}
 
-	private IDateTimeExtractor getEnglishExtractor(String name) {
+	private static IDateTimeExtractor getEnglishExtractor(String name) {
 		switch (name) {
 			case "DurationExtractor":
 				return new BaseDurationExtractor(new EnglishDurationExtractorConfiguration());
