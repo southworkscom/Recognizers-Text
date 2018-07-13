@@ -5,6 +5,7 @@ import com.microsoft.recognizers.text.IExtractor;
 import com.microsoft.recognizers.text.IParser;
 import com.microsoft.recognizers.text.datetime.config.BaseOptionsConfiguration;
 import com.microsoft.recognizers.text.datetime.english.extractors.EnglishDurationExtractorConfiguration;
+import com.microsoft.recognizers.text.datetime.extractors.BaseDurationExtractor;
 import com.microsoft.recognizers.text.datetime.parsers.config.ICommonDateTimeParserConfiguration;
 import com.microsoft.recognizers.text.datetime.parsers.config.IDurationParserConfiguration;
 
@@ -34,7 +35,7 @@ public class EnglishDurationParserConfiguration extends BaseOptionsConfiguration
         super(config.getOptions());
         cardinalExtractor = config.getCardinalExtractor();
         numberParser = config.getNumberParser();
-        durationExtractor = config.getDurationExtractor();
+        durationExtractor = new BaseDurationExtractor(new EnglishDurationExtractorConfiguration(), false);
         numberCombinedWithUnit = EnglishDurationExtractorConfiguration.NumberCombinedWithDurationUnit;
         anUnitRegex = EnglishDurationExtractorConfiguration.AnUnitRegex;
         duringRegex = EnglishDurationExtractorConfiguration.DuringRegex;

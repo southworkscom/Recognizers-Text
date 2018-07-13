@@ -55,11 +55,11 @@ public class BaseDurationParser implements IDateTimeParser {
 
             if (innerResult.getSuccess()) {
                 innerResult.setFutureResolution(ImmutableMap.<String, String>builder()
-                        .put(TimeTypeConstants.DURATION, innerResult.getFutureValue().toString())
+                        .put(TimeTypeConstants.DURATION, StringUtility.format((Double)innerResult.getFutureValue()))
                         .build());
 
                 innerResult.setPastResolution(ImmutableMap.<String, String>builder()
-                        .put(TimeTypeConstants.DURATION, innerResult.getPastValue().toString())
+                        .put(TimeTypeConstants.DURATION, StringUtility.format((Double)innerResult.getPastValue()))
                         .build());
 
                 if (er.data != null) {
@@ -214,7 +214,7 @@ public class BaseDurationParser implements IDateTimeParser {
 
             if (config.getUnitMap().containsKey(srcUnit)) {
                 Double numVal = Double.parseDouble(pr.value.toString()) + parseNumberWithUnitAndSuffix(suffixStr);
-                String numStr = String.valueOf(numVal);
+                String numStr = StringUtility.format(numVal);
 
                 String unitStr = config.getUnitMap().get(srcUnit);
 
@@ -242,7 +242,7 @@ public class BaseDurationParser implements IDateTimeParser {
         Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(config.getNumberCombinedWithUnit(), text)).findFirst();
         if (match.isPresent()) {
             Double numVal = Double.parseDouble(match.get().getGroup("num").value) + parseNumberWithUnitAndSuffix(suffixStr);
-            String numStr = String.valueOf(numVal);
+            String numStr = StringUtility.format(numVal);
 
             String srcUnit = match.get().getGroup("unit").value.toLowerCase();
 
@@ -282,7 +282,7 @@ public class BaseDurationParser implements IDateTimeParser {
         if (match.isPresent()) {
             Double numVal = StringUtility.isNullOrEmpty(match.get().getGroup("half").value) ? 1 : 0.5;
             numVal += parseNumberWithUnitAndSuffix(suffixStr);
-            String numStr = String.valueOf(numVal);
+            String numStr = StringUtility.format(numVal);
 
             String srcUnit = match.get().getGroup("unit").value.toLowerCase();
 
@@ -318,7 +318,7 @@ public class BaseDurationParser implements IDateTimeParser {
                 numVal = 3;
             }
 
-            String numStr = String.valueOf(numVal);
+            String numStr = StringUtility.format(numVal);
 
             String srcUnit = match.get().getGroup("unit").value.toLowerCase();
 
