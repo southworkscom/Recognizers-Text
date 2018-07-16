@@ -1,11 +1,14 @@
 package com.microsoft.recognizers.text.datetime.extractors;
 
 import com.microsoft.recognizers.text.ExtractResult;
+import com.microsoft.recognizers.text.ParseResult;
 import com.microsoft.recognizers.text.datetime.Constants;
 import com.microsoft.recognizers.text.datetime.extractors.config.IDateExtractorConfiguration;
 import com.microsoft.recognizers.text.datetime.utilities.AgoLaterUtil;
 import com.microsoft.recognizers.text.datetime.utilities.DateUtil;
+import com.microsoft.recognizers.text.datetime.utilities.FormatUtil;
 import com.microsoft.recognizers.text.datetime.utilities.Token;
+import com.microsoft.recognizers.text.utilities.FormatUtility;
 import com.microsoft.recognizers.text.utilities.Match;
 import com.microsoft.recognizers.text.utilities.RegExpUtility;
 import com.microsoft.recognizers.text.utilities.StringUtility;
@@ -86,7 +89,8 @@ public class BaseDateExtractor implements IDateTimeExtractor {
         for (ExtractResult result : ers) {
             int num;
             try {
-                num = Integer.parseInt(config.getNumberParser().parse(result).value.toString());
+                ParseResult parseResult = config.getNumberParser().parse(result);
+                num = Float.valueOf(parseResult.value.toString()).intValue();
             } catch (NumberFormatException e) {
                 num = 0;
             }
@@ -340,7 +344,7 @@ public class BaseDateExtractor implements IDateTimeExtractor {
                 ExtractResult er = new ExtractResult(start, length, firstTwoYearNumStr, null, null);
 
                 Object numberParsed = this.config.getNumberParser().parse(er).value;
-                int firstTwoYearNum = Integer.parseInt(numberParsed != null ? numberParsed.toString() : "0");
+                int firstTwoYearNum = Float.valueOf(numberParsed != null ? numberParsed.toString() : "0").intValue();
 
                 int lastTwoYearNum = 0;
                 String lastTwoYearNumStr = match.getGroup("lasttwoyearnum").value;
@@ -350,7 +354,7 @@ public class BaseDateExtractor implements IDateTimeExtractor {
                     er.withLength(match.getGroup("lasttwoyearnum").length);
 
                     Object parsed = this.config.getNumberParser().parse(er).value;
-                    lastTwoYearNum = Integer.parseInt(parsed != null ? parsed.toString() : "0");
+                    lastTwoYearNum = Float.valueOf(parsed != null ? parsed.toString() : "0").intValue();
                 }
 
                 // Exclude pure number like "nineteen", "twenty four"
