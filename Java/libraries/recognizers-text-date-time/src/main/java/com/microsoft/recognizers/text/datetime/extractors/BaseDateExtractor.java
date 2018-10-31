@@ -164,7 +164,7 @@ public class BaseDateExtractor implements IDateTimeExtractor {
                     }
                 }
 
-                if (!isFound) {
+                if (isFound) {
                     continue;
                 }
 
@@ -190,7 +190,7 @@ public class BaseDateExtractor implements IDateTimeExtractor {
                 suffixStr = text.substring(result.start + result.length);
                 match = Arrays.stream(RegExpUtility.getMatches(config.getWeekDayRegex(), suffixStr.trim())).findFirst();
                 if (match.isPresent() && match.get().index == 0 && num <= 5 && result.type.equals("builtin.num.ordinal")) {
-                    String weekDayStr = match.get().getGroup("weekday").value;
+                    String weekDayStr = match.get().getGroup("weekday").value.toLowerCase();
                     if (config.getDayOfWeek().containsKey(weekDayStr)) {
                         int spaceLen = suffixStr.length() - suffixStr.trim().length();
                         tokens.add(new Token(result.start, result.start + result.length + spaceLen + match.get().length));
@@ -210,7 +210,7 @@ public class BaseDateExtractor implements IDateTimeExtractor {
                     int month = config.getMonthOfYear().getOrDefault(match.get().getGroup("month").value.toLowerCase(), reference.getMonthValue());
 
                     Pair<Integer, Integer> startEnd = extendWithWeekdayAndYear(startIndex, endIndex, month, num, text, reference);
-                    tokens.add(new Token(startEnd.getValue0(), startEnd.getValue0()));
+                    tokens.add(new Token(startEnd.getValue0(), startEnd.getValue1()));
                 }
             }
         }
@@ -236,7 +236,7 @@ public class BaseDateExtractor implements IDateTimeExtractor {
 
         // Check whether there's a weekday
         String prefix = text.substring(0, startIndexResult);
-        Optional<Match> matchWeekDay = Arrays.stream(RegExpUtility.getMatches(config.getWeekDayEnd(), suffix)).findFirst();
+        Optional<Match> matchWeekDay = Arrays.stream(RegExpUtility.getMatches(config.getWeekDayEnd(), prefix)).findFirst();
         if (matchWeekDay.isPresent()) {
             // Get weekday from context directly, compare it with the weekday extraction above
             // to see whether they are referred to the same weekday
@@ -349,9 +349,9 @@ public class BaseDateExtractor implements IDateTimeExtractor {
                 int lastTwoYearNum = 0;
                 String lastTwoYearNumStr = match.getGroup("lasttwoyearnum").value;
                 if (!StringUtility.isNullOrEmpty(lastTwoYearNumStr)) {
-                    er.withText(lastTwoYearNumStr);
-                    er.withStart(match.getGroup("lasttwoyearnum").index);
-                    er.withLength(match.getGroup("lasttwoyearnum").length);
+                    er = er.withText(lastTwoYearNumStr);
+                    er = er.withStart(match.getGroup("lasttwoyearnum").index);
+                    er = er.withLength(match.getGroup("lasttwoyearnum").length);
 
                     Object parsed = this.config.getNumberParser().parse(er).value;
                     lastTwoYearNum = Float.valueOf(parsed != null ? parsed.toString() : "0").intValue();

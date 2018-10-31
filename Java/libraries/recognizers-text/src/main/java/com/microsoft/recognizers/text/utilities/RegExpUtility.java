@@ -32,7 +32,7 @@ public abstract class RegExpUtility {
     }
 
     public static Map<String, String> getNamedGroups(Matcher groupedMatcher, boolean sanitize) {
-        Map<String, String> matchedGroups = new HashMap<>();
+        Map<String, String> matchedGroups = new LinkedHashMap<>();
         Matcher m = matchGroupNames.matcher(groupedMatcher.pattern().pattern());
         while (m.find()) {
             String groupName = m.group(1);
@@ -160,7 +160,7 @@ public abstract class RegExpUtility {
                         int length = match.group(key).length();
                         String value = source.substring(index, index + length);
 
-                        MatchGroup lastMatchGroup = groups.get(lastGroup);
+                        MatchGroup lastMatchGroup = groups.get(lastGroup.get());
                         groups.replace(lastGroup.get(), new MatchGroup(
                                 lastMatchGroup.value + value,
                                 lastMatchGroup.index,
