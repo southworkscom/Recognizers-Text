@@ -491,7 +491,7 @@ public class BaseDateParser implements IDateTimeParser {
 
             Optional<Match> matchYear = Arrays.stream(RegExpUtility.getMatches(this.config.getYearSuffix(), suffix)).findFirst();
             if (matchYear.isPresent()) {
-                year = ((BaseDateExtractor)this.config.getDateExtractor()).getYearFromText(matchYear);
+                year = ((BaseDateExtractor)this.config.getDateExtractor()).getYearFromText(matchYear.get());
                 if (year != Constants.InvalidYear)
                 {
                     ambiguous = false;

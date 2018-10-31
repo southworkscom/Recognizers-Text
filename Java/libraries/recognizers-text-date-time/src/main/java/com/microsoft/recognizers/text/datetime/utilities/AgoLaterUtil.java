@@ -8,6 +8,7 @@ import com.microsoft.recognizers.text.datetime.parsers.DateTimeParseResult;
 import com.microsoft.recognizers.text.datetime.parsers.IDateTimeParser;
 import com.microsoft.recognizers.text.datetime.parsers.config.IDateParserConfiguration;
 import com.microsoft.recognizers.text.utilities.Match;
+import com.microsoft.recognizers.text.utilities.MatchGroup;
 import com.microsoft.recognizers.text.utilities.RegExpUtility;
 import com.microsoft.recognizers.text.utilities.StringUtility;
 
@@ -79,7 +80,7 @@ public class AgoLaterUtil {
             ret.setMod(Constants.LESS_THAN_MOD);
         }
 
-        if (MatchingUtil.ContainsAgoLaterIndex(afterStr, utilityConfiguration.getAgoRegex()))
+        if (MatchingUtil.containsAgoLaterIndex(afterStr, utilityConfiguration.getAgoRegex()))
         {
             Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(utilityConfiguration.getAgoRegex(), afterStr)).findFirst();
             int swift = 0;
@@ -94,8 +95,8 @@ public class AgoLaterUtil {
 
             ((DateTimeResolutionResult)durationParseResult.value).setMod(Constants.BEFORE_MOD);
         }
-        else if (MatchingUtil.ContainsAgoLaterIndex(afterStr, utilityConfiguration.getLaterRegex()) ||
-                MatchingUtil.ContainsTermIndex(beforeStr, utilityConfiguration.getInConnectorRegex()))
+        else if (MatchingUtil.containsAgoLaterIndex(afterStr, utilityConfiguration.getLaterRegex()) ||
+                MatchingUtil.containsTermIndex(beforeStr, utilityConfiguration.getInConnectorRegex()))
         {
             Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(utilityConfiguration.getLaterRegex(), afterStr)).findFirst();
             int swift = 0;
@@ -133,6 +134,72 @@ public class AgoLaterUtil {
         }
 
         return ret;
+    }
+
+    public static List<Token> extractorDurationWithBeforeAndAfter(String text, ExtractResult er, List<Token> result, IDateTimeUtilityConfiguration utilityConfiguration) {
+        int pos = er.start + er.length;
+        if (pos <= text.length()) {
+            String afterString = text.substring(pos);
+            String beforeString = text.substring(0, er.start);
+            boolean isTimeDuration = RegExpUtility.getMatches(utilityConfiguration.getTimeUnitRegex(), er.text).length != 0;
+
+            MatchingUtilResult resultIndex = MatchingUtil.getAgoLaterIndex(afterString, utilityConfiguration.getAgoRegex());
+            if (resultIndex.result) {
+                // We don't support cases like "5 minutes from today" for now
+                // Cases like "5 minutes ago" or "5 minutes from now" are supported
+                // Cases like "2 days before today" or "2 weeks from today" are also supported
+                boolean isDayMatchInAfterString = isDayMatchInAfterString(afterString, utilityConfiguration.getAgoRegex(), "day");
+
+                if (!(isTimeDuration && isDayMatchInAfterString)) {
+                    result.add(new Token(er.start, er.start + er.length + resultIndex.index));
+                }
+            } else {
+                resultIndex = MatchingUtil.getAgoLaterIndex(afterString, utilityConfiguration.getLaterRegex());
+                if (resultIndex.result) {
+                    boolean isDayMatchInAfterString = isDayMatchInAfterString(afterString, utilityConfiguration.getLaterRegex(), "day");
+
+                    if (!(isTimeDuration && isDayMatchInAfterString)) {
+                        result.add(new Token(er.start, er.start + er.length + resultIndex.index));
+                    }
+                } else {
+                    resultIndex = MatchingUtil.getTermIndex(beforeString, utilityConfiguration.getInConnectorRegex());
+                    if (resultIndex.result) {
+                        // For range unit like "week, month, year", it should output dateRange or datetimeRange
+                        Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(utilityConfiguration.getRangeUnitRegex(), er.text)).findFirst();
+                        if (match.isPresent()) {
+                            if (er.start >= resultIndex.index) {
+                                result.add(new Token(er.start - resultIndex.index, er.start + er.length));
+                            }
+                        }
+                    } else {
+                        resultIndex = MatchingUtil.getTermIndex(beforeString, utilityConfiguration.getWithinNextPrefixRegex());
+                        if (resultIndex.result) {
+                            // For range unit like "week, month, year, day, second, minute, hour", it should output dateRange or datetimeRange
+                            Optional<Match> matchDateUnitRegex = Arrays.stream(RegExpUtility.getMatches(utilityConfiguration.getDateUnitRegex(), er.text)).findFirst();
+                            Optional<Match> matchTimeUnitRegex = Arrays.stream(RegExpUtility.getMatches(utilityConfiguration.getTimeUnitRegex(), er.text)).findFirst();
+                            if (!matchDateUnitRegex.isPresent() && !matchTimeUnitRegex.isPresent()) {
+                                if (er.start >= resultIndex.index) {
+                                    result.add(new Token(er.start - resultIndex.index, er.start + er.length));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private static boolean isDayMatchInAfterString(String text, Pattern pattern, String group) {
+        Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(pattern, text)).findFirst();
+
+        if (match.isPresent()) {
+            MatchGroup matchGroup = match.get().getGroup(group);
+            return StringUtility.isNullOrEmpty(matchGroup.value);
+        }
+
+        return false;
     }
 
     public enum AgoLaterMode
