@@ -43,7 +43,7 @@ public class DateTimeExtractorTest extends AbstractTest {
 
 	protected List<ExtractResult> extract(TestCase currentCase) {
 		IDateTimeExtractor extractor = getExtractor(currentCase);
-		return extractor.extract(currentCase.input);
+		return extractor.extract(currentCase.input, currentCase.getReferenceDateTime());
 	}
 
 	@Override

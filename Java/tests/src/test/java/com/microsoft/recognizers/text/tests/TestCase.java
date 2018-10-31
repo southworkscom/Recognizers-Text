@@ -28,7 +28,7 @@ public class TestCase {
             return LocalDateTime.parse(objectDateTime.toString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         }
 
-        return null;
+        return LocalDateTime.now();
     }
 
     public String toString() {
