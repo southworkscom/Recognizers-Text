@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.microsoft.recognizers.text.IExtractor;
 import com.microsoft.recognizers.text.IParser;
 import com.microsoft.recognizers.text.datetime.DateTimeOptions;
+import com.microsoft.recognizers.text.datetime.english.extractors.EnglishDateExtractorConfiguration;
 import com.microsoft.recognizers.text.datetime.english.extractors.EnglishDurationExtractorConfiguration;
 import com.microsoft.recognizers.text.datetime.extractors.*;
 import com.microsoft.recognizers.text.datetime.parsers.*;
@@ -78,7 +79,7 @@ public class EnglishCommonDateTimeParserConfiguration extends BaseDateParserConf
         numberParser = new BaseNumberParser(new EnglishNumberParserConfiguration());
 
         durationExtractor = new BaseDurationExtractor(new EnglishDurationExtractorConfiguration());
-        dateExtractor = new BaseDateExtractor(null);
+        dateExtractor = new BaseDateExtractor(new EnglishDateExtractorConfiguration());
         timeExtractor = new BaseTimeExtractor(null);
         dateTimeExtractor = new BaseDateTimeExtractor(null);
         datePeriodExtractor = new BaseDatePeriodExtractor(null);
@@ -86,7 +87,7 @@ public class EnglishCommonDateTimeParserConfiguration extends BaseDateParserConf
         dateTimePeriodExtractor = new BaseDateTimePeriodExtractor(null);
 
         durationParser = new BaseDurationParser(new EnglishDurationParserConfiguration(this));
-        dateParser = new BaseDateParser(null);
+        dateParser = new BaseDateParser(new EnglishDateParserConfiguration(this));
         timeParser = new BaseTimeParser(null);
         dateTimeParser = new BaseDateTimeParser(null);
         datePeriodParser = new BaseDatePeriodParser(null);
