@@ -32,7 +32,7 @@ public interface IDateParserConfiguration extends IOptionsConfiguration {
     Pattern getMonthRegex();
     Pattern getWeekDayOfMonthRegex();
     Pattern getForTheRegex();
-    Pattern getWeekDayAndDayOfMothRegex();
+    Pattern getWeekDayAndDayOfMonthRegex();
     Pattern getRelativeMonthRegex();
     Pattern getYearSuffix();
     Pattern getRelativeWeekDayRegex();

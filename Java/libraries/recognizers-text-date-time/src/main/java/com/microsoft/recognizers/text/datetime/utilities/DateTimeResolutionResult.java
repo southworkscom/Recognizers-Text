@@ -74,7 +74,7 @@ public class DateTimeResolutionResult {
     public Object getPastValue() { return this.pastValue; }
 
     public void setPastValue(Object pastValue) {
-        this.pastValue = futureValue;
+        this.pastValue = pastValue;
     }
 
     public List<Object> getSubDateTimeEntities() { return this.subDateTimeEntities; }

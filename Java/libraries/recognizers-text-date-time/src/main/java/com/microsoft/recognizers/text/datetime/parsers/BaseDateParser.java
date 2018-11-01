@@ -83,7 +83,7 @@ public class BaseDateParser implements IDateTimeParser {
                 innerResult.setFutureResolution(futureResolution.build());
 
                 ImmutableMap.Builder<String, String> pastResolution = ImmutableMap.builder();
-                futureResolution.put(TimeTypeConstants.DATE, FormatUtil.formatDate((LocalDateTime) innerResult.getPastValue()));
+                pastResolution.put(TimeTypeConstants.DATE, FormatUtil.formatDate((LocalDateTime) innerResult.getPastValue()));
 
                 innerResult.setPastResolution(pastResolution.build());
 
@@ -153,8 +153,8 @@ public class BaseDateParser implements IDateTimeParser {
             LocalDateTime futureDate, pastDate;
             String tryStr = FormatUtil.luisDate(year, month, day);
             if (DateUtil.tryParse(tryStr) != null) {
-                futureDate = DateUtil.safeCreateFromValue(LocalDateTime.MIN, year, month, day);
-                pastDate = DateUtil.safeCreateFromValue(LocalDateTime.MIN, year, month, day);
+                futureDate = DateUtil.safeCreateFromMinValue(year, month, day);
+                pastDate = DateUtil.safeCreateFromMinValue(year, month, day);
 
                 if (futureDate.isBefore(referenceDate))
                 {
@@ -167,8 +167,8 @@ public class BaseDateParser implements IDateTimeParser {
                 }
             }
             else {
-                futureDate = DateUtil.safeCreateFromValue(LocalDateTime.MIN, year, month + 1, day);
-                pastDate = DateUtil.safeCreateFromValue(LocalDateTime.MIN, year, month - 1, day);
+                futureDate = DateUtil.safeCreateFromMinValue(year, month + 1, day);
+                pastDate = DateUtil.safeCreateFromMinValue(year, month - 1, day);
             }
 
             ret.setFutureValue(futureDate);
@@ -200,7 +200,7 @@ public class BaseDateParser implements IDateTimeParser {
             int swift = this.config.getSwiftDay(match.get().getGroup("day").value);
             List<ExtractResult> numErs = this.config.getIntegerExtractor().extract(trimmedText);
             Object numberParsed = this.config.getNumberParser().parse(numErs.get(0)).value;
-            int numOfDays = Integer.parseInt(numberParsed != null ? numberParsed.toString() : "0");
+            int numOfDays = Math.round(((Double)numberParsed).floatValue());
 
             LocalDateTime value = referenceDate.plusDays(numOfDays + swift);
 
@@ -217,7 +217,7 @@ public class BaseDateParser implements IDateTimeParser {
         if (match.isPresent() && match.get().index == 0 && match.get().length == trimmedText.length()) {
             List<ExtractResult> numErs = this.config.getIntegerExtractor().extract(trimmedText);
             Object numberParsed = this.config.getNumberParser().parse(numErs.get(0)).value;
-            int num = Integer.parseInt(numberParsed != null ? numberParsed.toString() : "0");
+            int num = Math.round(((Double)numberParsed).floatValue());
 
             String weekdayStr = match.get().getGroup("weekday").value.toLowerCase();
             LocalDateTime value = referenceDate;
@@ -333,7 +333,7 @@ public class BaseDateParser implements IDateTimeParser {
             ExtractResult er = new ExtractResult(start, length, dayStr, null, null);
 
             Object numberParsed = this.config.getNumberParser().parse(er).value;
-            day = Integer.parseInt(numberParsed != null ? numberParsed.toString() : "0");
+            day = Math.round(((Double)numberParsed).floatValue());
 
             ret.setTimex(FormatUtil.luisDate(-1, -1, day));
 
@@ -341,10 +341,10 @@ public class BaseDateParser implements IDateTimeParser {
             String tryStr = FormatUtil.luisDate(year, month, day);
 
             if (DateUtil.tryParse(tryStr) != null) {
-                futureDate = DateUtil.safeCreateFromValue(LocalDateTime.MIN, year, month, day);
+                futureDate = DateUtil.safeCreateFromMinValue(year, month, day);
             }
             else {
-                futureDate = DateUtil.safeCreateFromValue(LocalDateTime.MIN, year, month + 1, day);
+                futureDate = DateUtil.safeCreateFromMinValue(year, month + 1, day);
             }
 
             ret.setFutureValue(futureDate);
@@ -355,7 +355,7 @@ public class BaseDateParser implements IDateTimeParser {
         }
 
         // handling cases like 'Thursday the 21st', which both 'Thursday' and '21st' refer to a same date
-        match = Arrays.stream(RegExpUtility.getMatches(this.config.getWeekDayAndDayOfMothRegex(), text)).findFirst();
+        match = Arrays.stream(RegExpUtility.getMatches(this.config.getWeekDayAndDayOfMonthRegex(), text)).findFirst();
         if (match.isPresent()) {
             int month = referenceDate.getMonthValue(), year = referenceDate.getYear();
             String dayStr = match.get().getGroup("DayOfMonth").value.toLowerCase();
@@ -367,7 +367,7 @@ public class BaseDateParser implements IDateTimeParser {
             ExtractResult erTmp = new ExtractResult(start, length, dayStr, null, null);
 
             Object numberParsed = this.config.getNumberParser().parse(erTmp).value;
-            int day = Integer.parseInt(numberParsed != null ? numberParsed.toString() : "0");
+            int day = Math.round(((Double)numberParsed).floatValue());
 
             // the validity of the phrase is guaranteed in the Date Extractor
             ret.setTimex(FormatUtil.luisDate(year, month, day));
@@ -445,7 +445,7 @@ public class BaseDateParser implements IDateTimeParser {
         }
 
         // here is a very special case, timeX followe future date
-        ret.setTimex("XXXX-"+ String.format("D2", month) + "-WXX-" + weekday +"-#" + cardinal);
+        ret.setTimex("XXXX-"+ String.format("%02d", month) + "-WXX-" + weekday +"-#" + cardinal);
         ret.setFutureValue(futureDate);
         ret.setPastValue(pastDate);
         ret.setSuccess(true);
@@ -480,7 +480,7 @@ public class BaseDateParser implements IDateTimeParser {
         }
 
         Object numberParsed = this.config.getNumberParser().parse(er.get(0)).value;
-        int num = Integer.parseInt(numberParsed != null ? numberParsed.toString() : "0");
+        int num = Math.round(((Double)numberParsed).floatValue());
 
         Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(this.config.getMonthRegex(), trimmedText)).findFirst();
         if (match.isPresent()) {
@@ -519,7 +519,7 @@ public class BaseDateParser implements IDateTimeParser {
                 month = referenceDate.getMonthValue();
                 // resolve the date of wanted week day
                 int wantedWeekDay = this.config.getDayOfWeek().get(match.get().getGroup("weekday").value);
-                LocalDateTime firstDate = DateUtil.safeCreateFromValue(LocalDateTime.MIN, referenceDate.getYear(), referenceDate.getMonthValue(), 1);
+                LocalDateTime firstDate = DateUtil.safeCreateFromMinValue(referenceDate.getYear(), referenceDate.getMonthValue(), 1);
                 int firstWeekDay = firstDate.getDayOfWeek().getValue();
                 LocalDateTime firstWantedWeekDay = firstDate.plusDays(wantedWeekDay > firstWeekDay ? wantedWeekDay - firstWeekDay : wantedWeekDay - firstWeekDay + 7);
                 int answerDay = firstWantedWeekDay.getDayOfMonth() + (num - 1) * 7;
@@ -533,8 +533,8 @@ public class BaseDateParser implements IDateTimeParser {
         }
 
         // for LUIS format value string
-        LocalDateTime futureDate =  DateUtil.safeCreateFromValue(LocalDateTime.MIN, year, month, day);
-        LocalDateTime pastDate =  DateUtil.safeCreateFromValue(LocalDateTime.MIN, year, month, day);
+        LocalDateTime futureDate = DateUtil.safeCreateFromMinValue(year, month, day);
+        LocalDateTime pastDate =  DateUtil.safeCreateFromMinValue(year, month, day);
 
         if (ambiguous) {
             ret.setTimex(FormatUtil.luisDate(-1, month, day));
@@ -578,8 +578,8 @@ public class BaseDateParser implements IDateTimeParser {
 
         // for LUIS format value string
         ret.setTimex(FormatUtil.luisDate(-1, -1, day));
-        LocalDateTime pastDate = DateUtil.safeCreateFromValue(LocalDateTime.MIN, year, month, day);
-        LocalDateTime futureDate = DateUtil.safeCreateFromValue(LocalDateTime.MIN, year, month, day);
+        LocalDateTime pastDate = DateUtil.safeCreateFromMinValue(year, month, day);
+        LocalDateTime futureDate = DateUtil.safeCreateFromMinValue(year, month, day);
 
         if (!futureDate.isEqual(LocalDateTime.MIN) && futureDate.isBefore(referenceDate)) {
             futureDate = futureDate.plusMonths(1);
@@ -597,7 +597,7 @@ public class BaseDateParser implements IDateTimeParser {
     }
 
     private static LocalDateTime computeDate(int cardinal, int weekday, int month, int year) {
-        LocalDateTime firstDay = DateUtil.safeCreateFromValue(LocalDateTime.MIN, year, month, 1);
+        LocalDateTime firstDay = DateUtil.safeCreateFromMinValue(year, month, 1);
         LocalDateTime firstWeekday = DateUtil.thisDate(firstDay, weekday);
         int dayOfWeekOfFirstDay = firstDay.getDayOfWeek().getValue();
 
@@ -656,8 +656,8 @@ public class BaseDateParser implements IDateTimeParser {
             ret.setTimex(FormatUtil.luisDate(year, month, day));
         }
 
-        LocalDateTime futureDate = DateUtil.safeCreateFromValue(LocalDateTime.MIN, year, month, day);
-        LocalDateTime pastDate = DateUtil.safeCreateFromValue(LocalDateTime.MIN, year, month, day);
+        LocalDateTime futureDate = DateUtil.safeCreateFromMinValue(year, month, day);
+        LocalDateTime pastDate = DateUtil.safeCreateFromMinValue(year, month, day);
 
         if (noYear && futureDate.isBefore(referenceDate))
         {

@@ -9,9 +9,11 @@ import com.microsoft.recognizers.text.ModelResult;
 import com.microsoft.recognizers.text.datetime.DateTimeOptions;
 import com.microsoft.recognizers.text.datetime.english.extractors.EnglishDurationExtractorConfiguration;
 import com.microsoft.recognizers.text.datetime.english.parsers.EnglishCommonDateTimeParserConfiguration;
+import com.microsoft.recognizers.text.datetime.english.parsers.EnglishDateParserConfiguration;
 import com.microsoft.recognizers.text.datetime.english.parsers.EnglishDurationParserConfiguration;
 import com.microsoft.recognizers.text.datetime.extractors.BaseDurationExtractor;
 import com.microsoft.recognizers.text.datetime.extractors.IDateTimeExtractor;
+import com.microsoft.recognizers.text.datetime.parsers.BaseDateParser;
 import com.microsoft.recognizers.text.datetime.parsers.BaseDurationParser;
 import com.microsoft.recognizers.text.datetime.parsers.DateTimeParseResult;
 import com.microsoft.recognizers.text.datetime.parsers.IDateTimeParser;
@@ -25,6 +27,7 @@ import org.junit.AssumptionViolatedException;
 import org.junit.runners.Parameterized;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -52,8 +55,9 @@ public class DateTimeParserTest extends AbstractTest {
 	protected List<DateTimeParseResult> parse(TestCase currentCase) {
 		IDateTimeExtractor extractor = getExtractor(currentCase);
 		IDateTimeParser parser = getParser(currentCase);
-		List<ExtractResult> extractResult = extractor.extract(currentCase.input);
-		return extractResult.stream().map(er -> parser.parse(er, currentCase.getReferenceDateTime())).collect(Collectors.toList());
+		LocalDateTime referenceDateTime = currentCase.getReferenceDateTime();
+		List<ExtractResult> extractResult = extractor.extract(currentCase.input, referenceDateTime);
+		return extractResult.stream().map(er -> parser.parse(er, referenceDateTime)).collect(Collectors.toList());
 	}
 
 	@Override
@@ -107,6 +111,8 @@ public class DateTimeParserTest extends AbstractTest {
 		switch (name) {
 			case "DurationParser":
 				return new BaseDurationParser(new EnglishDurationParserConfiguration(new EnglishCommonDateTimeParserConfiguration(DateTimeOptions.None)));
+			case "DateParser":
+				return new BaseDateParser(new EnglishDateParserConfiguration(new EnglishCommonDateTimeParserConfiguration(DateTimeOptions.None)));
 			default:
 				throw new AssumptionViolatedException("Parser Type/Name not supported.");
 		}

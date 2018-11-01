@@ -102,7 +102,7 @@ public class DurationParsingUtil {
             Double number = Double.parseDouble(numStr);
             String srcTimexUnit = durationStr.substring(i, i + 1);
             
-            if (!isTime && srcTimexUnit == "M") {
+            if (!isTime && srcTimexUnit.equals("M")) {
               srcTimexUnit = "MON";
             }
             
