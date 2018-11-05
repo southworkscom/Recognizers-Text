@@ -9,7 +9,6 @@ import com.microsoft.recognizers.text.utilities.Match;
 import com.microsoft.recognizers.text.utilities.RegExpUtility;
 
 import java.time.LocalDateTime;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.List;
 
