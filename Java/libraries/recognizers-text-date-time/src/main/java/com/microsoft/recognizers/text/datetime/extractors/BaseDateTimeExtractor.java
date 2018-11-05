@@ -1,15 +1,21 @@
 package com.microsoft.recognizers.text.datetime.extractors;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
 import com.microsoft.recognizers.text.ExtractResult;
 import com.microsoft.recognizers.text.datetime.Constants;
 import com.microsoft.recognizers.text.datetime.DateTimeOptions;
 import com.microsoft.recognizers.text.datetime.extractors.config.IDateTimeExtractorConfiguration;
+import com.microsoft.recognizers.text.datetime.utilities.AgoLaterUtil;
 import com.microsoft.recognizers.text.datetime.utilities.Token;
-import com.microsoft.recognizers.text.utilities.RegExpUtility;
 import com.microsoft.recognizers.text.utilities.Match;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.regex.Pattern;
+import com.microsoft.recognizers.text.utilities.RegExpUtility;
+import com.microsoft.recognizers.text.utilities.StringUtility;
 
 public class BaseDateTimeExtractor implements IDateTimeExtractor {
 
@@ -44,6 +50,61 @@ public class BaseDateTimeExtractor implements IDateTimeExtractor {
         return this.extract(input, LocalDateTime.now());
     }
 
+    // Special case for 'the end of today'
+    public List<Token> SpecialTimeOfDay(String input, LocalDateTime reference){
+        List<Token> ret = new ArrayList<>();
+        Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(this.config.getTheEndOfRegex(), input)).findFirst();
+        if (match.isPresent()){
+            ret.add(new Token(match.get().index, input.length()));
+        }
+
+        return ret;
+    }
+
+    private List<Token> DurationWithBeforeAndAfter(String input, LocalDateTime reference){
+        List<Token> ret = new ArrayList<>();
+
+        List<ExtractResult> ers = this.config.getDurationExtractor().extract(input, reference);
+        for (ExtractResult er : ers){
+            // if it is a multiple duration and its type is equal to Date then skip it.
+            if (er.data != null && er.data.toString() == Constants.MultipleDuration_Date){
+                continue;
+            }
+
+            Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(this.config.getUnitRegex(), er.text)).findFirst();
+            if (!match.isPresent()){
+                continue;
+            }
+
+            ret = AgoLaterUtil.extractorDurationWithBeforeAndAfter(input, er, ret, this.config.getUtilityConfiguration());
+        }
+
+        return ret;
+    }
+
+    public List<Token> SpecialTimeOfDate(String input, LocalDateTime reference){
+        List<Token> ret = new ArrayList<>();
+        List<ExtractResult> ers = this.config.getDatePointExtractor().extract(input, reference);
+
+        // handle "the end of the day"
+        for (ExtractResult er : ers){
+            String beforeStr = input.substring(0, (er!=null)? er.start :0);
+
+            Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(this.config.getTheEndOfRegex(), beforeStr)).findFirst();
+            if (match.isPresent()){
+                ret.add(new Token(match.get().index, (er!=null)? er.start + er.length :0));
+            } else {
+                String afterStr = input.substring((er!=null)? er.start + er.length :0);
+
+                match = Arrays.stream(RegExpUtility.getMatches(this.config.getTheEndOfRegex(), afterStr)).findFirst();
+                if (match.isPresent()){
+                    ret.add(new Token((er!=null)? er.start : 0, ((er!=null)? er.start + er.length:0) + ((match!=null)?match.get().index + match.get().length:0)));
+                }
+            }
+        }
+
+        return ret;
+    }
     // Parses a specific time of today, tonight, this afternoon, like "seven this afternoon"
     public List<Token> TimeOfTodayAfter(String input, LocalDateTime reference) {
         List<Token> ret = new ArrayList<>();
@@ -51,22 +112,23 @@ public class BaseDateTimeExtractor implements IDateTimeExtractor {
         List<ExtractResult> ers = this.config.getTimePointExtractor().extract(input, reference);
 
         for(ExtractResult er : ers){
-            var afterStr = input.substring(er.Start + er.Length ?? 0);
-            if (string.IsNullOrEmpty(afterStr)){
+            String afterStr = input.substring((er!=null)?er.start + er.length:0);
+            
+            if (StringUtility.isNullOrEmpty(afterStr)){
                 continue; //@here
             }
 
-            var match = this.config.TimeOfTodayAfterRegex.Match(afterStr);
-            if (match.Success){
-                var begin = er.Start ?? 0;
-                var end = (er.Start ?? 0) + (er.Length ?? 0) + match.Length;
-                ret.Add(new Token(begin, end));
+            Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(this.config.getTimeOfTodayAfterRegex(), afterStr)).findFirst();
+            if (match.isPresent()){
+                int begin = (er!=null)?er.start:0;
+                int end = (er!=null)?er.start + er.length:0 + match.get().length;
+                ret.add(new Token(begin, end));
             }
         }
 
-        var matches = this.config.SimpleTimeOfTodayAfterRegex.Matches(input);
-        foreach (Match match in matches){
-            ret.Add(new Token(match.Index, match.Index + match.Length));
+        Match[] matches = RegExpUtility.getMatches(this.config.getSimpleTimeOfTodayAfterRegex(), input);
+        for (Match match : matches){
+            ret.add(new Token(match.index, match.index + match.length));
         }
 
         return ret;
@@ -76,23 +138,21 @@ public class BaseDateTimeExtractor implements IDateTimeExtractor {
         List<Token> ret = new ArrayList<>();
         List<ExtractResult> ers = this.config.getTimePointExtractor().extract(input, reference);
         for (ExtractResult er : ers){
-            int erStart = er.getStart();
-            String beforeStr = input.substring(0, erStart == null ? 0 : erStart);
+            String beforeStr = input.substring(0, (er != null)? er.start :0);
 
             // handle "this morningh at 7am"
-            Match innerMatch = Arrays.stream(RegExpUtility.getMatches(this.config.getTimeOfDayRegex(), er.Text)).findFirst().get();
+            Match innerMatch = Arrays.stream(RegExpUtility.getMatches(this.config.getTimeOfDayRegex(), er.text)).findFirst().get();
             if (innerMatch != null && innerMatch.index == 0){
-                int erStart = er.getStart();
-                beforeStr = input.substring(0, (erStart == null ? 0 : erStart) + innerMatch.length);
+                beforeStr = input.substring(0, ((er != null)? er.start :0) + innerMatch.length);
             }
 
-            if (beforeStr == ""){
+            if (StringUtility.isNullOrEmpty(beforeStr)){
                 continue;
             }
             
-            Match match = Arrays.stream(RegExpUtility.getMatches(this.config.getTimeOfTodayBeforeRegex(), er.Text)).findFirst().get();
+            Match match = Arrays.stream(RegExpUtility.getMatches(this.config.getTimeOfTodayBeforeRegex(), er.text)).findFirst().get();
             if (match != null){
-                int begin = match.Index;
+                int begin = match.index;
                 int end = er.start + er.length;
                 ret.add(new Token(begin, end));
             }
@@ -105,6 +165,7 @@ public class BaseDateTimeExtractor implements IDateTimeExtractor {
 
         return ret;
     }
+
     // Match "now"
     public List<Token> BasicRegexMatch(String input){
         List<Token> ret = new ArrayList<>();
@@ -119,6 +180,7 @@ public class BaseDateTimeExtractor implements IDateTimeExtractor {
 
         return ret;
     }
+
     // Merge a Date entity and a Time entity, like "at 7 tomorrow"
     public List<Token> MergeDateAndTime(String input, LocalDateTime reference) {
         String SYS_NUM_INTEGER = com.microsoft.recognizers.text.number.Constants.SYS_NUM;
@@ -156,20 +218,20 @@ public class BaseDateTimeExtractor implements IDateTimeExtractor {
         int i = 0;
         while (i < ers.size() - 1){
             int j = i + 1;
-            /* REIMPLEMENT IsOverlap */
             while (j < ers.size() && ers.get(i).IsOverlap(ers.get(j))){
                 j++;
             }
-            /* REIMPLEMENT IsOverlap */
             if (j >= ers.size()){
                 break;
             }
-
-            if (ers.get(i).type == Constants.SYS_DATETIME_DATE && ers.get(j).type == Constants.SYS_DATETIME_TIME ||
-                ers.get(i).type == Constants.SYS_DATETIME_TIME && ers.get(j).type == Constants.SYS_DATETIME_DATE ||
-                ers.get(i).type == Constants.SYS_DATETIME_DATE && ers.get(j).type == SYS_NUM_INTEGER){
-                int middleBegin = (ers.get(i).start != null && ers.get(i).length != null) ? ers.get(i).start + ers.get(i).length : 0;
-                int middleEnd = ers.get(j).start != null ? ers.get(j).start : 0;
+            
+            ExtractResult ersI = ers.get(i);
+            ExtractResult ersJ = ers.get(j);
+            if (ersI.type == Constants.SYS_DATETIME_DATE && ersJ.type == Constants.SYS_DATETIME_TIME ||
+                ersI.type == Constants.SYS_DATETIME_TIME && ersJ.type == Constants.SYS_DATETIME_DATE ||
+                ersI.type == Constants.SYS_DATETIME_DATE && ersJ.type == SYS_NUM_INTEGER){
+                int middleBegin = ersI != null? ersI.start + ersI.length :0;
+                int middleEnd = ersJ != null? ersJ.start :0;
                 if (middleBegin > middleEnd){
                     i = j + 1;
                     continue;
@@ -178,9 +240,9 @@ public class BaseDateTimeExtractor implements IDateTimeExtractor {
                 String middleStr = input.substring(middleBegin, middleEnd - middleBegin).trim().toLowerCase();
                 boolean valid = false;
                 // for cases like "tomorrow 3",  "tomorrow at 3"
-                if (ers.get(j).type == SYS_NUM_INTEGER){
+                if (ersJ.type == SYS_NUM_INTEGER){
                     Optional<Match> matches = Arrays.stream(RegExpUtility.getMatches(this.config.getDateNumberConnectorRegex(), input)).findFirst();
-                    if ((middleStr == null || middleStr == "") || matches.isPresent()){
+                    if (StringUtility.isNullOrEmpty(middleStr) || matches.isPresent()){
                         valid = true;
                     }
                 } else {
@@ -190,8 +252,8 @@ public class BaseDateTimeExtractor implements IDateTimeExtractor {
                 }
 
                 if (valid){
-                    int begin = ers.get(i).start != null ? ers.get(i).start : 0;
-                    int end = (ers.get(i).start != null && ers.get(i).length != null) ? ers.get(i).start + ers.get(i).length : 0;
+                    int begin = ersI.start != null ? ersI.start : 0;
+                    int end = (ersI.start != null && ersI.length != null) ? ersI.start + ersI.length : 0;
                     ret.add(new Token(begin, end));
                 }
 
@@ -203,27 +265,24 @@ public class BaseDateTimeExtractor implements IDateTimeExtractor {
 
         // Handle "in the afternoon" at the end of entity
         for (int idx = 0; idx < ret.size(); idx++){
-            String afterStr = input.substring(ret.get(idx).getEnd());
+            Token idxToken = ret.get(idx);
+            String afterStr = input.substring(idxToken.getEnd());
             Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(this.config.getSuffixRegex(), afterStr)).findFirst();
             if (match.isPresent()){
-                ret.set(idx, new Token(ret.get(idx).getStart(), ret.get(idx).getEnd() + match.get().length));
+                ret.set(idx, new Token(idxToken.getStart(), idxToken.getEnd() + match.get().length));
             }
         }
 
         // Handle "day" prefixes
         for (int idx = 0; idx < ret.size(); idx++){
-            String beforeStr = input.substring(0, ret.get(idx).getStart());            
+            Token idxToken = ret.get(idx);
+            String beforeStr = input.substring(0, idxToken.getStart());            
             Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(this.config.getUtilityConfiguration().getCommonDatePrefixRegex(), beforeStr)).findFirst();
             if (match.isPresent()){
-                ret.set(idx, new Token(ret.get(idx).getStart() - match.get().length, ret.get(idx).getEnd()));
+                ret.set(idx, new Token(idxToken.getStart() - match.get().length, idxToken.getEnd()));
             }
         }
 
         return ret;
-    }
-    private boolean isOverlap(ExtractResult extract1, ExtractResult extract2){
-        boolean result = false;
-        //if(extract1.)
-        return result;
     }
 }
