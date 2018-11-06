@@ -11,17 +11,17 @@ import java.util.regex.Pattern;
 
 public interface ISetExtractorConfiguration extends IOptionsConfiguration {
     Pattern getLastRegex();
-    Pattern getEachPrefixRegex();
+    Pattern getEachDayRegex();
+    Pattern getSetEachRegex();
     Pattern getPeriodicRegex();
     Pattern getEachUnitRegex();
-    Pattern getEachDayRegex();
-    Pattern getBeforeEachDayRegex();
+    Pattern getEachPrefixRegex();
     Pattern getSetWeekDayRegex();
-    Pattern getSetEachRegex();
-    IDateTimeExtractor getDurationExtractor();
+    Pattern getBeforeEachDayRegex();
     IDateTimeExtractor getTimeExtractor();
     IDateTimeExtractor getDateExtractor();
     IDateTimeExtractor getDateTimeExtractor();
+    IDateTimeExtractor getDurationExtractor();
     IDateTimeExtractor getDatePeriodExtractor();
     IDateTimeExtractor getTimePeriodExtractor();
     IDateTimeExtractor getDateTimePeriodExtractor();
