@@ -108,13 +108,15 @@ public class BaseDatePeriodExtractor implements IDateTimeExtractor {
                 int periodEnd = nextResult.start + nextResult.length;
 
                 // handle "from/between" together with till words (till/until/through...)
-                String beforeStr = input.substring(periodBegin, periodEnd).trim().toLowerCase();
+                String beforeStr = input.substring(0, periodBegin).trim().toLowerCase();
                 
                 ResultIndex fromIndex = config.GetFromTokenIndex(beforeStr);
                 ResultIndex betweenIndex = config.GetBetweenTokenIndex(beforeStr);
 
-                if (fromIndex.result || betweenIndex.result) {
+                if (fromIndex.result) {
                     periodBegin = fromIndex.index;
+                } else if (betweenIndex.result) {
+                    periodBegin = betweenIndex.index;
                 }
 
                 results.add(new Token(periodBegin, periodEnd));
@@ -184,7 +186,6 @@ public class BaseDatePeriodExtractor implements IDateTimeExtractor {
             
             // within "Days/Weeks/Months/Years" should be handled as dateRange here
             // if duration contains "Seconds/Minutes/Hours", it should be treated as datetimeRange
-            // TODO: test if last-match===match-rightToLeft
             match = Arrays.stream(RegExpUtility.getMatches(config.getWithinNextPrefixRegex(), beforeStr)).reduce((f, s) -> s);
             if (matchPrefixRegexInSegment(beforeStr, match)) {
                 int startToken = match.get().index;
