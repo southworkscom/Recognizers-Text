@@ -13,9 +13,7 @@ import com.microsoft.recognizers.text.tests.helpers.ExtractResultMixIn;
 import com.microsoft.recognizers.text.tests.helpers.ModelResultMixIn;
 import org.apache.commons.io.FileUtils;
 import org.javatuples.Pair;
-import org.junit.Assert;
-import org.junit.AssumptionViolatedException;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -40,9 +38,70 @@ public abstract class AbstractTest {
         this.currentCase = currentCase;
     }
 
+    private static Map<String, Integer> testCounter;
+    private static Map<String, Integer> passCounter;
+    private static Map<String, Integer> failCounter;
+    private static Map<String, Integer> skipCounter;
+
+    @BeforeClass
+    public static void before(){
+        testCounter = new LinkedHashMap<>();
+        passCounter = new LinkedHashMap<>();
+        failCounter = new LinkedHashMap<>();
+        skipCounter = new LinkedHashMap<>();
+    }
+
+    @AfterClass
+    public static void after(){
+        Map<String, String> counter = new LinkedHashMap<>();
+        for (Map.Entry<String, Integer> entry : testCounter.entrySet()) {
+            counter.put(entry.getKey(), entry.getValue().toString());
+        }
+        for (Map.Entry<String, String> entry : counter.entrySet()) {
+            Integer passValue = passCounter.getOrDefault(entry.getKey(), 0);
+            Integer failValue = failCounter.getOrDefault(entry.getKey(), 0);
+            Integer skipValue = skipCounter.getOrDefault(entry.getKey(), 0);
+            counter.put(entry.getKey(), "|\t" + entry.getValue() + "\t|\t" + passValue.toString() + "\t|\t" + skipValue.toString() + "\t|\t" + failValue.toString());
+        }
+        print(counter);
+    }
+
+    private static void print(Map<String, String> map) {
+        System.out.println("| TOTAL | Passed|Skipped|Failed ||| Key");
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            System.out.println(entry.getValue() + "\t||| " + entry.getKey());
+        }
+    }
+
+    private void count(TestCase testCase) {
+        String key = testCase.recognizerName + "-" + testCase.language + "-" + testCase.modelName;
+        Integer current = testCounter.getOrDefault(key, 0);
+        testCounter.put(key, current + 1);
+    }
+
+    private void countPass(TestCase testCase) {
+        String key = testCase.recognizerName + "-" + testCase.language + "-" + testCase.modelName;
+        Integer current = passCounter.getOrDefault(key, 0);
+        passCounter.put(key, current + 1);
+    }
+
+    private void countSkip(TestCase testCase) {
+        String key = testCase.recognizerName + "-" + testCase.language + "-" + testCase.modelName;
+        Integer current = skipCounter.getOrDefault(key, 0);
+        skipCounter.put(key, current + 1);
+    }
+
+    private void countFail(TestCase testCase) {
+        String key = testCase.recognizerName + "-" + testCase.language + "-" + testCase.modelName;
+        Integer current = failCounter.getOrDefault(key, 0);
+        failCounter.put(key, current + 1);
+    }
+
     @Test
     public void test() {
+        count(currentCase);
         if (!isJavaSupported(this.currentCase.notSupported)) {
+            countSkip(currentCase);
             throw new AssumptionViolatedException("Test case wih input '" + this.currentCase.input + "' not supported.");
         }
 
@@ -51,7 +110,13 @@ public abstract class AbstractTest {
             System.out.println("Debug Brk!");
         }
 
-        recognizeAndAssert(currentCase);
+        try {
+            recognizeAndAssert(currentCase);
+            countPass(this.currentCase);
+        } catch (Exception ex) {
+            countFail(currentCase);
+            throw ex;
+        }
     }
 
     // TODO Override in specific models
