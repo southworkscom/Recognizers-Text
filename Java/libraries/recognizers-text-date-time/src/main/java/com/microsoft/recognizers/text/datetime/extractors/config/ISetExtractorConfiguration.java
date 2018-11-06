@@ -10,27 +10,19 @@ import com.microsoft.recognizers.text.matcher.StringMatcher;
 import java.util.regex.Pattern;
 
 public interface ISetExtractorConfiguration extends IOptionsConfiguration {
-    IDateTimeExtractor getDateExtractor();
+    Pattern getLastRegex();
+    Pattern getEachPrefixRegex();
+    Pattern getPeriodicRegex();
+    Pattern getEachUnitRegex();
+    Pattern getEachDayRegex();
+    Pattern getBeforeEachDayRegex();
+    Pattern getSetWeekDayRegex();
+    Pattern getSetEachRegex();
+    IDateTimeExtractor getDurationExtractor();
     IDateTimeExtractor getTimeExtractor();
+    IDateTimeExtractor getDateExtractor();
     IDateTimeExtractor getDateTimeExtractor();
     IDateTimeExtractor getDatePeriodExtractor();
     IDateTimeExtractor getTimePeriodExtractor();
     IDateTimeExtractor getDateTimePeriodExtractor();
-    IDateTimeExtractor getDurationExtractor();
-    IDateTimeExtractor getSetExtractor();
-    IDateTimeExtractor getHolidayExtractor();
-    IDateTimeZoneExtractor getTimeZoneExtractor();
-    IDateTimeListExtractor getDateTimeAltExtractor();
-    IExtractor getIntegerExtractor();
-    Iterable<Pattern> getFilterWordRegexList();
-    Pattern getAfterRegex();
-    Pattern getBeforeRegex();
-    Pattern getSinceRegex();
-    Pattern getFromToRegex();
-    Pattern getSingleAmbiguousMonthRegex();
-    Pattern getPrepositionSuffixRegex();
-    Pattern getNumberEndingPattern();
-    Pattern getYearAfterRegex();
-    Pattern getUnspecificDatePeriodRegex();
-    StringMatcher getSuperfluousWordMatcher();
 }
