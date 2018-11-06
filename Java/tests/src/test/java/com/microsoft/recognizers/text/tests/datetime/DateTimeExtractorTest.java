@@ -13,8 +13,10 @@ import com.microsoft.recognizers.text.ModelResult;
 import com.microsoft.recognizers.text.ResolutionKey;
 import com.microsoft.recognizers.text.datetime.english.extractors.EnglishDateExtractorConfiguration;
 import com.microsoft.recognizers.text.datetime.english.extractors.EnglishHolidayExtractorConfiguration;
+import com.microsoft.recognizers.text.datetime.english.extractors.EnglishDatePeriodExtractorConfiguration;
 import com.microsoft.recognizers.text.datetime.extractors.BaseDateExtractor;
 import com.microsoft.recognizers.text.datetime.extractors.BaseHolidayExtractor;
+import com.microsoft.recognizers.text.datetime.extractors.BaseDatePeriodExtractor;
 import com.microsoft.recognizers.text.tests.AbstractTest;
 import com.microsoft.recognizers.text.tests.TestCase;
 import com.microsoft.recognizers.text.datetime.english.extractors.EnglishDurationExtractorConfiguration;
@@ -95,6 +97,8 @@ public class DateTimeExtractorTest extends AbstractTest {
 				return new BaseDurationExtractor(new EnglishDurationExtractorConfiguration());
 			case "DateExtractor":
 				return new BaseDateExtractor(new EnglishDateExtractorConfiguration());
+			case "DatePeriodExtractor":
+				return new BaseDatePeriodExtractor(new EnglishDatePeriodExtractorConfiguration());
 			case "HolidayExtractor":
 				return new BaseHolidayExtractor(new EnglishHolidayExtractorConfiguration());
 			default:
