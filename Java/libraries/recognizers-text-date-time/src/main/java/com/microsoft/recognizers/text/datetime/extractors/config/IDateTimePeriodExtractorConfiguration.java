@@ -7,8 +7,8 @@ import com.microsoft.recognizers.text.datetime.extractors.IDateTimeExtractor;
 import java.util.regex.Pattern;
 
 public interface IDateTimePeriodExtractorConfiguration extends IOptionsConfiguration {
-    String TokenBeforeDate();
-    Iterable<Pattern> SimpleCasesRegex();
+    String getTokenBeforeDate();
+    Iterable<Pattern> getSimpleCasesRegex();
     Pattern getPrepositionRegex();
     Pattern getTillRegex();
     Pattern getSpecificTimeOfDayRegex();
@@ -33,13 +33,13 @@ public interface IDateTimePeriodExtractorConfiguration extends IOptionsConfigura
     Pattern getSuffixRegex();
     Pattern getBeforeRegex();
     Pattern getAfterRegex();
-    IExtractor CardinalExtractor();
-    IDateTimeExtractor SingleDateExtractor();
-    IDateTimeExtractor SingleTimeExtractor();
-    IDateTimeExtractor SingleDateTimeExtractor();
-    IDateTimeExtractor DurationExtractor();
-    IDateTimeExtractor TimePeriodExtractor();
-    ResultIndex GetFromTokenIndex(String text);
-    boolean HasConnectorToken(String text);
-    ResultIndex GetBetweenTokenIndex(String text);
+    IExtractor getCardinalExtractor();
+    IDateTimeExtractor getSingleDateExtractor();
+    IDateTimeExtractor getSingleTimeExtractor();
+    IDateTimeExtractor getSingleDateTimeExtractor();
+    IDateTimeExtractor getDurationExtractor();
+    IDateTimeExtractor getTimePeriodExtractor();
+    ResultIndex getFromTokenIndex(String text);
+    boolean hasConnectorToken(String text);
+    ResultIndex getBetweenTokenIndex(String text);
 }
