@@ -9,11 +9,8 @@ import com.microsoft.recognizers.text.ExtractResult;
 import com.microsoft.recognizers.text.ModelResult;
 import com.microsoft.recognizers.text.datetime.english.extractors.*;
 import com.microsoft.recognizers.text.datetime.DateTimeOptions;
+import com.microsoft.recognizers.text.datetime.english.extractors.*;
 import com.microsoft.recognizers.text.datetime.extractors.*;
-import com.microsoft.recognizers.text.datetime.extractors.BaseTimeZoneExtractor;
-import com.microsoft.recognizers.text.datetime.extractors.BaseTimeExtractor;
-import com.microsoft.recognizers.text.datetime.english.extractors.EnglishDateTimeExtractorConfiguration;
-import com.microsoft.recognizers.text.datetime.extractors.BaseSetExtractor;
 import com.microsoft.recognizers.text.tests.AbstractTest;
 import com.microsoft.recognizers.text.tests.TestCase;
 import org.javatuples.Pair;
@@ -105,6 +102,8 @@ public class DateTimeExtractorTest extends AbstractTest {
 				return new BaseHolidayExtractor(new EnglishHolidayExtractorConfiguration());
 			case "TimePeriodExtractor":
 				return new BaseTimePeriodExtractor(new EnglishTimePeriodExtractorConfiguration());
+			case "MergedParser":
+				return new BaseMergedExtractor(new EnglishMergedExtractorConfiguration(DateTimeOptions.None));
 			case "DateTimePeriodExtractor":
 				return new BaseDateTimePeriodExtractor(new EnglishDateTimePeriodExtractorConfiguration());
 			default:
