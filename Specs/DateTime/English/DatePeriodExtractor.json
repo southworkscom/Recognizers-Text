@@ -3645,7 +3645,7 @@
   },
   {
     "Input": "Cortana, can you please set something up for the week of the 18th.",
-    "NotSupported": "javascript, python",
+    "NotSupported": "javascript, python, java",
     "Results": [
       {
         "Text": "the week of the 18th",
