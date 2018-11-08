@@ -7,12 +7,12 @@ import java.util.stream.IntStream;
 import com.microsoft.recognizers.text.Culture;
 import com.microsoft.recognizers.text.ExtractResult;
 import com.microsoft.recognizers.text.ModelResult;
+import com.microsoft.recognizers.text.datetime.english.extractors.EnglishDatePeriodExtractorConfiguration;
+import com.microsoft.recognizers.text.datetime.extractors.BaseDatePeriodExtractor;
 import com.microsoft.recognizers.text.datetime.english.extractors.EnglishDateExtractorConfiguration;
 import com.microsoft.recognizers.text.datetime.extractors.BaseDateExtractor;
 import com.microsoft.recognizers.text.tests.AbstractTest;
 import com.microsoft.recognizers.text.tests.TestCase;
-import com.microsoft.recognizers.text.datetime.english.extractors.EnglishDurationExtractorConfiguration;
-import com.microsoft.recognizers.text.datetime.extractors.BaseDurationExtractor;
 import com.microsoft.recognizers.text.datetime.extractors.IDateTimeExtractor;
 import org.javatuples.Pair;
 import org.junit.Assert;
@@ -85,8 +85,8 @@ public class DateTimeExtractorTest extends AbstractTest {
 
 	private static IDateTimeExtractor getEnglishExtractor(String name) {
 		switch (name) {
-			case "DurationExtractor":
-				return new BaseDurationExtractor(new EnglishDurationExtractorConfiguration());
+			case "DatePeriodExtractor":
+				return new BaseDatePeriodExtractor(new EnglishDatePeriodExtractorConfiguration());
 			case "DateExtractor":
 				return new BaseDateExtractor(new EnglishDateExtractorConfiguration());
 			default:
