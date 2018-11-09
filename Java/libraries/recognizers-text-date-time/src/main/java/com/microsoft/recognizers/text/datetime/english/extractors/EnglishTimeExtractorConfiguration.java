@@ -136,6 +136,6 @@ public class EnglishTimeExtractorConfiguration extends BaseOptionsConfiguration 
     {
         super(options);
         DurationExtractor = new BaseDurationExtractor(new EnglishDurationExtractorConfiguration());
-        //TimeZoneExtractor = new BaseTimeZoneExtractor(new EnglishTimeZoneExtractorConfiguration(options));
+        TimeZoneExtractor = new BaseTimeZoneExtractor(new EnglishTimeZoneExtractorConfiguration(options));
     }
 }
