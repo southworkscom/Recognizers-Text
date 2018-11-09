@@ -8,6 +8,7 @@ import com.microsoft.recognizers.text.utilities.Match;
 import com.microsoft.recognizers.text.utilities.RegExpUtility;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -63,7 +64,7 @@ public class MatchingUtil {
     }
 
     // Temporary solution for recover superfluous words only under the Preview mode
-    public static Iterable<ExtractResult> PosProcessExtractionRecoverSuperfluousWords(Iterable<ExtractResult> extractResults, Iterable<MatchResult<String>> superfluousWordMatches, String originText)
+    public static List<ExtractResult> PosProcessExtractionRecoverSuperfluousWords(List<ExtractResult> extractResults, Iterable<MatchResult<String>> superfluousWordMatches, String originText)
     {
         for (MatchResult<String> match : superfluousWordMatches)
         {
