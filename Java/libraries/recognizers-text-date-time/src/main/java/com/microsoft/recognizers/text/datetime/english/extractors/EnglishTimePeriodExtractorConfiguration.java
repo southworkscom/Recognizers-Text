@@ -76,9 +76,9 @@ public class EnglishTimePeriodExtractorConfiguration extends BaseOptionsConfigur
         add(SpecificTimeBetweenAnd);}
     };
 
-    public final Pattern getTillRegex() { return getTillRegex(); }
-    public final Pattern getTimeOfDayRegex() { return getTimeOfDayRegex(); }
-    public final Pattern getGeneralEndingRegex() { return getGeneralEndingRegex(); }
+    public final Pattern getTillRegex() { return TillRegex; }
+    public final Pattern getTimeOfDayRegex() { return TimeOfDayRegex; }
+    public final Pattern getGeneralEndingRegex() { return GeneralEndingRegex; }
 
     public final ResultIndex GetFromTokenIndex(String input)
     {

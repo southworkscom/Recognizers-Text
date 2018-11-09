@@ -107,7 +107,7 @@ public class BaseTimePeriodExtractor implements IDateTimeExtractor {
     private List<Token> MergeTwoTimePoints(String input, LocalDateTime reference)
     {
         List<Token> ret = new ArrayList<>();
-        List<ExtractResult> ers = this.config.getIntegerExtractor().extract(input);
+        List<ExtractResult> ers = this.config.getSingleTimeExtractor().extract(input);
 
         // Handling ending number as a time point.
         List<ExtractResult> numErs = this.config.getIntegerExtractor().extract(input);
@@ -154,7 +154,7 @@ public class BaseTimePeriodExtractor implements IDateTimeExtractor {
                 if (j >= ers.size()) break;
 
                 // check connector string
-                String midStr = input.substring(numEndPoint, ers.get(j).start - numEndPoint);
+                String midStr = input.substring(numEndPoint, ers.get(j).start);
                 Pattern tillRegex = this.config.getTillRegex();
                 Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(tillRegex, midStr)).findFirst();
                 if (match.isPresent() && match.get().length == midStr.trim().length())
@@ -198,9 +198,9 @@ public class BaseTimePeriodExtractor implements IDateTimeExtractor {
                 continue;
             }
 
-            String middleStr = input.substring(middleBegin, middleEnd - middleBegin).trim().toLowerCase(java.util.Locale.ROOT);
+            String middleStr = input.substring(middleBegin, middleEnd).trim().toLowerCase(java.util.Locale.ROOT);
             Pattern tillRegex = this.config.getTillRegex();
-            Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(tillRegex, input)).findFirst();
+            Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(tillRegex, middleStr)).findFirst();
 
             // Handle "{TimePoint} to {TimePoint}"
             if (match.isPresent() && match.get().index == 0 && match.get().length == middleStr.length())
