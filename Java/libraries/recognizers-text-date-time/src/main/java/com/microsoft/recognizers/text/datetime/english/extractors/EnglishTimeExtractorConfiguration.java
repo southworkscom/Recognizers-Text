@@ -57,8 +57,7 @@ public class EnglishTimeExtractorConfiguration extends BaseOptionsConfiguration 
     public static final Pattern ConnectNumRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.ConnectNumRegex, Pattern.CASE_INSENSITIVE);
     public static final Pattern TimeBeforeAfterRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.TimeBeforeAfterRegex, Pattern.CASE_INSENSITIVE);
 
-    public static final Iterable<Pattern> TimeRegexList = new ArrayList<Pattern>()
-    {
+    public static final Iterable<Pattern> TimeRegexList = new ArrayList<Pattern>() {
         // (three min past)? seven|7|(senven thirty) pm
         {add(RegExpUtility.getSafeRegExp(EnglishDateTime.TimeRegex1, Pattern.CASE_INSENSITIVE));
 
@@ -92,48 +91,40 @@ public class EnglishTimeExtractorConfiguration extends BaseOptionsConfiguration 
         add(ConnectNumRegex);}
     };
 
-    public final Iterable<Pattern> getTimeRegexList()
-    {
+    public final Iterable<Pattern> getTimeRegexList() {
         return TimeRegexList;
     }
 
-    public final Pattern getAtRegex()
-    {
+    public final Pattern getAtRegex() {
         return AtRegex;
     }
 
-    public final Pattern getIshRegex()
-    {
+    public final Pattern getIshRegex() {
         return IshRegex;
     }
 
-    public final Pattern getTimeBeforeAfterRegex()
-    {
+    public final Pattern getTimeBeforeAfterRegex() {
         return TimeBeforeAfterRegex;
     }
 
     private IDateTimeExtractor DurationExtractor;
-    public final IDateTimeExtractor getDurationExtractor()
-    {
+    public final IDateTimeExtractor getDurationExtractor() {
         return DurationExtractor;
     }
 
     private IDateTimeExtractor TimeZoneExtractor;
-    public final IDateTimeExtractor getTimeZoneExtractor()
-    {
+    public final IDateTimeExtractor getTimeZoneExtractor() {
         return TimeZoneExtractor;
     }
 
 
-    public EnglishTimeExtractorConfiguration()
-    {
+    public EnglishTimeExtractorConfiguration() {
         this(DateTimeOptions.None);
     }
 
     //C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
     //ORIGINAL LINE: public EnglishTimeExtractorConfiguration(DateTimeOptions options = DateTimeOptions.None)
-    public EnglishTimeExtractorConfiguration(DateTimeOptions options)
-    {
+    public EnglishTimeExtractorConfiguration(DateTimeOptions options) {
         super(options);
         DurationExtractor = new BaseDurationExtractor(new EnglishDurationExtractorConfiguration());
         TimeZoneExtractor = new BaseTimeZoneExtractor(new EnglishTimeZoneExtractorConfiguration(options));

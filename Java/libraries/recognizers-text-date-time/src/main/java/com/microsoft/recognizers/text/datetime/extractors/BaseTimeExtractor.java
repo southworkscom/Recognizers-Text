@@ -49,8 +49,7 @@ public class BaseTimeExtractor implements IDateTimeExtractor {
         return this.extract(input, LocalDateTime.now());
     }
 
-    private List<ExtractResult> MergeTimeZones(List<ExtractResult> timeErs, List<ExtractResult> timeZoneErs, String text)
-    {
+    private List<ExtractResult> MergeTimeZones(List<ExtractResult> timeErs, List<ExtractResult> timeZoneErs, String text) {
         for (ExtractResult er : timeErs)
         {
             for (ExtractResult timeZoneEr :timeZoneErs)
@@ -76,8 +75,7 @@ public class BaseTimeExtractor implements IDateTimeExtractor {
         return timeErs;
     }
 
-    public final List<Token> BasicRegexMatch(String text)
-    {
+    public final List<Token> BasicRegexMatch(String text) {
         List<Token> ret = new ArrayList<>();
         for (Pattern regex : this.config.getTimeRegexList())
         {
@@ -90,8 +88,7 @@ public class BaseTimeExtractor implements IDateTimeExtractor {
         return ret;
     }
 
-    private List<Token> AtRegexMatch(String text)
-    {
+    private List<Token> AtRegexMatch(String text) {
         List<Token> ret = new ArrayList<>();
         // handle "at 5", "at seven"
         Pattern pattern = this.config.getAtRegex();
@@ -110,8 +107,7 @@ public class BaseTimeExtractor implements IDateTimeExtractor {
         return ret;
     }
 
-    private List<Token> BeforeAfterRegexMatch(String text)
-    {
+    private List<Token> BeforeAfterRegexMatch(String text) {
         List<Token> ret = new ArrayList<>();
         // only enabled in CalendarMode
         if (this.config.getOptions() ==  DateTimeOptions.CalendarMode)
@@ -130,8 +126,7 @@ public class BaseTimeExtractor implements IDateTimeExtractor {
         return ret;
     }
 
-    private List<Token> SpecialCasesRegexMatch (String text)
-    {
+    private List<Token> SpecialCasesRegexMatch (String text) {
         List<Token> ret = new ArrayList<>();
         // handle "ish"
         if (this.config.getIshRegex() != null && RegExpUtility.getMatches(this.config.getIshRegex(), text).length > 0)
