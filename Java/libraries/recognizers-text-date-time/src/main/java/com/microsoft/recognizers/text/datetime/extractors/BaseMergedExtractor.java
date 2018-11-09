@@ -1,20 +1,22 @@
 package com.microsoft.recognizers.text.datetime.extractors;
 
-import com.google.common.collect.Iterators;
 import com.microsoft.recognizers.text.ExtractResult;
 import com.microsoft.recognizers.text.datetime.Constants;
 import com.microsoft.recognizers.text.datetime.DateTimeOptions;
 import com.microsoft.recognizers.text.datetime.extractors.config.IMergedExtractorConfiguration;
 import com.microsoft.recognizers.text.datetime.extractors.config.ProcessedSuperfluousWords;
+import com.microsoft.recognizers.text.datetime.extractors.config.ResultIndex;
 import com.microsoft.recognizers.text.datetime.utilities.MatchingUtil;
 import com.microsoft.recognizers.text.datetime.utilities.Token;
 import com.microsoft.recognizers.text.matcher.MatchResult;
 import com.microsoft.recognizers.text.utilities.Match;
 import com.microsoft.recognizers.text.utilities.MatchGroup;
 import com.microsoft.recognizers.text.utilities.RegExpUtility;
+import com.microsoft.recognizers.text.utilities.StringUtility;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class BaseMergedExtractor implements IDateTimeExtractor {
@@ -67,6 +69,22 @@ public class BaseMergedExtractor implements IDateTimeExtractor {
         }
 
         ret = FilterUnspecificDatePeriod(ret, input);
+        AddMod(ret, input);
+
+        // filtering
+        if (this.config.getOptions() != null && this.config.getOptions() != DateTimeOptions.CalendarMode)
+        {
+            CheckCalendarFilterList(ret, input);
+        }
+
+        Collections.sort(ret);
+
+        if (this.config.getOptions() != null && this.config.getOptions() != DateTimeOptions.EnablePreview)
+        {
+            ret = MatchingUtil.PosProcessExtractionRecoverSuperfluousWords(ret, superfluousWordMatches, originInput);
+        }
+
+        return ret;
     }
 
     @Override
@@ -162,5 +180,89 @@ public class BaseMergedExtractor implements IDateTimeExtractor {
             }
         }
         return newResults;
+    }
+
+    private void AddMod(List<ExtractResult> ers, String text)
+    {
+        int lastEnd = 0;
+        for (ExtractResult er : ers)
+        {
+            String beforeStr = text.substring(lastEnd, er.start ).toLowerCase(Locale.ROOT);
+
+            ResultIndex resultIndex = HasTokenIndex(beforeStr.replaceAll("\\s+$", ""), config.getBeforeRegex());
+            if (resultIndex.result)
+            {
+                int modLenght = beforeStr.length() - resultIndex.index;
+                er = er.withLength(er.length + modLenght);
+                er = er.withStart(er.start - modLenght);
+                er = er.withText(er.text.substring(er.start, er.start + er.length));
+            }
+
+            resultIndex = HasTokenIndex(beforeStr.replaceAll("\\s+$", ""), config.getAfterRegex());
+            if (resultIndex.result)
+            {
+                int modLenght = beforeStr.length() - resultIndex.index;
+                er = er.withLength(er.length + modLenght);
+                er = er.withStart(er.start - modLenght);
+                er = er.withText(er.text.substring(er.start, er.start + er.length));
+            }
+
+            resultIndex = HasTokenIndex(beforeStr.replaceAll("\\s+$", ""), config.getSinceRegex());
+            if (resultIndex.result)
+            {
+                int modLenght = beforeStr.length() - resultIndex.index;
+                er = er.withLength(er.length + modLenght);
+                er = er.withStart(er.start - modLenght);
+                er = er.withText(er.text.substring(er.start, er.start + er.length));
+            }
+
+            if (er.type.equals(Constants.SYS_DATETIME_DATEPERIOD))
+            {
+                // 2012 or after/above
+                String afterStr = text.substring(er.start + er.length).toLowerCase(Locale.ROOT);
+
+                Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(config.getYearAfterRegex(), text)).findFirst();
+                if (match.isPresent() && match.get().index == 0 && match.get().length == afterStr.replaceAll("^\\s+", "").length())
+                {
+                    int modLenght = match.get().length + afterStr.indexOf(match.get().value);
+                    er = er.withLength(er.length + modLenght);
+                    er = er.withText(er.text.substring(er.start, er.start + er.length));
+                }
+            }
+        }
+    }
+
+    private ResultIndex HasTokenIndex(String text, Pattern pattern)
+    {
+        ResultIndex resultIndex = new ResultIndex(false, -1);
+
+        Matcher regexMatcher = pattern.matcher(text);
+        while (regexMatcher.find())
+        {
+            if (StringUtility.isNullOrWhiteSpace(text.substring(regexMatcher.start(), regexMatcher.start() + regexMatcher.end())))
+            {
+                resultIndex = new ResultIndex(true  , regexMatcher.start());
+                return resultIndex;
+            }
+            // Support cases has two or more specific tokens
+            // For example, "show me sales after 2010 and before 2018 or before 2000"
+            // When extract "before 2000", we need the second "before" which will be matched in the second Regex match
+        }
+
+        return resultIndex;
+    }
+
+    private void CheckCalendarFilterList(List<ExtractResult> ers, String text)
+    {
+        List<ExtractResult> shallowCopy = ers.subList(0, ers.size());
+        Collections.reverse(shallowCopy);
+        for (ExtractResult er : shallowCopy)
+        {
+            for (Pattern negRegex : this.config.getFilterWordRegexList())
+            {
+                Matcher regexMatcher = negRegex.matcher(er.text);
+                if (regexMatcher.find()) ers.remove(er);
+            }
+        }
     }
 }
