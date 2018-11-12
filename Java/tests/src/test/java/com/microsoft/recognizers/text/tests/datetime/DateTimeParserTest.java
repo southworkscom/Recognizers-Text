@@ -13,14 +13,13 @@ import com.microsoft.recognizers.text.datetime.english.parsers.EnglishDateParser
 import com.microsoft.recognizers.text.datetime.english.parsers.EnglishDurationParserConfiguration;
 import com.microsoft.recognizers.text.datetime.extractors.BaseDurationExtractor;
 import com.microsoft.recognizers.text.datetime.extractors.IDateTimeExtractor;
-import com.microsoft.recognizers.text.datetime.parsers.BaseDateParser;
-import com.microsoft.recognizers.text.datetime.parsers.BaseDurationParser;
-import com.microsoft.recognizers.text.datetime.parsers.DateTimeParseResult;
-import com.microsoft.recognizers.text.datetime.parsers.IDateTimeParser;
+import com.microsoft.recognizers.text.datetime.parsers.*;
 import com.microsoft.recognizers.text.datetime.utilities.DateTimeResolutionResult;
+import com.microsoft.recognizers.text.datetime.utilities.TimeZoneResolutionResult;
 import com.microsoft.recognizers.text.tests.AbstractTest;
 import com.microsoft.recognizers.text.tests.TestCase;
 import com.microsoft.recognizers.text.tests.helpers.DateTimeResolutionResultMixIn;
+import com.microsoft.recognizers.text.tests.helpers.TimeZoneResolutionResultMixIn;
 import org.javatuples.Pair;
 import org.junit.Assert;
 import org.junit.AssumptionViolatedException;
@@ -109,6 +108,8 @@ public class DateTimeParserTest extends AbstractTest {
 
 	private static IDateTimeParser getEnglishParser(String name) {
 		switch (name) {
+			case "TimeZoneParser":
+				return new BaseTimeZoneParser();
 			case "DurationParser":
 				return new BaseDurationParser(new EnglishDurationParserConfiguration(new EnglishCommonDateTimeParserConfiguration(DateTimeOptions.None)));
 			case "DateParser":
@@ -127,7 +128,8 @@ public class DateTimeParserTest extends AbstractTest {
 		// Deserializer
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
-		mapper.addMixIn(DateTimeParseResult.class, DateTimeResolutionResultMixIn.class);
+		mapper.addMixIn(DateTimeResolutionResult.class, DateTimeResolutionResultMixIn.class);
+		mapper.addMixIn(TimeZoneResolutionResult.class, TimeZoneResolutionResultMixIn.class);
 
 		try {
 			String json = mapper.writeValueAsString(result);
