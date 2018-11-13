@@ -103,7 +103,7 @@ public class BaseSetExtractor implements IDateTimeExtractor {
         List<ExtractResult> ers = this.config.getTimeExtractor().extract(text, reference);
         for (ExtractResult er : ers)
         {
-            String afterStr = text.substring(er.start, er.length);
+            String afterStr = text.substring(er.start + er.length);
             if (StringUtility.isNullOrEmpty(afterStr) && this.config.getBeforeEachDayRegex() != null)
             {
                 String beforeStr = text.substring(0, er.start);
@@ -159,17 +159,17 @@ public class BaseSetExtractor implements IDateTimeExtractor {
             {
                 String trimedText = sb.delete(match.index, match.index + match.length).toString();
                 sb = new StringBuilder(trimedText);
-                trimedText = sb.insert(match.index, match.getGroup("weekday").toString()).toString();
+                trimedText = sb.insert(match.index, match.getGroup("weekday").value).toString();
 
                 List<ExtractResult> ers = extractor.extract(trimedText, reference);
                 for (ExtractResult er: ers)
                 {
-                    if (er.start <= match.index && er.text.contains(match.getGroup("weekday").toString()))
+                    if (er.start <= match.index && er.text.contains(match.getGroup("weekday").value))
                     {
                         int len = er.length + 1;
-                        if (match.getGroup(Constants.PrefixGroupName).toString() != "")
+                        if (match.getGroup(Constants.PrefixGroupName).value != "")
                         {
-                            len += match.getGroup(Constants.PrefixGroupName).toString().length();
+                            len += match.getGroup(Constants.PrefixGroupName).value.length();
                         }
                         ret.add(new Token(er.start, er.start + len));
                     }
