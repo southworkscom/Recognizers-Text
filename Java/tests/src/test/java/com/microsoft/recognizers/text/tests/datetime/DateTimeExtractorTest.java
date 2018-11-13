@@ -1,16 +1,12 @@
 package com.microsoft.recognizers.text.tests.datetime;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.IntStream;
 
-import com.google.common.collect.ImmutableMap;
 import com.microsoft.recognizers.text.Culture;
 import com.microsoft.recognizers.text.ExtractResult;
 import com.microsoft.recognizers.text.ModelResult;
-import com.microsoft.recognizers.text.ResolutionKey;
 import com.microsoft.recognizers.text.datetime.english.extractors.*;
 import com.microsoft.recognizers.text.datetime.DateTimeOptions;
 import com.microsoft.recognizers.text.datetime.extractors.*;
@@ -18,8 +14,12 @@ import com.microsoft.recognizers.text.datetime.english.extractors.EnglishTimeZon
 import com.microsoft.recognizers.text.datetime.english.extractors.EnglishTimeExtractorConfiguration;
 import com.microsoft.recognizers.text.datetime.extractors.BaseTimeZoneExtractor;
 import com.microsoft.recognizers.text.datetime.extractors.BaseTimeExtractor;
+import com.microsoft.recognizers.text.datetime.english.extractors.EnglishDateTimeExtractorConfiguration;
+import com.microsoft.recognizers.text.datetime.extractors.BaseDateExtractor;
+import com.microsoft.recognizers.text.datetime.extractors.BaseDateTimeExtractor;
 import com.microsoft.recognizers.text.tests.AbstractTest;
 import com.microsoft.recognizers.text.tests.TestCase;
+
 import org.javatuples.Pair;
 import org.junit.Assert;
 import org.junit.AssumptionViolatedException;
@@ -28,12 +28,12 @@ import org.junit.runners.Parameterized;
 public class DateTimeExtractorTest extends AbstractTest {
 
 	private static final String recognizerType = "DateTime";
-	
+
 	@Parameterized.Parameters(name = "{0}")
 	public static Collection<TestCase> testCases() {
-			return AbstractTest.enumerateTestCases(recognizerType, "Extractor");
+		return AbstractTest.enumerateTestCases(recognizerType, "Extractor");
 	}
-	
+
 	public DateTimeExtractorTest(TestCase currentCase) {
 		super(currentCase);
 	}
@@ -97,6 +97,8 @@ public class DateTimeExtractorTest extends AbstractTest {
 				return new BaseDateExtractor(new EnglishDateExtractorConfiguration());
 			case "DatePeriodExtractor":
 				return new BaseDatePeriodExtractor(new EnglishDatePeriodExtractorConfiguration());
+			case "DateTimeExtractor":
+				return new BaseDateTimeExtractor(new EnglishDateTimeExtractorConfiguration());
 			case "TimeZoneExtractor":
 				return new BaseTimeZoneExtractor(new EnglishTimeZoneExtractorConfiguration(DateTimeOptions.EnablePreview));
 			case "TimeExtractor":

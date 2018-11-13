@@ -166,7 +166,7 @@ public class AgoLaterUtil {
                     if (resultIndex.result) {
                         // For range unit like "week, month, year", it should output dateRange or datetimeRange
                         Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(utilityConfiguration.getRangeUnitRegex(), er.text)).findFirst();
-                        if (match.isPresent()) {
+                        if (!match.isPresent()) {
                             if (er.start >= resultIndex.index) {
                                 result.add(new Token(er.start - resultIndex.index, er.start + er.length));
                             }
@@ -196,7 +196,7 @@ public class AgoLaterUtil {
 
         if (match.isPresent()) {
             MatchGroup matchGroup = match.get().getGroup(group);
-            return StringUtility.isNullOrEmpty(matchGroup.value);
+            return !StringUtility.isNullOrEmpty(matchGroup.value);
         }
 
         return false;

@@ -64,4 +64,20 @@ public class ExtractResult {
                 this.type,
                 newData);
     }
+
+    private boolean IsOverlap(ExtractResult er1, ExtractResult er2){
+        return !(er1.start >= er2.start + er2.length ) && !( er2.start >= er1.start + er1.length);
+    }
+
+    private boolean IsCover(ExtractResult er1, ExtractResult er2){
+        return ((er2.start < er1.start) && ((er2.start + er2.length) >= (er1.start + er1.length))) || ((er2.start <= er1.start) && ((er2.start + er2.length) > (er1.start + er1.length)));
+    }
+
+    public boolean IsOverlap(ExtractResult er){
+        return IsOverlap(this, er);
+    }
+
+    public boolean IsCover(ExtractResult er){
+        return IsCover(this, er);
+    }
 }

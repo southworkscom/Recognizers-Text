@@ -119,9 +119,9 @@ public abstract class AbstractTest {
         } catch (AssumptionViolatedException ex) {
             countSkip(currentCase);
             throw ex;
-        } catch (Exception ex) {
+        } catch (Throwable err) {
             countFail(currentCase);
-            throw ex;
+            throw err;
         }
     }
 
