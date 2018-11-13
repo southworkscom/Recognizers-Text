@@ -51,7 +51,7 @@ public class MatchingUtil {
     // Temporary solution for remove superfluous words only under the Preview mode
     public static ProcessedSuperfluousWords PreProcessTextRemoveSuperfluousWords(String text, StringMatcher matcher)
     {
-        Iterable<MatchResult<String>> superfluousWordMatches = matcher.Find(text);
+        Iterable<MatchResult<String>> superfluousWordMatches = matcher.find(text);
         int bias = 0;
 
         for (MatchResult<String> match : superfluousWordMatches)

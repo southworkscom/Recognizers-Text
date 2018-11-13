@@ -42,10 +42,10 @@ public class EnglishTimeZoneExtractorConfiguration extends BaseOptionsConfigurat
     public EnglishTimeZoneExtractorConfiguration(DateTimeOptions options) {
         super(options);
         if (options.match(DateTimeOptions.EnablePreview)) {
-            CityMatcher.init(
-                    EnglishTimeZone.MajorLocations.stream()
-                            .map(o -> FormatUtility.removeDiacritics(o.toLowerCase()))
-                            .collect(Collectors.toCollection(ArrayList::new)));
+            ArrayList<String> values = EnglishTimeZone.MajorLocations.stream()
+                    .map(o -> FormatUtility.removeDiacritics(o.toLowerCase()))
+                    .collect(Collectors.toCollection(ArrayList::new));
+            CityMatcher.init(values);
         }
     }
 

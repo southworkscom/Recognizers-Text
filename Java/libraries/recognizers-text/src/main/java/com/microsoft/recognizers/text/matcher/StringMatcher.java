@@ -62,7 +62,7 @@ public class StringMatcher {
         init(tokenizedValues, (String[]) ids.toArray());
     }
 
-    public void init(Iterable<String>[] tokenizedValues, String[] ids) {
+    public void init(List<List<String>> tokenizedValues, String[] ids) {
         matcher.init(tokenizedValues, ids);
     }
 

@@ -77,7 +77,7 @@ public class BaseMergedExtractor implements IDateTimeExtractor {
             CheckCalendarFilterList(ret, input);
         }
 
-        Collections.sort(ret);
+        ret.sort(Comparator.comparingInt(r -> r.start));
 
         if (this.config.getOptions() != null && this.config.getOptions() != DateTimeOptions.EnablePreview)
         {
@@ -106,10 +106,10 @@ public class BaseMergedExtractor implements IDateTimeExtractor {
             int firstIndex = -1;
             for (int i = 0; i < dst.size(); i++)
             {
-                if (dst.get(i).IsOverlap(result))
+                if (dst.get(i).isOverlap(result))
                 {
                     isFound = true;
-                    if (dst.get(i).IsCover(result))
+                    if (dst.get(i).isCover(result))
                     {
                         if (firstIndex == -1) overlapIndexes.add(i);
                     }
