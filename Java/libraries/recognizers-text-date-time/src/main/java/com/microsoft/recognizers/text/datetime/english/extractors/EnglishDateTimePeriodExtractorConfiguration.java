@@ -23,10 +23,10 @@ import com.microsoft.recognizers.text.utilities.RegExpUtility;
 public class EnglishDateTimePeriodExtractorConfiguration implements IDateTimePeriodExtractorConfiguration {
     private static final int flags = Pattern.CASE_INSENSITIVE;
 
-    public static final Iterable<Pattern> SimpleCases = new ArrayList<Pattern>(){
+    public static final Iterable<Pattern> SimpleCases = new ArrayList<Pattern>() {
         {
-            // add(EnglishTimePeriodExtractorConfiguration.PureNumFromTo);
-            // add(EnglishTimePeriodExtractorConfiguration.PureNumBetweenAnd);
+            add(EnglishTimePeriodExtractorConfiguration.PureNumFromTo);
+            add(EnglishTimePeriodExtractorConfiguration.PureNumBetweenAnd);
         }
     };
     public static final Pattern PeriodTimeOfDayRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.PeriodTimeOfDayRegex, flags);
@@ -71,10 +71,10 @@ public class EnglishDateTimePeriodExtractorConfiguration implements IDateTimePer
         weekDayRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.WeekDayRegex, flags);
         cardinalExtractor = CardinalExtractor.getInstance();
         singleDateExtractor = new BaseDateExtractor(new EnglishDateExtractorConfiguration());
-        singleTimeExtractor = new BaseTimeExtractor(null);
-        singleDateTimeExtractor = new BaseDateTimeExtractor(null);
+        singleTimeExtractor = new BaseTimeExtractor(new EnglishTimeExtractorConfiguration());
+        singleDateTimeExtractor = new BaseDateTimeExtractor(new EnglishDateTimeExtractorConfiguration());
         durationExtractor = new BaseDurationExtractor(new EnglishDurationExtractorConfiguration(options));
-        timePeriodExtractor = new BaseTimePeriodExtractor(null);
+        timePeriodExtractor = new BaseTimePeriodExtractor(new EnglishTimePeriodExtractorConfiguration());
 
         rangeConnectorRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.RangeConnectorRegex, flags);
     }
@@ -96,14 +96,12 @@ public class EnglishDateTimePeriodExtractorConfiguration implements IDateTimePer
 
     @Override
     public Pattern getPrepositionRegex() {
-        // return EnglishTimePeriodExtractorConfiguration.PrepositionRegex;
-        return null;
+        return EnglishTimePeriodExtractorConfiguration.PrepositionRegex;
     }
 
     @Override
     public Pattern getTillRegex() {
-        // return EnglishTimePeriodExtractorConfiguration.TillRegex;
-        return null;
+        return EnglishTimePeriodExtractorConfiguration.TillRegex;
     }
 
     @Override
