@@ -1,11 +1,7 @@
 package com.microsoft.recognizers.text.datetime.extractors;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import com.microsoft.recognizers.text.ExtractResult;
 import com.microsoft.recognizers.text.datetime.Constants;
@@ -112,7 +108,7 @@ public class BaseDateTimeExtractor implements IDateTimeExtractor {
         List<ExtractResult> ers = this.config.getTimePointExtractor().extract(input, reference);
 
         for(ExtractResult er : ers){
-            String afterStr = input.substring((er!=null)?er.start + er.length:0);
+            String afterStr = input.substring(er.start + er.length);
             
             if (StringUtility.isNullOrEmpty(afterStr)){
                 continue; //@here
@@ -120,8 +116,8 @@ public class BaseDateTimeExtractor implements IDateTimeExtractor {
 
             Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(this.config.getTimeOfTodayAfterRegex(), afterStr)).findFirst();
             if (match.isPresent()){
-                int begin = (er!=null)?er.start:0;
-                int end = (er!=null)?er.start + er.length:0 + match.get().length;
+                int begin = er.start;
+                int end = er.start + er.length + match.get().length;
                 ret.add(new Token(begin, end));
             }
         }
@@ -141,7 +137,7 @@ public class BaseDateTimeExtractor implements IDateTimeExtractor {
             String beforeStr = input.substring(0, (er != null)? er.start :0);
 
             // handle "this morningh at 7am"
-            Match innerMatch = Arrays.stream(RegExpUtility.getMatches(this.config.getTimeOfDayRegex(), er.text)).findFirst().get();
+            Match innerMatch = Arrays.stream(RegExpUtility.getMatches(this.config.getTimeOfDayRegex(), er.text)).findFirst().orElse(null);
             if (innerMatch != null && innerMatch.index == 0){
                 beforeStr = input.substring(0, ((er != null)? er.start :0) + innerMatch.length);
             }
@@ -150,7 +146,7 @@ public class BaseDateTimeExtractor implements IDateTimeExtractor {
                 continue;
             }
             
-            Match match = Arrays.stream(RegExpUtility.getMatches(this.config.getTimeOfTodayBeforeRegex(), er.text)).findFirst().get();
+            Match match = Arrays.stream(RegExpUtility.getMatches(this.config.getTimeOfTodayBeforeRegex(), beforeStr)).findFirst().orElse(null);
             if (match != null){
                 int begin = match.index;
                 int end = er.start + er.length;
@@ -193,9 +189,6 @@ public class BaseDateTimeExtractor implements IDateTimeExtractor {
         List<ExtractResult> timeErs = this.config.getTimePointExtractor().extract(input, reference);
         Match[] timeNumMatches = RegExpUtility.getMatches(config.getNumberAsTimeRegex(), input);
 
-        for (Match match : timeNumMatches) {
-            ret.add(new Token(match.index, match.index + match.length));
-        }
         if (timeErs.size() == 0 && timeNumMatches.length == 0){
             return ret;
         }
@@ -214,7 +207,8 @@ public class BaseDateTimeExtractor implements IDateTimeExtractor {
             ers.addAll(numErs);
         }
 
-        Collections.sort(ers, (ExtractResult ExtractResult1, ExtractResult ExtractResult2)-> (ExtractResult1.start < ExtractResult2.start) ? 1 : -1 );
+        ers.sort(Comparator.comparingInt(erA -> erA.start));
+
         int i = 0;
         while (i < ers.size() - 1){
             int j = i + 1;
@@ -237,7 +231,7 @@ public class BaseDateTimeExtractor implements IDateTimeExtractor {
                     continue;
                 }
 
-                String middleStr = input.substring(middleBegin, middleEnd - middleBegin).trim().toLowerCase();
+                String middleStr = input.substring(middleBegin, middleEnd).trim().toLowerCase();
                 boolean valid = false;
                 // for cases like "tomorrow 3",  "tomorrow at 3"
                 if (ersJ.type == SYS_NUM_INTEGER){
@@ -252,8 +246,8 @@ public class BaseDateTimeExtractor implements IDateTimeExtractor {
                 }
 
                 if (valid){
-                    int begin = ersI.start != null ? ersI.start : 0;
-                    int end = (ersI.start != null && ersI.length != null) ? ersI.start + ersI.length : 0;
+                    int begin = ersI.start;
+                    int end = ersJ.start + ersJ.length;
                     ret.add(new Token(begin, end));
                 }
 
