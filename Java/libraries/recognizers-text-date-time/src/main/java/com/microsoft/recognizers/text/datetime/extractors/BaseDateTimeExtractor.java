@@ -212,7 +212,7 @@ public class BaseDateTimeExtractor implements IDateTimeExtractor {
         int i = 0;
         while (i < ers.size() - 1){
             int j = i + 1;
-            while (j < ers.size() && ers.get(i).IsOverlap(ers.get(j))){
+            while (j < ers.size() && ers.get(i).isOverlap(ers.get(j))){
                 j++;
             }
             if (j >= ers.size()){
