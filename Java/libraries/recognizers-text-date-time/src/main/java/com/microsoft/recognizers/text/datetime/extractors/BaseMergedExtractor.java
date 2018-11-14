@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class BaseMergedExtractor implements IDateTimeExtractor {
 
@@ -37,7 +38,7 @@ public class BaseMergedExtractor implements IDateTimeExtractor {
         List<ExtractResult> ret = new ArrayList<>();
         String originInput = input;
         Iterable<MatchResult<String>> superfluousWordMatches = null;
-        if(this.config.getOptions() != null && this.config.getOptions() != DateTimeOptions.EnablePreview)
+        if(this.config.getOptions().match(DateTimeOptions.EnablePreview))
         {
             ProcessedSuperfluousWords processedSuperfluousWords = MatchingUtil.PreProcessTextRemoveSuperfluousWords(input, this.config.getSuperfluousWordMatcher());
             input = processedSuperfluousWords.text;
@@ -50,10 +51,11 @@ public class BaseMergedExtractor implements IDateTimeExtractor {
         AddTo(ret, this.config.getDatePeriodExtractor().extract(input, reference), input);
         AddTo(ret, this.config.getDateTimeExtractor().extract(input, reference), input);
         AddTo(ret, this.config.getTimePeriodExtractor().extract(input, reference), input);
+        AddTo(ret, this.config.getDateTimePeriodExtractor().extract(input, reference), input);
         AddTo(ret, this.config.getSetExtractor().extract(input, reference), input);
         AddTo(ret, this.config.getHolidayExtractor().extract(input, reference), input);
 
-        if (this.config.getOptions() != null && this.config.getOptions() != DateTimeOptions.EnablePreview)
+        if (this.config.getOptions().match(DateTimeOptions.EnablePreview))
         {
             AddTo(ret, this.config.getTimeZoneExtractor().extract(input, reference), input);
             ret = this.config.getTimeZoneExtractor().removeAmbiguousTimezone(ret);
@@ -63,7 +65,7 @@ public class BaseMergedExtractor implements IDateTimeExtractor {
         AddTo(ret, NumberEndingRegexMatch(input, ret), input);
 
         // modify time entity to an alternative DateTime expression if it follows a DateTime entity
-        if (this.config.getOptions() != null && this.config.getOptions() != DateTimeOptions.ExtendedTypes)
+        if (this.config.getOptions().match(DateTimeOptions.ExtendedTypes))
         {
             ret = this.config.getDateTimeAltExtractor().extract(ret, input, reference);
         }
@@ -72,14 +74,14 @@ public class BaseMergedExtractor implements IDateTimeExtractor {
         AddMod(ret, input);
 
         // filtering
-        if (this.config.getOptions() != null && this.config.getOptions() != DateTimeOptions.CalendarMode)
+        if (this.config.getOptions().match(DateTimeOptions.CalendarMode))
         {
             CheckCalendarFilterList(ret, input);
         }
 
         ret.sort(Comparator.comparingInt(r -> r.start));
 
-        if (this.config.getOptions() != null && this.config.getOptions() != DateTimeOptions.EnablePreview)
+        if (this.config.getOptions().match(DateTimeOptions.EnablePreview))
         {
             ret = MatchingUtil.PosProcessExtractionRecoverSuperfluousWords(ret, superfluousWordMatches, originInput);
         }
@@ -94,39 +96,40 @@ public class BaseMergedExtractor implements IDateTimeExtractor {
 
     private void AddTo(List<ExtractResult> dst, List<ExtractResult> src, String text)
     {
-        for (ExtractResult result: src)
-        {
-            if (config.getOptions() != null && config.getOptions() != DateTimeOptions.SkipFromToMerge)
-            {
-                if (ShouldSkipFromToMerge(result)) continue;
+        for (ExtractResult result : src) {
+            if (config.getOptions().match(DateTimeOptions.SkipFromToMerge)) {
+                if (ShouldSkipFromToMerge(result)) {
+                    continue;
+                }
             }
 
             boolean isFound = false ;
-            ArrayList<Integer> overlapIndexes = new ArrayList<>();
+            List<Integer> overlapIndexes = new ArrayList<>();
             int firstIndex = -1;
-            for (int i = 0; i < dst.size(); i++)
-            {
-                if (dst.get(i).isOverlap(result))
-                {
+            for (int i = 0; i < dst.size(); i++) {
+                if (dst.get(i).isOverlap(result)) {
                     isFound = true;
-                    if (dst.get(i).isCover(result))
-                    {
-                        if (firstIndex == -1) overlapIndexes.add(i);
+                    if (dst.get(i).isCover(result)) {
+                        if (firstIndex == -1) {
+                            firstIndex = i;
+                        }
+
+                        overlapIndexes.add(i);
                     }
-                    else
-                    {
+                    else {
                         break;
                     }
                 }
             }
 
-            if (!isFound) dst.add(result);
-            else if (overlapIndexes.size() > 0)
-            {
+            if (!isFound) {
+                dst.add(result);
+            } else if (overlapIndexes.size() > 0) {
                 List<ExtractResult> tempDst = new ArrayList<>();
-                for (int i = 0; i < dst.size(); i++)
-                {
-                    if (!overlapIndexes.contains(i)) tempDst.add(dst.get(i));
+                for (int i = 0; i < dst.size(); i++) {
+                    if (!overlapIndexes.contains(i)) {
+                        tempDst.add(dst.get(i));
+                    }
                 }
 
                 // insert at the first overlap occurrence to keep the order
@@ -146,18 +149,17 @@ public class BaseMergedExtractor implements IDateTimeExtractor {
     {
         List<Token> tokens = new ArrayList<>();
 
-        for (ExtractResult extractResult: extractResults)
-        {
-            if (extractResult.type.equals(Constants.SYS_DATETIME_TIME) || extractResult.type.equals(Constants.SYS_DATETIME_DATETIME))
-            {
+        for (ExtractResult extractResult: extractResults) {
+            if (extractResult.type.equals(Constants.SYS_DATETIME_TIME) || extractResult.type.equals(Constants.SYS_DATETIME_DATETIME)) {
                 String stringAfter = text.substring(extractResult.start + extractResult.length);
                 Pattern numberEndingPattern = this.config.getNumberEndingPattern();
-                Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(numberEndingPattern, text)).findFirst();
-                if (match.isPresent())
-                {
+                Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(numberEndingPattern, stringAfter)).findFirst();
+                if (match.isPresent()) {
                     MatchGroup newTime = match.get().getGroup("newTime");
-                    List<ExtractResult> numRes = this.config.getIntegerExtractor().extract(newTime.toString());
-                    if (numRes.size() > 0) continue;
+                    List<ExtractResult> numRes = this.config.getIntegerExtractor().extract(newTime.value);
+                    if (numRes.size() == 0){
+                        continue;
+                    }
 
                     int startPosition = extractResult.start + extractResult.length + newTime.index;
                     tokens.add(new Token(startPosition, startPosition + newTime.length));
@@ -171,21 +173,15 @@ public class BaseMergedExtractor implements IDateTimeExtractor {
 
     private List<ExtractResult> FilterUnspecificDatePeriod(List<ExtractResult> ers, String text)
     {
-        List<ExtractResult> newResults = new ArrayList<>();
-        for (ExtractResult extractResult: ers)
-        {
-            if (extractResult.text.matches(this.config.getUnspecificDatePeriodRegex().pattern()))
-            {
-                newResults.add(extractResult);
-            }
-        }
-        return newResults;
+        ers.removeIf(er -> Arrays.stream(RegExpUtility.getMatches(config.getUnspecificDatePeriodRegex(), er.text)).findFirst().isPresent());
+        return ers;
     }
 
     private void AddMod(List<ExtractResult> ers, String text)
     {
         int lastEnd = 0;
-        for (ExtractResult er : ers)
+        int idx = 0;
+        for (ExtractResult er : ers.toArray(new ExtractResult[0]))
         {
             String beforeStr = text.substring(lastEnd, er.start ).toLowerCase(Locale.ROOT);
 
@@ -195,7 +191,7 @@ public class BaseMergedExtractor implements IDateTimeExtractor {
                 int modLenght = beforeStr.length() - resultIndex.index;
                 er = er.withLength(er.length + modLenght);
                 er = er.withStart(er.start - modLenght);
-                er = er.withText(er.text.substring(er.start, er.start + er.length));
+                er = er.withText(text.substring(er.start, er.start + er.length));
             }
 
             resultIndex = HasTokenIndex(beforeStr.replaceAll("\\s+$", ""), config.getAfterRegex());
@@ -204,7 +200,7 @@ public class BaseMergedExtractor implements IDateTimeExtractor {
                 int modLenght = beforeStr.length() - resultIndex.index;
                 er = er.withLength(er.length + modLenght);
                 er = er.withStart(er.start - modLenght);
-                er = er.withText(er.text.substring(er.start, er.start + er.length));
+                er = er.withText(text.substring(er.start, er.start + er.length));
             }
 
             resultIndex = HasTokenIndex(beforeStr.replaceAll("\\s+$", ""), config.getSinceRegex());
@@ -213,7 +209,7 @@ public class BaseMergedExtractor implements IDateTimeExtractor {
                 int modLenght = beforeStr.length() - resultIndex.index;
                 er = er.withLength(er.length + modLenght);
                 er = er.withStart(er.start - modLenght);
-                er = er.withText(er.text.substring(er.start, er.start + er.length));
+                er = er.withText(text.substring(er.start, er.start + er.length));
             }
 
             if (er.type.equals(Constants.SYS_DATETIME_DATEPERIOD))
@@ -221,35 +217,33 @@ public class BaseMergedExtractor implements IDateTimeExtractor {
                 // 2012 or after/above
                 String afterStr = text.substring(er.start + er.length).toLowerCase(Locale.ROOT);
 
-                Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(config.getYearAfterRegex(), text)).findFirst();
-                if (match.isPresent() && match.get().index == 0 && match.get().length == afterStr.replaceAll("^\\s+", "").length())
+                Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(config.getYearAfterRegex(), StringUtility.trimStart(afterStr))).findFirst();
+                if (match.isPresent() && match.get().index == 0 && match.get().length == afterStr.trim().length())
                 {
                     int modLenght = match.get().length + afterStr.indexOf(match.get().value);
                     er = er.withLength(er.length + modLenght);
-                    er = er.withText(er.text.substring(er.start, er.start + er.length));
+                    er = er.withText(text.substring(er.start, er.start + er.length));
                 }
             }
+            ers.set(idx, er);
+            idx++;
         }
     }
 
     private ResultIndex HasTokenIndex(String text, Pattern pattern)
     {
-        ResultIndex resultIndex = new ResultIndex(false, -1);
+        Match[] matches = RegExpUtility.getMatches(pattern, text);
 
-        Matcher regexMatcher = pattern.matcher(text);
-        while (regexMatcher.find())
-        {
-            if (StringUtility.isNullOrWhiteSpace(text.substring(regexMatcher.start(), regexMatcher.start() + regexMatcher.end())))
-            {
-                resultIndex = new ResultIndex(true  , regexMatcher.start());
-                return resultIndex;
+        // Support cases has two or more specific tokens
+        // For example, "show me sales after 2010 and before 2018 or before 2000"
+        // When extract "before 2000", we need the second "before" which will be matched in the second Regex match
+        for (Match match: matches) {
+            if (StringUtility.isNullOrWhiteSpace(text.substring(match.index + match.length))) {
+                return new ResultIndex(true  , match.index);
             }
-            // Support cases has two or more specific tokens
-            // For example, "show me sales after 2010 and before 2018 or before 2000"
-            // When extract "before 2000", we need the second "before" which will be matched in the second Regex match
         }
 
-        return resultIndex;
+        return new ResultIndex(false, -1);
     }
 
     private void CheckCalendarFilterList(List<ExtractResult> ers, String text)
