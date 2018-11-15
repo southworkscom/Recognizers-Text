@@ -43,4 +43,9 @@ public class FormatUtil {
     {
         return String.join(dateDelimiter, String.format("%04d", date.getYear()),  String.format("%02d", date.getMonthValue()),  String.format("%02d", date.getDayOfMonth()));
     }
+
+    public static String formatTime(LocalDateTime time)
+    {
+        return String.join(timeDelimiter, String.format("%02d", time.getHour()),  String.format("%02d", time.getMinute()),  String.format("%02d", time.getSecond()));
+    }
 }

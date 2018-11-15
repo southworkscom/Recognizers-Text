@@ -53,6 +53,10 @@ public class DateTimeResolutionResult {
 
     public String getComment() { return this.comment; }
 
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
     public Map<String, String> getFutureResolution() { return this.futureResolution; }
 
     public void setFutureResolution(Map<String, String> futureResolution) {

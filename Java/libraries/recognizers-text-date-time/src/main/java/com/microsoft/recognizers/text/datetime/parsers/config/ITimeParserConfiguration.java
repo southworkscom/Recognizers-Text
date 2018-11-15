@@ -14,6 +14,6 @@ public interface ITimeParserConfiguration extends IOptionsConfiguration {
     ImmutableMap<String, Integer> getNumbers();
     IDateTimeUtilityConfiguration getUtilityConfiguration();
     IDateTimeParser getTimeZoneParser();
-    AdjustResult adjustByPrefix(String prefix, int hour, int min, boolean hasMin);
-    AdjustResult adjustBySuffix(String suffix, int hour, int min, boolean hasMin, boolean hasAm, boolean hasPm);
+    PrefixAdjustResult adjustByPrefix(String prefix, int hour, int min, boolean hasMin);
+    SuffixAdjustResult adjustBySuffix(String suffix, int hour, int min, boolean hasMin, boolean hasAm, boolean hasPm);
 }
