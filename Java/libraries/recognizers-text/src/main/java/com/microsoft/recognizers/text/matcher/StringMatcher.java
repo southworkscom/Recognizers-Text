@@ -41,12 +41,12 @@ public class StringMatcher {
         init(values, (String[]) StreamSupport.stream(values.spliterator(), false).toArray(size -> new String[size]));
     }
 
-    void init(Iterable<String> values, String[] ids) {
+    public void init(Iterable<String> values, String[] ids) {
         List<List<String>> tokenizedValues = getTokenizedText(values);
         init(tokenizedValues, ids);
     }
 
-    void init(Map<String, List<String>> valuesMap) {
+    public void init(Map<String, List<String>> valuesMap) {
         ArrayList<String> values = new ArrayList<>();
         ArrayList<String> ids = new ArrayList<>();
 
@@ -62,7 +62,7 @@ public class StringMatcher {
         init(tokenizedValues, (String[]) ids.toArray());
     }
 
-    void init(List<List<String>> tokenizedValues, String[] ids) {
+    public void init(List<List<String>> tokenizedValues, String[] ids) {
         matcher.init(tokenizedValues, ids);
     }
 
