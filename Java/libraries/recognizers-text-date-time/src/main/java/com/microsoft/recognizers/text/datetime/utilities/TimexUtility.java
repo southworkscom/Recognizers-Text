@@ -3,8 +3,10 @@ package com.microsoft.recognizers.text.datetime.utilities;
 import com.microsoft.recognizers.text.datetime.DatePeriodTimexType;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.IsoFields;
 
 public class TimexUtility {
 
@@ -37,7 +39,8 @@ public class TimexUtility {
     }
 
     public static String generateWeekTimex(LocalDateTime monday) {
-        return FormatUtil.toIsoWeekTimex(monday);
+        int isoWeek = LocalDate.of(monday.getYear(), monday.getMonthValue(), monday.getDayOfMonth()).get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
+        return String.format("%04d-W%02d", monday.getYear(), isoWeek);
     }
 
     public static String generateWeekendTimex() {
@@ -45,25 +48,21 @@ public class TimexUtility {
     }
 
     public static String generateWeekendTimex(LocalDateTime date) {
-        return String.format("D4", date.getYear()) + "-W" +
-                Cal.GetWeekOfYear(date,
-                        CalendarWeekRule.FirstFourDayWeek,
-                        DayOfWeek.MONDAY)
-                        .ToString("D2") + "-WE";
+        int isoWeek = LocalDate.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth()).get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
+        return String.format("%04d-W%02d-WE", date.getYear(), isoWeek);
     }
     public static String generateMonthTimex() {
         return "XXXX-XX";
     }
 
     public static String generateMonthTimex(LocalDateTime date) {
-        return String.format("D4",date.getYear()) + "-" +
-                String.format("D2",date.getMonthValue());
+        return String.format("%04d-%02d",date.getYear(), date.getMonthValue());
     }
     public static String generateYearTimex() {
         return "XXXX";
     }
 
     public static String generateYearTimex(LocalDateTime date) {
-        return String.format("D4", date.getYear());
+        return String.format("%04d", date.getYear());
     }
 }

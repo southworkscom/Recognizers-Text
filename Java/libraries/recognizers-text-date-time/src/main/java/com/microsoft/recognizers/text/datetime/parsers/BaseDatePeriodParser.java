@@ -5,6 +5,7 @@ import com.microsoft.recognizers.text.ExtractResult;
 import com.microsoft.recognizers.text.ParseResult;
 import com.microsoft.recognizers.text.datetime.Constants;
 import com.microsoft.recognizers.text.datetime.DatePeriodTimexType;
+import com.microsoft.recognizers.text.datetime.DateTimeOptions;
 import com.microsoft.recognizers.text.datetime.TimeTypeConstants;
 import com.microsoft.recognizers.text.datetime.extractors.BaseDateExtractor;
 import com.microsoft.recognizers.text.datetime.parsers.config.IDatePeriodParserConfiguration;
@@ -16,8 +17,10 @@ import com.microsoft.recognizers.text.utilities.StringUtility;
 import org.javatuples.Pair;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.IsoFields;
 import java.util.*;
 
 public class BaseDatePeriodParser implements IDateTimeParser{
@@ -407,23 +410,23 @@ public class BaseDatePeriodParser implements IDateTimeParser{
         int beginDay, endDay;
         boolean noYear = true;
 
-        String trimedText = text.trim();
-        Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(this.config.getMonthFrontBetweenRegex(),trimedText)).findFirst();
+        String trimmedText = text.trim();
+        Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(this.config.getMonthFrontBetweenRegex(),trimmedText)).findFirst();
         String beginLuisStr, endLuisStr;
 
         if (!match.isPresent()) {
-            match = Arrays.stream(RegExpUtility.getMatches(this.config.getBetweenRegex(),trimedText)).findFirst();
+            match = Arrays.stream(RegExpUtility.getMatches(this.config.getBetweenRegex(),trimmedText)).findFirst();
         }
 
         if (!match.isPresent()) {
-            match = Arrays.stream(RegExpUtility.getMatches(this.config.getMonthFrontSimpleCasesRegex(),trimedText)).findFirst();
+            match = Arrays.stream(RegExpUtility.getMatches(this.config.getMonthFrontSimpleCasesRegex(),trimmedText)).findFirst();
         }
 
         if (!match.isPresent()) {
-            match = Arrays.stream(RegExpUtility.getMatches(this.config.getSimpleCasesRegex(),trimedText)).findFirst();
+            match = Arrays.stream(RegExpUtility.getMatches(this.config.getSimpleCasesRegex(),trimmedText)).findFirst();
         }
 
-        if (match.isPresent() && match.get().index == 0 && match.get().length == trimedText.length()) {
+        if (match.isPresent() && match.get().index == 0 && match.get().length == trimmedText.length()) {
             MatchGroup days = match.get().getGroup("day");
             beginDay = this.config.getDayOfMonth().get(days.captures[0].toLowerCase());
             endDay = this.config.getDayOfMonth().get(days.captures[1].toLowerCase());
@@ -598,25 +601,25 @@ public class BaseDatePeriodParser implements IDateTimeParser{
                 int swift = this.config.getSwiftDayOrMonth(trimmedText);
 
                 if (this.config.isWeekOnly(trimmedText)) {
-                    LocalDateTime monday = DateUtil.next(referenceDate, DayOfWeek.MONDAY.getValue()).plusDays(7 * swift);
+                    LocalDateTime monday = DateUtil.thisDate(referenceDate, DayOfWeek.MONDAY.getValue()).plusDays(7 * swift);
 
                     ret.setTimex(isRef ? TimexUtility.generateWeekTimex() : TimexUtility.generateWeekTimex(monday));
 
-                    LocalDateTime beginDate = DateUtil.next(referenceDate,DayOfWeek.MONDAY.getValue()).plusDays(7 * swift);
+                    LocalDateTime beginDate = DateUtil.thisDate(referenceDate,DayOfWeek.MONDAY.getValue()).plusDays(7 * swift);
 
-                    LocalDateTime endValue = DateUtil.next(referenceDate, DayOfWeek.SUNDAY.getValue()).plusDays(7 * swift);
+                    LocalDateTime endValue = DateUtil.thisDate(referenceDate, DayOfWeek.SUNDAY.getValue()).plusDays(7 * swift);
 
                     LocalDateTime endDate = inclusiveEndPeriod ? endValue : endValue.plusDays(1);
 
                     if (earlyPrefix) {
-                        endValue = DateUtil.next(referenceDate, DayOfWeek.WEDNESDAY.getValue()).plusDays(7 * swift);
+                        endValue = DateUtil.thisDate(referenceDate, DayOfWeek.WEDNESDAY.getValue()).plusDays(7 * swift);
                         endDate = inclusiveEndPeriod ? endValue : endValue.plusDays(1);
                     } else if (midPrefix) {
-                        beginDate = DateUtil.next(referenceDate,DayOfWeek.TUESDAY.getValue()).plusDays(7 * swift);
-                        endValue = DateUtil.next(referenceDate,DayOfWeek.FRIDAY.getValue()).plusDays(7 * swift);
+                        beginDate = DateUtil.thisDate(referenceDate,DayOfWeek.TUESDAY.getValue()).plusDays(7 * swift);
+                        endValue = DateUtil.thisDate(referenceDate,DayOfWeek.FRIDAY.getValue()).plusDays(7 * swift);
                         endDate = inclusiveEndPeriod ? endValue : endValue.plusDays(1);
                     } else if (latePrefix) {
-                        beginDate = DateUtil.next(referenceDate, DayOfWeek.THURSDAY.getValue()).plusDays(7 * swift);
+                        beginDate = DateUtil.thisDate(referenceDate, DayOfWeek.THURSDAY.getValue()).plusDays(7 * swift);
                     }
 
                     if (earlierPrefix && swift == 0) {
@@ -637,8 +640,8 @@ public class BaseDatePeriodParser implements IDateTimeParser{
                 }
 
                 if (this.config.isWeekend(trimmedText)) {
-                    LocalDateTime beginDate = DateUtil.next(referenceDate,DayOfWeek.SATURDAY.getValue()).plusDays(7 * swift);
-                    LocalDateTime endValue = DateUtil.next(referenceDate,DayOfWeek.SUNDAY.getValue()).plusDays(7 * swift);
+                    LocalDateTime beginDate = DateUtil.thisDate(referenceDate,DayOfWeek.SATURDAY.getValue()).plusDays(7 * swift);
+                    LocalDateTime endValue = DateUtil.thisDate(referenceDate,DayOfWeek.SUNDAY.getValue()).plusDays(7 * swift);
                     LocalDateTime endDate = inclusiveEndPeriod ? endValue : endValue.plusDays(1);
 
                     ret.setTimex(isRef ? TimexUtility.generateWeekendTimex() : TimexUtility.generateWeekendTimex(beginDate));
@@ -1090,6 +1093,383 @@ public class BaseDatePeriodParser implements IDateTimeParser{
             LocalDateTime beginDateResult = DurationParsingUtil.shiftDateTime(timex, endDate, false);
             return new GetModAndDateResult(beginDateResult,endDate,mod);
         }
+    }
+
+    private DateTimeResolutionResult parseWeekOfMonth(String text, LocalDateTime referenceDate) {
+        DateTimeResolutionResult ret = new DateTimeResolutionResult();
+
+        String trimmedText = text.trim().toLowerCase();
+        Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(this.config.getWeekOfMonthRegex(),trimmedText)).findFirst();
+        if (!(match.isPresent() && match.get().length == text.length())) {
+            return ret;
+        }
+
+        String cardinalStr = match.get().getGroup("cardinal").value;
+        String monthStr = match.get().getGroup("month").value;
+        boolean noYear = false;
+        int year;
+
+        int cardinal;
+        if (this.config.isLastCardinal(cardinalStr)) {
+            cardinal = 5;
+        } else {
+            cardinal = this.config.getCardinalMap().get(cardinalStr);
+        }
+
+        int month;
+        if (StringUtility.isNullOrEmpty(monthStr)) {
+            int swift = this.config.getSwiftDayOrMonth(trimmedText);
+
+            month = referenceDate.plusMonths(swift).getMonthValue();
+            year = referenceDate.plusMonths(swift).getYear();
+        } else {
+            month = this.config.getMonthOfYear().get(monthStr);
+            year = referenceDate.getYear();
+            noYear = true;
+        }
+
+        ret = getWeekOfMonth(cardinal, month, year, referenceDate, noYear);
+
+        return ret;
+    }
+
+    private DateTimeResolutionResult parseWeekOfYear(String text, LocalDateTime referenceDate) {
+        DateTimeResolutionResult ret = new DateTimeResolutionResult();
+        String trimmedText = text.trim().toLowerCase();
+        Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(this.config.getWeekOfYearRegex(),trimmedText)).findFirst();
+        if (!(match.isPresent() && match.get().length == text.length())) {
+            return ret;
+        }
+
+        String cardinalStr = match.get().getGroup("cardinal").value;
+        String orderStr = match.get().getGroup("order").value.toLowerCase();
+
+        int year = ((BaseDateExtractor)this.config.getDateExtractor()).getYearFromText(match.get());
+        if (year == Constants.InvalidYear) {
+            int swift = this.config.getSwiftYear(orderStr);
+            if (swift < -1) {
+                return ret;
+            }
+            year = referenceDate.getYear() + swift;
+        }
+
+        LocalDateTime targetWeekMonday;
+        int weekNum = 0;
+        if (this.config.isLastCardinal(cardinalStr)) {
+            LocalDateTime lastDay = DateUtil.safeCreateFromMinValue(year, 12, 31);
+            LocalDateTime lastDayWeekMonday = DateUtil.thisDate(lastDay, DayOfWeek.MONDAY.getValue());
+            weekNum = LocalDate.of(lastDay.getYear(), lastDay.getMonthValue(), lastDay.getDayOfMonth()).get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
+            if (weekNum == 1) {
+                lastDayWeekMonday = DateUtil.thisDate(lastDay.minusDays(7), DayOfWeek.MONDAY.getValue());
+            }
+            targetWeekMonday = lastDayWeekMonday;
+            weekNum = LocalDate.of(targetWeekMonday.getYear(), targetWeekMonday.getMonthValue(), targetWeekMonday.getDayOfMonth()).get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
+
+            ret.setTimex(String.format("%04d-%02d-W%s",year,targetWeekMonday.getMonthValue(),weekNum));
+        } else {
+            LocalDateTime firstDay = DateUtil.safeCreateFromMinValue(year, 1, 1);
+            LocalDateTime firstDayWeekMonday = DateUtil.thisDate(firstDay,DayOfWeek.MONDAY.getValue());
+
+            weekNum = LocalDate.of(firstDay.getYear(), firstDay.getMonthValue(), firstDay.getDayOfMonth()).get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
+            if (weekNum != 1) {
+                firstDayWeekMonday = DateUtil.thisDate(firstDay.plusDays(7), DayOfWeek.MONDAY.getValue());
+            }
+
+            int cardinal = this.config.getCardinalMap().get(cardinalStr);
+            targetWeekMonday = firstDayWeekMonday.plusDays(7 * (cardinal - 1));
+            LocalDateTime targetWeekSunday = DateUtil.thisDate(targetWeekMonday, DayOfWeek.SUNDAY.getValue());
+
+            ret.setTimex(String.format("%04d-%02d-W%02d", year, targetWeekSunday.getMonthValue(),cardinal));
+        }
+
+        ret.setFutureValue(inclusiveEndPeriod
+            ? new Pair<>(targetWeekMonday, targetWeekMonday.plusDays(6))
+            : new Pair<>(targetWeekMonday, targetWeekMonday.plusDays(7)));
+
+        ret.setPastValue(inclusiveEndPeriod
+                ? new Pair<>(targetWeekMonday, targetWeekMonday.plusDays(6))
+                : new Pair<>(targetWeekMonday, targetWeekMonday.plusDays(7)));
+
+        ret.setSuccess(true);
+
+        return ret;
+    }
+
+    private DateTimeResolutionResult parseHalfYear(String text, LocalDateTime referenceDate) {
+        DateTimeResolutionResult ret = new DateTimeResolutionResult();
+        Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(this.config.getAllHalfYearRegex(),text)).findFirst();
+
+        if (!(match.isPresent() && match.get().length == text.length())) {
+            return ret;
+        }
+
+        String cardinalStr = match.get().getGroup("cardinal").value.toLowerCase();
+        String orderStr = match.get().getGroup("order").value.toLowerCase();
+        String numberStr = match.get().getGroup("number").value;
+
+        int year = ((BaseDateExtractor)this.config.getDateExtractor()).getYearFromText(match.get());
+
+        if (year == Constants.InvalidYear) {
+            int swift = this.config.getSwiftYear(orderStr);
+            if (swift < -1) {
+                return ret;
+            }
+            year = referenceDate.getYear() + swift;
+        }
+
+        int halfNum;
+        if (!StringUtility.isNullOrEmpty(numberStr)) {
+            halfNum = Integer.parseInt(numberStr);
+        } else {
+            halfNum = this.config.getCardinalMap().get(cardinalStr);
+        }
+
+        LocalDateTime beginDate = DateUtil.safeCreateFromMinValue(year, (halfNum - 1) * Constants.SemesterMonthCount + 1, 1);
+        LocalDateTime endDate = DateUtil.safeCreateFromMinValue(year, halfNum * Constants.SemesterMonthCount, 1).plusMonths(1);
+        ret.setFutureValue(new Pair<>(beginDate, endDate));
+        ret.setPastValue(new Pair<>(beginDate, endDate));
+        ret.setTimex(String.format("(%s,%s,P6M)",FormatUtil.luisDate(beginDate),FormatUtil.luisDate(endDate)));
+        ret.setSuccess(true);
+
+        return ret;
+    }
+
+    private DateTimeResolutionResult parseQuarter(String text, LocalDateTime referenceDate) {
+        DateTimeResolutionResult ret = new DateTimeResolutionResult();
+        Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(this.config.getQuarterRegex(),text)).findFirst();
+
+        if (!(match.isPresent() && match.get().length == text.length())) {
+            match = Arrays.stream(RegExpUtility.getMatches(this.config.getQuarterRegexYearFront(),text)).findFirst();
+        }
+
+        if (!(match.isPresent() && match.get().length == text.length())) {
+            return ret;
+        }
+
+        String cardinalStr = match.get().getGroup("cardinal").value.toLowerCase();
+        String orderStr = match.get().getGroup("order").value.toLowerCase();
+        String numberStr = match.get().getGroup("number").value;
+
+        boolean noSpecificYear = false;
+        int year = ((BaseDateExtractor)this.config.getDateExtractor()).getYearFromText(match.get());
+
+        if (year == Constants.InvalidYear) {
+            int swift = this.config.getSwiftYear(orderStr);
+            if (swift < -1) {
+                swift = 0;
+                noSpecificYear = true;
+            }
+            year = referenceDate.getYear() + swift;
+        }
+
+        int quarterNum;
+        if (!StringUtility.isNullOrEmpty(numberStr)) {
+            quarterNum = Integer.parseInt(numberStr);
+        } else {
+            quarterNum = this.config.getCardinalMap().get(cardinalStr);
+        }
+
+        LocalDateTime beginDate = DateUtil.safeCreateFromMinValue(year, (quarterNum - 1) * Constants.TrimesterMonthCount + 1, 1);
+        LocalDateTime endDate = DateUtil.safeCreateFromMinValue(year, quarterNum * Constants.TrimesterMonthCount, 1).plusMonths(1);
+
+        if (noSpecificYear) {
+            if (endDate.compareTo(referenceDate) < 0) {
+                ret.setPastValue(new Pair<>(beginDate, endDate));
+
+                LocalDateTime futureBeginDate = DateUtil.safeCreateFromMinValue(year + 1, (quarterNum - 1) * Constants.TrimesterMonthCount + 1, 1);
+                LocalDateTime futureEndDate = DateUtil.safeCreateFromMinValue(year + 1, quarterNum * Constants.TrimesterMonthCount, 1).plusMonths(1);
+                ret.setFutureValue(new Pair<>(futureBeginDate, futureEndDate));
+            } else if (endDate.compareTo(referenceDate) > 0) {
+                ret.setFutureValue(new Pair<>(beginDate, endDate));
+
+                LocalDateTime pastBeginDate = DateUtil.safeCreateFromMinValue(year - 1, (quarterNum - 1) * Constants.TrimesterMonthCount + 1, 1);
+                LocalDateTime pastEndDate = DateUtil.safeCreateFromMinValue(year - 1, quarterNum * Constants.TrimesterMonthCount, 1).plusMonths(1);
+                ret.setPastValue(new Pair<>(pastBeginDate, pastEndDate));
+            } else {
+                ret.setFutureValue(new Pair<>(beginDate, endDate));
+                ret.setPastValue(new Pair<>(beginDate, endDate));
+            }
+        } else {
+            ret.setFutureValue(new Pair<>(beginDate, endDate));
+            ret.setPastValue(new Pair<>(beginDate, endDate));
+        }
+
+        ret.setTimex(String.format("(%s,%s,P3M)", FormatUtil.luisDate(beginDate), FormatUtil.luisDate(endDate)));
+        ret.setSuccess(true);
+
+        return ret;
+    }
+
+    private DateTimeResolutionResult parseSeason(String text, LocalDateTime referenceDate) {
+        DateTimeResolutionResult ret = new DateTimeResolutionResult();
+        Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(this.config.getSeasonRegex(),text)).findFirst();
+        if (match.isPresent() && match.get().length == text.length()) {
+            String seasonStr = this.config.getSeasonMap().get(match.get().getGroup("seas").value.toLowerCase());
+            String orderStr = match.get().getGroup("order").value.toLowerCase();
+
+            if (!match.get().getGroup("EarlyPrefix").value.equals("")) {
+                ret.setMod(Constants.EARLY_MOD);
+            } else if (!match.get().getGroup("MidPrefix").value.equals("")) {
+                ret.setMod(Constants.MID_MOD);
+            } else if (!match.get().getGroup("LatePrefix").value.equals("")) {
+                ret.setMod(Constants.LATE_MOD);
+            }
+
+            int year = ((BaseDateExtractor)this.config.getDateExtractor()).getYearFromText(match.get());
+            if (year == Constants.InvalidYear) {
+                int swift = this.config.getSwiftYear(text);
+                if (swift < -1) {
+                    ret.setTimex(seasonStr);
+                    ret.setSuccess(true);
+                    return ret;
+                }
+                year = referenceDate.getYear() + swift;
+            }
+
+            String yearStr = String.format("%04d",year);
+            ret.setTimex(String.format("%s-%s",yearStr, seasonStr));
+
+            ret.setSuccess(true);
+            return ret;
+        }
+        return ret;
+    }
+
+    private DateTimeResolutionResult parseWeekOfDate(String text, LocalDateTime referenceDate) {
+        DateTimeResolutionResult ret = new DateTimeResolutionResult();
+        Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(config.getWeekOfRegex(),text)).findFirst();
+        List<ExtractResult> ex = config.getDateExtractor().extract(text, referenceDate);
+
+        if (match.isPresent() && ex.size() == 1) {
+            DateTimeResolutionResult pr = (DateTimeResolutionResult)config.getDateParser().parse(ex.get(0), referenceDate).value;
+            if (config.getOptions().match(DateTimeOptions.CalendarMode)) {
+                LocalDateTime monday = DateUtil.thisDate((LocalDateTime)pr.getFutureValue(), DayOfWeek.MONDAY.getValue());
+                ret.setTimex(TimexUtility.generateWeekTimex(monday));
+            } else {
+                ret.setTimex(pr.getTimex());
+            }
+            ret.setComment(Constants.Comment_WeekOf);
+            ret.setFutureValue(getWeekRangeFromDate((LocalDateTime)pr.getFutureValue()));
+            ret.setPastValue(getWeekRangeFromDate((LocalDateTime)pr.getPastValue()));
+            ret.setSuccess(true);
+        }
+        return ret;
+    }
+
+    private DateTimeResolutionResult parseMonthOfDate(String text, LocalDateTime referenceDate) {
+        DateTimeResolutionResult ret = new DateTimeResolutionResult();
+        Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(config.getMonthOfRegex(),text)).findFirst();
+        List<ExtractResult> ex = config.getDateExtractor().extract(text, referenceDate);
+
+        if (match.isPresent() && ex.size() == 1) {
+            DateTimeResolutionResult pr = (DateTimeResolutionResult)config.getDateParser().parse(ex.get(0), referenceDate).value;
+            ret.setTimex(pr.getTimex());
+            ret.setComment(Constants.Comment_MonthOf);
+            ret.setFutureValue(getMonthRangeFromDate((LocalDateTime)pr.getFutureValue()));
+            ret.setPastValue(getMonthRangeFromDate((LocalDateTime)pr.getPastValue()));
+            ret.setSuccess(true);
+        }
+        return ret;
+    }
+
+    private Pair<LocalDateTime, LocalDateTime> getWeekRangeFromDate(LocalDateTime date) {
+        LocalDateTime startDate = DateUtil.thisDate(date, DayOfWeek.MONDAY.getValue());
+        LocalDateTime endDate = inclusiveEndPeriod ? startDate.plusDays(6) : startDate.plusDays(7);
+        return new Pair<>(startDate,endDate);
+    }
+
+    private Pair<LocalDateTime, LocalDateTime> getMonthRangeFromDate(LocalDateTime date) {
+        LocalDateTime startDate = DateUtil.safeCreateFromMinValue(date.getYear(), date.getMonthValue(), 1);
+        LocalDateTime endDate;
+
+        if (date.getMonthValue() < 12) {
+            endDate = DateUtil.safeCreateFromMinValue(date.getYear(), date.getMonthValue() + 1, 1);
+        } else {
+            endDate = DateUtil.safeCreateFromMinValue(date.getYear() + 1, 1, 1);
+        }
+
+        endDate = inclusiveEndPeriod ? endDate.minusDays(1) : endDate;
+        return new Pair<>(startDate, endDate);
+    }
+
+    private DateTimeResolutionResult parseWhichWeek(String text, LocalDateTime referenceDate) {
+        DateTimeResolutionResult ret = new DateTimeResolutionResult();
+        Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(this.config.getWhichWeekRegex(),text)).findFirst();
+        if (match.isPresent() && match.get().length == text.length()) {
+            int num = Integer.parseInt(match.get().getGroup("number").value);
+            int year = referenceDate.getYear();
+            ret.setTimex(String.format("%04d",year));
+            LocalDateTime firstDay = DateUtil.safeCreateFromMinValue(year, 1, 1);
+            LocalDateTime firstWeekday = DateUtil.thisDate(firstDay, DayOfWeek.of(1).getValue());
+            LocalDateTime value = firstWeekday.plusDays(7 * num);
+            LocalDateTime futureDate = value;
+            LocalDateTime pastDate = value;
+            ret.setTimex(String.format("%s-W%02d",ret.getTimex(),num));
+            ret.setFutureValue(new Pair<>(futureDate, futureDate.plusDays(7)));
+            ret.setPastValue(new Pair<>(pastDate, pastDate.plusDays(7)));
+            ret.setSuccess(true);
+        }
+        return ret;
+    }
+
+    private static DateTimeResolutionResult getWeekOfMonth(int cardinal, int month, int year, LocalDateTime referenceDate, boolean noYear) {
+        DateTimeResolutionResult ret = new DateTimeResolutionResult();
+        LocalDateTime value = computeDate(cardinal, 1, month, year);
+
+        if (value.getMonthValue() != month) {
+            cardinal -= 1;
+            value = value.minusDays(7);
+        }
+
+        LocalDateTime futureDate = value;
+        LocalDateTime pastDate = value;
+        if (noYear && futureDate.isBefore(referenceDate)) {
+            futureDate = computeDate(cardinal, 1, month, year + 1);
+            if (futureDate.getMonthValue() != month) {
+                futureDate = futureDate.minusDays(7);
+            }
+        }
+
+        if (noYear && pastDate.compareTo(referenceDate) >= 0) {
+            pastDate = computeDate(cardinal, 1, month, year - 1);
+            if (pastDate.getMonthValue() != month) {
+                pastDate = pastDate.minusDays(7);
+            }
+        }
+
+        if (noYear) {
+            ret.setTimex(String.format("XXXX-%02d", month));
+        } else {
+            ret.setTimex(String.format("%04d-%02d", year, month));
+        }
+
+        ret.setTimex(String.format("%s-W%02d",ret.getTimex(),cardinal));
+
+        ret.setFutureValue(inclusiveEndPeriod
+                ? new Pair<>(futureDate, futureDate.plusDays(6))
+                : new Pair<>(futureDate, futureDate.plusDays(7)));
+        ret.setPastValue(inclusiveEndPeriod
+                ? new Pair<>(pastDate, pastDate.plusDays(6))
+                : new Pair<>(pastDate, pastDate.plusDays(7)));
+
+        ret.setSuccess(true);
+
+        return ret;
+    }
+
+    private static LocalDateTime computeDate(int cardinal, int weekday, int month, int year) {
+        LocalDateTime firstDay = DateUtil.safeCreateFromMinValue(year, month, 1);
+        LocalDateTime firstWeekday = DateUtil.thisDate(firstDay,DayOfWeek.of(weekday).getValue());
+
+        if (weekday == 0) {
+            weekday = 7;
+        }
+
+        if (weekday < firstDay.getDayOfWeek().getValue()) {
+            firstWeekday = DateUtil.next(firstDay, DayOfWeek.of(weekday).getValue());
+        }
+
+        return firstWeekday.plusDays(7 * (cardinal - 1));
     }
 
     @Override
