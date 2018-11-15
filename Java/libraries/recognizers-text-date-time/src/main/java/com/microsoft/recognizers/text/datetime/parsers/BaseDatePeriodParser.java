@@ -1472,8 +1472,127 @@ public class BaseDatePeriodParser implements IDateTimeParser{
         return firstWeekday.plusDays(7 * (cardinal - 1));
     }
 
+    private DateTimeResolutionResult parseDecade(String text, LocalDateTime referenceDate) {
+        DateTimeResolutionResult ret = new DateTimeResolutionResult();
+        int firstTwoNumOfYear = referenceDate.getYear() / 100;
+        int decade;
+        int beginYear;
+        int decadeLastYear = 10;
+        int swift = 1;
+        boolean inputCentury = false;
+
+        String trimmedText = text.trim();
+        Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(this.config.getDecadeWithCenturyRegex(),trimmedText)).findFirst();
+        String beginLuisStr, endLuisStr;
+
+        if (match.isPresent() && match.get().index == 0 && match.get().length == trimmedText.length()) {
+            String decadeStr = match.get().getGroup("decade").value.toLowerCase();
+            if (!int.TryParse(decadeStr, out decade))
+            {
+                if (this.config.getWrittenDecades().containsKey(decadeStr)) {
+                    decade = this.config.getWrittenDecades().get(decadeStr);
+                } else if (this.config.getSpecialDecadeCases().containsKey(decadeStr)) {
+                    firstTwoNumOfYear = this.config.getSpecialDecadeCases().get(decadeStr) / 100;
+                    decade = this.config.getSpecialDecadeCases().get(decadeStr) % 100;
+                    inputCentury = true;
+                }
+            }
+
+            String centuryStr = match.get().getGroup("century").value.toLowerCase();
+            if (!StringUtility.isNullOrEmpty(centuryStr)) {
+                if (!int.TryParse(centuryStr, out firstTwoNumOfYear))
+                {
+                    if (this.config.getNumbers().containsKey(centuryStr)) {
+                        firstTwoNumOfYear = this.config.getNumbers().get(centuryStr);
+                    } else {
+                        // handle the case like "one/two thousand", "one/two hundred", etc.
+                        List<ExtractResult> er = this.config.getIntegerExtractor().extract(centuryStr);
+
+                        if (er.size() == 0) {
+                            return ret;
+                        }
+
+                        firstTwoNumOfYear = Math.round(((Double)(this.config.getNumberParser().parse(er.get(0)).value != null ? this.config.getNumberParser().parse(er.get(0)).value : 0)).floatValue());
+                        if (firstTwoNumOfYear >= 100) {
+                            firstTwoNumOfYear = firstTwoNumOfYear / 100;
+                        }
+                    }
+                }
+
+                inputCentury = true;
+            }
+        } else {
+            // handle cases like "the last 2 decades" "the next decade"
+            match = Arrays.stream(RegExpUtility.getMatches(this.config.getRelativeDecadeRegex(), trimmedText)).findFirst();
+            if (match.isPresent() && match.get().index == 0 && match.get().length == trimmedText.length()) {
+                inputCentury = true;
+
+                swift = this.config.getSwiftDayOrMonth(trimmedText);
+
+                String numStr = match.get().getGroup("number").value.toLowerCase();
+                List<ExtractResult> er = this.config.getIntegerExtractor().extract(numStr);
+                if (er.size() == 1) {
+                    int swiftNum = Math.round(((Double)(this.config.getNumberParser().parse(er.get(0)).value != null ? this.config.getNumberParser().parse(er.get(0)).value : 0)).floatValue());
+                    swift = swift * swiftNum;
+                }
+
+                int beginDecade = (referenceDate.getYear() % 100) / 10;
+                if (swift < 0) {
+                    beginDecade += swift;
+                } else if (swift > 0) {
+                    beginDecade += 1;
+                }
+
+                decade = beginDecade * 10;
+            } else {
+                return ret;
+            }
+        }
+
+        beginYear = firstTwoNumOfYear * 100 + decade;
+        int totalLastYear = decadeLastYear * Math.abs(swift);
+
+        if (inputCentury) {
+            beginLuisStr = FormatUtil.luisDate(beginYear, 1, 1);
+            endLuisStr = FormatUtil.luisDate(beginYear + totalLastYear, 1, 1);
+        } else {
+            String beginYearStr = String.format("XX%s",decade);
+            beginLuisStr = FormatUtil.luisDate(-1, 1, 1);
+            beginLuisStr = beginLuisStr.replace("XXXX", beginYearStr);
+
+            String endYearStr = String.format("XX%s",(decade + totalLastYear));
+            endLuisStr = FormatUtil.luisDate(-1, 1, 1);
+            endLuisStr = endLuisStr.replace("XXXX", endYearStr);
+        }
+        ret.setTimex(String.format("(%s,%s,P%sY)", beginLuisStr, endLuisStr, totalLastYear));
+
+        int futureYear = beginYear, pastYear = beginYear;
+        LocalDateTime startDate = DateUtil.safeCreateFromMinValue(beginYear, 1, 1);
+        if (!inputCentury && startDate.isBefore(referenceDate)) {
+            futureYear += 100;
+        }
+
+        if (!inputCentury && startDate.compareTo(referenceDate) >= 0) {
+            pastYear -= 100;
+        }
+
+        ret.setFutureValue(new Pair<>(DateUtil.safeCreateFromMinValue(futureYear, 1, 1)
+                ,DateUtil.safeCreateFromMinValue(futureYear + totalLastYear, 1, 1)));
+
+        ret.setPastValue(new Pair<>(DateUtil.safeCreateFromMinValue(pastYear, 1, 1)
+                ,DateUtil.safeCreateFromMinValue(pastYear + totalLastYear, 1, 1)));
+
+        ret.setSuccess(true);
+
+        return ret;
+    }
+
+    public boolean getInclusvieEndPeriodFlag() {
+        return inclusiveEndPeriod;
+    }
+
     @Override
     public List<DateTimeParseResult> filterResults(String query, List<DateTimeParseResult> candidateResults) {
-        throw new UnsupportedOperationException();
+        return candidateResults;
     }
 }
