@@ -927,7 +927,9 @@ public class BaseDatePeriodParser implements IDateTimeParser{
             pastEnd = futureEnd;
         }
 
-        ret.setTimex(String.format("(%s,%s,P%sD)", ((DateTimeParseResult) pr1).timexStr , ((DateTimeParseResult) pr2).timexStr, (ChronoUnit.DAYS.between(futureBegin,futureEnd))));
+        String diffDays = StringUtility.format((double)ChronoUnit.HOURS.between(futureBegin,futureEnd) / 24);
+
+        ret.setTimex(String.format("(%s,%s,P%sD)", ((DateTimeParseResult) pr1).timexStr , ((DateTimeParseResult) pr2).timexStr, diffDays ) );
         ret.setFutureValue(new Pair<>(futureBegin, futureEnd));
         ret.setPastValue(new Pair<>(pastBegin, pastEnd));
         ret.setSuccess(true);
