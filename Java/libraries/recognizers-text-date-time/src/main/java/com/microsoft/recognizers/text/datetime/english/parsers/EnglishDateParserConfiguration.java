@@ -21,53 +21,18 @@ import java.util.regex.Pattern;
 
 public class EnglishDateParserConfiguration extends BaseOptionsConfiguration implements IDateParserConfiguration {
 
-    public EnglishDateParserConfiguration(ICommonDateTimeParserConfiguration config) {
-        super(config.getOptions());
-        dateTokenPrefix = EnglishDateTime.DateTokenPrefix;
-        integerExtractor = config.getIntegerExtractor();
-        ordinalExtractor = config.getOrdinalExtractor();
-        cardinalExtractor = config.getCardinalExtractor();
-        numberParser = config.getNumberParser();
-        durationExtractor = config.getDurationExtractor();
-        dateExtractor = config.getDateExtractor();
-        durationParser = config.getDurationParser();
-        dateRegexes = Collections.unmodifiableList(EnglishDateExtractorConfiguration.DateRegexList);
-        onRegex = EnglishDateExtractorConfiguration.OnRegex;
-        specialDayRegex = EnglishDateExtractorConfiguration.SpecialDayRegex;
-        specialDayWithNumRegex = EnglishDateExtractorConfiguration.SpecialDayWithNumRegex;
-        nextRegex = EnglishDateExtractorConfiguration.NextDateRegex;
-        thisRegex = EnglishDateExtractorConfiguration.ThisRegex;
-        lastRegex = EnglishDateExtractorConfiguration.LastDateRegex;
-        unitRegex = EnglishDateExtractorConfiguration.DateUnitRegex;
-        weekDayRegex = EnglishDateExtractorConfiguration.WeekDayRegex;
-        monthRegex = EnglishDateExtractorConfiguration.MonthRegex;
-        weekDayOfMonthRegex = EnglishDateExtractorConfiguration.WeekDayOfMonthRegex;
-        forTheRegex = EnglishDateExtractorConfiguration.ForTheRegex;
-        weekDayAndDayOfMonthRegex = EnglishDateExtractorConfiguration.WeekDayAndDayOfMonthRegex;
-        relativeMonthRegex = EnglishDateExtractorConfiguration.RelativeMonthRegex;
-        yearSuffix = EnglishDateExtractorConfiguration.YearSuffix;
-        relativeWeekDayRegex = EnglishDateExtractorConfiguration.RelativeWeekDayRegex;
-        unitMap = config.getUnitMap();
-        dayOfMonth = config.getDayOfMonth();
-        dayOfWeek = config.getDayOfWeek();
-        monthOfYear = config.getMonthOfYear();
-        cardinalMap = config.getCardinalMap();
-        utilityConfiguration = config.getUtilityConfiguration();
-
-        relativeDayRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.RelativeDayRegex, Pattern.CASE_INSENSITIVE);
-        nextPrefixRegex =  RegExpUtility.getSafeRegExp(EnglishDateTime.NextPrefixRegex, Pattern.CASE_INSENSITIVE);
-        pastPrefixRegex =  RegExpUtility.getSafeRegExp(EnglishDateTime.PastPrefixRegex, Pattern.CASE_INSENSITIVE);
-    }
-
     private final String dateTokenPrefix;
+
     private final IExtractor integerExtractor;
     private final IExtractor ordinalExtractor;
     private final IExtractor cardinalExtractor;
     private final IParser numberParser;
+
     private final IDateTimeExtractor durationExtractor;
     private final IDateTimeExtractor dateExtractor;
     private final IDateTimeParser durationParser;
     private final Iterable<Pattern> dateRegexes;
+
     private final Pattern onRegex;
     private final Pattern specialDayRegex;
     private final Pattern specialDayWithNumRegex;
@@ -83,12 +48,6 @@ public class EnglishDateParserConfiguration extends BaseOptionsConfiguration imp
     private final Pattern relativeMonthRegex;
     private final Pattern yearSuffix;
     private final Pattern relativeWeekDayRegex;
-    private final ImmutableMap<String, String> unitMap;
-    private final ImmutableMap<String, Integer> dayOfMonth;
-    private final ImmutableMap<String, Integer> dayOfWeek;
-    private final ImmutableMap<String, Integer> monthOfYear;
-    private final ImmutableMap<String, Integer> cardinalMap;
-    private final IDateTimeUtilityConfiguration utilityConfiguration;
 
     // The following three regexes only used in this configuration
     // They are not used in the base parser, therefore they are not extracted
@@ -96,6 +55,59 @@ public class EnglishDateParserConfiguration extends BaseOptionsConfiguration imp
     private final Pattern relativeDayRegex;
     private final Pattern nextPrefixRegex;
     private final Pattern pastPrefixRegex;
+
+    private final ImmutableMap<String, String> unitMap;
+    private final ImmutableMap<String, Integer> dayOfMonth;
+    private final ImmutableMap<String, Integer> dayOfWeek;
+    private final ImmutableMap<String, Integer> monthOfYear;
+    private final ImmutableMap<String, Integer> cardinalMap;
+
+    private final IDateTimeUtilityConfiguration utilityConfiguration;
+
+    public EnglishDateParserConfiguration(ICommonDateTimeParserConfiguration config) {
+
+        super(config.getOptions());
+
+        dateTokenPrefix = EnglishDateTime.DateTokenPrefix;
+
+        dateExtractor = config.getDateExtractor();
+        integerExtractor = config.getIntegerExtractor();
+        ordinalExtractor = config.getOrdinalExtractor();
+        cardinalExtractor = config.getCardinalExtractor();
+        durationExtractor = config.getDurationExtractor();
+
+        durationParser = config.getDurationParser();
+        numberParser = config.getNumberParser();
+
+        
+        onRegex = EnglishDateExtractorConfiguration.OnRegex;
+        thisRegex = EnglishDateExtractorConfiguration.ThisRegex;
+        yearSuffix = EnglishDateExtractorConfiguration.YearSuffix;
+        monthRegex = EnglishDateExtractorConfiguration.MonthRegex;
+        forTheRegex = EnglishDateExtractorConfiguration.ForTheRegex;
+        nextRegex = EnglishDateExtractorConfiguration.NextDateRegex;
+        lastRegex = EnglishDateExtractorConfiguration.LastDateRegex;
+        unitRegex = EnglishDateExtractorConfiguration.DateUnitRegex;
+        weekDayRegex = EnglishDateExtractorConfiguration.WeekDayRegex;
+        specialDayRegex = EnglishDateExtractorConfiguration.SpecialDayRegex;
+        relativeMonthRegex = EnglishDateExtractorConfiguration.RelativeMonthRegex;
+        weekDayOfMonthRegex = EnglishDateExtractorConfiguration.WeekDayOfMonthRegex;
+        relativeWeekDayRegex = EnglishDateExtractorConfiguration.RelativeWeekDayRegex;
+        specialDayWithNumRegex = EnglishDateExtractorConfiguration.SpecialDayWithNumRegex;
+        weekDayAndDayOfMonthRegex = EnglishDateExtractorConfiguration.WeekDayAndDayOfMonthRegex;
+        dateRegexes = Collections.unmodifiableList(EnglishDateExtractorConfiguration.DateRegexList);
+
+        unitMap = config.getUnitMap();
+        dayOfWeek = config.getDayOfWeek();
+        dayOfMonth = config.getDayOfMonth();
+        monthOfYear = config.getMonthOfYear();
+        cardinalMap = config.getCardinalMap();
+        utilityConfiguration = config.getUtilityConfiguration();
+
+        nextPrefixRegex =  RegExpUtility.getSafeRegExp(EnglishDateTime.NextPrefixRegex, Pattern.CASE_INSENSITIVE);
+        pastPrefixRegex =  RegExpUtility.getSafeRegExp(EnglishDateTime.PastPrefixRegex, Pattern.CASE_INSENSITIVE);
+        relativeDayRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.RelativeDayRegex, Pattern.CASE_INSENSITIVE);
+    }
 
     @Override
     public String getDateTokenPrefix() {
@@ -249,6 +261,7 @@ public class EnglishDateParserConfiguration extends BaseOptionsConfiguration imp
 
     @Override
     public Integer getSwiftDay(String text) {
+
         String trimmedText = text.trim().toLowerCase();
         Integer swift = 0;
 
@@ -277,6 +290,7 @@ public class EnglishDateParserConfiguration extends BaseOptionsConfiguration imp
     }
 
     private Integer getSwift(String text) {
+
         String trimmedText = text.trim().toLowerCase();
         Integer swift = 0;
 

@@ -1,10 +1,5 @@
 package com.microsoft.recognizers.text.datetime.english.extractors;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.regex.Pattern;
-
 import com.microsoft.recognizers.text.IExtractor;
 import com.microsoft.recognizers.text.datetime.DateTimeOptions;
 import com.microsoft.recognizers.text.datetime.extractors.BaseDateExtractor;
@@ -20,6 +15,11 @@ import com.microsoft.recognizers.text.number.english.extractors.CardinalExtracto
 import com.microsoft.recognizers.text.utilities.Match;
 import com.microsoft.recognizers.text.utilities.RegExpUtility;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.regex.Pattern;
+
 public class EnglishDateTimePeriodExtractorConfiguration implements IDateTimePeriodExtractorConfiguration {
     private static final int flags = Pattern.CASE_INSENSITIVE;
 
@@ -29,6 +29,7 @@ public class EnglishDateTimePeriodExtractorConfiguration implements IDateTimePer
             add(EnglishTimePeriodExtractorConfiguration.PureNumBetweenAnd);
         }
     };
+
     public static final Pattern PeriodTimeOfDayRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.PeriodTimeOfDayRegex, flags);
     public static final Pattern PeriodSpecificTimeOfDayRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.PeriodSpecificTimeOfDayRegex, flags);
     public static final Pattern TimeUnitRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.TimeUnitRegex, flags);
@@ -64,7 +65,9 @@ public class EnglishDateTimePeriodExtractorConfiguration implements IDateTimePer
     }
 
     public EnglishDateTimePeriodExtractorConfiguration(DateTimeOptions options) {
+
         super();
+
         //TODO add english implementations
         this.options = options;
         tokenBeforeDate = EnglishDateTime.TokenBeforeDate;
@@ -247,8 +250,10 @@ public class EnglishDateTimePeriodExtractorConfiguration implements IDateTimePer
     // TODO: these three methods are the same in DatePeriod, should be abstracted
     @Override
     public ResultIndex getFromTokenIndex(String text) {
+
         int index = -1;
         boolean result = false;
+
         if (text.endsWith("from")) {
             result = true;
             index = text.lastIndexOf("from");
@@ -257,21 +262,23 @@ public class EnglishDateTimePeriodExtractorConfiguration implements IDateTimePer
         return new ResultIndex(result, index);
     }
 
-	@Override
-	public ResultIndex getBetweenTokenIndex(String text) {
+    @Override
+    public ResultIndex getBetweenTokenIndex(String text) {
+
         int index = -1;
         boolean result = false;
+
         if (text.endsWith("between")) {
             result = true;
             index = text.lastIndexOf("between");
         }
-        
+
         return new ResultIndex(result, index);
-	}
+    }
 
     @Override
     public boolean hasConnectorToken(String text) {
         Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(rangeConnectorRegex, text)).findFirst();
         return match.isPresent() && match.get().length == text.trim().length();
-	}
+    }
 }

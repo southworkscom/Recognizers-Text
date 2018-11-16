@@ -37,6 +37,7 @@ public class BaseDatePeriodExtractor implements IDateTimeExtractor {
 
     @Override
     public List<ExtractResult> extract(String input, LocalDateTime reference) {
+
         List<Token> tokens = new ArrayList<>();
 
         tokens.addAll(matchSimpleCases(input));
@@ -52,15 +53,17 @@ public class BaseDatePeriodExtractor implements IDateTimeExtractor {
     }
 
     private List<Token> matchSimpleCases(String input) {
+
         List<Token> results = new ArrayList<>();
 
         for (Pattern regex : config.getSimpleCasesRegexes()) {
-            Match[] matches = RegExpUtility.getMatches(regex, input);
 
+            Match[] matches = RegExpUtility.getMatches(regex, input);
             for (Match match : matches) {
+
                 Optional<Match> matchYear = Arrays.stream(RegExpUtility.getMatches(config.getYearRegex(), match.value)).findFirst();
-                
                 if (matchYear.isPresent() && matchYear.get().length == match.length) {
+
                     int year = ((BaseDateExtractor) config.getDatePointExtractor()).getYearFromText(matchYear.get());
                     if (!(year >= Constants.MinYearNum && year <= Constants.MaxYearNum)) {
                         continue;
@@ -69,28 +72,26 @@ public class BaseDatePeriodExtractor implements IDateTimeExtractor {
 
                 results.add(new Token(match.index, match.index + match.length));
             }
-
         }
 
         return results;
-	}
+    }
 
     private List<Token> mergeTwoTimePoints(String input, LocalDateTime reference) {
         List<ExtractResult> ers = config.getDatePointExtractor().extract(input, reference);
-
         return mergeMultipleExtractions(input, ers);
     }
     
     private List<Token> mergeMultipleExtractions(String input, List<ExtractResult> extractionResults) {
-        List<Token> results = new ArrayList<>();
 
+        List<Token> results = new ArrayList<>();
         if (extractionResults.size() <= 1) {
             return results;
         }
 
         int idx = 0;
-
         while (idx < extractionResults.size() - 1) {
+
             ExtractResult thisResult = extractionResults.get(idx);
             ExtractResult nextResult = extractionResults.get(idx + 1);
 
@@ -104,12 +105,13 @@ public class BaseDatePeriodExtractor implements IDateTimeExtractor {
             String middleStr = input.substring(middleBegin, middleEnd).trim().toLowerCase();
             Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(config.getTillRegex(), middleStr)).findFirst();
             if (match.isPresent() && match.get().index == 0 && match.get().length == middleStr.length()) {
+
                 int periodBegin = thisResult.start;
                 int periodEnd = nextResult.start + nextResult.length;
 
                 // handle "from/between" together with till words (till/until/through...)
                 String beforeStr = input.substring(0, periodBegin).trim().toLowerCase();
-                
+
                 ResultIndex fromIndex = config.GetFromTokenIndex(beforeStr);
                 ResultIndex betweenIndex = config.GetBetweenTokenIndex(beforeStr);
 
@@ -122,7 +124,7 @@ public class BaseDatePeriodExtractor implements IDateTimeExtractor {
                 results.add(new Token(periodBegin, periodEnd));
 
                 // merge two tokens here, increase the index by two
-                idx =+ 2;
+                idx = + 2;
                 continue;
             }
 

@@ -1,8 +1,5 @@
 package com.microsoft.recognizers.text.datetime.english.extractors;
 
-import java.util.ArrayList;
-import java.util.regex.Pattern;
-
 import com.microsoft.recognizers.text.datetime.extractors.BaseDateExtractor;
 import com.microsoft.recognizers.text.datetime.extractors.BaseDatePeriodExtractor;
 import com.microsoft.recognizers.text.datetime.extractors.IDateTimeExtractor;
@@ -10,12 +7,15 @@ import com.microsoft.recognizers.text.datetime.extractors.config.IDateTimeAltExt
 import com.microsoft.recognizers.text.datetime.resources.EnglishDateTime;
 import com.microsoft.recognizers.text.utilities.RegExpUtility;
 
+import java.util.ArrayList;
+import java.util.regex.Pattern;
+
 public class EnglishDateTimeAltExtractorConfiguration implements IDateTimeAltExtractorConfiguration {
+
     private static final int flags = Pattern.CASE_INSENSITIVE;
 
     private static final Pattern OrRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.OrRegex, flags);
     private static final Pattern DayRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.DayRegex, flags);
-
     public static final Pattern ThisPrefixRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.ThisPrefixRegex, flags);
     public static final Pattern PastPrefixRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.PastPrefixRegex, flags);
     public static final Pattern NextPrefixRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.NextPrefixRegex, flags);
@@ -71,7 +71,7 @@ public class EnglishDateTimeAltExtractorConfiguration implements IDateTimeAltExt
     }
 
     @Override
-	public Pattern getDayRegex() {
-		return DayRegex;
-	}
+    public Pattern getDayRegex() {
+        return DayRegex;
+    }
 }
