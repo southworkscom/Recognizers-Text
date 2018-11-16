@@ -15,15 +15,15 @@ public class TimexUtility {
 
         if (timexType == DatePeriodTimexType.ByDay)
         {
-            datePeriodTimex = "P" + ChronoUnit.DAYS.between(end,begin) + "D";
+            datePeriodTimex = "P" + ChronoUnit.DAYS.between(begin,end) + "D";
         }
         else if (timexType == DatePeriodTimexType.ByWeek)
         {
-            datePeriodTimex = "P" + (ChronoUnit.WEEKS.between(end,begin) / 7) + "W";
+            datePeriodTimex = "P" + (ChronoUnit.WEEKS.between(begin,end)) + "W";
         }
         else if (timexType == DatePeriodTimexType.ByMonth)
         {
-            datePeriodTimex =  "P" + ChronoUnit.MONTHS.between(end,begin) + "M"; // ((end.getYear() - begin.getYear()) * 12) + (end.getMonthValue() - begin.getMonthValue());
+            datePeriodTimex =  "P" + ChronoUnit.MONTHS.between(begin,end) + "M"; // ((end.getYear() - begin.getYear()) * 12) + (end.getMonthValue() - begin.getMonthValue());
         }
         else
         {

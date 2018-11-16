@@ -53,7 +53,7 @@ public class BaseDatePeriodParser implements IDateTimeParser{
             }
 
             if (innerResult.getSuccess()) {
-                if (innerResult.getMod().equals(Constants.BEFORE_MOD)) {
+                if (innerResult.getMod() != null && innerResult.getMod().equals(Constants.BEFORE_MOD)) {
                     innerResult.setFutureResolution(ImmutableMap.<String,String>builder()
                         .put(TimeTypeConstants.END_DATE,
                             FormatUtil.formatDate((LocalDateTime)innerResult.getFutureValue()))
@@ -63,7 +63,7 @@ public class BaseDatePeriodParser implements IDateTimeParser{
                         .put(TimeTypeConstants.END_DATE,
                             FormatUtil.formatDate((LocalDateTime)innerResult.getPastValue()))
                         .build());
-                } else if (innerResult.getMod().equals(Constants.AFTER_MOD)) {
+                } else if (innerResult.getMod() != null && innerResult.getMod().equals(Constants.AFTER_MOD)) {
                     innerResult.setFutureResolution(ImmutableMap.<String,String>builder()
                             .put(TimeTypeConstants.START_DATE,
                                     FormatUtil.formatDate((LocalDateTime)innerResult.getFutureValue()))
@@ -147,11 +147,11 @@ public class BaseDatePeriodParser implements IDateTimeParser{
                     endResolution = parseBaseDatePeriod(match.get().getGroup("end").value.trim(), referenceDate);
 
                     if (endResolution.getSuccess()) {
-                        futureEnd = ((Pair<LocalDateTime,LocalDateTime>)startResolution.getFutureValue()).getValue0();
-                        pastEnd = ((Pair<LocalDateTime,LocalDateTime>)startResolution.getPastValue()).getValue0();
+                        futureEnd = ((Pair<LocalDateTime,LocalDateTime>)endResolution.getFutureValue()).getValue0();
+                        pastEnd = ((Pair<LocalDateTime,LocalDateTime>)endResolution.getPastValue()).getValue0();
 
                         if (endResolution.getTimex().contains("-W")) {
-                            isStartByWeek = true;
+                            isEndByWeek = true;
                         }
                     }
                 }
@@ -328,7 +328,7 @@ public class BaseDatePeriodParser implements IDateTimeParser{
 
                 if (durationExtractionResult.isPresent()) {
                     ParseResult duration = this.config.getDurationParser().parse(durationExtractionResult.get());
-                    long durationInSeconds = (long)((DateTimeResolutionResult)(duration.value)).getPastValue();
+                    long durationInSeconds = Math.round((Double)((DateTimeResolutionResult)(duration.value)).getPastValue());
 
                     if (isLessThanOrWithIn) {
                         LocalDateTime startDate = LocalDateTime.MIN;
@@ -380,7 +380,7 @@ public class BaseDatePeriodParser implements IDateTimeParser{
             Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(this.config.getWeekWithWeekDayRangeRegex(),text)).findFirst();
             String weekPrefix = null;
             if (match.isPresent()) {
-                weekPrefix = match.get().getGroup("week").toString();
+                weekPrefix = match.get().getGroup("week").value;
             }
 
             if (!StringUtility.isNullOrEmpty(weekPrefix)) {
@@ -530,15 +530,15 @@ public class BaseDatePeriodParser implements IDateTimeParser{
         if (match.isPresent() && match.get().index == 0 && match.get().length == trimmedText.length()) {
             if (!match.get().getGroup("EarlyPrefix").value.equals("")) {
                 earlyPrefix = true;
-                trimmedText = match.get().getGroup(Constants.SuffixGroupName).toString();
+                trimmedText = match.get().getGroup(Constants.SuffixGroupName).value;
                 ret.setMod(Constants.EARLY_MOD);
             } else if (!match.get().getGroup("LatePrefix").value.equals("")) {
                 latePrefix = true;
-                trimmedText = match.get().getGroup(Constants.SuffixGroupName).toString();
+                trimmedText = match.get().getGroup(Constants.SuffixGroupName).value;
                 ret.setMod(Constants.LATE_MOD);
             } else if (!match.get().getGroup("MidPrefix").value.equals("")) {
                 midPrefix = true;
-                trimmedText = match.get().getGroup(Constants.SuffixGroupName).toString();
+                trimmedText = match.get().getGroup(Constants.SuffixGroupName).value;
                 ret.setMod(Constants.MID_MOD);
             }
 
@@ -708,7 +708,7 @@ public class BaseDatePeriodParser implements IDateTimeParser{
 
 
         LocalDateTime pastStart = DateUtil.safeCreateFromMinValue(pastYear, month, 1);
-        LocalDateTime pastEnd = inclusiveEndPeriod ? pastStart.plusMonths(1).minusDays(1) : pastStart.plusMonths(1).minusDays(1);
+        LocalDateTime pastEnd = inclusiveEndPeriod ? pastStart.plusMonths(1).minusDays(1) : pastStart.plusMonths(1);
 
         if (earlyPrefix) {
             futureEnd = inclusiveEndPeriod
@@ -731,13 +731,13 @@ public class BaseDatePeriodParser implements IDateTimeParser{
             pastStart = DateUtil.safeCreateFromMinValue(pastYear, month, 16);
         }
 
-        if (earlierPrefix && futureEnd == pastEnd)
+        if (earlierPrefix && futureEnd.isEqual(pastEnd))
         {
             if (futureEnd.isAfter(referenceDate))
             {
                 futureEnd = pastEnd = referenceDate;
             }
-        } else if (laterPrefix && futureStart == pastStart) {
+        } else if (laterPrefix && futureStart.isEqual(pastStart)) {
             if (futureStart.isBefore(referenceDate)) {
                 futureStart = pastStart = referenceDate;
             }
@@ -927,7 +927,7 @@ public class BaseDatePeriodParser implements IDateTimeParser{
             pastEnd = futureEnd;
         }
 
-        ret.setTimex(String.format("(%s,%s,P%sD", ((DateTimeParseResult) pr1).timexStr , ((DateTimeParseResult) pr2).timexStr, (ChronoUnit.DAYS.between(futureEnd,futureBegin))));
+        ret.setTimex(String.format("(%s,%s,P%sD)", ((DateTimeParseResult) pr1).timexStr , ((DateTimeParseResult) pr2).timexStr, (ChronoUnit.DAYS.between(futureBegin,futureEnd))));
         ret.setFutureValue(new Pair<>(futureBegin, futureEnd));
         ret.setPastValue(new Pair<>(pastBegin, pastEnd));
         ret.setSuccess(true);
@@ -1050,14 +1050,14 @@ public class BaseDatePeriodParser implements IDateTimeParser{
                 case "MON":
                     endDate = DateUtil.safeCreateFromMinValue(beginDate.getYear(), beginDate.getMonthValue(), 1);
                     endDate = endDate.plusMonths(1).minusDays(1);
-                    diff = (int)ChronoUnit.DAYS.between(endDate, beginDate) + 1;
+                    diff = (int)ChronoUnit.DAYS.between(beginDate, endDate) + 1;
                     timex = String.format("P%sD",diff);
                     break;
 
                 case "Y":
                     endDate = DateUtil.safeCreateFromMinValue(beginDate.getYear(), 12, 1);
                     endDate = endDate.plusMonths(1).minusDays(1);
-                    diff = (int)ChronoUnit.DAYS.between(endDate,beginDate) + 1;
+                    diff = (int)ChronoUnit.DAYS.between(beginDate, endDate) + 1;
                     timex = String.format("P%sD",diff);
                     break;
             }
