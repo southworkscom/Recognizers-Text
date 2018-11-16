@@ -6,17 +6,20 @@ import com.microsoft.recognizers.text.datetime.Constants;
 import com.microsoft.recognizers.text.datetime.extractors.config.IDateExtractorConfiguration;
 import com.microsoft.recognizers.text.datetime.utilities.AgoLaterUtil;
 import com.microsoft.recognizers.text.datetime.utilities.DateUtil;
-import com.microsoft.recognizers.text.datetime.utilities.FormatUtil;
 import com.microsoft.recognizers.text.datetime.utilities.Token;
-import com.microsoft.recognizers.text.utilities.FormatUtility;
 import com.microsoft.recognizers.text.utilities.Match;
 import com.microsoft.recognizers.text.utilities.RegExpUtility;
 import com.microsoft.recognizers.text.utilities.StringUtility;
-import org.javatuples.Pair;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
+
+import org.javatuples.Pair;
 
 public class BaseDateExtractor implements IDateTimeExtractor {
 
@@ -38,6 +41,7 @@ public class BaseDateExtractor implements IDateTimeExtractor {
 
     @Override
     public List<ExtractResult> extract(String input, LocalDateTime reference) {
+
         List<Token> tokens = new ArrayList<>();
 
         tokens.addAll(basicRegexMatch(input));
@@ -50,14 +54,16 @@ public class BaseDateExtractor implements IDateTimeExtractor {
 
     // match basic patterns in DateRegexList
     private Collection<Token> basicRegexMatch(String text) {
+
         List<Token> result = new ArrayList<>();
 
         for (Pattern regex : config.getDateRegexList()) {
-            Match[] matches = RegExpUtility.getMatches(regex, text);
 
+            Match[] matches = RegExpUtility.getMatches(regex, text);
             for (Match match : matches) {
                 result.add(new Token(match.index, match.index + match.length));
             }
+
         }
 
         return  result;
@@ -66,14 +72,15 @@ public class BaseDateExtractor implements IDateTimeExtractor {
     // match several other cases
     // including 'today', 'the day after tomorrow', 'on 13'
     private Collection<Token> implicitDate(String text) {
+
         List<Token> result = new ArrayList<>();
-
         for (Pattern regex : config.getImplicitDateList()) {
-            Match[] matches = RegExpUtility.getMatches(regex, text);
 
+            Match[] matches = RegExpUtility.getMatches(regex, text);
             for (Match match : matches) {
                 result.add(new Token(match.index, match.index + match.length));
             }
+
         }
 
         return  result;
@@ -81,14 +88,17 @@ public class BaseDateExtractor implements IDateTimeExtractor {
 
     // Check every integers and ordinal number for date
     private Collection<Token> numberWithMonth(String text, LocalDateTime reference) {
-        List<Token> tokens = new ArrayList<>();
 
+        List<Token> tokens = new ArrayList<>();
         List<ExtractResult> ers = config.getOrdinalExtractor().extract(text);
+
         ers.addAll(config.getIntegerExtractor().extract(text));
 
         for (ExtractResult result : ers) {
+
             int num;
             try {
+
                 ParseResult parseResult = config.getNumberParser().parse(result);
                 num = Float.valueOf(parseResult.value.toString()).intValue();
             } catch (NumberFormatException e) {
@@ -100,16 +110,15 @@ public class BaseDateExtractor implements IDateTimeExtractor {
             }
 
             if (result.start >= 0) {
+
                 // Handling cases like '(Monday,) Jan twenty two'
                 String frontStr = text.substring(0, result.start);
-
                 Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(config.getMonthEnd(), frontStr)).findFirst();
                 if (match.isPresent()) {
+
                     int startIndex = match.get().index;
                     int endIndex = match.get().index + match.get().length + result.length;
-
                     int month = config.getMonthOfYear().getOrDefault(match.get().getGroup("month").value.toLowerCase(), reference.getMonthValue());
-
                     Pair<Integer, Integer> startEnd = extendWithWeekdayAndYear(startIndex, endIndex, month, num, text, reference);
 
                     tokens.add(new Token(startEnd.getValue0(), startEnd.getValue1()));
@@ -119,11 +128,13 @@ public class BaseDateExtractor implements IDateTimeExtractor {
                 // Handling cases like 'for the 25th'
                 Match[] matches = RegExpUtility.getMatches(config.getForTheRegex(), text);
                 boolean isFound = false;
-
                 for (Match matchCase : matches) {
+
                     if (matchCase != null) {
+
                         String ordinalNum = matchCase.getGroup("DayOfMonth").value;
                         if (ordinalNum.equals(result.text)) {
+
                             int endLenght = 0;
                             if (!matchCase.getGroup("end").value.equals("")) {
                                 endLenght = matchCase.getGroup("end").value.length();
@@ -143,9 +154,12 @@ public class BaseDateExtractor implements IDateTimeExtractor {
                 matches = RegExpUtility.getMatches(config.getWeekDayAndDayOfMonthRegex(), text);
                 isFound = false;
                 for (Match matchCase : matches) {
+
                     if (matchCase != null) {
+
                         String ordinalNum = matchCase.getGroup("DayOfMonth").value;
                         if (ordinalNum.equals(result.text)) {
+
                             // Get week of day for the ordinal number which is regarded as a date of reference month
                             LocalDateTime date = DateUtil.safeCreateFromMinValue(reference.getYear(), reference.getMonthValue(), num);
                             String numWeekDayStr = date.getDayOfWeek().toString().toLowerCase();
@@ -172,6 +186,7 @@ public class BaseDateExtractor implements IDateTimeExtractor {
                 String suffixStr = text.substring(result.start + result.length);
                 match = Arrays.stream(RegExpUtility.getMatches(config.getRelativeMonthRegex(), suffixStr.trim())).findFirst();
                 if (match.isPresent() && match.get().index == 0) {
+
                     int spaceLen = suffixStr.length() - suffixStr.trim().length();
                     int resStart = result.start;
                     int resEnd = resStart + result.length + spaceLen + match.get().length;
@@ -179,6 +194,7 @@ public class BaseDateExtractor implements IDateTimeExtractor {
                     // Check if prefix contains 'the', include it if any
                     String prefix = text.substring(0, resStart);
                     Optional<Match> prefixMatch = Arrays.stream(RegExpUtility.getMatches(config.getPrefixArticleRegex(), prefix)).findFirst();
+
                     if (prefixMatch.isPresent()) {
                         resStart = prefixMatch.get().index;
                     }
@@ -191,6 +207,7 @@ public class BaseDateExtractor implements IDateTimeExtractor {
                 match = Arrays.stream(RegExpUtility.getMatches(config.getWeekDayRegex(), suffixStr.trim())).findFirst();
                 if (match.isPresent() && match.get().index == 0 && num <= 5 && result.type.equals("builtin.num.ordinal")) {
                     String weekDayStr = match.get().getGroup("weekday").value.toLowerCase();
+
                     if (config.getDayOfWeek().containsKey(weekDayStr)) {
                         int spaceLen = suffixStr.length() - suffixStr.trim().length();
                         tokens.add(new Token(result.start, result.start + result.length + spaceLen + match.get().length));
@@ -200,16 +217,16 @@ public class BaseDateExtractor implements IDateTimeExtractor {
 
             // For cases like "I'll go back twenty second of June"
             if (result.start + result.length < text.length()) {
-                String afterStr = text.substring(result.start + result.length);
 
+                String afterStr = text.substring(result.start + result.length);
                 Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(config.getOfMonth(), afterStr)).findFirst();
                 if (match.isPresent()) {
+
                     int startIndex = result.start;
                     int endIndex = result.start + result.length + match.get().length;
-
                     int month = config.getMonthOfYear().getOrDefault(match.get().getGroup("month").value.toLowerCase(), reference.getMonthValue());
-
                     Pair<Integer, Integer> startEnd = extendWithWeekdayAndYear(startIndex, endIndex, month, num, text, reference);
+
                     tokens.add(new Token(startEnd.getValue0(), startEnd.getValue1()));
                 }
             }
@@ -219,6 +236,7 @@ public class BaseDateExtractor implements IDateTimeExtractor {
     }
 
     private Pair<Integer, Integer> extendWithWeekdayAndYear(int startIndex, int endIndex, int month, int day, String text, LocalDateTime reference) {
+
         int year = reference.getYear();
         int startIndexResult = startIndex;
         int endIndexResult = endIndex;
@@ -238,14 +256,16 @@ public class BaseDateExtractor implements IDateTimeExtractor {
         String prefix = text.substring(0, startIndexResult);
         Optional<Match> matchWeekDay = Arrays.stream(RegExpUtility.getMatches(config.getWeekDayEnd(), prefix)).findFirst();
         if (matchWeekDay.isPresent()) {
+
             // Get weekday from context directly, compare it with the weekday extraction above
             // to see whether they are referred to the same weekday
             String extractedWeekDayStr = matchWeekDay.get().getGroup("weekday").value.toLowerCase();
             String numWeekDayStr = date.getDayOfWeek().toString().toLowerCase();
-
             if (config.getDayOfWeek().containsKey(numWeekDayStr) && config.getDayOfWeek().containsKey(extractedWeekDayStr)) {
+
                 int weekDay1 = config.getDayOfWeek().get(numWeekDayStr);
                 int weekday2 = config.getDayOfWeek().get(extractedWeekDayStr);
+
                 if (date != DateUtil.minValue() && weekDay1 == weekday2) {
                     startIndexResult = matchWeekDay.get().index;
                 }
@@ -258,11 +278,12 @@ public class BaseDateExtractor implements IDateTimeExtractor {
 
     // TODO: Remove the parsing logic from here
     private Collection<Token> extractRelativeDurationDate(String text, LocalDateTime reference) {
-        List<Token> tokens = new ArrayList<>();
 
+        List<Token> tokens = new ArrayList<>();
         List<ExtractResult> durations = config.getDurationExtractor().extract(text, reference);
 
         for (ExtractResult duration : durations) {
+
             // if it is a multiple duration but its type is not equal to Date, skip it here
             if (isMultipleDuration(duration) && !isMultipleDurationDate(duration)) {
                 continue;
@@ -292,20 +313,26 @@ public class BaseDateExtractor implements IDateTimeExtractor {
         ExtractResult result = er;
         result = stripInequalityPrefix(result, config.getMoreThanRegex());
         result = stripInequalityPrefix(result, config.getLessThanRegex());
+
         return  result;
     }
 
     private ExtractResult stripInequalityPrefix(ExtractResult er, Pattern regex) {
+
         ExtractResult result = er;
         Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(regex, er.text)).findFirst();
-
         if (match.isPresent()) {
+
             int originalLength = er.text.length();
             String text = er.text.replace(match.get().value, "").trim();
             int start = er.start + originalLength - text.length();
             int length = text.length();
             String data = "";
-            result = er.withText(text).withStart(start).withLength(length).withData(data);
+
+            result = er.withText(text)
+                        .withStart(start)
+                        .withLength(length)
+                        .withData(data);
         }
 
         return result;
@@ -325,10 +352,11 @@ public class BaseDateExtractor implements IDateTimeExtractor {
     }
 
     public int getYearFromText(Match match) {
-        int year = Constants.InvalidYear;
 
+        int year = Constants.InvalidYear;
         String yearStr = match.getGroup("year").value;
         if (!StringUtility.isNullOrEmpty(yearStr)) {
+
             year = Integer.parseInt(yearStr);
             if (year < 100 && year >= Constants.MinTwoDigitYearPastNum) {
                 year += 1900;
@@ -336,19 +364,20 @@ public class BaseDateExtractor implements IDateTimeExtractor {
                 year += 2000;
             }
         } else {
+
             String firstTwoYearNumStr = match.getGroup("firsttwoyearnum").value;
             if (!StringUtility.isNullOrEmpty(firstTwoYearNumStr)) {
+
                 int start = match.getGroup("firsttwoyearnum").index;
                 int length = match.getGroup("firsttwoyearnum").length;
-
                 ExtractResult er = new ExtractResult(start, length, firstTwoYearNumStr, null, null);
-
                 Object numberParsed = this.config.getNumberParser().parse(er).value;
                 int firstTwoYearNum = Float.valueOf(numberParsed != null ? numberParsed.toString() : "0").intValue();
-
                 int lastTwoYearNum = 0;
                 String lastTwoYearNumStr = match.getGroup("lasttwoyearnum").value;
+
                 if (!StringUtility.isNullOrEmpty(lastTwoYearNumStr)) {
+
                     er = er.withText(lastTwoYearNumStr);
                     er = er.withStart(match.getGroup("lasttwoyearnum").index);
                     er = er.withLength(match.getGroup("lasttwoyearnum").length);

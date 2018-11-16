@@ -52,9 +52,10 @@ public class BaseDateTimeAltExtractor implements IDateTimeListExtractor {
 
         int i = 0;
         while (i < result.size() - 1) {
-            int j = i + 1;
 
+            int j = i + 1;
             while (j < result.size()) {
+
                 // check whether middle string is a connector
                 int middleBegin = result.get(j - 1).start + result.get(j - 1).length;
                 int middleEnd = result.get(j).start;
@@ -90,8 +91,8 @@ public class BaseDateTimeAltExtractor implements IDateTimeListExtractor {
             String parentText = text.substring(parentTextStart, parentTextEnd);
 
             if (data.size() > 0) {
-                data.put(ExtendedModelResult.ParentTextKey, parentText);
 
+                data.put(ExtendedModelResult.ParentTextKey, parentText);
                 Map<String, Object> modifiedData = new LinkedHashMap<>();
                 modifiedData.put(Constants.SubType, result.get(i).type);
                 modifiedData.put(ExtendedModelResult.ParentTextKey, parentText);
@@ -111,12 +112,13 @@ public class BaseDateTimeAltExtractor implements IDateTimeListExtractor {
 
                 i = j + 1;
             } else {
+
                 Collections.reverse(altErs);
                 data = extractSingleAlt(altErs);
                 if (data.size() > 0) {
-                    data.put(ExtendedModelResult.ParentTextKey, parentText);
 
                     Map<String, Object> modifiedData = new LinkedHashMap<>();
+                    data.put(ExtendedModelResult.ParentTextKey, parentText);
                     modifiedData.put(Constants.SubType, result.get(i).type);
                     modifiedData.put(ExtendedModelResult.ParentTextKey, parentText);
 
@@ -147,15 +149,18 @@ public class BaseDateTimeAltExtractor implements IDateTimeListExtractor {
     }
 
     private List<ExtractResult> addImplicitDates(List<ExtractResult> originalErs, String text) {
-        List<ExtractResult> result = new ArrayList<>();
 
+        List<ExtractResult> result = new ArrayList<>();
         Match[] implicitDateMatches = RegExpUtility.getMatches(config.getDayRegex(), text);
         int i = 0;
+
         originalErs.sort(Comparator.comparingInt(er -> er.start));
 
         for (Match dateMatch : implicitDateMatches) {
+
             boolean notBeContained = true;
             while (i < originalErs.size()) {
+
                 if (originalErs.get(i).start <= dateMatch.index && originalErs.get(i).start + originalErs.get(i).length >= dateMatch.index + dateMatch.length) {
                     notBeContained = false;
                     break;
@@ -184,18 +189,22 @@ public class BaseDateTimeAltExtractor implements IDateTimeListExtractor {
     }
 
     private List<ExtractResult> pruneInvalidImplicitDate(List<ExtractResult> ers) {
+
         return ers.stream().filter(er -> {
+
             if (er.data != null || !er.type.equals(Constants.SYS_DATETIME_DATE)) {
                 return false;
             }
 
             Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(config.getDayRegex(), er.text)).findFirst();
+
             return match.isPresent() && match.get().index == 0 && match.get().length == er.length;
         }).collect(Collectors.toList());
     }
 
     // Resolve cases like "this week or next".
     private List<ExtractResult> resolveImplicitRelativeDatePeriod(List<ExtractResult> ers, String text) {
+
         List<Match> relativeTermsMatches = new ArrayList<>();
         for (Pattern regex : config.getRelativePrefixList()) {
             relativeTermsMatches.addAll(Arrays.asList(RegExpUtility.getMatches(regex, text)));
@@ -204,30 +213,37 @@ public class BaseDateTimeAltExtractor implements IDateTimeListExtractor {
         List<ExtractResult> relativeDatePeriodErs = new ArrayList<>();
         int i = 0;
         for (ExtractResult result : ers.toArray(new ExtractResult[0])) {
+
             if (!result.type.equals(Constants.SYS_DATETIME_DATETIMEALT)) {
+
                 int resultEnd = result.start + result.length;
                 for (Match relativeTermsMatch : relativeTermsMatches) {
+
                     if (relativeTermsMatch.index > resultEnd) {
+
                         // Check whether middle string is a connector
                         int middleBegin = resultEnd;
                         int middleEnd = relativeTermsMatch.index;
                         String middleStr = text.substring(middleBegin, middleEnd).trim().toLowerCase();
                         Match[] orTermMatches = RegExpUtility.getMatches(config.getOrRegex(), middleStr);
                         if (orTermMatches.length == 1 && orTermMatches[0].index == 0 && orTermMatches[0].length == middleStr.length()) {
+
                             int parentTextStart = result.start;
                             int parentTextEnd = relativeTermsMatch.index + relativeTermsMatch.length;
                             String parentText = text.substring(parentTextStart, parentTextEnd);
-
                             ExtractResult contextErs = new ExtractResult();
                             for (Pattern regex : config.getRelativePrefixList()) {
+
                                 Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(regex, result.text)).findFirst();
                                 if (match.isPresent()) {
+
                                     int matchEnd = match.get().index + match.get().length;
                                     contextErs = new ExtractResult(
                                         matchEnd,
                                         result.length - matchEnd,
                                         result.text.substring(matchEnd, result.length),
                                         Constants.ContextType_RelativeSuffix);
+
                                     break;
                                 }
                             }
@@ -237,7 +253,7 @@ public class BaseDateTimeAltExtractor implements IDateTimeListExtractor {
                             customData.put(ExtendedModelResult.ParentTextKey, parentText);
                             customData.put(Constants.Context, contextErs);
 
-							relativeDatePeriodErs.add(new ExtractResult(
+                            relativeDatePeriodErs.add(new ExtractResult(
                                 relativeTermsMatch.index, 
                                 relativeTermsMatch.length,
                                 relativeTermsMatch.value,
@@ -267,6 +283,7 @@ public class BaseDateTimeAltExtractor implements IDateTimeListExtractor {
     }
 
     private Map<String, Object> extractSingleAlt(List<ExtractResult> extractResults) {
+
         if (extractResults.isEmpty()) {
             return new LinkedHashMap<>();
         }
@@ -299,10 +316,11 @@ public class BaseDateTimeAltExtractor implements IDateTimeListExtractor {
     }
 
     private Map<String, Object> extractDateTime_Time(ExtractResult former, ExtractResult latter) {
-        Map<String, Object> data = new LinkedHashMap<>();
 
+        Map<String, Object> data = new LinkedHashMap<>();
         // Modify time entity to an alternative DateTime expression, such as "8pm" in "Monday 7pm or 8pm"
         if (former.type.equals(Constants.SYS_DATETIME_DATETIME) && latter.type.equals(Constants.SYS_DATETIME_TIME)) {
+
             List<ExtractResult> ers = config.getDateExtractor().extract(former.text);
             if (ers.size() == 1) {
                 data.put(Constants.Context, ers.get(0));
@@ -314,9 +332,9 @@ public class BaseDateTimeAltExtractor implements IDateTimeListExtractor {
     }
 
     private Map<String, Object> extractDates(List<ExtractResult> extractResults) {
+
         Map<String, Object> data = new LinkedHashMap<>();
         boolean allAreDates = true;
-
         for (ExtractResult er : extractResults) {
             if (!er.type.equals(Constants.SYS_DATETIME_DATE)) {
                 allAreDates = false;
@@ -326,15 +344,20 @@ public class BaseDateTimeAltExtractor implements IDateTimeListExtractor {
 
         // Modify time entity to an alternative Date expression, such as "Thursday" in "next week on Tuesday or Thursday"
         if (allAreDates) {
+
             List<ExtractResult> ers = config.getDatePeriodExtractor().extract(extractResults.get(0).text);
             if (ers.size() == 1) {
+
                 data.put(Constants.Context, ers.get(0));
                 data.put(Constants.SubType, Constants.SYS_DATETIME_DATE);
             } else {
+
                 // "Thursday" in "next/last/this Tuesday or Thursday"
                 for (Pattern regex : config.getRelativePrefixList()) {
+
                     Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(regex, extractResults.get(0).text)).findFirst();
                     if (match.isPresent()) {
+
                         data.put(Constants.Context, new ExtractResult(
                             match.get().index,
                             match.get().length,
@@ -350,13 +373,16 @@ public class BaseDateTimeAltExtractor implements IDateTimeListExtractor {
     }
 
     private Map<String, Object> extractTime_Time(ExtractResult former, ExtractResult latter) {
-        Map<String, Object> data = new LinkedHashMap<>();
 
+        Map<String, Object> data = new LinkedHashMap<>();
         if (former.type.equals(Constants.SYS_DATETIME_TIME) && latter.type.equals(Constants.SYS_DATETIME_TIME)) {
+
             // "8 oclock" in "in the morning at 7 oclock or 8 oclock"
             for (Pattern regex : config.getAmPmRegexList()) {
+
                 Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(regex, former.text)).findFirst();
                 if (match.isPresent()) {
+
                     data.put(Constants.Context, new ExtractResult(
                         match.get().index,
                         match.get().length,
@@ -371,10 +397,11 @@ public class BaseDateTimeAltExtractor implements IDateTimeListExtractor {
     }
 
     private Map<String, Object> extractDateTime_DateTime(ExtractResult former, ExtractResult latter) {
-        Map<String, Object> data = new LinkedHashMap<>();
 
+        Map<String, Object> data = new LinkedHashMap<>();
         // Modify time entity to an alternative DateTime expression, such as "Tue 1 pm" in "next week Mon 9 am or Tue 1 pm"
         if (former.type.equals(Constants.SYS_DATETIME_DATETIME) && latter.type.equals(Constants.SYS_DATETIME_DATETIME)) {
+
             List<ExtractResult> ers = config.getDatePeriodExtractor().extract(former.text);
             if (ers.size() == 1) {
                 data.put(Constants.Context, ers.get(0));
@@ -386,10 +413,11 @@ public class BaseDateTimeAltExtractor implements IDateTimeListExtractor {
     }
 
     private Map<String, Object> extractDateTimeRange_TimeRange(ExtractResult former, ExtractResult latter) {
-        Map<String, Object> data = new LinkedHashMap<>();
 
+        Map<String, Object> data = new LinkedHashMap<>();
         // Modify time entity to an alternative DateTimeRange expression, such as "9-10 am" in "Monday 7-8 am or 9-10 am"
         if (former.type.equals(Constants.SYS_DATETIME_DATETIMEPERIOD) && latter.type.equals(Constants.SYS_DATETIME_TIMEPERIOD)) {
+
             List<ExtractResult> ers = config.getDateExtractor().extract(former.text);
             if (ers.size() == 1) {
                 data.put(Constants.Context, ers.get(0));
@@ -401,8 +429,8 @@ public class BaseDateTimeAltExtractor implements IDateTimeListExtractor {
     }
 
     private Map<String, Object> extractDateRange_DateRange(ExtractResult former, ExtractResult latter) {
-        Map<String, Object> data = new LinkedHashMap<>();
 
+        Map<String, Object> data = new LinkedHashMap<>();
         if (former.type.equals(Constants.SYS_DATETIME_DATEPERIOD) && latter.type.equals(Constants.SYS_DATETIME_DATEPERIOD)) {
             data.put(Constants.SubType, Constants.SYS_DATETIME_DATEPERIOD);
         }

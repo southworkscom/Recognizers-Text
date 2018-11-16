@@ -56,38 +56,43 @@ public class EnglishTimeExtractorConfiguration extends BaseOptionsConfiguration 
     public static final Pattern ConnectNumRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.ConnectNumRegex, Pattern.CASE_INSENSITIVE);
     public static final Pattern TimeBeforeAfterRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.TimeBeforeAfterRegex, Pattern.CASE_INSENSITIVE);
 
+    private IDateTimeExtractor DurationExtractor;
+    private IDateTimeExtractor TimeZoneExtractor;
+
     public static final Iterable<Pattern> TimeRegexList = new ArrayList<Pattern>() {
         // (three min past)? seven|7|(senven thirty) pm
-        {add(RegExpUtility.getSafeRegExp(EnglishDateTime.TimeRegex1, Pattern.CASE_INSENSITIVE));
+        {
+            add(RegExpUtility.getSafeRegExp(EnglishDateTime.TimeRegex1, Pattern.CASE_INSENSITIVE));
 
-        // (three min past)? 3:00(:00)? (pm)?
-        add(RegExpUtility.getSafeRegExp(EnglishDateTime.TimeRegex2, Pattern.CASE_INSENSITIVE));
+            // (three min past)? 3:00(:00)? (pm)?
+            add(RegExpUtility.getSafeRegExp(EnglishDateTime.TimeRegex2, Pattern.CASE_INSENSITIVE));
 
-        // (three min past)? 3.00 (pm)
-        add(RegExpUtility.getSafeRegExp(EnglishDateTime.TimeRegex3, Pattern.CASE_INSENSITIVE));
+            // (three min past)? 3.00 (pm)
+            add(RegExpUtility.getSafeRegExp(EnglishDateTime.TimeRegex3, Pattern.CASE_INSENSITIVE));
 
-        // (three min past) (five thirty|seven|7|7:00(:00)?) (pm)? (in the night)
-        add(RegExpUtility.getSafeRegExp(EnglishDateTime.TimeRegex4, Pattern.CASE_INSENSITIVE));
+            // (three min past) (five thirty|seven|7|7:00(:00)?) (pm)? (in the night)
+            add(RegExpUtility.getSafeRegExp(EnglishDateTime.TimeRegex4, Pattern.CASE_INSENSITIVE));
 
-        // (three min past) (five thirty|seven|7|7:00(:00)?) (pm)?
-        add(RegExpUtility.getSafeRegExp(EnglishDateTime.TimeRegex5, Pattern.CASE_INSENSITIVE));
+            // (three min past) (five thirty|seven|7|7:00(:00)?) (pm)?
+            add(RegExpUtility.getSafeRegExp(EnglishDateTime.TimeRegex5, Pattern.CASE_INSENSITIVE));
 
-        // (five thirty|seven|7|7:00(:00)?) (pm)? (in the night)
-        add(RegExpUtility.getSafeRegExp(EnglishDateTime.TimeRegex6, Pattern.CASE_INSENSITIVE));
+            // (five thirty|seven|7|7:00(:00)?) (pm)? (in the night)
+            add(RegExpUtility.getSafeRegExp(EnglishDateTime.TimeRegex6, Pattern.CASE_INSENSITIVE));
 
-        // (in the night) at (five thirty|seven|7|7:00(:00)?) (pm)?
-        add(RegExpUtility.getSafeRegExp(EnglishDateTime.TimeRegex7, Pattern.CASE_INSENSITIVE));
+            // (in the night) at (five thirty|seven|7|7:00(:00)?) (pm)?
+            add(RegExpUtility.getSafeRegExp(EnglishDateTime.TimeRegex7, Pattern.CASE_INSENSITIVE));
 
-        // (in the night) (five thirty|seven|7|7:00(:00)?) (pm)?
-        add(RegExpUtility.getSafeRegExp(EnglishDateTime.TimeRegex8, Pattern.CASE_INSENSITIVE));
+            // (in the night) (five thirty|seven|7|7:00(:00)?) (pm)?
+            add(RegExpUtility.getSafeRegExp(EnglishDateTime.TimeRegex8, Pattern.CASE_INSENSITIVE));
 
-        add(RegExpUtility.getSafeRegExp(EnglishDateTime.TimeRegex9, Pattern.CASE_INSENSITIVE));
+            add(RegExpUtility.getSafeRegExp(EnglishDateTime.TimeRegex9, Pattern.CASE_INSENSITIVE));
 
-        // (three min past)? 3h00 (pm)?
-        add(RegExpUtility.getSafeRegExp(EnglishDateTime.TimeRegex10, Pattern.CASE_INSENSITIVE));
+            // (three min past)? 3h00 (pm)?
+            add(RegExpUtility.getSafeRegExp(EnglishDateTime.TimeRegex10, Pattern.CASE_INSENSITIVE));
 
-        // 340pm
-        add(ConnectNumRegex);}
+            // 340pm
+            add(ConnectNumRegex);
+        }
     };
 
     public final Iterable<Pattern> getTimeRegexList() {
@@ -106,25 +111,26 @@ public class EnglishTimeExtractorConfiguration extends BaseOptionsConfiguration 
         return TimeBeforeAfterRegex;
     }
 
-    private IDateTimeExtractor DurationExtractor;
     public final IDateTimeExtractor getDurationExtractor() {
         return DurationExtractor;
     }
 
-    private IDateTimeExtractor TimeZoneExtractor;
     public final IDateTimeExtractor getTimeZoneExtractor() {
         return TimeZoneExtractor;
     }
-
 
     public EnglishTimeExtractorConfiguration() {
         this(DateTimeOptions.None);
     }
 
-    //C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-    //ORIGINAL LINE: public EnglishTimeExtractorConfiguration(DateTimeOptions options = DateTimeOptions.None)
+    // C# TO JAVA CONVERTER NOTE: Java does not support optional parameters.
+    // Overloaded method(s) are created above:
+    // ORIGINAL LINE: public EnglishTimeExtractorConfiguration(DateTimeOptions
+    // options = DateTimeOptions.None)
     public EnglishTimeExtractorConfiguration(DateTimeOptions options) {
+
         super(options);
+
         DurationExtractor = new BaseDurationExtractor(new EnglishDurationExtractorConfiguration());
         TimeZoneExtractor = new BaseTimeZoneExtractor(new EnglishTimeZoneExtractorConfiguration(options));
     }

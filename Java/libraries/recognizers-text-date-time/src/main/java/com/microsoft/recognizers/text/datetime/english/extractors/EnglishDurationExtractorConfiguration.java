@@ -13,138 +13,124 @@ import com.microsoft.recognizers.text.utilities.RegExpUtility;
 
 public class EnglishDurationExtractorConfiguration extends BaseOptionsConfiguration implements IDurationExtractorConfiguration {
 
-  public static final Pattern DurationUnitRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.DurationUnitRegex, Pattern.CASE_INSENSITIVE);
+    public static final Pattern DurationUnitRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.DurationUnitRegex, Pattern.CASE_INSENSITIVE);
+    public static final Pattern SuffixAndRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.SuffixAndRegex, Pattern.CASE_INSENSITIVE);
+    public static final Pattern DurationFollowedUnit = RegExpUtility.getSafeRegExp(EnglishDateTime.DurationFollowedUnit, Pattern.CASE_INSENSITIVE);
+    public static final Pattern NumberCombinedWithDurationUnit = RegExpUtility.getSafeRegExp(EnglishDateTime.NumberCombinedWithDurationUnit, Pattern.CASE_INSENSITIVE);
+    public static final Pattern AnUnitRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.AnUnitRegex, Pattern.CASE_INSENSITIVE);
+    public static final Pattern DuringRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.DuringRegex, Pattern.CASE_INSENSITIVE);
+    public static final Pattern AllRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.AllRegex, Pattern.CASE_INSENSITIVE);
+    public static final Pattern HalfRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.HalfRegex, Pattern.CASE_INSENSITIVE);
+    public static final Pattern ConjunctionRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.ConjunctionRegex, Pattern.CASE_INSENSITIVE);
+    public static final Pattern InexactNumberRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.InexactNumberRegex, Pattern.CASE_INSENSITIVE);
+    public static final Pattern InexactNumberUnitRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.InexactNumberUnitRegex, Pattern.CASE_INSENSITIVE);
+    public static final Pattern RelativeDurationUnitRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.RelativeDurationUnitRegex, Pattern.CASE_INSENSITIVE);
+    public static final Pattern DurationConnectorRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.DurationConnectorRegex, Pattern.CASE_INSENSITIVE);
+    public static final Pattern MoreThanRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.MoreThanRegex, Pattern.CASE_INSENSITIVE);
+    public static final Pattern LessThanRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.LessThanRegex, Pattern.CASE_INSENSITIVE);
 
-  public static final Pattern SuffixAndRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.SuffixAndRegex, Pattern.CASE_INSENSITIVE);
+    private final IExtractor cardinalExtractor;
+    private final ImmutableMap<String, String> unitMap;
+    private final ImmutableMap<String, Long> unitValueMap;
 
-  public static final Pattern DurationFollowedUnit = RegExpUtility.getSafeRegExp(EnglishDateTime.DurationFollowedUnit, Pattern.CASE_INSENSITIVE);
+    public EnglishDurationExtractorConfiguration() {
+        this(DateTimeOptions.None);
+    }
 
-  public static final Pattern NumberCombinedWithDurationUnit = RegExpUtility.getSafeRegExp(EnglishDateTime.NumberCombinedWithDurationUnit, Pattern.CASE_INSENSITIVE);
+    public EnglishDurationExtractorConfiguration(DateTimeOptions options) {
+        super(options);
+        cardinalExtractor = CardinalExtractor.getInstance();
+        unitMap = (ImmutableMap) EnglishDateTime.UnitMap;
+        unitValueMap = (ImmutableMap) EnglishDateTime.UnitValueMap;
+    }
 
-  public static final Pattern AnUnitRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.AnUnitRegex, Pattern.CASE_INSENSITIVE);
+    @Override
+    public Pattern getFollowedUnit() {
+        return DurationFollowedUnit;
+    }
 
-  public static final Pattern DuringRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.DuringRegex, Pattern.CASE_INSENSITIVE);
+    @Override
+    public Pattern getNumberCombinedWithUnit() {
+        return NumberCombinedWithDurationUnit;
+    }
 
-  public static final Pattern AllRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.AllRegex, Pattern.CASE_INSENSITIVE);
+    @Override
+    public Pattern getAnUnitRegex() {
+        return AnUnitRegex;
+    }
 
-  public static final Pattern HalfRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.HalfRegex, Pattern.CASE_INSENSITIVE);
+    @Override
+    public Pattern getDuringRegex() {
+        return DuringRegex;
+    }
 
-  public static final Pattern ConjunctionRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.ConjunctionRegex, Pattern.CASE_INSENSITIVE);
+    @Override
+    public Pattern getAllRegex() {
+        return AllRegex;
+    }
 
-  public static final Pattern InexactNumberRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.InexactNumberRegex, Pattern.CASE_INSENSITIVE);
+    @Override
+    public Pattern getHalfRegex() {
+        return HalfRegex;
+    }
 
-  public static final Pattern InexactNumberUnitRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.InexactNumberUnitRegex, Pattern.CASE_INSENSITIVE);
+    @Override
+    public Pattern getSuffixAndRegex() {
+        return SuffixAndRegex;
+    }
 
-  public static final Pattern RelativeDurationUnitRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.RelativeDurationUnitRegex, Pattern.CASE_INSENSITIVE);
+    @Override
+    public Pattern getConjunctionRegex() {
+        return ConjunctionRegex;
+    }
 
-  public static final Pattern DurationConnectorRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.DurationConnectorRegex, Pattern.CASE_INSENSITIVE);
+    @Override
+    public Pattern getInexactNumberRegex() {
+        return InexactNumberRegex;
+    }
 
-  public static final Pattern MoreThanRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.MoreThanRegex, Pattern.CASE_INSENSITIVE);
+    @Override
+    public Pattern getInexactNumberUnitRegex() {
+        return InexactNumberUnitRegex;
+    }
 
-  public static final Pattern LessThanRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.LessThanRegex, Pattern.CASE_INSENSITIVE);
-  
-  private final IExtractor cardinalExtractor;
-  private final ImmutableMap<String, String> unitMap;
-  private final ImmutableMap<String, Long> unitValueMap;
-  
-  public EnglishDurationExtractorConfiguration() {
-    this(DateTimeOptions.None);
-  }
-  
-  public EnglishDurationExtractorConfiguration(DateTimeOptions options) {
-    super(options);
-    cardinalExtractor = CardinalExtractor.getInstance();
-    unitMap = (ImmutableMap) EnglishDateTime.UnitMap;
-    unitValueMap = (ImmutableMap) EnglishDateTime.UnitValueMap;
-  }
+    @Override
+    public Pattern getRelativeDurationUnitRegex() {
+        return RelativeDurationUnitRegex;
+    }
 
-	@Override
-	public Pattern getFollowedUnit() {
-		return DurationFollowedUnit;
-	}
+    @Override
+    public Pattern getDurationUnitRegex() {
+        return DurationUnitRegex;
+    }
 
-	@Override
-	public Pattern getNumberCombinedWithUnit() {
-		return NumberCombinedWithDurationUnit;
-	}
+    @Override
+    public Pattern getDurationConnectorRegex() {
+        return DurationConnectorRegex;
+    }
 
-	@Override
-	public Pattern getAnUnitRegex() {
-		return AnUnitRegex;
-	}
+    @Override
+    public Pattern getLessThanRegex() {
+        return LessThanRegex;
+    }
 
-	@Override
-	public Pattern getDuringRegex() {
-		return DuringRegex;
-	}
+    @Override
+    public Pattern getMoreThanRegex() {
+        return MoreThanRegex;
+    }
 
-	@Override
-	public Pattern getAllRegex() {
-		return AllRegex;
-	}
+    @Override
+    public IExtractor getCardinalExtractor() {
+        return cardinalExtractor;
+    }
 
-	@Override
-	public Pattern getHalfRegex() {
-		return HalfRegex;
-	}
+    @Override
+    public ImmutableMap<String, String> getUnitMap() {
+        return unitMap;
+    }
 
-	@Override
-	public Pattern getSuffixAndRegex() {
-		return SuffixAndRegex;
-	}
-
-	@Override
-	public Pattern getConjunctionRegex() {
-		return ConjunctionRegex;
-	}
-
-	@Override
-	public Pattern getInexactNumberRegex() {
-		return InexactNumberRegex;
-	}
-
-	@Override
-	public Pattern getInexactNumberUnitRegex() {
-		return InexactNumberUnitRegex;
-	}
-
-	@Override
-	public Pattern getRelativeDurationUnitRegex() {
-		return RelativeDurationUnitRegex;
-	}
-
-	@Override
-	public Pattern getDurationUnitRegex() {
-		return DurationUnitRegex;
-	}
-
-	@Override
-	public Pattern getDurationConnectorRegex() {
-		return DurationConnectorRegex;
-	}
-
-	@Override
-	public Pattern getLessThanRegex() {
-		return LessThanRegex;
-	}
-
-	@Override
-	public Pattern getMoreThanRegex() {
-		return MoreThanRegex;
-	}
-
-	@Override
-	public IExtractor getCardinalExtractor() {
-		return cardinalExtractor;
-	}
-
-	@Override
-	public ImmutableMap<String, String> getUnitMap() {
-		return unitMap;
-	}
-
-	@Override
-	public ImmutableMap<String, Long> getUnitValueMap() {
-		return unitValueMap;
-	}
+    @Override
+    public ImmutableMap<String, Long> getUnitValueMap() {
+        return unitValueMap;
+    }
 }
