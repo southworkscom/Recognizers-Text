@@ -10,10 +10,7 @@ import com.microsoft.recognizers.text.datetime.TimeTypeConstants;
 import com.microsoft.recognizers.text.datetime.extractors.BaseDateExtractor;
 import com.microsoft.recognizers.text.datetime.parsers.config.IDatePeriodParserConfiguration;
 import com.microsoft.recognizers.text.datetime.utilities.*;
-import com.microsoft.recognizers.text.utilities.Match;
-import com.microsoft.recognizers.text.utilities.MatchGroup;
-import com.microsoft.recognizers.text.utilities.RegExpUtility;
-import com.microsoft.recognizers.text.utilities.StringUtility;
+import com.microsoft.recognizers.text.utilities.*;
 import org.javatuples.Pair;
 
 import java.time.DayOfWeek;
@@ -1486,22 +1483,25 @@ public class BaseDatePeriodParser implements IDateTimeParser{
         String beginLuisStr, endLuisStr;
 
         if (match.isPresent() && match.get().index == 0 && match.get().length == trimmedText.length()) {
+
             String decadeStr = match.get().getGroup("decade").value.toLowerCase();
-            if (!int.TryParse(decadeStr, out decade))
-            {
+            if (!IntegerUtility.canParse(decadeStr)) {
                 if (this.config.getWrittenDecades().containsKey(decadeStr)) {
                     decade = this.config.getWrittenDecades().get(decadeStr);
                 } else if (this.config.getSpecialDecadeCases().containsKey(decadeStr)) {
                     firstTwoNumOfYear = this.config.getSpecialDecadeCases().get(decadeStr) / 100;
                     decade = this.config.getSpecialDecadeCases().get(decadeStr) % 100;
                     inputCentury = true;
+                } else {
+                    return ret;
                 }
+            } else {
+                decade = Integer.parseInt(decadeStr);
             }
 
             String centuryStr = match.get().getGroup("century").value.toLowerCase();
             if (!StringUtility.isNullOrEmpty(centuryStr)) {
-                if (!int.TryParse(centuryStr, out firstTwoNumOfYear))
-                {
+                if (!IntegerUtility.canParse(centuryStr)) {
                     if (this.config.getNumbers().containsKey(centuryStr)) {
                         firstTwoNumOfYear = this.config.getNumbers().get(centuryStr);
                     } else {
@@ -1517,6 +1517,8 @@ public class BaseDatePeriodParser implements IDateTimeParser{
                             firstTwoNumOfYear = firstTwoNumOfYear / 100;
                         }
                     }
+                } else {
+                    firstTwoNumOfYear = Integer.parseInt(centuryStr);
                 }
 
                 inputCentury = true;
