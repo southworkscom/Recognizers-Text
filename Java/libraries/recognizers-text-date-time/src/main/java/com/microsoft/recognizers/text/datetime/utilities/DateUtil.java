@@ -47,27 +47,27 @@ public class DateUtil {
         }
 
         Integer[] validDays = {
-                31,
-                year %4 == 0 && year%100 != 0 || year%400 == 0 ? 29 : 28,
-                31,
-                30,
-                31,
-                30,
-                31,
-                31,
-                30,
-                31,
-                30,
-                31
+            31,
+            year % 4 == 0 && year % 100 != 0 || year % 400 == 0 ? 29 : 28,
+            31,
+            30,
+            31,
+            30,
+            31,
+            31,
+            30,
+            31,
+            30,
+            31
         };
 
         return month >= 1 && month <= 12 && day >= 1 && day <= validDays[month - 1];
     }
 
     public static boolean isValidTime(int hour, int minute, int second) {
-        return 0 <= hour && hour <= 23
-        && 0 <= minute && minute <= 59
-        && 0 <= second && second <= 59;
+        return 0 <= hour && hour <= 23 &&
+            0 <= minute && minute <= 59 &&
+            0 <= second && second <= 59;
     }
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER = new DateTimeFormatterBuilder()
@@ -79,8 +79,8 @@ public class DateUtil {
 
     public static LocalDateTime tryParse(String date) {
         try {
-           return LocalDateTime.parse(date, DATE_TIME_FORMATTER);
-        } catch(DateTimeParseException ex) {
+            return LocalDateTime.parse(date, DATE_TIME_FORMATTER);
+        } catch (DateTimeParseException ex) {
             return null;
         }
     }
@@ -88,13 +88,11 @@ public class DateUtil {
     public static LocalDateTime next(LocalDateTime from, int dayOfWeek) {
         int start = from.getDayOfWeek().getValue();
 
-        if (start == 0)
-        {
+        if (start == 0) {
             start = 7;
         }
 
-        if (dayOfWeek == 0)
-        {
+        if (dayOfWeek == 0) {
             dayOfWeek = 7;
         }
 
@@ -104,13 +102,11 @@ public class DateUtil {
     public static LocalDateTime thisDate(LocalDateTime from, int dayOfWeek) {
         int start = from.getDayOfWeek().getValue();
 
-        if (start == 0)
-        {
+        if (start == 0) {
             start = 7;
         }
 
-        if (dayOfWeek == 0)
-        {
+        if (dayOfWeek == 0) {
             dayOfWeek = 7;
         }
 
@@ -120,13 +116,11 @@ public class DateUtil {
     public static LocalDateTime last(LocalDateTime from, int dayOfWeek) {
         int start = from.getDayOfWeek().getValue();
 
-        if (start == 0)
-        {
+        if (start == 0) {
             start = 7;
         }
 
-        if (dayOfWeek == 0)
-        {
+        if (dayOfWeek == 0) {
             dayOfWeek = 7;
         }
 

@@ -27,54 +27,54 @@ public class EnglishSetExtractorConfiguration extends BaseOptionsConfiguration i
     public static final Pattern EachPrefixRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.EachPrefixRegex, Pattern.CASE_INSENSITIVE);
     public static final Pattern SetWeekDayRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.SetWeekDayRegex, Pattern.CASE_INSENSITIVE);
 
-    private IDateTimeExtractor TimeExtractor;
-    private IDateTimeExtractor DateExtractor;
-    private IDateTimeExtractor DurationExtractor;
-    private IDateTimeExtractor DateTimeExtractor;
-    private IDateTimeExtractor DatePeriodExtractor;
-    private IDateTimeExtractor TimePeriodExtractor;
-    private IDateTimeExtractor DateTimePeriodExtractor;
+    private IDateTimeExtractor timeExtractor;
+    private IDateTimeExtractor dateExtractor;
+    private IDateTimeExtractor durationExtractor;
+    private IDateTimeExtractor dateTimeExtractor;
+    private IDateTimeExtractor datePeriodExtractor;
+    private IDateTimeExtractor timePeriodExtractor;
+    private IDateTimeExtractor dateTimePeriodExtractor;
 
     public EnglishSetExtractorConfiguration() {
 
         super(DateTimeOptions.None);
 
-        TimeExtractor = new BaseTimeExtractor(new EnglishTimeExtractorConfiguration());
-        DateExtractor = new BaseDateExtractor(new EnglishDateExtractorConfiguration());
-        DurationExtractor = new BaseDurationExtractor(new EnglishDurationExtractorConfiguration());
-        DateTimeExtractor = new BaseDateTimeExtractor(new EnglishDateTimeExtractorConfiguration());
-        DatePeriodExtractor = new BaseDatePeriodExtractor(new EnglishDatePeriodExtractorConfiguration());
-        TimePeriodExtractor = new BaseTimePeriodExtractor(new EnglishTimePeriodExtractorConfiguration());
-        DateTimePeriodExtractor = new BaseDateTimePeriodExtractor(new EnglishDateTimePeriodExtractorConfiguration());
+        timeExtractor = new BaseTimeExtractor(new EnglishTimeExtractorConfiguration());
+        dateExtractor = new BaseDateExtractor(new EnglishDateExtractorConfiguration());
+        durationExtractor = new BaseDurationExtractor(new EnglishDurationExtractorConfiguration());
+        dateTimeExtractor = new BaseDateTimeExtractor(new EnglishDateTimeExtractorConfiguration());
+        datePeriodExtractor = new BaseDatePeriodExtractor(new EnglishDatePeriodExtractorConfiguration());
+        timePeriodExtractor = new BaseTimePeriodExtractor(new EnglishTimePeriodExtractorConfiguration());
+        dateTimePeriodExtractor = new BaseDateTimePeriodExtractor(new EnglishDateTimePeriodExtractorConfiguration());
     }
 
 
     public final IDateTimeExtractor getTimeExtractor() {
-        return TimeExtractor;
+        return timeExtractor;
     }
 
     public final IDateTimeExtractor getDateExtractor() {
-        return DateExtractor;
+        return dateExtractor;
     }
 
     public final IDateTimeExtractor getDurationExtractor() {
-        return DurationExtractor;
+        return durationExtractor;
     }
 
     public final IDateTimeExtractor getDateTimeExtractor() {
-        return DateTimeExtractor;
+        return dateTimeExtractor;
     }
 
     public final IDateTimeExtractor getDatePeriodExtractor() {
-        return DatePeriodExtractor;
+        return datePeriodExtractor;
     }
 
     public final IDateTimeExtractor getTimePeriodExtractor() {
-        return TimePeriodExtractor;
+        return timePeriodExtractor;
     }
 
     public final IDateTimeExtractor getDateTimePeriodExtractor() {
-        return DateTimePeriodExtractor;
+        return dateTimePeriodExtractor;
     }
 
     public final Pattern getLastRegex() {

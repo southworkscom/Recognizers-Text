@@ -56,8 +56,8 @@ public class EnglishTimeExtractorConfiguration extends BaseOptionsConfiguration 
     public static final Pattern ConnectNumRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.ConnectNumRegex, Pattern.CASE_INSENSITIVE);
     public static final Pattern TimeBeforeAfterRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.TimeBeforeAfterRegex, Pattern.CASE_INSENSITIVE);
 
-    private IDateTimeExtractor DurationExtractor;
-    private IDateTimeExtractor TimeZoneExtractor;
+    private IDateTimeExtractor durationExtractor;
+    private IDateTimeExtractor timeZoneExtractor;
 
     public static final Iterable<Pattern> TimeRegexList = new ArrayList<Pattern>() {
         // (three min past)? seven|7|(senven thirty) pm
@@ -112,11 +112,11 @@ public class EnglishTimeExtractorConfiguration extends BaseOptionsConfiguration 
     }
 
     public final IDateTimeExtractor getDurationExtractor() {
-        return DurationExtractor;
+        return durationExtractor;
     }
 
     public final IDateTimeExtractor getTimeZoneExtractor() {
-        return TimeZoneExtractor;
+        return timeZoneExtractor;
     }
 
     public EnglishTimeExtractorConfiguration() {
@@ -131,7 +131,7 @@ public class EnglishTimeExtractorConfiguration extends BaseOptionsConfiguration 
 
         super(options);
 
-        DurationExtractor = new BaseDurationExtractor(new EnglishDurationExtractorConfiguration());
-        TimeZoneExtractor = new BaseTimeZoneExtractor(new EnglishTimeZoneExtractorConfiguration(options));
+        durationExtractor = new BaseDurationExtractor(new EnglishDurationExtractorConfiguration());
+        timeZoneExtractor = new BaseTimeZoneExtractor(new EnglishTimeZoneExtractorConfiguration(options));
     }
 }

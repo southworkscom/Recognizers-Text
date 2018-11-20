@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 public class BaseTimeExtractor implements IDateTimeExtractor {
@@ -28,18 +27,18 @@ public class BaseTimeExtractor implements IDateTimeExtractor {
     public BaseTimeExtractor(ITimeExtractorConfiguration config) {
         this.config = config;
     }
+
     @Override
     public List<ExtractResult> extract(String input, LocalDateTime reference) {
         List<Token> tokens = new ArrayList<>();
-        tokens.addAll(BasicRegexMatch(input));
-        tokens.addAll(AtRegexMatch(input));
-        tokens.addAll(BeforeAfterRegexMatch(input));
-        tokens.addAll(SpecialCasesRegexMatch(input));
+        tokens.addAll(basicRegexMatch(input));
+        tokens.addAll(atRegexMatch(input));
+        tokens.addAll(beforeAfterRegexMatch(input));
+        tokens.addAll(specialCasesRegexMatch(input));
 
         List<ExtractResult> timeErs = Token.mergeAllTokens(tokens, input, getExtractorName());
-        if (this.config.getOptions() == DateTimeOptions.EnablePreview)
-        {
-            timeErs = MergeTimeZones(timeErs, config.getTimeZoneExtractor().extract(input, reference), input);
+        if (this.config.getOptions() == DateTimeOptions.EnablePreview) {
+            timeErs = mergeTimeZones(timeErs, config.getTimeZoneExtractor().extract(input, reference), input);
         }
         return timeErs;
     }
@@ -49,20 +48,16 @@ public class BaseTimeExtractor implements IDateTimeExtractor {
         return this.extract(input, LocalDateTime.now());
     }
 
-    private List<ExtractResult> MergeTimeZones(List<ExtractResult> timeErs, List<ExtractResult> timeZoneErs, String text) {
-        for (ExtractResult er : timeErs)
-        {
-            for (ExtractResult timeZoneEr :timeZoneErs)
-            {
+    private List<ExtractResult> mergeTimeZones(List<ExtractResult> timeErs, List<ExtractResult> timeZoneErs, String text) {
+        for (ExtractResult er : timeErs) {
+            for (ExtractResult timeZoneEr :timeZoneErs) {
                 int begin = er.start + er.length;
                 int end = timeZoneEr.start;
 
-                if (begin > end)
-                {
+                if (begin > end) {
                     String gapText = text.substring(begin, end - begin);
 
-                    if (StringUtility.isNullOrWhiteSpace(gapText))
-                    {
+                    if (StringUtility.isNullOrWhiteSpace(gapText)) {
                         int newLenght = timeZoneEr.start + timeZoneEr.length - er.start;
 
                         er = er.withText(text.substring(er.start, newLenght));
@@ -75,30 +70,25 @@ public class BaseTimeExtractor implements IDateTimeExtractor {
         return timeErs;
     }
 
-    public final List<Token> BasicRegexMatch(String text) {
+    public final List<Token> basicRegexMatch(String text) {
         List<Token> ret = new ArrayList<>();
-        for (Pattern regex : this.config.getTimeRegexList())
-        {
+        for (Pattern regex : this.config.getTimeRegexList()) {
             Match[] matches = RegExpUtility.getMatches(regex, text);
-            for (Match match : matches)
-            {
+            for (Match match : matches) {
                 ret.add(new Token(match.index, match.index + match.length));
             }
         }
         return ret;
     }
 
-    private List<Token> AtRegexMatch(String text) {
+    private List<Token> atRegexMatch(String text) {
         List<Token> ret = new ArrayList<>();
         // handle "at 5", "at seven"
         Pattern pattern = this.config.getAtRegex();
         Match[] matches = RegExpUtility.getMatches(pattern, text);
-        if (matches.length > 0)
-        {
-            for (Match match : matches)
-            {
-                if (match.index + match.length < text.length() && text.charAt(match.index + match.length) == '%')
-                {
+        if (matches.length > 0) {
+            for (Match match : matches) {
+                if (match.index + match.length < text.length() && text.charAt(match.index + match.length) == '%') {
                     continue;
                 }
                 ret.add(new Token(match.index, match.index + match.length));
@@ -107,18 +97,15 @@ public class BaseTimeExtractor implements IDateTimeExtractor {
         return ret;
     }
 
-    private List<Token> BeforeAfterRegexMatch(String text) {
+    private List<Token> beforeAfterRegexMatch(String text) {
         List<Token> ret = new ArrayList<>();
         // only enabled in CalendarMode
-        if (this.config.getOptions() ==  DateTimeOptions.CalendarMode)
-        {
+        if (this.config.getOptions() ==  DateTimeOptions.CalendarMode) {
             // handle "before 3", "after three"
             Pattern beforeAfterRegex = this.config.getTimeBeforeAfterRegex();
             Match[] matches = RegExpUtility.getMatches(beforeAfterRegex, text);
-            if (matches.length > 1)
-            {
-                for (Match match : matches)
-                {
+            if (matches.length > 1) {
+                for (Match match : matches) {
                     ret.add(new Token(match.index, match.index + match.length));
                 }
             }
@@ -126,14 +113,12 @@ public class BaseTimeExtractor implements IDateTimeExtractor {
         return ret;
     }
 
-    private List<Token> SpecialCasesRegexMatch (String text) {
+    private List<Token> specialCasesRegexMatch(String text) {
         List<Token> ret = new ArrayList<>();
         // handle "ish"
-        if (this.config.getIshRegex() != null && RegExpUtility.getMatches(this.config.getIshRegex(), text).length > 0)
-        {
+        if (this.config.getIshRegex() != null && RegExpUtility.getMatches(this.config.getIshRegex(), text).length > 0) {
             Match[] matches = RegExpUtility.getMatches(this.config.getIshRegex(), text);
-            for (Match match : matches)
-            {
+            for (Match match : matches) {
                 ret.add(new Token(match.index, match.index + match.length));
             }
         }

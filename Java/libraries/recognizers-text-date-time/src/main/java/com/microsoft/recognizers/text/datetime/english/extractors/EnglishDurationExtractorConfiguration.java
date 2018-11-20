@@ -1,7 +1,5 @@
 package com.microsoft.recognizers.text.datetime.english.extractors;
 
-import java.util.regex.Pattern;
-
 import com.google.common.collect.ImmutableMap;
 import com.microsoft.recognizers.text.IExtractor;
 import com.microsoft.recognizers.text.datetime.DateTimeOptions;
@@ -10,6 +8,8 @@ import com.microsoft.recognizers.text.datetime.extractors.config.IDurationExtrac
 import com.microsoft.recognizers.text.datetime.resources.EnglishDateTime;
 import com.microsoft.recognizers.text.number.english.extractors.CardinalExtractor;
 import com.microsoft.recognizers.text.utilities.RegExpUtility;
+
+import java.util.regex.Pattern;
 
 public class EnglishDurationExtractorConfiguration extends BaseOptionsConfiguration implements IDurationExtractorConfiguration {
 
@@ -40,8 +40,8 @@ public class EnglishDurationExtractorConfiguration extends BaseOptionsConfigurat
     public EnglishDurationExtractorConfiguration(DateTimeOptions options) {
         super(options);
         cardinalExtractor = CardinalExtractor.getInstance();
-        unitMap = (ImmutableMap) EnglishDateTime.UnitMap;
-        unitValueMap = (ImmutableMap) EnglishDateTime.UnitValueMap;
+        unitMap = (ImmutableMap<String, String>) EnglishDateTime.UnitMap;
+        unitValueMap = (ImmutableMap<String, Long>) EnglishDateTime.UnitValueMap;
     }
 
     @Override

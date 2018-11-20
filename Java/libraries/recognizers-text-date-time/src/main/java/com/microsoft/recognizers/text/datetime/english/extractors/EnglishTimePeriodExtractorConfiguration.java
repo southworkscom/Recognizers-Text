@@ -1,22 +1,20 @@
 package com.microsoft.recognizers.text.datetime.english.extractors;
 
 import com.microsoft.recognizers.text.IExtractor;
-import com.microsoft.recognizers.text.datetime.extractors.IDateTimeExtractor;
-import com.microsoft.recognizers.text.datetime.extractors.config.ResultIndex;
-import com.microsoft.recognizers.text.datetime.utilities.IDateTimeUtilityConfiguration;
-import com.microsoft.recognizers.text.number.english.extractors.IntegerExtractor;
-import com.microsoft.recognizers.text.utilities.RegExpUtility;
 import com.microsoft.recognizers.text.datetime.DateTimeOptions;
-import com.microsoft.recognizers.text.datetime.resources.EnglishDateTime;
-import com.microsoft.recognizers.text.datetime.extractors.BaseTimeExtractor;
 import com.microsoft.recognizers.text.datetime.config.BaseOptionsConfiguration;
-import com.microsoft.recognizers.text.datetime.extractors.config.ITimePeriodExtractorConfiguration;
 import com.microsoft.recognizers.text.datetime.english.parsers.EnglishDatetimeUtilityConfiguration;
+import com.microsoft.recognizers.text.datetime.extractors.BaseTimeExtractor;
+import com.microsoft.recognizers.text.datetime.extractors.IDateTimeExtractor;
+import com.microsoft.recognizers.text.datetime.extractors.config.ITimePeriodExtractorConfiguration;
+import com.microsoft.recognizers.text.datetime.extractors.config.ResultIndex;
+import com.microsoft.recognizers.text.datetime.resources.EnglishDateTime;
+import com.microsoft.recognizers.text.datetime.utilities.IDateTimeUtilityConfiguration;
+import com.microsoft.recognizers.text.utilities.RegExpUtility;
 
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-import static com.microsoft.recognizers.text.datetime.resources.EnglishDateTime.TokenBeforeDate;
 
 public class EnglishTimePeriodExtractorConfiguration extends BaseOptionsConfiguration
         implements ITimePeriodExtractorConfiguration {
@@ -39,11 +37,11 @@ public class EnglishTimePeriodExtractorConfiguration extends BaseOptionsConfigur
     public static final Pattern SpecificTimeOfDayRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.SpecificTimeOfDayRegex, Pattern.CASE_INSENSITIVE);
     public static final Pattern TimeNumberCombinedWithUnit = RegExpUtility.getSafeRegExp(EnglishDateTime.TimeNumberCombinedWithUnit, Pattern.CASE_INSENSITIVE);
 
-    private String TokenBeforeDate;
+    private String tokenBeforeDate;
 
-    private IDateTimeUtilityConfiguration UtilityConfiguration;
-    private IDateTimeExtractor SingleTimeExtractor;
-    private IExtractor IntegerExtractor;
+    private IDateTimeUtilityConfiguration utilityConfiguration;
+    private IDateTimeExtractor singleTimeExtractor;
+    private IExtractor integerExtractor;
 
     public final Iterable<Pattern> getSimpleCasesRegex = new ArrayList<Pattern>() {
         {
@@ -59,29 +57,29 @@ public class EnglishTimePeriodExtractorConfiguration extends BaseOptionsConfigur
     }
 
     public final String getTokenBeforeDate() {
-        return TokenBeforeDate;
+        return tokenBeforeDate;
     }
 
     public EnglishTimePeriodExtractorConfiguration(DateTimeOptions options) {
 
         super(options);
 
-        TokenBeforeDate = EnglishDateTime.TokenBeforeDate;
-        SingleTimeExtractor = new BaseTimeExtractor(new EnglishTimeExtractorConfiguration(options));
-        UtilityConfiguration = new EnglishDatetimeUtilityConfiguration();
-        IntegerExtractor = com.microsoft.recognizers.text.number.english.extractors.IntegerExtractor.getInstance();
+        tokenBeforeDate = EnglishDateTime.TokenBeforeDate;
+        singleTimeExtractor = new BaseTimeExtractor(new EnglishTimeExtractorConfiguration(options));
+        utilityConfiguration = new EnglishDatetimeUtilityConfiguration();
+        integerExtractor = com.microsoft.recognizers.text.number.english.extractors.IntegerExtractor.getInstance();
     }
 
     public final IDateTimeUtilityConfiguration getUtilityConfiguration() {
-        return UtilityConfiguration;
+        return utilityConfiguration;
     }
 
     public final IDateTimeExtractor getSingleTimeExtractor() {
-        return SingleTimeExtractor;
+        return singleTimeExtractor;
     }
 
     public final IExtractor getIntegerExtractor() {
-        return IntegerExtractor;
+        return integerExtractor;
     }
 
     public Iterable<Pattern> getSimpleCasesRegex() {
@@ -100,7 +98,7 @@ public class EnglishTimePeriodExtractorConfiguration extends BaseOptionsConfigur
         return GeneralEndingRegex;
     }
 
-    public final ResultIndex GetFromTokenIndex(String input) {
+    public final ResultIndex getFromTokenIndex(String input) {
 
         ResultIndex result = new ResultIndex(false, -1);
 
@@ -112,7 +110,7 @@ public class EnglishTimePeriodExtractorConfiguration extends BaseOptionsConfigur
         return result;
     }
 
-    public final ResultIndex GetBetweenTokenIndex(String input) {
+    public final ResultIndex getBetweenTokenIndex(String input) {
 
         ResultIndex result = new ResultIndex(false, -1);
 
@@ -124,7 +122,7 @@ public class EnglishTimePeriodExtractorConfiguration extends BaseOptionsConfigur
         return result;
     }
 
-    public final boolean HasConnectorToken(String input) {
+    public final boolean hasConnectorToken(String input) {
         return input.equals("and");
     }
 }

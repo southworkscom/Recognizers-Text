@@ -49,6 +49,7 @@ public class BaseTimeParser implements IDateTimeParser {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public DateTimeParseResult parse(ExtractResult er, LocalDateTime reference) {
 
         LocalDateTime referenceTime = reference;
@@ -74,8 +75,7 @@ public class BaseTimeParser implements IDateTimeParser {
                 innerResult = internalParse(er.text, referenceTime);
             }
 
-            if (innerResult.getSuccess())
-            {
+            if (innerResult.getSuccess()) {
                 ImmutableMap.Builder<String, String> futureResolution = ImmutableMap.builder();
                 futureResolution.put(TimeTypeConstants.TIME, FormatUtil.formatTime((LocalDateTime) innerResult.getFutureValue()));
 
@@ -118,7 +118,7 @@ public class BaseTimeParser implements IDateTimeParser {
             offset = config.getTimeTokenPrefix().length();
         }
 
-        if (match.isPresent() && match.get().index == offset && match.get().length == trimmedText.length()){
+        if (match.isPresent() && match.get().index == offset && match.get().length == trimmedText.length()) {
             return match2Time(match.get(), referenceTime);
         }
 
@@ -130,7 +130,9 @@ public class BaseTimeParser implements IDateTimeParser {
         } else {
             try {
                 hour = Integer.parseInt(text);
-            } catch (Exception e) { }
+            } catch (Exception e) {
+                //expected
+            }
         }
 
         if (hour != null && hour >= 0 && hour <= 24) {
@@ -335,14 +337,13 @@ public class BaseTimeParser implements IDateTimeParser {
     }
 
     private boolean isAmDesc(String descStr, Match match) {
-        return checkRegex(config.getUtilityConfiguration().getAmDescRegex(), descStr)
-        || checkRegex(config.getUtilityConfiguration().getAmPmDescRegex(), descStr)
-        || !StringUtility.isNullOrEmpty(match.getGroup(Constants.ImplicitAmGroupName).value);
+        return checkRegex(config.getUtilityConfiguration().getAmDescRegex(), descStr) ||
+                checkRegex(config.getUtilityConfiguration().getAmPmDescRegex(), descStr) ||
+                !StringUtility.isNullOrEmpty(match.getGroup(Constants.ImplicitAmGroupName).value);
     }
 
     private boolean isPmDesc(String descStr, Match match) {
-        return checkRegex(config.getUtilityConfiguration().getPmDescRegex(), descStr)
-        || !StringUtility.isNullOrEmpty(match.getGroup(Constants.ImplicitPmGroupName).value);
+        return checkRegex(config.getUtilityConfiguration().getPmDescRegex(), descStr) || !StringUtility.isNullOrEmpty(match.getGroup(Constants.ImplicitPmGroupName).value);
     }
 
     private boolean checkRegex(Pattern regex, String input) {

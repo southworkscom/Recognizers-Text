@@ -73,7 +73,7 @@ public class BaseTimeZoneParser implements IDateTimeParser {
             // TODO: Temporary solution for city timezone and ambiguous data
             DateTimeResolutionResult value = new DateTimeResolutionResult();
             value.setSuccess(true);
-			value.setTimeZoneResolution(new TimeZoneResolutionResult("UTC+XX:XX", Constants.InvalidOffsetValue, text));
+            value.setTimeZoneResolution(new TimeZoneResolutionResult("UTC+XX:XX", Constants.InvalidOffsetValue, text));
             String resolutionStr = String.format("%s: %s", Constants.UtcOffsetMinsKey, "XX:XX");
 
             result = new DateTimeParseResult(result.withValue(value));

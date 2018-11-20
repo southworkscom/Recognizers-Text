@@ -49,13 +49,11 @@ public class MatchingUtil {
     }
 
     // Temporary solution for remove superfluous words only under the Preview mode
-    public static ProcessedSuperfluousWords PreProcessTextRemoveSuperfluousWords(String text, StringMatcher matcher)
-    {
+    public static ProcessedSuperfluousWords preProcessTextRemoveSuperfluousWords(String text, StringMatcher matcher) {
         Iterable<MatchResult<String>> superfluousWordMatches = matcher.find(text);
         int bias = 0;
 
-        for (MatchResult<String> match : superfluousWordMatches)
-        {
+        for (MatchResult<String> match : superfluousWordMatches) {
             StringBuilder sb = new StringBuilder(text);
             text = sb.delete(match.getStart() - bias, match.getLength()).toString();
         }
@@ -64,31 +62,26 @@ public class MatchingUtil {
     }
 
     // Temporary solution for recover superfluous words only under the Preview mode
-    public static List<ExtractResult> PosProcessExtractionRecoverSuperfluousWords(List<ExtractResult> extractResults, Iterable<MatchResult<String>> superfluousWordMatches, String originText)
-    {
-        for (MatchResult<String> match : superfluousWordMatches)
-        {
-            for (ExtractResult extractResult : extractResults)
-            {
+    public static List<ExtractResult> posProcessExtractionRecoverSuperfluousWords(List<ExtractResult> extractResults,
+            Iterable<MatchResult<String>> superfluousWordMatches, String originText) {
+        for (MatchResult<String> match : superfluousWordMatches) {
+            for (ExtractResult extractResult : extractResults) {
                 int extractResultEnd = extractResult.start + extractResult.length;
-                if (match.getStart() > extractResult.start && extractResultEnd >= match.getStart())
-                {
+                if (match.getStart() > extractResult.start && extractResultEnd >= match.getStart()) {
                     extractResult = extractResult.withLength(extractResult.length + match.getLength());
                 }
 
-                if (match.getStart() <= extractResult.start)
-                {
-                    extractResult = extractResult.withStart(extractResult.start + match.getLength() );
+                if (match.getStart() <= extractResult.start) {
+                    extractResult = extractResult.withStart(extractResult.start + match.getLength());
                 }
             }
         }
 
-        for (ExtractResult extractResult : extractResults)
-        {
-            extractResult = extractResult.withText(originText.substring(extractResult.start, extractResult.start + extractResult.length));
+        for (ExtractResult extractResult : extractResults) {
+            extractResult = extractResult
+                    .withText(originText.substring(extractResult.start, extractResult.start + extractResult.length));
         }
 
-        return  extractResults;
+        return extractResults;
     }
 }
-

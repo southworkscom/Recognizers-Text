@@ -65,11 +65,11 @@ public interface IDatePeriodExtractorConfiguration {
 
     IParser getNumberParser();
 
-    ResultIndex GetFromTokenIndex(String text);
+    ResultIndex getFromTokenIndex(String text);
 
-    boolean HasConnectorToken(String text);
+    boolean hasConnectorToken(String text);
 
-    ResultIndex GetBetweenTokenIndex(String text);
+    ResultIndex getBetweenTokenIndex(String text);
 
     String[] getDurationDateRestrictions();
 }

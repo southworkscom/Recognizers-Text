@@ -8,7 +8,7 @@ import com.microsoft.recognizers.text.datetime.parsers.config.IDatePeriodParserC
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class BaseDatePeriodParser implements IDateTimeParser{
+public class BaseDatePeriodParser implements IDateTimeParser {
 
     private final IDatePeriodParserConfiguration config;
 
@@ -27,12 +27,12 @@ public class BaseDatePeriodParser implements IDateTimeParser{
     }
 
     @Override
-    public List<DateTimeParseResult> filterResults(String query, List<DateTimeParseResult> candidateResults) {
-        throw new UnsupportedOperationException();
+    public ParseResult parse(ExtractResult extractResult) {
+        return this.parse(extractResult, LocalDateTime.now());
     }
 
     @Override
-    public ParseResult parse(ExtractResult extractResult) {
-        return this.parse(extractResult, LocalDateTime.now());
+    public List<DateTimeParseResult> filterResults(String query, List<DateTimeParseResult> candidateResults) {
+        throw new UnsupportedOperationException();
     }
 }

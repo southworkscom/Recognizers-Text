@@ -2,7 +2,6 @@ package com.microsoft.recognizers.text.datetime.parsers;
 
 import com.microsoft.recognizers.text.ExtractResult;
 import com.microsoft.recognizers.text.ParseResult;
-import com.microsoft.recognizers.text.datetime.Constants;
 import com.microsoft.recognizers.text.datetime.parsers.config.IMergedParserConfiguration;
 
 import java.time.LocalDateTime;
@@ -27,12 +26,12 @@ public class BaseMergedDateTimeParser implements IDateTimeParser {
     }
 
     @Override
-    public List<DateTimeParseResult> filterResults(String query, List<DateTimeParseResult> candidateResults) {
-        throw new UnsupportedOperationException();
+    public ParseResult parse(ExtractResult extractResult) {
+        return this.parse(extractResult, LocalDateTime.now());
     }
 
     @Override
-    public ParseResult parse(ExtractResult extractResult) {
-        return this.parse(extractResult, LocalDateTime.now());
+    public List<DateTimeParseResult> filterResults(String query, List<DateTimeParseResult> candidateResults) {
+        throw new UnsupportedOperationException();
     }
 }

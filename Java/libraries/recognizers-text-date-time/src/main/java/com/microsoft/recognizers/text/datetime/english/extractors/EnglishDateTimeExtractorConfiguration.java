@@ -133,7 +133,7 @@ public class EnglishDateTimeExtractorConfiguration extends BaseOptionsConfigurat
         return utilityConfiguration;
     }
 
-    public boolean IsConnector(String text) {
+    public boolean isConnector(String text) {
 
         text = text.trim();
 

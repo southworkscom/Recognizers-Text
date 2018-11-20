@@ -38,7 +38,7 @@ public interface IDateTimeExtractorConfiguration extends IOptionsConfiguration {
 
     IExtractor getIntegerExtractor();
 
-    boolean IsConnector(String text);
+    boolean isConnector(String text);
 
     IDateTimeUtilityConfiguration getUtilityConfiguration();
 }

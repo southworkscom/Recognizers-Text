@@ -292,8 +292,10 @@ public class BaseDateExtractor implements IDateTimeExtractor {
             // Some types of duration can be compounded with "before", "after" or "from" suffix to create a "date"
             // While some other types of durations, when compounded with such suffix, it will not create a "date", but create a "dateperiod"
             // For example, durations like "3 days", "2 weeks", "1 week and 2 days", can be compounded with such suffix to create a "date"
-            // But "more than 3 days", "less than 2 weeks", when compounded with such suffix, it will become cases like "more than 3 days from today" which is a "dateperiod", not a "date"
-            // As this parent method is aimed to extract RelativeDurationDate, so for cases with "more than" or "less than", we remove the prefix so as to extract the expected RelativeDurationDate
+            // But "more than 3 days", "less than 2 weeks", when compounded with such suffix, it will become cases like "more than 3 days
+            // from today" which is a "dateperiod", not a "date"
+            // As this parent method is aimed to extract RelativeDurationDate, so for cases with "more than" or "less than", we remove the
+            // prefix so as to extract the expected RelativeDurationDate
             if (isInequalityDuration(duration)) {
                 duration = stripInequalityDuration(duration);
             }
