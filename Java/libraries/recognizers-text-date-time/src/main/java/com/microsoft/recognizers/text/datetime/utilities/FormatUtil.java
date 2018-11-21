@@ -48,4 +48,8 @@ public class FormatUtil {
     {
         return String.join(timeDelimiter, String.format("%02d", time.getHour()),  String.format("%02d", time.getMinute()),  String.format("%02d", time.getSecond()));
     }
+
+    public static String formatDateTime(LocalDateTime datetime) {
+        return String.join(" ", formatDate(datetime), formatTime(datetime));
+    }
 }

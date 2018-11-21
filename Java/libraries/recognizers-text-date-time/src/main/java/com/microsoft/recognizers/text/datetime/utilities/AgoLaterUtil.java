@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 public class AgoLaterUtil {
@@ -27,7 +28,7 @@ public class AgoLaterUtil {
                                                                         ImmutableMap<String, String> unitMap,
                                                                         Pattern unitRegex,
                                                                         IDateTimeUtilityConfiguration utilityConfiguration,
-                                                                        IDateParserConfiguration config) {
+                                                                        Function<String, Integer> getSwiftDay) {
         DateTimeResolutionResult ret = new DateTimeResolutionResult();
         List<ExtractResult> durationRes = durationExtractor.extract(text, referenceTime);
         if (durationRes.size() > 0) {
@@ -51,7 +52,7 @@ public class AgoLaterUtil {
                 if (pr.value != null)
                 {
                     return getAgoLaterResult(pr, afterStr, beforeStr, referenceTime,
-                            utilityConfiguration, mode, config);
+                            utilityConfiguration, mode, getSwiftDay);
                 }
             }
         }
@@ -65,7 +66,7 @@ public class AgoLaterUtil {
             LocalDateTime referenceTime,
             IDateTimeUtilityConfiguration utilityConfiguration,
             AgoLaterMode mode,
-            IDateParserConfiguration config)
+            Function<String, Integer> getSwiftDay)
     {
         DateTimeResolutionResult ret = new DateTimeResolutionResult();
         LocalDateTime resultDateTime = referenceTime;
@@ -88,7 +89,7 @@ public class AgoLaterUtil {
             // Handle cases like "3 days before yesterday"
             if (match.isPresent() && !StringUtility.isNullOrEmpty(match.get().getGroup("day").value))
             {
-                swift = config.getSwiftDay(match.get().getGroup("day").value);
+                swift = getSwiftDay.apply(match.get().getGroup("day").value);
             }
 
             resultDateTime = DurationParsingUtil.shiftDateTime(timex, referenceTime.plusDays(swift), false);
@@ -104,7 +105,7 @@ public class AgoLaterUtil {
             // Handle cases like "3 days after tomorrow"
             if (match.isPresent() && !StringUtility.isNullOrEmpty(match.get().getGroup("day").value))
             {
-                swift = config.getSwiftDay(match.get().getGroup("day").value);
+                swift = getSwiftDay.apply(match.get().getGroup("day").value);
             }
 
             resultDateTime = DurationParsingUtil.shiftDateTime(timex, referenceTime.plusDays(swift), true);
