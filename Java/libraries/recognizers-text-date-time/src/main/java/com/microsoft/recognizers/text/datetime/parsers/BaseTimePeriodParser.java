@@ -10,10 +10,7 @@ import com.microsoft.recognizers.text.datetime.parsers.config.MatchedTimeRangeRe
 import com.microsoft.recognizers.text.datetime.utilities.DateTimeResolutionResult;
 import com.microsoft.recognizers.text.datetime.utilities.DateUtil;
 import com.microsoft.recognizers.text.datetime.utilities.FormatUtil;
-import com.microsoft.recognizers.text.utilities.Match;
-import com.microsoft.recognizers.text.utilities.MatchGroup;
-import com.microsoft.recognizers.text.utilities.RegExpUtility;
-import com.microsoft.recognizers.text.utilities.StringUtility;
+import com.microsoft.recognizers.text.utilities.*;
 import org.javatuples.Pair;
 
 import java.time.Duration;
@@ -124,8 +121,8 @@ public class BaseTimePeriodParser implements IDateTimeParser {
 
             // get hours
             MatchGroup hourGroup = match.get().getGroup(Constants.HourGroupName);
-            String hourStr = hourGroup.captures[0];
-            int afterHourIndex = trimmedText.indexOf(hourStr) + hourStr.length();
+            String hourStr = hourGroup.captures[0].value;
+            int afterHourIndex = hourGroup.captures[0].index + hourGroup.captures[0].length;
 
             // hard to integrate this part into the regex
             if (afterHourIndex == trimmedText.length() || !trimmedText.substring(afterHourIndex).trim().startsWith(":")) {
@@ -137,8 +134,8 @@ public class BaseTimePeriodParser implements IDateTimeParser {
                     beginHour = this.config.getNumbers().get(hourStr);
                 }
 
-                hourStr = hourGroup.value;
-                afterHourIndex = trimmedText.indexOf(hourGroup.captures[1]) + hourGroup.captures[1].length();
+                hourStr = hourGroup.captures[1].value;
+                afterHourIndex = hourGroup.captures[1].index + hourGroup.captures[1].length;
 
                 if (afterHourIndex == trimmedText.length() || !trimmedText.substring(afterHourIndex).trim().startsWith(":")) {
                     int endHour;
@@ -255,7 +252,7 @@ public class BaseTimePeriodParser implements IDateTimeParser {
             // Get time1 and time2
             MatchGroup hourGroup = match.get().getGroup(Constants.HourGroupName);
 
-            String hourStr = hourGroup.captures[0];
+            String hourStr = hourGroup.captures[0].value;
 
             if (config.getNumbers().containsKey(hourStr)) {
                 beginHour = config.getNumbers().get(hourStr);
@@ -264,7 +261,7 @@ public class BaseTimePeriodParser implements IDateTimeParser {
             }
 
 
-            hourStr = hourGroup.captures[1];
+            hourStr = hourGroup.captures[1].value;
 
             if (config.getNumbers().containsKey(hourStr)) {
                 endHour = config.getNumbers().get(hourStr);
@@ -279,21 +276,21 @@ public class BaseTimePeriodParser implements IDateTimeParser {
 
             // Get beginMinute (if exists) and endMinute (if exists)
             for (int i = 0; i < match.get().getGroup(Constants.MinuteGroupName).captures.length; i++) {
-                String minuteCapture = match.get().getGroup(Constants.MinuteGroupName).captures[i];
-                if (beginMinute == invalidFlag && trimmedText.indexOf(minuteCapture) >= time1StartIndex && trimmedText.indexOf(minuteCapture) + minuteCapture.length() <= time1EndIndex) {
-                    beginMinute = Integer.parseInt(minuteCapture);
-                } else if (trimmedText.indexOf(minuteCapture, time1EndIndex) >= time2StartIndex && trimmedText.indexOf(minuteCapture) + minuteCapture.length() <= time2EndIndex) {
-                    endMinute = Integer.parseInt(minuteCapture);
+                Capture minuteCapture = match.get().getGroup(Constants.MinuteGroupName).captures[i];
+                if (minuteCapture.index >= time1StartIndex && (minuteCapture.index + minuteCapture.length) <= time1EndIndex) {
+                    beginMinute = Integer.parseInt(minuteCapture.value);
+                } else if (minuteCapture.index >= time2StartIndex && (minuteCapture.index + minuteCapture.length) <= time2EndIndex) {
+                    endMinute = Integer.parseInt(minuteCapture.value);
                 }
             }
 
             // Get beginSecond (if exists) and endSecond (if exists)
             for (int i = 0; i < match.get().getGroup(Constants.SecondGroupName).captures.length; i++) {
-                String secondCapture = match.get().getGroup(Constants.SecondGroupName).captures[i];
-                if (beginSecond == invalidFlag && trimmedText.indexOf(secondCapture) >= time1StartIndex && trimmedText.indexOf(secondCapture) + secondCapture.length() <= time1EndIndex) {
-                    beginSecond = Integer.parseInt(secondCapture);
-                } else if (trimmedText.indexOf(secondCapture, time1EndIndex) >= time2StartIndex && trimmedText.indexOf(secondCapture) + secondCapture.length() <= time2EndIndex) {
-                    endSecond = Integer.parseInt(secondCapture);
+                Capture secondCapture = match.get().getGroup(Constants.SecondGroupName).captures[i];
+                if (secondCapture.index >= time1StartIndex && (secondCapture.index + secondCapture.length) <= time1EndIndex) {
+                    beginSecond = Integer.parseInt(secondCapture.value);
+                } else if (secondCapture.index >= time2StartIndex && (secondCapture.index + secondCapture.length) <= time2EndIndex) {
+                    endSecond = Integer.parseInt(secondCapture.value);
                 }
             }
 
@@ -303,11 +300,11 @@ public class BaseTimePeriodParser implements IDateTimeParser {
             String rightDesc = match.get().getGroup("rightDesc").value;
 
             for (int i = 0; i < match.get().getGroup(Constants.DescGroupName).captures.length; i++) {
-                String descCapture = match.get().getGroup(Constants.DescGroupName).captures[i];
-                if (trimmedText.indexOf(descCapture) >= time1StartIndex && trimmedText.indexOf(descCapture) + descCapture.length() <= time1EndIndex && StringUtility.isNullOrEmpty(leftDesc)) {
-                    leftDesc = descCapture;
-                } else if (trimmedText.indexOf(descCapture) >= time2StartIndex && trimmedText.indexOf(descCapture) + descCapture.length() <= time2EndIndex && StringUtility.isNullOrEmpty(rightDesc)) {
-                    rightDesc = descCapture;
+                Capture descCapture = match.get().getGroup(Constants.DescGroupName).captures[i];
+                if (descCapture.index >= time1StartIndex && (descCapture.index + descCapture.length) <= time1EndIndex && StringUtility.isNullOrEmpty(leftDesc)) {
+                    leftDesc = descCapture.value;
+                } else if (descCapture.index >= time2StartIndex && (descCapture.index + descCapture.length) <= time2EndIndex && StringUtility.isNullOrEmpty(rightDesc)) {
+                    rightDesc = descCapture.value;
                 }
             }
 
