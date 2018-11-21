@@ -425,8 +425,8 @@ public class BaseDatePeriodParser implements IDateTimeParser{
 
         if (match.isPresent() && match.get().index == 0 && match.get().length == trimmedText.length()) {
             MatchGroup days = match.get().getGroup("day");
-            beginDay = this.config.getDayOfMonth().get(days.captures[0].toLowerCase());
-            endDay = this.config.getDayOfMonth().get(days.captures[1].toLowerCase());
+            beginDay = this.config.getDayOfMonth().get(days.captures[0].value.toLowerCase());
+            endDay = this.config.getDayOfMonth().get(days.captures[1].value.toLowerCase());
 
             // parse year
             year = ((BaseDateExtractor)this.config.getDateExtractor()).getYearFromText(match.get());
