@@ -1,6 +1,8 @@
 package com.microsoft.recognizers.text.datetime.utilities;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
@@ -36,6 +38,13 @@ public class DateUtil {
 
     public static LocalDateTime safeCreateFromMinValue(int year, int month, int day, int hour, int minute, int second) {
         return safeCreateFromValue(minValue(), year, month, day, hour, minute, second);
+    }
+
+    public static LocalDateTime safeCreateFromMinValue(LocalDate date, LocalTime time) {
+        return safeCreateFromValue(minValue(),
+            date.getYear(), date.getMonthValue(), date.getDayOfMonth(),
+            time.getHour(), time.getMinute(), time.getSecond()
+        );
     }
 
     public static LocalDateTime minValue() {
