@@ -113,7 +113,6 @@ public class EnglishTimePeriodParserConfiguration extends BaseOptionsConfigurati
             endMin = 59;
         } else {
             timex = null;
-            return new MatchedTimeRangeResult(false, timex, beginHour, endHour, endMin);
         }
 
         return new MatchedTimeRangeResult(true, timex, beginHour, endHour, endMin);

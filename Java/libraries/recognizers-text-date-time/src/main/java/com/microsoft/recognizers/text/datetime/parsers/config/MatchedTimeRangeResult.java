@@ -1,11 +1,11 @@
 package com.microsoft.recognizers.text.datetime.parsers.config;
 
 public class MatchedTimeRangeResult {
-    private final boolean matched;
-    private final String timeStr;
-    private final int beginHour;
-    private final int endHour;
-    private final int endMin;
+    private boolean matched;
+    private String timeStr;
+    private int beginHour;
+    private int endHour;
+    private int endMin;
 
     public MatchedTimeRangeResult(boolean matched, String timeStr, int beginHour, int endHour, int endMin) {
         this.matched = matched;
@@ -14,4 +14,16 @@ public class MatchedTimeRangeResult {
         this.endHour = endHour;
         this.endMin = endMin;
     }
+
+    public boolean getMatched() { return matched; }
+    public String getTimeStr() { return timeStr; }
+    public int getBeginHour() { return beginHour; }
+    public int getEndHour() { return endHour; }
+    public int getEndMin() { return endMin; }
+
+    public void setMatched(boolean matched) { this.matched = matched; }
+    public void setTimeStr(String timeStr) { this.timeStr = timeStr; }
+    public void setBeginHour(int beginHour) { this.beginHour = beginHour; }
+    public void setEndHour(int endHour) { this.endHour = endHour; }
+    public void setEndMin(int endMin) { this.endMin = endMin; }
 }

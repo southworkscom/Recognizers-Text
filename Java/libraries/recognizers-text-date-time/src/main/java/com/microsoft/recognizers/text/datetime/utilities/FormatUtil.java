@@ -1,6 +1,8 @@
 package com.microsoft.recognizers.text.datetime.utilities;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 public class FormatUtil {
 
@@ -51,5 +53,36 @@ public class FormatUtil {
 
     public static String formatDateTime(LocalDateTime datetime) {
         return String.join(" ", formatDate(datetime), formatTime(datetime));
+    }
+
+    public static String shortTime(int hour, int min, int second) {
+        if (min < 0 && second < 0) {
+            return String.format("T%02d",hour);
+        }
+        else if (second < 0)
+        {
+            return String.format("T%02d:%02d", hour, min);
+        }
+
+        return String.format("T%02d:%02d:%02d",hour, min, second);
+    }
+
+    // Only handle TimeSpan which is less than one day
+    public static String luisTimeSpan(Duration timeSpan) {
+        String result = "PT";
+
+        if (timeSpan.get(ChronoUnit.HOURS) > 0) {
+            result = String.format("%s%sH", result, timeSpan.get(ChronoUnit.HOURS));
+        }
+
+        if (timeSpan.get(ChronoUnit.MINUTES) > 0) {
+            result = String.format("%s%sM", result, timeSpan.get(ChronoUnit.MINUTES));
+        }
+
+        if (timeSpan.get(ChronoUnit.SECONDS) > 0) {
+            result = String.format("%s%sS", result, timeSpan.get(ChronoUnit.SECONDS));
+        }
+
+        return result;
     }
 }
