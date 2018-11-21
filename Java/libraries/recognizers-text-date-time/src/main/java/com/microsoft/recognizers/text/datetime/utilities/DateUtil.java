@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
 
 public class DateUtil {
 
@@ -125,5 +126,10 @@ public class DateUtil {
         }
 
         return from.plusDays(dayOfWeek - start - 7);
+    }
+
+    public static LocalDateTime plusPeriodInNanos(LocalDateTime reference, double period, ChronoUnit unit) {
+        long nanos = unit.getDuration().toNanos();
+        return reference.plusNanos(Math.round(nanos * period));
     }
 }

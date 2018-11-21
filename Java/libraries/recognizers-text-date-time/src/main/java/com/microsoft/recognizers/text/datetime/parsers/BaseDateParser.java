@@ -436,7 +436,7 @@ public class BaseDateParser implements IDateTimeParser {
 
         return AgoLaterUtil.parseDurationWithAgoAndLater(text, referenceDate,
                 config.getDurationExtractor(), config.getDurationParser(), config.getUnitMap(), config.getUnitRegex(),
-                config.getUtilityConfiguration(), config);
+                config.getUtilityConfiguration(), config::getSwiftDay);
     }
 
     // handle cases like "January first", "twenty-two of August"

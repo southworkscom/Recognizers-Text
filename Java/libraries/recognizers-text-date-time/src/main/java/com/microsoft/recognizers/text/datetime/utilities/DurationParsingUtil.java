@@ -4,7 +4,9 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Map;
+
 
 public class DurationParsingUtil {
     public static boolean isTimeDurationUnit(String unitStr) {
@@ -54,32 +56,39 @@ public class DurationParsingUtil {
         int futureOrPast = future ? 1 : -1;
         for (Map.Entry<String, Double> pair : timexUnitMap.entrySet()) {
             String unit = pair.getKey();
+            ChronoUnit chronoUnit;
             Double number = pair.getValue();
+
             switch (unit) {
                 case "H":
-                    result = result.plusHours(Math.round(number * futureOrPast));
+                    chronoUnit = ChronoUnit.HOURS;
                     break;
                 case "M":
-                    result = result.plusMinutes(Math.round(number * futureOrPast));
+                    chronoUnit = ChronoUnit.MINUTES;
                     break;
                 case "S":
-                    result = result.plusSeconds(Math.round(number * futureOrPast));
+                    chronoUnit = ChronoUnit.SECONDS;
                     break;
                 case "D":
-                    result = result.plusDays(Math.round(number * futureOrPast));
+                    chronoUnit = ChronoUnit.DAYS;
                     break;
                 case "W":
-                    result = result.plusWeeks(Math.round(number * futureOrPast));
+                    chronoUnit = ChronoUnit.WEEKS;
                     break;
                 case "MON":
+                    chronoUnit = ChronoUnit.MONTHS;
                     result = result.plusMonths(Math.round(number * futureOrPast));
                     break;
                 case "Y":
+                    chronoUnit = ChronoUnit.YEARS;
                     result = result.plusYears(Math.round(number * futureOrPast));
                     break;
 
                 default:
                     return result;
+            }
+            if (chronoUnit != ChronoUnit.MONTHS && chronoUnit != ChronoUnit.YEARS) {
+                result = DateUtil.plusPeriodInNanos(result, number * futureOrPast, chronoUnit);
             }
         }
         return result;
