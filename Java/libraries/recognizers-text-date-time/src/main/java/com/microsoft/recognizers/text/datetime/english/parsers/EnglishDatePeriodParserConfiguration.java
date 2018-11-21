@@ -18,7 +18,8 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-public class EnglishDatePeriodParserConfiguration extends BaseOptionsConfiguration implements IDatePeriodParserConfiguration {
+public class EnglishDatePeriodParserConfiguration extends BaseOptionsConfiguration
+        implements IDatePeriodParserConfiguration {
 
     public EnglishDatePeriodParserConfiguration(ICommonDateTimeParserConfiguration config) {
         super(config.getOptions());
@@ -51,7 +52,7 @@ public class EnglishDatePeriodParserConfiguration extends BaseOptionsConfigurati
         allHalfYearRegex = EnglishDatePeriodExtractorConfiguration.AllHalfYearRegex;
         seasonRegex = EnglishDatePeriodExtractorConfiguration.SeasonRegex;
         whichWeekRegex = EnglishDatePeriodExtractorConfiguration.WhichWeekRegex;
-        weekOfRegex= EnglishDatePeriodExtractorConfiguration.WeekOfRegex;
+        weekOfRegex = EnglishDatePeriodExtractorConfiguration.WeekOfRegex;
         monthOfRegex = EnglishDatePeriodExtractorConfiguration.MonthOfRegex;
         restOfDateRegex = EnglishDatePeriodExtractorConfiguration.RestOfDateRegex;
         laterEarlyPeriodRegex = EnglishDatePeriodExtractorConfiguration.LaterEarlyPeriodRegex;
@@ -80,7 +81,8 @@ public class EnglishDatePeriodParserConfiguration extends BaseOptionsConfigurati
         nextPrefixRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.NextPrefixRegex, Pattern.CASE_INSENSITIVE);
         pastPrefixRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.PastPrefixRegex, Pattern.CASE_INSENSITIVE);
         thisPrefixRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.ThisPrefixRegex, Pattern.CASE_INSENSITIVE);
-        afterNextSuffixRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.AfterNextSuffixRegex, Pattern.CASE_INSENSITIVE);
+        afterNextSuffixRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.AfterNextSuffixRegex,
+                Pattern.CASE_INSENSITIVE);
     }
 
     private final String tokenBeforeDate;
@@ -149,285 +151,384 @@ public class EnglishDatePeriodParserConfiguration extends BaseOptionsConfigurati
     private final ImmutableMap<String, Integer> writtenDecades;
     private final ImmutableMap<String, Integer> numbers;
     private final ImmutableMap<String, Integer> specialDecadeCases;
-    
-    @Override
-    public String getTokenBeforeDate() { return tokenBeforeDate;}
 
     @Override
-    public IDateTimeExtractor getDateExtractor() { return dateExtractor;}
+    public String getTokenBeforeDate() {
+        return tokenBeforeDate;
+    }
 
     @Override
-    public IExtractor getCardinalExtractor() { return cardinalExtractor;}
+    public IDateTimeExtractor getDateExtractor() {
+        return dateExtractor;
+    }
 
     @Override
-    public IExtractor getOrdinalExtractor() { return ordinalExtractor;}
+    public IExtractor getCardinalExtractor() {
+        return cardinalExtractor;
+    }
 
     @Override
-    public IExtractor getIntegerExtractor() { return integerExtractor;}
+    public IExtractor getOrdinalExtractor() {
+        return ordinalExtractor;
+    }
 
     @Override
-    public IParser getNumberParser() { return numberParser;}
+    public IExtractor getIntegerExtractor() {
+        return integerExtractor;
+    }
 
     @Override
-    public IDateTimeExtractor getDurationExtractor() { return durationExtractor;}
+    public IParser getNumberParser() {
+        return numberParser;
+    }
 
     @Override
-    public IDateTimeParser getDurationParser() { return durationParser;}
+    public IDateTimeExtractor getDurationExtractor() {
+        return durationExtractor;
+    }
 
     @Override
-    public IDateTimeParser getDateParser() { return dateParser;}
+    public IDateTimeParser getDurationParser() {
+        return durationParser;
+    }
 
     @Override
-    public Pattern getMonthFrontBetweenRegex() { return monthFrontBetweenRegex;}
+    public IDateTimeParser getDateParser() {
+        return dateParser;
+    }
 
     @Override
-    public Pattern getBetweenRegex() { return betweenRegex;}
+    public Pattern getMonthFrontBetweenRegex() {
+        return monthFrontBetweenRegex;
+    }
 
     @Override
-    public Pattern getMonthFrontSimpleCasesRegex() { return monthFrontSimpleCasesRegex;}
+    public Pattern getBetweenRegex() {
+        return betweenRegex;
+    }
 
     @Override
-    public Pattern getSimpleCasesRegex() { return simpleCasesRegex;}
+    public Pattern getMonthFrontSimpleCasesRegex() {
+        return monthFrontSimpleCasesRegex;
+    }
 
     @Override
-    public Pattern getOneWordPeriodRegex() { return oneWordPeriodRegex;}
+    public Pattern getSimpleCasesRegex() {
+        return simpleCasesRegex;
+    }
 
     @Override
-    public Pattern getMonthWithYear() { return monthWithYear;}
+    public Pattern getOneWordPeriodRegex() {
+        return oneWordPeriodRegex;
+    }
 
     @Override
-    public Pattern getMonthNumWithYear() { return monthNumWithYear;}
+    public Pattern getMonthWithYear() {
+        return monthWithYear;
+    }
 
     @Override
-    public Pattern getYearRegex() { return yearRegex;}
+    public Pattern getMonthNumWithYear() {
+        return monthNumWithYear;
+    }
 
     @Override
-    public Pattern getPastRegex() { return pastRegex;}
+    public Pattern getYearRegex() {
+        return yearRegex;
+    }
 
     @Override
-    public Pattern getFutureRegex() { return futureRegex;}
+    public Pattern getPastRegex() {
+        return pastRegex;
+    }
 
     @Override
-    public Pattern getFutureSuffixRegex() { return futureSuffixRegex;}
+    public Pattern getFutureRegex() {
+        return futureRegex;
+    }
 
     @Override
-    public Pattern getNumberCombinedWithUnit() { return numberCombinedWithUnit;}
+    public Pattern getFutureSuffixRegex() {
+        return futureSuffixRegex;
+    }
 
     @Override
-    public Pattern getWeekOfMonthRegex() { return weekOfMonthRegex;}
+    public Pattern getNumberCombinedWithUnit() {
+        return numberCombinedWithUnit;
+    }
 
     @Override
-    public Pattern getWeekOfYearRegex() { return weekOfYearRegex;}
+    public Pattern getWeekOfMonthRegex() {
+        return weekOfMonthRegex;
+    }
 
     @Override
-    public Pattern getQuarterRegex() { return quarterRegex;}
+    public Pattern getWeekOfYearRegex() {
+        return weekOfYearRegex;
+    }
 
     @Override
-    public Pattern getQuarterRegexYearFront() { return quarterRegexYearFront;}
+    public Pattern getQuarterRegex() {
+        return quarterRegex;
+    }
 
     @Override
-    public Pattern getAllHalfYearRegex() { return allHalfYearRegex;}
+    public Pattern getQuarterRegexYearFront() {
+        return quarterRegexYearFront;
+    }
 
     @Override
-    public Pattern getSeasonRegex() { return seasonRegex;}
+    public Pattern getAllHalfYearRegex() {
+        return allHalfYearRegex;
+    }
 
     @Override
-    public Pattern getWhichWeekRegex() { return whichWeekRegex;}
+    public Pattern getSeasonRegex() {
+        return seasonRegex;
+    }
 
     @Override
-    public Pattern getWeekOfRegex() { return weekOfRegex;}
+    public Pattern getWhichWeekRegex() {
+        return whichWeekRegex;
+    }
 
     @Override
-    public Pattern getMonthOfRegex() { return monthOfRegex;}
+    public Pattern getWeekOfRegex() {
+        return weekOfRegex;
+    }
 
     @Override
-    public Pattern getInConnectorRegex() { return inConnectorRegex;}
+    public Pattern getMonthOfRegex() {
+        return monthOfRegex;
+    }
 
     @Override
-    public Pattern getWithinNextPrefixRegex() { return withinNextPrefixRegex;}
+    public Pattern getInConnectorRegex() {
+        return inConnectorRegex;
+    }
 
     @Override
-    public Pattern getNextPrefixRegex() { return nextPrefixRegex;}
+    public Pattern getWithinNextPrefixRegex() {
+        return withinNextPrefixRegex;
+    }
 
     @Override
-    public Pattern getPastPrefixRegex() { return pastPrefixRegex;}
+    public Pattern getNextPrefixRegex() {
+        return nextPrefixRegex;
+    }
 
     @Override
-    public Pattern getThisPrefixRegex() { return thisPrefixRegex;}
+    public Pattern getPastPrefixRegex() {
+        return pastPrefixRegex;
+    }
 
     @Override
-    public Pattern getRestOfDateRegex() { return restOfDateRegex;}
+    public Pattern getThisPrefixRegex() {
+        return thisPrefixRegex;
+    }
 
     @Override
-    public Pattern getLaterEarlyPeriodRegex() { return laterEarlyPeriodRegex;}
+    public Pattern getRestOfDateRegex() {
+        return restOfDateRegex;
+    }
 
     @Override
-    public Pattern getWeekWithWeekDayRangeRegex() { return weekWithWeekDayRangeRegex;}
+    public Pattern getLaterEarlyPeriodRegex() {
+        return laterEarlyPeriodRegex;
+    }
 
     @Override
-    public Pattern getYearPlusNumberRegex() { return yearPlusNumberRegex;}
+    public Pattern getWeekWithWeekDayRangeRegex() {
+        return weekWithWeekDayRangeRegex;
+    }
 
     @Override
-    public Pattern getDecadeWithCenturyRegex() { return decadeWithCenturyRegex;}
+    public Pattern getYearPlusNumberRegex() {
+        return yearPlusNumberRegex;
+    }
 
     @Override
-    public Pattern getYearPeriodRegex() { return yearPeriodRegex;}
+    public Pattern getDecadeWithCenturyRegex() {
+        return decadeWithCenturyRegex;
+    }
 
     @Override
-    public Pattern getComplexDatePeriodRegex() { return complexDatePeriodRegex;}
+    public Pattern getYearPeriodRegex() {
+        return yearPeriodRegex;
+    }
 
     @Override
-    public Pattern getRelativeDecadeRegex() { return relativeDecadeRegex;}
+    public Pattern getComplexDatePeriodRegex() {
+        return complexDatePeriodRegex;
+    }
 
     @Override
-    public Pattern getReferenceDatePeriodRegex() { return referenceDatePeriodRegex;}
+    public Pattern getRelativeDecadeRegex() {
+        return relativeDecadeRegex;
+    }
 
     @Override
-    public Pattern getAgoRegex() { return agoRegex;}
+    public Pattern getReferenceDatePeriodRegex() {
+        return referenceDatePeriodRegex;
+    }
 
     @Override
-    public Pattern getLaterRegex() { return laterRegex;}
+    public Pattern getAgoRegex() {
+        return agoRegex;
+    }
 
     @Override
-    public Pattern getLessThanRegex() { return lessThanRegex;}
+    public Pattern getLaterRegex() {
+        return laterRegex;
+    }
 
     @Override
-    public Pattern getMoreThanRegex() { return moreThanRegex;}
+    public Pattern getLessThanRegex() {
+        return lessThanRegex;
+    }
 
     @Override
-    public Pattern getCenturySuffixRegex() { return centurySuffixRegex;}
+    public Pattern getMoreThanRegex() {
+        return moreThanRegex;
+    }
 
     @Override
-    public ImmutableMap<String, String> getUnitMap() { return unitMap; }
+    public Pattern getCenturySuffixRegex() {
+        return centurySuffixRegex;
+    }
 
     @Override
-    public ImmutableMap<String, Integer> getCardinalMap() { return cardinalMap; }
+    public ImmutableMap<String, String> getUnitMap() {
+        return unitMap;
+    }
 
     @Override
-    public ImmutableMap<String, Integer> getDayOfMonth() { return dayOfMonth; }
+    public ImmutableMap<String, Integer> getCardinalMap() {
+        return cardinalMap;
+    }
 
     @Override
-    public ImmutableMap<String, Integer> getMonthOfYear() { return monthOfYear; }
+    public ImmutableMap<String, Integer> getDayOfMonth() {
+        return dayOfMonth;
+    }
 
     @Override
-    public ImmutableMap<String, String> getSeasonMap() { return seasonMap; }
+    public ImmutableMap<String, Integer> getMonthOfYear() {
+        return monthOfYear;
+    }
 
     @Override
-    public ImmutableMap<String, Integer> getWrittenDecades() { return writtenDecades; }
+    public ImmutableMap<String, String> getSeasonMap() {
+        return seasonMap;
+    }
 
     @Override
-    public ImmutableMap<String, Integer> getNumbers() { return numbers; }
+    public ImmutableMap<String, Integer> getWrittenDecades() {
+        return writtenDecades;
+    }
 
     @Override
-    public ImmutableMap<String, Integer> getSpecialDecadeCases() { return specialDecadeCases; }
-    
+    public ImmutableMap<String, Integer> getNumbers() {
+        return numbers;
+    }
+
     @Override
-    public int getSwiftDayOrMonth(String text)
-    {
+    public ImmutableMap<String, Integer> getSpecialDecadeCases() {
+        return specialDecadeCases;
+    }
+
+    @Override
+    public int getSwiftDayOrMonth(String text) {
         String trimmedText = text.trim().toLowerCase();
         int swift = 0;
-        Optional<Match> matchAfterNext = Arrays.stream(RegExpUtility.getMatches(afterNextSuffixRegex, trimmedText)).findFirst();
+        Optional<Match> matchAfterNext = Arrays.stream(RegExpUtility.getMatches(afterNextSuffixRegex, trimmedText))
+                .findFirst();
         Optional<Match> matchNext = Arrays.stream(RegExpUtility.getMatches(nextPrefixRegex, trimmedText)).findFirst();
         Optional<Match> matchPast = Arrays.stream(RegExpUtility.getMatches(pastPrefixRegex, trimmedText)).findFirst();
-        if (matchAfterNext.isPresent())
-        {
+        if (matchAfterNext.isPresent()) {
             swift = 2;
-        }
-        else if (matchNext.isPresent())
-        {
+        } else if (matchNext.isPresent()) {
             swift = 1;
-        }
-        else if (matchPast.isPresent())
-        {
+        } else if (matchPast.isPresent()) {
             swift = -1;
         }
         return swift;
     }
 
     @Override
-    public int getSwiftYear(String text)
-    {
+    public int getSwiftYear(String text) {
         String trimmedText = text.trim().toLowerCase();
         int swift = -10;
-        Optional<Match> matchAfterNext = Arrays.stream(RegExpUtility.getMatches(afterNextSuffixRegex, trimmedText)).findFirst();
+        Optional<Match> matchAfterNext = Arrays.stream(RegExpUtility.getMatches(afterNextSuffixRegex, trimmedText))
+                .findFirst();
         Optional<Match> matchNext = Arrays.stream(RegExpUtility.getMatches(nextPrefixRegex, trimmedText)).findFirst();
         Optional<Match> matchPast = Arrays.stream(RegExpUtility.getMatches(pastPrefixRegex, trimmedText)).findFirst();
-        Optional<Match> matchThisPresent = Arrays.stream(RegExpUtility.getMatches(thisPrefixRegex, trimmedText)).findFirst();
-        if (matchAfterNext.isPresent())
-        {
+        Optional<Match> matchThisPresent = Arrays.stream(RegExpUtility.getMatches(thisPrefixRegex, trimmedText))
+                .findFirst();
+        if (matchAfterNext.isPresent()) {
             swift = 2;
-        }
-        else if (matchNext.isPresent())
-        {
+        } else if (matchNext.isPresent()) {
             swift = 1;
-        }
-        else if (matchPast.isPresent())
-        {
+        } else if (matchPast.isPresent()) {
             swift = -1;
-        }
-        else if (matchThisPresent.isPresent())
-        {
+        } else if (matchThisPresent.isPresent()) {
             swift = 0;
         }
         return swift;
     }
 
     @Override
-    public boolean isFuture(String text)
-    {
+    public boolean isFuture(String text) {
         String trimmedText = text.trim().toLowerCase();
         return (trimmedText.startsWith("this") || trimmedText.startsWith("next"));
     }
 
     @Override
-    public boolean isLastCardinal(String text)
-    {
+    public boolean isLastCardinal(String text) {
         String trimmedText = text.trim().toLowerCase();
         return trimmedText.equals("last");
     }
 
     @Override
-    public boolean isMonthOnly(String text)
-    {
+    public boolean isMonthOnly(String text) {
         String trimmedText = text.trim().toLowerCase();
-        Optional<Match> matchAfterNext = Arrays.stream(RegExpUtility.getMatches(afterNextSuffixRegex, trimmedText)).findFirst();
+        Optional<Match> matchAfterNext = Arrays.stream(RegExpUtility.getMatches(afterNextSuffixRegex, trimmedText))
+                .findFirst();
         return trimmedText.endsWith("month") || trimmedText.contains(" month ") && matchAfterNext.isPresent();
     }
 
     @Override
-    public boolean isMonthToDate(String text)
-    {
+    public boolean isMonthToDate(String text) {
         String trimmedText = text.trim().toLowerCase();
         return trimmedText.equals("month to date");
     }
 
     @Override
-    public boolean isWeekend(String text)
-    {
+    public boolean isWeekend(String text) {
         String trimmedText = text.trim().toLowerCase();
-        Optional<Match> matchAfterNext = Arrays.stream(RegExpUtility.getMatches(afterNextSuffixRegex, trimmedText)).findFirst();
+        Optional<Match> matchAfterNext = Arrays.stream(RegExpUtility.getMatches(afterNextSuffixRegex, trimmedText))
+                .findFirst();
         return trimmedText.endsWith("weekend") || trimmedText.contains(" weekend ") && matchAfterNext.isPresent();
     }
 
     @Override
-    public boolean isWeekOnly(String text)
-    {
+    public boolean isWeekOnly(String text) {
         String trimmedText = text.trim().toLowerCase();
-        Optional<Match> matchAfterNext = Arrays.stream(RegExpUtility.getMatches(afterNextSuffixRegex, trimmedText)).findFirst();
+        Optional<Match> matchAfterNext = Arrays.stream(RegExpUtility.getMatches(afterNextSuffixRegex, trimmedText))
+                .findFirst();
         return trimmedText.endsWith("week") || trimmedText.contains(" week ") && matchAfterNext.isPresent();
     }
 
     @Override
-    public boolean isYearOnly(String text)
-    {
+    public boolean isYearOnly(String text) {
         String trimmedText = text.trim().toLowerCase();
-        Optional<Match> matchAfterNext = Arrays.stream(RegExpUtility.getMatches(afterNextSuffixRegex, trimmedText)).findFirst();
+        Optional<Match> matchAfterNext = Arrays.stream(RegExpUtility.getMatches(afterNextSuffixRegex, trimmedText))
+                .findFirst();
         return trimmedText.endsWith("year") || trimmedText.contains(" year ") && matchAfterNext.isPresent();
     }
 
     @Override
-    public boolean isYearToDate(String text)
-    {
+    public boolean isYearToDate(String text) {
         String trimmedText = text.trim().toLowerCase();
         return trimmedText.equals("year to date");
     }

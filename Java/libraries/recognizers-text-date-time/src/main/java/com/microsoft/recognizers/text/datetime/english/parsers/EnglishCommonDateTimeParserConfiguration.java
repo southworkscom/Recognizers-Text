@@ -4,11 +4,31 @@ import com.google.common.collect.ImmutableMap;
 import com.microsoft.recognizers.text.IExtractor;
 import com.microsoft.recognizers.text.IParser;
 import com.microsoft.recognizers.text.datetime.DateTimeOptions;
-import com.microsoft.recognizers.text.datetime.english.extractors.*;
-import com.microsoft.recognizers.text.datetime.extractors.*;
-import com.microsoft.recognizers.text.datetime.parsers.*;
-import com.microsoft.recognizers.text.datetime.parsers.config.ICommonDateTimeParserConfiguration;
+import com.microsoft.recognizers.text.datetime.english.extractors.EnglishDateExtractorConfiguration;
+import com.microsoft.recognizers.text.datetime.english.extractors.EnglishDatePeriodExtractorConfiguration;
+import com.microsoft.recognizers.text.datetime.english.extractors.EnglishDateTimeExtractorConfiguration;
+import com.microsoft.recognizers.text.datetime.english.extractors.EnglishDateTimePeriodExtractorConfiguration;
+import com.microsoft.recognizers.text.datetime.english.extractors.EnglishDurationExtractorConfiguration;
+import com.microsoft.recognizers.text.datetime.english.extractors.EnglishTimeExtractorConfiguration;
+import com.microsoft.recognizers.text.datetime.english.extractors.EnglishTimePeriodExtractorConfiguration;
+import com.microsoft.recognizers.text.datetime.extractors.BaseDateExtractor;
+import com.microsoft.recognizers.text.datetime.extractors.BaseDatePeriodExtractor;
+import com.microsoft.recognizers.text.datetime.extractors.BaseDateTimeExtractor;
+import com.microsoft.recognizers.text.datetime.extractors.BaseDateTimePeriodExtractor;
+import com.microsoft.recognizers.text.datetime.extractors.BaseDurationExtractor;
+import com.microsoft.recognizers.text.datetime.extractors.BaseTimeExtractor;
+import com.microsoft.recognizers.text.datetime.extractors.BaseTimePeriodExtractor;
+import com.microsoft.recognizers.text.datetime.extractors.IDateTimeExtractor;
+import com.microsoft.recognizers.text.datetime.parsers.BaseDateParser;
+import com.microsoft.recognizers.text.datetime.parsers.BaseDatePeriodParser;
+import com.microsoft.recognizers.text.datetime.parsers.BaseDateTimeAltParser;
+import com.microsoft.recognizers.text.datetime.parsers.BaseDateTimeParser;
+import com.microsoft.recognizers.text.datetime.parsers.BaseDateTimePeriodParser;
+import com.microsoft.recognizers.text.datetime.parsers.BaseDurationParser;
+import com.microsoft.recognizers.text.datetime.parsers.BaseTimePeriodParser;
+import com.microsoft.recognizers.text.datetime.parsers.IDateTimeParser;
 import com.microsoft.recognizers.text.datetime.parsers.config.BaseDateParserConfiguration;
+import com.microsoft.recognizers.text.datetime.parsers.config.ICommonDateTimeParserConfiguration;
 import com.microsoft.recognizers.text.datetime.resources.EnglishDateTime;
 import com.microsoft.recognizers.text.datetime.utilities.IDateTimeUtilityConfiguration;
 import com.microsoft.recognizers.text.number.english.extractors.CardinalExtractor;
@@ -25,6 +45,7 @@ public class EnglishCommonDateTimeParserConfiguration extends BaseDateParserConf
     public static final Pattern AmbiguousMonthP0Regex = RegExpUtility.getSafeRegExp(EnglishDateTime.AmbiguousMonthP0Regex, Pattern.CASE_INSENSITIVE);
 
     private final IDateTimeUtilityConfiguration utilityConfiguration;
+
     private final ImmutableMap<String, String> unitMap;
     private final ImmutableMap<String, Long> unitValueMap;
     private final ImmutableMap<String, String> seasonMap;
@@ -36,10 +57,12 @@ public class EnglishCommonDateTimeParserConfiguration extends BaseDateParserConf
     private final ImmutableMap<String, Double> doubleNumbers;
     private final ImmutableMap<String, Integer> writtenDecades;
     private final ImmutableMap<String, Integer> specialDecadeCases;
+
     private final IExtractor cardinalExtractor;
     private final IExtractor integerExtractor;
     private final IExtractor ordinalExtractor;
     private final IParser numberParser;
+
     private final IDateTimeExtractor durationExtractor;
     private final IDateTimeExtractor dateExtractor;
     private final IDateTimeExtractor timeExtractor;
@@ -47,6 +70,7 @@ public class EnglishCommonDateTimeParserConfiguration extends BaseDateParserConf
     private final IDateTimeExtractor datePeriodExtractor;
     private final IDateTimeExtractor timePeriodExtractor;
     private final IDateTimeExtractor dateTimePeriodExtractor;
+
     private final IDateTimeParser dateParser;
     private final IDateTimeParser timeParser;
     private final IDateTimeParser dateTimeParser;
@@ -57,7 +81,9 @@ public class EnglishCommonDateTimeParserConfiguration extends BaseDateParserConf
     private final IDateTimeParser dateTimeAltParser;
 
     public EnglishCommonDateTimeParserConfiguration(DateTimeOptions options) {
+
         super(options);
+
         utilityConfiguration = new EnglishDatetimeUtilityConfiguration();
 
         unitMap = EnglishDateTime.UnitMap;

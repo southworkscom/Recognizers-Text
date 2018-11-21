@@ -3,8 +3,6 @@ package com.microsoft.recognizers.text.datetime.utilities;
 import com.microsoft.recognizers.text.ExtractResult;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class Token {
@@ -33,7 +31,9 @@ public class Token {
         List<Token> mergedTokens = new ArrayList<>();
 
         tokens.sort((o1, o2) -> {
-            if (o1.start != o2.start) return o1.start - o2.start;
+            if (o1.start != o2.start) {
+                return o1.start - o2.start;
+            }
             return o2.getLength() - o1.getLength();
         });
 

@@ -1,6 +1,5 @@
 package com.microsoft.recognizers.text.datetime.english.parsers;
 
-
 import com.google.common.collect.ImmutableMap;
 import com.microsoft.recognizers.text.IExtractor;
 import com.microsoft.recognizers.text.datetime.Constants;
@@ -8,11 +7,14 @@ import com.microsoft.recognizers.text.datetime.config.BaseOptionsConfiguration;
 import com.microsoft.recognizers.text.datetime.english.extractors.EnglishTimePeriodExtractorConfiguration;
 import com.microsoft.recognizers.text.datetime.extractors.IDateTimeExtractor;
 import com.microsoft.recognizers.text.datetime.parsers.IDateTimeParser;
-import com.microsoft.recognizers.text.datetime.parsers.config.*;
+import com.microsoft.recognizers.text.datetime.parsers.config.ICommonDateTimeParserConfiguration;
+import com.microsoft.recognizers.text.datetime.parsers.config.ITimePeriodParserConfiguration;
+import com.microsoft.recognizers.text.datetime.parsers.config.MatchedTimeRangeResult;
 import com.microsoft.recognizers.text.datetime.utilities.IDateTimeUtilityConfiguration;
 import java.util.regex.Pattern;
 
-public class EnglishTimePeriodParserConfiguration extends BaseOptionsConfiguration implements ITimePeriodParserConfiguration {
+public class EnglishTimePeriodParserConfiguration extends BaseOptionsConfiguration
+        implements ITimePeriodParserConfiguration {
 
     private final IDateTimeExtractor timeExtractor;
     private final IDateTimeParser timeParser;
@@ -27,7 +29,7 @@ public class EnglishTimePeriodParserConfiguration extends BaseOptionsConfigurati
     private final IDateTimeUtilityConfiguration utilityConfiguration;
     private final ImmutableMap<String, Integer> numbers;
 
-    public EnglishTimePeriodParserConfiguration (ICommonDateTimeParserConfiguration config) {
+    public EnglishTimePeriodParserConfiguration(ICommonDateTimeParserConfiguration config) {
         super(config.getOptions());
 
         timeExtractor = config.getTimeExtractor();
@@ -45,43 +47,68 @@ public class EnglishTimePeriodParserConfiguration extends BaseOptionsConfigurati
     }
 
     @Override
-    public IDateTimeExtractor getTimeExtractor() { return timeExtractor; }
+    public IDateTimeExtractor getTimeExtractor() {
+        return timeExtractor;
+    }
 
     @Override
-    public IDateTimeParser getTimeParser() { return timeParser; }
+    public IDateTimeParser getTimeParser() {
+        return timeParser;
+    }
 
     @Override
-    public IExtractor getIntegerExtractor() { return integerExtractor; }
-    
-    @Override
-    public Pattern getPureNumberFromToRegex() { return pureNumberFromToRegex; }
+    public IExtractor getIntegerExtractor() {
+        return integerExtractor;
+    }
 
     @Override
-    public Pattern getPureNumberBetweenAndRegex() { return pureNumberBetweenAndRegex; }
+    public Pattern getPureNumberFromToRegex() {
+        return pureNumberFromToRegex;
+    }
 
     @Override
-    public Pattern getSpecificTimeFromToRegex() { return specificTimeFromToRegex; }
+    public Pattern getPureNumberBetweenAndRegex() {
+        return pureNumberBetweenAndRegex;
+    }
 
     @Override
-    public Pattern getSpecificTimeBetweenAndRegex() { return specificTimeBetweenAndRegex; }
-    
-    @Override
-    public Pattern getTimeOfDayRegex() { return timeOfDayRegex; }
-    
-    @Override
-    public Pattern getGeneralEndingRegex() { return generalEndingRegex; }
+    public Pattern getSpecificTimeFromToRegex() {
+        return specificTimeFromToRegex;
+    }
 
     @Override
-    public Pattern getTillRegex() { return tillRegex; }
+    public Pattern getSpecificTimeBetweenAndRegex() {
+        return specificTimeBetweenAndRegex;
+    }
 
     @Override
-    public ImmutableMap<String, Integer> getNumbers() { return numbers; }
+    public Pattern getTimeOfDayRegex() {
+        return timeOfDayRegex;
+    }
 
     @Override
-    public IDateTimeUtilityConfiguration getUtilityConfiguration() { return utilityConfiguration; }
-    
+    public Pattern getGeneralEndingRegex() {
+        return generalEndingRegex;
+    }
+
     @Override
-    public MatchedTimeRangeResult getMatchedTimexRange(String text, String timex, int beginHour, int endHour, int endMin) {
+    public Pattern getTillRegex() {
+        return tillRegex;
+    }
+
+    @Override
+    public ImmutableMap<String, Integer> getNumbers() {
+        return numbers;
+    }
+
+    @Override
+    public IDateTimeUtilityConfiguration getUtilityConfiguration() {
+        return utilityConfiguration;
+    }
+
+    @Override
+    public MatchedTimeRangeResult getMatchedTimexRange(String text, String timex, int beginHour, int endHour,
+            int endMin) {
         String trimmedText = text.trim().toLowerCase();
         if (trimmedText.endsWith("s")) {
             trimmedText = trimmedText.substring(0, trimmedText.length() - 1);

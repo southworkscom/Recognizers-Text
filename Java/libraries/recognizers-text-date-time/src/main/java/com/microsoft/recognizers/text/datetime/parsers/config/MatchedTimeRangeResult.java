@@ -15,15 +15,43 @@ public class MatchedTimeRangeResult {
         this.endMin = endMin;
     }
 
-    public boolean getMatched() { return matched; }
-    public String getTimeStr() { return timeStr; }
-    public int getBeginHour() { return beginHour; }
-    public int getEndHour() { return endHour; }
-    public int getEndMin() { return endMin; }
+    public boolean getMatched() {
+        return matched;
+    }
 
-    public void setMatched(boolean matched) { this.matched = matched; }
-    public void setTimeStr(String timeStr) { this.timeStr = timeStr; }
-    public void setBeginHour(int beginHour) { this.beginHour = beginHour; }
-    public void setEndHour(int endHour) { this.endHour = endHour; }
-    public void setEndMin(int endMin) { this.endMin = endMin; }
+    public String getTimeStr() {
+        return timeStr;
+    }
+
+    public int getBeginHour() {
+        return beginHour;
+    }
+
+    public int getEndHour() {
+        return endHour;
+    }
+
+    public int getEndMin() {
+        return endMin;
+    }
+
+    public void setMatched(boolean matched) {
+        this.matched = matched;
+    }
+
+    public void setTimeStr(String timeStr) {
+        this.timeStr = timeStr;
+    }
+
+    public void setBeginHour(int beginHour) {
+        this.beginHour = beginHour;
+    }
+
+    public void setEndHour(int endHour) {
+        this.endHour = endHour;
+    }
+
+    public void setEndMin(int endMin) {
+        this.endMin = endMin;
+    }
 }

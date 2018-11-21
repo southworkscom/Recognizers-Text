@@ -5,23 +5,17 @@ import com.microsoft.recognizers.text.IExtractor;
 import com.microsoft.recognizers.text.IParser;
 import com.microsoft.recognizers.text.datetime.Constants;
 import com.microsoft.recognizers.text.datetime.config.BaseOptionsConfiguration;
-import com.microsoft.recognizers.text.datetime.english.extractors.EnglishDateExtractorConfiguration;
 import com.microsoft.recognizers.text.datetime.english.extractors.EnglishDateTimeExtractorConfiguration;
 import com.microsoft.recognizers.text.datetime.english.extractors.EnglishTimeExtractorConfiguration;
 import com.microsoft.recognizers.text.datetime.extractors.IDateTimeExtractor;
 import com.microsoft.recognizers.text.datetime.extractors.config.ResultTimex;
 import com.microsoft.recognizers.text.datetime.parsers.IDateTimeParser;
 import com.microsoft.recognizers.text.datetime.parsers.config.ICommonDateTimeParserConfiguration;
-import com.microsoft.recognizers.text.datetime.parsers.config.IDateParserConfiguration;
 import com.microsoft.recognizers.text.datetime.parsers.config.IDateTimeParserConfiguration;
 import com.microsoft.recognizers.text.datetime.resources.EnglishDateTime;
 import com.microsoft.recognizers.text.datetime.utilities.IDateTimeUtilityConfiguration;
-import com.microsoft.recognizers.text.utilities.Match;
 import com.microsoft.recognizers.text.utilities.RegExpUtility;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Optional;
 import java.util.regex.Pattern;
 
 public class EnglishDateTimeParserConfiguration extends BaseOptionsConfiguration implements IDateTimeParserConfiguration {
@@ -242,5 +236,5 @@ public class EnglishDateTimeParserConfiguration extends BaseOptionsConfiguration
         }
         
         return result;
-	}
+    }
 }

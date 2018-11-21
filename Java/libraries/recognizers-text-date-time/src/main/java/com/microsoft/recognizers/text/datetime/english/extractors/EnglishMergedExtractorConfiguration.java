@@ -2,16 +2,31 @@ package com.microsoft.recognizers.text.datetime.english.extractors;
 
 import com.microsoft.recognizers.text.IExtractor;
 import com.microsoft.recognizers.text.datetime.DateTimeOptions;
-import com.microsoft.recognizers.text.datetime.extractors.*;
+import com.microsoft.recognizers.text.datetime.extractors.BaseDateExtractor;
+import com.microsoft.recognizers.text.datetime.extractors.BaseDatePeriodExtractor;
+import com.microsoft.recognizers.text.datetime.extractors.BaseDateTimeAltExtractor;
+import com.microsoft.recognizers.text.datetime.extractors.BaseDateTimeExtractor;
+import com.microsoft.recognizers.text.datetime.extractors.BaseDateTimePeriodExtractor;
+import com.microsoft.recognizers.text.datetime.extractors.BaseDurationExtractor;
+import com.microsoft.recognizers.text.datetime.extractors.BaseHolidayExtractor;
+import com.microsoft.recognizers.text.datetime.extractors.BaseSetExtractor;
+import com.microsoft.recognizers.text.datetime.extractors.BaseTimeExtractor;
+import com.microsoft.recognizers.text.datetime.extractors.BaseTimePeriodExtractor;
+import com.microsoft.recognizers.text.datetime.extractors.BaseTimeZoneExtractor;
+import com.microsoft.recognizers.text.datetime.extractors.IDateTimeExtractor;
+import com.microsoft.recognizers.text.datetime.extractors.IDateTimeListExtractor;
+import com.microsoft.recognizers.text.datetime.extractors.IDateTimeZoneExtractor;
 import com.microsoft.recognizers.text.datetime.extractors.config.IMergedExtractorConfiguration;
 import com.microsoft.recognizers.text.datetime.resources.EnglishDateTime;
 import com.microsoft.recognizers.text.matcher.StringMatcher;
+import com.microsoft.recognizers.text.number.english.extractors.IntegerExtractor;
 import com.microsoft.recognizers.text.utilities.RegExpUtility;
 
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 public class EnglishMergedExtractorConfiguration implements IMergedExtractorConfiguration {
+
     public static final Pattern AfterRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.AfterRegex, Pattern.CASE_INSENSITIVE);
     public static final Pattern SinceRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.SinceRegex, Pattern.CASE_INSENSITIVE);
     public static final Pattern BeforeRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.BeforeRegex, Pattern.CASE_INSENSITIVE);
@@ -21,6 +36,22 @@ public class EnglishMergedExtractorConfiguration implements IMergedExtractorConf
     public static final Pattern PrepositionSuffixRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.PrepositionSuffixRegex, Pattern.CASE_INSENSITIVE);
     public static final Pattern SingleAmbiguousMonthRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.SingleAmbiguousMonthRegex, Pattern.CASE_INSENSITIVE);
     public static final Pattern UnspecificDatePeriodRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.UnspecificDatePeriodRegex, Pattern.CASE_INSENSITIVE);
+
+
+    private DateTimeOptions options;
+    private IDateTimeExtractor setExtractor;
+    private IExtractor integerExtractor;
+    private IDateTimeExtractor dateExtractor;
+    private IDateTimeExtractor timeExtractor;
+    private IDateTimeExtractor holidayExtractor;
+    private IDateTimeExtractor dateTimeExtractor;
+    private IDateTimeExtractor durationExtractor;
+    private IDateTimeExtractor datePeriodExtractor;
+    private IDateTimeExtractor timePeriodExtractor;
+    private IDateTimeZoneExtractor timeZoneExtractor;
+    private IDateTimeListExtractor dateTimeAltExtractor;
+    private IDateTimeExtractor dateTimePeriodExtractor;
+
     private static final Iterable<Pattern> filterWordRegexList = new ArrayList<Pattern>() {
         {
             // one on one
@@ -31,51 +62,68 @@ public class EnglishMergedExtractorConfiguration implements IMergedExtractorConf
         }
     };
 
-    public final Iterable<Pattern> getFilterWordRegexList() { return filterWordRegexList; }
+    public final Iterable<Pattern> getFilterWordRegexList() {
+        return filterWordRegexList;
+    }
 
-    public final StringMatcher getSuperfluousWordMatcher() { return new StringMatcher(); }
+    public final StringMatcher getSuperfluousWordMatcher() {
+        return new StringMatcher();
+    }
 
-    private DateTimeOptions options;
-    public final DateTimeOptions getOptions() { return options; }
+    public final DateTimeOptions getOptions() {
+        return options;
+    }
 
-    private IDateTimeExtractor setExtractor;
-    public final IDateTimeExtractor getSetExtractor() { return setExtractor; }
+    public final IDateTimeExtractor getSetExtractor() {
+        return setExtractor;
+    }
 
-    private IExtractor integerExtractor;
-    public final IExtractor getIntegerExtractor() { return integerExtractor; }
+    public final IExtractor getIntegerExtractor() {
+        return integerExtractor;
+    }
 
-    private IDateTimeExtractor dateExtractor;
-    public final IDateTimeExtractor getDateExtractor() { return dateExtractor; }
+    public final IDateTimeExtractor getDateExtractor() {
+        return dateExtractor;
+    }
 
-    private IDateTimeExtractor timeExtractor;
-    public final IDateTimeExtractor getTimeExtractor() { return timeExtractor; }
+    public final IDateTimeExtractor getTimeExtractor() {
+        return timeExtractor;
+    }
 
-    private IDateTimeExtractor holidayExtractor;
-    public final IDateTimeExtractor getHolidayExtractor() { return holidayExtractor; }
+    public final IDateTimeExtractor getHolidayExtractor() {
+        return holidayExtractor;
+    }
 
-    private IDateTimeExtractor dateTimeExtractor;
-    public final IDateTimeExtractor getDateTimeExtractor() { return dateTimeExtractor; }
+    public final IDateTimeExtractor getDateTimeExtractor() {
+        return dateTimeExtractor;
+    }
 
-    private IDateTimeExtractor durationExtractor;
-    public final IDateTimeExtractor getDurationExtractor() { return durationExtractor; }
+    public final IDateTimeExtractor getDurationExtractor() {
+        return durationExtractor;
+    }
 
-    private IDateTimeExtractor datePeriodExtractor;
-    public final IDateTimeExtractor getDatePeriodExtractor() { return datePeriodExtractor; }
+    public final IDateTimeExtractor getDatePeriodExtractor() {
+        return datePeriodExtractor;
+    }
 
-    private IDateTimeExtractor timePeriodExtractor;
-    public final IDateTimeExtractor getTimePeriodExtractor() { return timePeriodExtractor; }
+    public final IDateTimeExtractor getTimePeriodExtractor() {
+        return timePeriodExtractor;
+    }
 
-    private IDateTimeZoneExtractor timeZoneExtractor;
-    public final IDateTimeZoneExtractor getTimeZoneExtractor() { return timeZoneExtractor; }
+    public final IDateTimeZoneExtractor getTimeZoneExtractor() {
+        return timeZoneExtractor;
+    }
 
-    private IDateTimeListExtractor dateTimeAltExtractor;
-    public final IDateTimeListExtractor getDateTimeAltExtractor() { return dateTimeAltExtractor; }
+    public final IDateTimeListExtractor getDateTimeAltExtractor() {
+        return dateTimeAltExtractor;
+    }
 
-    private IDateTimeExtractor dateTimePeriodExtractor;
-    public final IDateTimeExtractor getDateTimePeriodExtractor() { return dateTimePeriodExtractor; }
+    public final IDateTimeExtractor getDateTimePeriodExtractor() {
+        return dateTimePeriodExtractor;
+    }
 
-    public EnglishMergedExtractorConfiguration(DateTimeOptions options)
-    {
+    public EnglishMergedExtractorConfiguration(DateTimeOptions options) {
+
         this.options = options;
 
         setExtractor = new BaseSetExtractor(new EnglishSetExtractorConfiguration());
@@ -88,22 +136,47 @@ public class EnglishMergedExtractorConfiguration implements IMergedExtractorConf
         timeZoneExtractor = new BaseTimeZoneExtractor(new EnglishTimeZoneExtractorConfiguration(options));
         dateTimeAltExtractor = new BaseDateTimeAltExtractor(new EnglishDateTimeAltExtractorConfiguration());
         timePeriodExtractor = new BaseTimePeriodExtractor(new EnglishTimePeriodExtractorConfiguration(options));
-        integerExtractor = com.microsoft.recognizers.text.number.english.extractors.IntegerExtractor.getInstance();
+        integerExtractor = IntegerExtractor.getInstance();
         dateTimePeriodExtractor = new BaseDateTimePeriodExtractor(new EnglishDateTimePeriodExtractorConfiguration(options));
 
-        if (this.options != null & this.options != DateTimeOptions.EnablePreview)
-        {
+        if (this.options != null & this.options != DateTimeOptions.EnablePreview) {
             getSuperfluousWordMatcher().init(EnglishDateTime.SuperfluousWordList);
         }
     }
 
-    public final Pattern getAfterRegex() { return AfterRegex; }
-    public final Pattern getSinceRegex() { return SinceRegex; }
-    public final Pattern getBeforeRegex() { return BeforeRegex; }
-    public final Pattern getFromToRegex() { return FromToRegex; }
-    public final Pattern getYearAfterRegex() { return YearAfterRegex; }
-    public final Pattern getNumberEndingPattern() { return NumberEndingPattern; }
-    public final Pattern getPrepositionSuffixRegex() { return PrepositionSuffixRegex; }
-    public final Pattern getSingleAmbiguousMonthRegex() { return SingleAmbiguousMonthRegex; }
-    public final Pattern getUnspecificDatePeriodRegex() { return UnspecificDatePeriodRegex; }
+    public final Pattern getAfterRegex() {
+        return AfterRegex;
+    }
+
+    public final Pattern getSinceRegex() {
+        return SinceRegex;
+    }
+
+    public final Pattern getBeforeRegex() {
+        return BeforeRegex;
+    }
+
+    public final Pattern getFromToRegex() {
+        return FromToRegex;
+    }
+
+    public final Pattern getYearAfterRegex() {
+        return YearAfterRegex;
+    }
+
+    public final Pattern getNumberEndingPattern() {
+        return NumberEndingPattern;
+    }
+
+    public final Pattern getPrepositionSuffixRegex() {
+        return PrepositionSuffixRegex;
+    }
+
+    public final Pattern getSingleAmbiguousMonthRegex() {
+        return SingleAmbiguousMonthRegex;
+    }
+
+    public final Pattern getUnspecificDatePeriodRegex() {
+        return UnspecificDatePeriodRegex;
+    }
 }

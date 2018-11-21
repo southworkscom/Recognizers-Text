@@ -22,8 +22,8 @@ public class TimeParser extends BaseTimeParser {
 
     @Override
     protected DateTimeResolutionResult internalParse(String text, LocalDateTime referenceTime) {
-        DateTimeResolutionResult innerResult = super.internalParse(text, referenceTime);
 
+        DateTimeResolutionResult innerResult = super.internalParse(text, referenceTime);
         if (!innerResult.getSuccess()) {
             innerResult = parseIsh(text, referenceTime);
         }
@@ -33,11 +33,13 @@ public class TimeParser extends BaseTimeParser {
 
     // parse "noonish", "11-ish"
     private DateTimeResolutionResult parseIsh(String text, LocalDateTime referenceTime) {
+
         DateTimeResolutionResult result = new DateTimeResolutionResult();
         String trimmedText = text.trim().toLowerCase();
 
         Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(EnglishTimeExtractorConfiguration.IshRegex, trimmedText)).findFirst();
         if (match.isPresent() && match.get().length == trimmedText.length()) {
+
             String hourStr = match.get().getGroup(Constants.HourGroupName).value;
             int hour = Constants.HalfDayHourCount;
 
@@ -46,11 +48,13 @@ public class TimeParser extends BaseTimeParser {
             }
 
             result.setTimex(String.format("T%02d", hour));
+
             LocalDateTime resultTime = DateUtil.safeCreateFromMinValue(
                 referenceTime.getYear(),
                 referenceTime.getMonthValue(),
                 referenceTime.getDayOfMonth(),
                 hour, 0, 0);
+
             result.setFutureValue(resultTime);
             result.setPastValue(resultTime);
             result.setSuccess(true);

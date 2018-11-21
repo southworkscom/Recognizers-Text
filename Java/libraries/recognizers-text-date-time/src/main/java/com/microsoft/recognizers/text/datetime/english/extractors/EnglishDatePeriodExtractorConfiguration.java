@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 public class EnglishDatePeriodExtractorConfiguration implements IDatePeriodExtractorConfiguration {
+
     private static final int flags = Pattern.CASE_INSENSITIVE;
     public static final Pattern YearRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.YearRegex, flags);
     public static final Pattern TillRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.TillRegex, flags);
@@ -96,7 +97,6 @@ public class EnglishDatePeriodExtractorConfiguration implements IDatePeriodExtra
     };
 
     private final Pattern rangeConnectorRegex;
-
     private final IDateTimeExtractor datePointExtractor;
     private final IExtractor cardinalExtractor;
     private final IExtractor ordinalExtractor;
@@ -261,19 +261,21 @@ public class EnglishDatePeriodExtractorConfiguration implements IDatePeriodExtra
         return numberParser;
     }
 
-	@Override
-	public String[] getDurationDateRestrictions() {
-		return durationDateRestrictions;
+    @Override
+    public String[] getDurationDateRestrictions() {
+        return durationDateRestrictions;
     }
-    
+
     public DateTimeOptions getOptions() {
         return options;
     }
 
     @Override
-    public ResultIndex GetFromTokenIndex(String text) {
+    public ResultIndex getFromTokenIndex(String text) {
+
         int index = -1;
         boolean result = false;
+
         if (text.endsWith("from")) {
             result = true;
             index = text.lastIndexOf("from");
@@ -283,9 +285,11 @@ public class EnglishDatePeriodExtractorConfiguration implements IDatePeriodExtra
     }
 
     @Override
-    public ResultIndex GetBetweenTokenIndex(String text) {
+    public ResultIndex getBetweenTokenIndex(String text) {
+
         int index = -1;
         boolean result = false;
+
         if (text.endsWith("between")) {
             result = true;
             index = text.lastIndexOf("between");
@@ -295,7 +299,7 @@ public class EnglishDatePeriodExtractorConfiguration implements IDatePeriodExtra
     }
 
     @Override
-    public boolean HasConnectorToken(String text) {
+    public boolean hasConnectorToken(String text) {
         Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(rangeConnectorRegex, text)).findFirst();
         return match.isPresent() && match.get().length == text.trim().length();
     }

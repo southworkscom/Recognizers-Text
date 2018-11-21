@@ -15,6 +15,7 @@ public class EnglishDurationParserConfiguration extends BaseOptionsConfiguration
 
     private final IExtractor cardinalExtractor;
     private final IExtractor durationExtractor;
+
     private final IParser numberParser;
     private final Pattern numberCombinedWithUnit;
     private final Pattern anUnitRegex;
@@ -27,6 +28,7 @@ public class EnglishDurationParserConfiguration extends BaseOptionsConfiguration
     private final Pattern inexactNumberRegex;
     private final Pattern inexactNumberUnitRegex;
     private final Pattern durationUnitRegex;
+
     private final ImmutableMap<String, String> unitMap;
     private final ImmutableMap<String, Long> unitValueMap;
     private final ImmutableMap<String, Double> doubleNumbers;

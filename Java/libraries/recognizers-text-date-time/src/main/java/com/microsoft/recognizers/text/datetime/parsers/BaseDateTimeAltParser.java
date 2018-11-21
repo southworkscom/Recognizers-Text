@@ -27,12 +27,12 @@ public class BaseDateTimeAltParser implements IDateTimeParser {
     }
 
     @Override
-    public List<DateTimeParseResult> filterResults(String query, List<DateTimeParseResult> candidateResults) {
-        throw new UnsupportedOperationException();
+    public ParseResult parse(ExtractResult extractResult) {
+        return this.parse(extractResult, LocalDateTime.now());
     }
 
     @Override
-    public ParseResult parse(ExtractResult extractResult) {
-        return this.parse(extractResult, LocalDateTime.now());
+    public List<DateTimeParseResult> filterResults(String query, List<DateTimeParseResult> candidateResults) {
+        throw new UnsupportedOperationException();
     }
 }

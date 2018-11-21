@@ -8,12 +8,20 @@ import java.util.regex.Pattern;
 
 public interface IMergedParserConfiguration extends IOptionsConfiguration {
     Pattern getBeforeRegex();
+
     Pattern getAfterRegex();
+
     Pattern getSinceRegex();
+
     Pattern getYearAfterRegex();
+
     Pattern getYearRegex();
+
     IDateTimeParser getGetParser();
+
     IDateTimeParser getHolidayParser();
+
     IDateTimeParser getTimeZoneParser();
+
     StringMatcher getSuperfluousWordMatcher();
 }

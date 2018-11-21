@@ -1,6 +1,8 @@
 package com.microsoft.recognizers.text.datetime;
 
-import com.microsoft.recognizers.text.*;
+import com.microsoft.recognizers.text.Culture;
+import com.microsoft.recognizers.text.ModelResult;
+import com.microsoft.recognizers.text.Recognizer;
 import com.microsoft.recognizers.text.datetime.models.DateTimeModel;
 
 import java.time.LocalDateTime;
@@ -65,7 +67,7 @@ public class DateTimeRecognizer extends Recognizer<DateTimeOptions> {
     protected void initializeConfiguration() {
         //region English
         registerModel(DateTimeModel.class, Culture.English,
-                (options) -> new DateTimeModel(null, null));
+            (options) -> new DateTimeModel(null, null));
         //endregion
     }
 }
