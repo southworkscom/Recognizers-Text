@@ -71,18 +71,18 @@ public class FormatUtil {
     public static String luisTimeSpan(Duration timeSpan) {
         String result = "PT";
 
-        if (timeSpan.get(ChronoUnit.HOURS) > 0) {
-            result = String.format("%s%sH", result, timeSpan.get(ChronoUnit.HOURS));
+        if (timeSpan.toHours() % 24 > 0) {
+            result = String.format("%s%sH", result, timeSpan.toHours() % 24 );
         }
 
-        if (timeSpan.get(ChronoUnit.MINUTES) > 0) {
-            result = String.format("%s%sM", result, timeSpan.get(ChronoUnit.MINUTES));
+        if (timeSpan.toMinutes() % 60 > 0) {
+            result = String.format("%s%sM", result, timeSpan.toMinutes() % 60);
         }
 
-        if (timeSpan.get(ChronoUnit.SECONDS) > 0) {
-            result = String.format("%s%sS", result, timeSpan.get(ChronoUnit.SECONDS));
+        if (timeSpan.get(ChronoUnit.SECONDS)  % 60 > 0) {
+            result = String.format("%s%sS", result, timeSpan.get(ChronoUnit.SECONDS) % 60);
         }
 
-        return result;
+        return timeSpan.toString();
     }
 }

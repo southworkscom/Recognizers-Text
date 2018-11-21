@@ -18,7 +18,6 @@ import org.javatuples.Pair;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class BaseTimePeriodParser implements IDateTimeParser {
@@ -110,7 +109,7 @@ public class BaseTimePeriodParser implements IDateTimeParser {
     private DateTimeResolutionResult parsePureNumCases(String text, LocalDateTime referenceTime) {
         DateTimeResolutionResult ret = new DateTimeResolutionResult();
 
-        int year = referenceTime.getYear(), month = referenceTime.getMonthValue(), day = referenceTime.getDayOfYear();
+        int year = referenceTime.getYear(), month = referenceTime.getMonthValue(), day = referenceTime.getDayOfMonth();
         String trimmedText = text.trim().toLowerCase();
 
         Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(this.config.getPureNumberFromToRegex(),trimmedText)).findFirst();
@@ -226,7 +225,7 @@ public class BaseTimePeriodParser implements IDateTimeParser {
     private DateTimeResolutionResult parseSpecificTimeCases(String text, LocalDateTime referenceTime) {
         DateTimeResolutionResult ret = new DateTimeResolutionResult();
         
-        int year = referenceTime.getYear(), month = referenceTime.getMonthValue(), day = referenceTime.getDayOfYear();
+        int year = referenceTime.getYear(), month = referenceTime.getMonthValue(), day = referenceTime.getDayOfMonth();
         String trimmedText = text.trim().toLowerCase();
 
         // Handle cases like "from 4:30 to 5"
@@ -281,9 +280,9 @@ public class BaseTimePeriodParser implements IDateTimeParser {
             // Get beginMinute (if exists) and endMinute (if exists)
             for (int i = 0; i < match.get().getGroup(Constants.MinuteGroupName).captures.length; i++) {
                 String minuteCapture = match.get().getGroup(Constants.MinuteGroupName).captures[i];
-                if (trimmedText.indexOf(minuteCapture) >= time1StartIndex && trimmedText.indexOf(minuteCapture) + minuteCapture.length() <= time1EndIndex) {
+                if (beginMinute == invalidFlag && trimmedText.indexOf(minuteCapture) >= time1StartIndex && trimmedText.indexOf(minuteCapture) + minuteCapture.length() <= time1EndIndex) {
                     beginMinute = Integer.parseInt(minuteCapture);
-                } else if (trimmedText.indexOf(minuteCapture) >= time2StartIndex && trimmedText.indexOf(minuteCapture) + minuteCapture.length() <= time2EndIndex) {
+                } else if (trimmedText.indexOf(minuteCapture, time1EndIndex) >= time2StartIndex && trimmedText.indexOf(minuteCapture) + minuteCapture.length() <= time2EndIndex) {
                     endMinute = Integer.parseInt(minuteCapture);
                 }
             }
@@ -291,9 +290,9 @@ public class BaseTimePeriodParser implements IDateTimeParser {
             // Get beginSecond (if exists) and endSecond (if exists)
             for (int i = 0; i < match.get().getGroup(Constants.SecondGroupName).captures.length; i++) {
                 String secondCapture = match.get().getGroup(Constants.SecondGroupName).captures[i];
-                if (trimmedText.indexOf(secondCapture) >= time1StartIndex && trimmedText.indexOf(secondCapture) + secondCapture.length() <= time1EndIndex) {
+                if (beginSecond == invalidFlag && trimmedText.indexOf(secondCapture) >= time1StartIndex && trimmedText.indexOf(secondCapture) + secondCapture.length() <= time1EndIndex) {
                     beginSecond = Integer.parseInt(secondCapture);
-                } else if (trimmedText.indexOf(secondCapture) >= time2StartIndex && trimmedText.indexOf(secondCapture) + secondCapture.length() <= time2EndIndex) {
+                } else if (trimmedText.indexOf(secondCapture, time1EndIndex) >= time2StartIndex && trimmedText.indexOf(secondCapture) + secondCapture.length() <= time2EndIndex) {
                     endSecond = Integer.parseInt(secondCapture);
                 }
             }
@@ -377,7 +376,7 @@ public class BaseTimePeriodParser implements IDateTimeParser {
                     if (endHour < Constants.HalfDayHourCount) {
                         if (endDateTime.isBefore(beginDateTime)) {
                             Duration span = Duration.between(endDateTime, beginDateTime).abs();
-                            if (span.get(ChronoUnit.HOURS) >= Constants.HalfDayHourCount) {
+                            if (span.toHours() >= Constants.HalfDayHourCount) {
                                 endDateTime = endDateTime.plusHours(24);
                             } else {
                                 endDateTime = endDateTime.plusHours(Constants.HalfDayHourCount);
@@ -406,7 +405,7 @@ public class BaseTimePeriodParser implements IDateTimeParser {
                             beginDateTime = beginDateTime.minusHours(Constants.HalfDayHourCount);
                         } else {
                             Duration span = Duration.between(beginDateTime,endDateTime);
-                            if (span.get(ChronoUnit.HOURS) > Constants.HalfDayHourCount) {
+                            if (span.toHours() > Constants.HalfDayHourCount) {
                                 beginDateTime = beginDateTime.plusHours(Constants.HalfDayHourCount);
                             }
                         }
@@ -433,7 +432,7 @@ public class BaseTimePeriodParser implements IDateTimeParser {
 
             ret.setSuccess(true);
 
-            ret.setTimex(String.format("(%s,%s,%s", beginStr, endStr, FormatUtil.luisTimeSpan(Duration.between(beginDateTime,endDateTime))));
+            ret.setTimex(String.format("(%s,%s,%s)", beginStr, endStr, FormatUtil.luisTimeSpan(Duration.between(beginDateTime,endDateTime))));
 
             ret.setFutureValue(new Pair<LocalDateTime, LocalDateTime>(beginDateTime,endDateTime));
             ret.setPastValue(new Pair<LocalDateTime, LocalDateTime>(beginDateTime,endDateTime));
@@ -551,8 +550,8 @@ public class BaseTimePeriodParser implements IDateTimeParser {
             endTime = endTime.plusDays(1);
         }
 
-        long minutes = (Duration.between(beginTime,endTime).get(ChronoUnit.MINUTES));
-        long hours = (Duration.between(beginTime, endTime).get(ChronoUnit.HOURS));
+        long minutes = (Duration.between(beginTime,endTime).toMinutes() % 60);
+        long hours = (Duration.between(beginTime, endTime).toHours() % 24);
         ret.setTimex(String.format("(%s,%s,PT", pr1.timexStr,pr2.timexStr));
 
         if(hours>0) {
@@ -561,6 +560,7 @@ public class BaseTimePeriodParser implements IDateTimeParser {
         if(minutes>0) {
             ret.setTimex(String.format("%s%sM", ret.getTimex(), minutes));
         }
+        ret.setTimex(ret.getTimex() + ")");
 
         ret.setFutureValue(new Pair<LocalDateTime, LocalDateTime>(beginTime, endTime));
         ret.setPastValue(new Pair<LocalDateTime, LocalDateTime>(beginTime, endTime));
