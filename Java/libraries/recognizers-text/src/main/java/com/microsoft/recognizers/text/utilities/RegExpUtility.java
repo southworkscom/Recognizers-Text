@@ -182,8 +182,9 @@ public abstract class RegExpUtility {
                 }
 
                 if (!StringUtility.isNullOrEmpty(match.group(key))) {
+                    int lastCaptureIndex = groups.get(groupKey).captures.length > 0 ? groups.get(groupKey).captures[groups.get(groupKey).captures.length - 1].index + 1 : 0;
 
-                    int index = match.start() + match.group(0).indexOf(match.group(key));
+                    int index = match.start() + match.group(0).indexOf(match.group(key), lastCaptureIndex);
                     int length = match.group(key).length();
                     String value = source.substring(index, index + length);
                     List<Capture> captures = new ArrayList<>(Arrays.asList(groups.get(groupKey).captures));
