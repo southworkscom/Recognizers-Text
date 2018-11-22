@@ -148,7 +148,7 @@ public class EnglishSetParserConfiguration extends BaseOptionsConfiguration impl
         durationExtractor = config.getDurationExtractor();
         datePeriodExtractor = config.getDatePeriodExtractor();
         timePeriodExtractor = config.getTimePeriodExtractor();
-        dateTimePeriodExtractor = config.getDateTimeExtractor();
+        dateTimePeriodExtractor = config.getDateTimePeriodExtractor();
 
         unitMap = config.getUnitMap();
         timeParser = config.getTimeParser();
