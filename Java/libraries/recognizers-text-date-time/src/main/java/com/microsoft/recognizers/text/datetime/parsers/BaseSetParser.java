@@ -165,7 +165,7 @@ public class BaseSetParser implements IDateTimeParser {
                 Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(this.config.getEachUnitRegex(), text)).findFirst();
 
                 if (match.get().getGroup("other").value != "") {
-                    result = result.WithTimex(result.timex.replace("1", "2"));
+                    result = result.withTimex(result.timex.replace("1", "2"));
                 }
 
                 ret.setTimex(result.timex);

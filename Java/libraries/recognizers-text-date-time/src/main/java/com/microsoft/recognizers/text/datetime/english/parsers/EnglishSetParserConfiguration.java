@@ -172,19 +172,19 @@ public class EnglishSetParserConfiguration extends BaseOptionsConfiguration impl
         String trimmedText = text.trim().toLowerCase(Locale.ROOT);
 
         if (trimmedText.equals("daily")) {
-            result = result.WithTimex("P1D");
+            result = result.withTimex("P1D");
         } else if (trimmedText.equals("weekly")) {
-            result = result.WithTimex("P1W");
+            result = result.withTimex("P1W");
         } else if (trimmedText.equals("biweekly")) {
-            result = result.WithTimex("P2W");
+            result = result.withTimex("P2W");
         } else if (trimmedText.equals("monthly")) {
-            result = result.WithTimex("P1M");
+            result = result.withTimex("P1M");
         } else if (trimmedText.equals("yearly") || trimmedText.equals("annually") || trimmedText.equals("annual")) {
-            result = result.WithTimex("P1Y");
+            result = result.withTimex("P1Y");
         }
 
         if (result.timex != "") {
-            result = result.WithResult(true);
+            result = result.withResult(true);
         }
 
         return result;
@@ -195,17 +195,17 @@ public class EnglishSetParserConfiguration extends BaseOptionsConfiguration impl
         String trimmedText = text.trim().toLowerCase(Locale.ROOT);
 
         if (trimmedText.equals("day")) {
-            result = result.WithTimex("P1D");
+            result = result.withTimex("P1D");
         } else if (trimmedText.equals("week")) {
-            result = result.WithTimex("P1W");
+            result = result.withTimex("P1W");
         } else if (trimmedText.equals("month")) {
-            result = result.WithTimex("P1M");
+            result = result.withTimex("P1M");
         } else if (trimmedText.equals("year")) {
-            result = result.WithTimex("P1Y");
+            result = result.withTimex("P1Y");
         }
 
         if (result.timex != "") {
-            result = result.WithResult(true);
+            result = result.withResult(true);
         }
 
         return result;
