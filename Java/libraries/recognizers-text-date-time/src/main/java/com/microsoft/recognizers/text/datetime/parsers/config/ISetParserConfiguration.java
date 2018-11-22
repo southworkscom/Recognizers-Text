@@ -8,8 +8,7 @@ import com.microsoft.recognizers.text.datetime.utilities.MatchedTimexResult;
 
 import java.util.regex.Pattern;
 
-public interface ISetParserConfiguration extends IOptionsConfiguration
-{
+public interface ISetParserConfiguration extends IOptionsConfiguration {
     IDateTimeExtractor getDurationExtractor();
 
     IDateTimeParser getDurationParser();

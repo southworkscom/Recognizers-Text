@@ -13,109 +13,179 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 public class EnglishSetParserConfiguration extends BaseOptionsConfiguration implements ISetParserConfiguration {
-    private IDateTimeParser TimeParser;
-    public final IDateTimeParser getTimeParser() { return TimeParser; }
+    private IDateTimeParser timeParser;
 
-    private IDateTimeParser DateParser;
-    public final IDateTimeParser getDateParser() { return DateParser; }
+    public final IDateTimeParser getTimeParser() {
+        return timeParser;
+    }
 
-    private ImmutableMap<String, String> UnitMap;
-    public final ImmutableMap<String, String> getUnitMap() { return UnitMap; }
+    private IDateTimeParser dateParser;
 
-    private IDateTimeParser DateTimeParser;
-    public final IDateTimeParser getDateTimeParser() { return DateTimeParser; }
+    public final IDateTimeParser getDateParser() {
+        return dateParser;
+    }
 
-    private IDateTimeParser DurationParser;
-    public final IDateTimeParser getDurationParser() { return DurationParser; }
+    private ImmutableMap<String, String> unitMap;
 
-    private IDateTimeExtractor TimeExtractor;
-    public final IDateTimeExtractor getTimeExtractor() { return TimeExtractor; }
+    public final ImmutableMap<String, String> getUnitMap() {
+        return unitMap;
+    }
 
-    private IDateTimeExtractor DateExtractor;
-    public final IDateTimeExtractor getDateExtractor() { return DateExtractor; }
+    private IDateTimeParser dateTimeParser;
 
-    private IDateTimeParser DatePeriodParser;
-    public final IDateTimeParser getDatePeriodParser() { return DatePeriodParser; }
+    public final IDateTimeParser getDateTimeParser() {
+        return dateTimeParser;
+    }
 
-    private IDateTimeParser TimePeriodParser;
-    public final IDateTimeParser getTimePeriodParser() { return TimePeriodParser; }
+    private IDateTimeParser durationParser;
 
-    private IDateTimeExtractor DurationExtractor;
-    public final IDateTimeExtractor getDurationExtractor() { return DurationExtractor; }
+    public final IDateTimeParser getDurationParser() {
+        return durationParser;
+    }
 
-    private IDateTimeExtractor DateTimeExtractor;
-    public final IDateTimeExtractor getDateTimeExtractor() { return DateTimeExtractor; }
+    private IDateTimeExtractor timeExtractor;
 
-    private IDateTimeParser DateTimePeriodParser;
-    public final IDateTimeParser getDateTimePeriodParser() { return DateTimePeriodParser; }
+    public final IDateTimeExtractor getTimeExtractor() {
+        return timeExtractor;
+    }
 
-    private IDateTimeExtractor DatePeriodExtractor;
-    public final IDateTimeExtractor getDatePeriodExtractor() { return DatePeriodExtractor; }
+    private IDateTimeExtractor dateExtractor;
 
-    private IDateTimeExtractor TimePeriodExtractor;
-    public final IDateTimeExtractor getTimePeriodExtractor() { return TimePeriodExtractor; }
+    public final IDateTimeExtractor getDateExtractor() {
+        return dateExtractor;
+    }
 
-    private IDateTimeExtractor DateTimePeriodExtractor;
-    public final IDateTimeExtractor getDateTimePeriodExtractor() { return DateTimePeriodExtractor; }
+    private IDateTimeParser datePeriodParser;
 
-    private Pattern EachDayRegex;
-    public final Pattern getEachDayRegex() { return EachDayRegex; }
+    public final IDateTimeParser getDatePeriodParser() {
+        return datePeriodParser;
+    }
 
-    private Pattern SetEachRegex;
-    public final Pattern getSetEachRegex() { return SetEachRegex; }
+    private IDateTimeParser timePeriodParser;
 
-    private Pattern PeriodicRegex;
-    public final Pattern getPeriodicRegex() { return PeriodicRegex; }
+    public final IDateTimeParser getTimePeriodParser() {
+        return timePeriodParser;
+    }
 
-    private Pattern EachUnitRegex;
-    public final Pattern getEachUnitRegex() { return EachUnitRegex; }
+    private IDateTimeExtractor durationExtractor;
 
-    private Pattern SetWeekDayRegex;
-    public final Pattern getSetWeekDayRegex() { return SetWeekDayRegex; }
+    public final IDateTimeExtractor getDurationExtractor() {
+        return durationExtractor;
+    }
 
-    private Pattern EachPrefixRegex;
-    public final Pattern getEachPrefixRegex() { return EachPrefixRegex; }
+    private IDateTimeExtractor dateTimeExtractor;
 
-    public EnglishSetParserConfiguration(ICommonDateTimeParserConfiguration config)
-    {
+    public final IDateTimeExtractor getDateTimeExtractor() {
+        return dateTimeExtractor;
+    }
+
+    private IDateTimeParser dateTimePeriodParser;
+
+    public final IDateTimeParser getDateTimePeriodParser() {
+        return dateTimePeriodParser;
+    }
+
+    private IDateTimeExtractor datePeriodExtractor;
+
+    public final IDateTimeExtractor getDatePeriodExtractor() {
+        return datePeriodExtractor;
+    }
+
+    private IDateTimeExtractor timePeriodExtractor;
+
+    public final IDateTimeExtractor getTimePeriodExtractor() {
+        return timePeriodExtractor;
+    }
+
+    private IDateTimeExtractor dateTimePeriodExtractor;
+
+    public final IDateTimeExtractor getDateTimePeriodExtractor() {
+        return dateTimePeriodExtractor;
+    }
+
+    private Pattern eachDayRegex;
+
+    public final Pattern getEachDayRegex() {
+        return eachDayRegex;
+    }
+
+    private Pattern setEachRegex;
+
+    public final Pattern getSetEachRegex() {
+        return setEachRegex;
+    }
+
+    private Pattern periodicRegex;
+
+    public final Pattern getPeriodicRegex() {
+        return periodicRegex;
+    }
+
+    private Pattern eachUnitRegex;
+
+    public final Pattern getEachUnitRegex() {
+        return eachUnitRegex;
+    }
+
+    private Pattern setWeekDayRegex;
+
+    public final Pattern getSetWeekDayRegex() {
+        return setWeekDayRegex;
+    }
+
+    private Pattern eachPrefixRegex;
+
+    public final Pattern getEachPrefixRegex() {
+        return eachPrefixRegex;
+    }
+
+    public EnglishSetParserConfiguration(ICommonDateTimeParserConfiguration config) {
         super(config.getOptions());
 
-        TimeExtractor = config.getTimeExtractor();
-        DateExtractor = config.getDateExtractor();
-        DateTimeExtractor = config.getDateTimeExtractor();
-        DurationExtractor = config.getDurationExtractor();
-        DatePeriodExtractor = config.getDatePeriodExtractor();
-        TimePeriodExtractor = config.getTimePeriodExtractor();
-        DateTimePeriodExtractor = config.getDateTimeExtractor();
+        timeExtractor = config.getTimeExtractor();
+        dateExtractor = config.getDateExtractor();
+        dateTimeExtractor = config.getDateTimeExtractor();
+        durationExtractor = config.getDurationExtractor();
+        datePeriodExtractor = config.getDatePeriodExtractor();
+        timePeriodExtractor = config.getTimePeriodExtractor();
+        dateTimePeriodExtractor = config.getDateTimeExtractor();
 
-        UnitMap = config.getUnitMap();
-        TimeParser = config.getTimeParser();
-        DateParser = config.getDateParser();
-        DateTimeParser = config.getDateTimeParser();
-        DurationParser = config.getDurationParser();
-        DatePeriodParser = config.getDatePeriodParser();
-        TimePeriodParser = config.getTimePeriodParser();
-        DateTimePeriodParser = config.getDateTimePeriodParser();
+        unitMap = config.getUnitMap();
+        timeParser = config.getTimeParser();
+        dateParser = config.getDateParser();
+        dateTimeParser = config.getDateTimeParser();
+        durationParser = config.getDurationParser();
+        datePeriodParser = config.getDatePeriodParser();
+        timePeriodParser = config.getTimePeriodParser();
+        dateTimePeriodParser = config.getDateTimePeriodParser();
 
-        EachDayRegex = EnglishSetExtractorConfiguration.EachDayRegex;
-        SetEachRegex = EnglishSetExtractorConfiguration.SetEachRegex;
-        EachUnitRegex = EnglishSetExtractorConfiguration.EachUnitRegex;
-        PeriodicRegex = EnglishSetExtractorConfiguration.PeriodicRegex;
-        EachPrefixRegex = EnglishSetExtractorConfiguration.EachPrefixRegex;
-        SetWeekDayRegex = EnglishSetExtractorConfiguration.SetWeekDayRegex;
+        eachDayRegex = EnglishSetExtractorConfiguration.EachDayRegex;
+        setEachRegex = EnglishSetExtractorConfiguration.SetEachRegex;
+        eachUnitRegex = EnglishSetExtractorConfiguration.EachUnitRegex;
+        periodicRegex = EnglishSetExtractorConfiguration.PeriodicRegex;
+        eachPrefixRegex = EnglishSetExtractorConfiguration.EachPrefixRegex;
+        setWeekDayRegex = EnglishSetExtractorConfiguration.SetWeekDayRegex;
     }
 
     public MatchedTimexResult getMatchedDailyTimex(String text) {
         MatchedTimexResult result = new MatchedTimexResult();
         String trimmedText = text.trim().toLowerCase(Locale.ROOT);
 
-        if (trimmedText.equals("daily")) result = result.WithTimex("P1D");
-        else if (trimmedText.equals("weekly")) result = result.WithTimex("P1W");
-        else if (trimmedText.equals("biweekly")) result = result.WithTimex("P2W");
-        else if (trimmedText.equals("monthly")) result = result.WithTimex("P1M");
-        else if (trimmedText.equals("yearly") || trimmedText.equals("annually") || trimmedText.equals("annual")) result = result.WithTimex("P1Y");
+        if (trimmedText.equals("daily")) {
+            result = result.WithTimex("P1D");
+        } else if (trimmedText.equals("weekly")) {
+            result = result.WithTimex("P1W");
+        } else if (trimmedText.equals("biweekly")) {
+            result = result.WithTimex("P2W");
+        } else if (trimmedText.equals("monthly")) {
+            result = result.WithTimex("P1M");
+        } else if (trimmedText.equals("yearly") || trimmedText.equals("annually") || trimmedText.equals("annual")) {
+            result = result.WithTimex("P1Y");
+        }
 
-        if (result.timex != "") result = result.WithResult(true);
+        if (result.timex != "") {
+            result = result.WithResult(true);
+        }
 
         return result;
     }
@@ -124,12 +194,19 @@ public class EnglishSetParserConfiguration extends BaseOptionsConfiguration impl
         MatchedTimexResult result = new MatchedTimexResult();
         String trimmedText = text.trim().toLowerCase(Locale.ROOT);
 
-        if (trimmedText.equals("day")) result = result.WithTimex("P1D");
-        else if (trimmedText.equals("week")) result = result.WithTimex("P1W");
-        else if (trimmedText.equals("month")) result = result.WithTimex("P1M");
-        else if (trimmedText.equals("year")) result = result.WithTimex("P1Y");
+        if (trimmedText.equals("day")) {
+            result = result.WithTimex("P1D");
+        } else if (trimmedText.equals("week")) {
+            result = result.WithTimex("P1W");
+        } else if (trimmedText.equals("month")) {
+            result = result.WithTimex("P1M");
+        } else if (trimmedText.equals("year")) {
+            result = result.WithTimex("P1Y");
+        }
 
-        if (result.timex != "") result = result.WithResult(true);
+        if (result.timex != "") {
+            result = result.WithResult(true);
+        }
 
         return result;
     }

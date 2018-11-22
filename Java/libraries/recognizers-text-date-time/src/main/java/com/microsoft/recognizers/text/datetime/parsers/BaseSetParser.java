@@ -37,39 +37,39 @@ public class BaseSetParser implements IDateTimeParser {
 
         if (er.type.equals(getParserName())) {
 
-            DateTimeResolutionResult innerResult = ParseEachUnit(er.text);
+            DateTimeResolutionResult innerResult = parseEachUnit(er.text);
             if (!innerResult.getSuccess()) {
-                innerResult = ParseEachDuration(er.text, reference);
+                innerResult = parseEachDuration(er.text, reference);
             }
 
             if (!innerResult.getSuccess()) {
-                innerResult = ParserTimeEveryday(er.text, reference);
+                innerResult = parserTimeEveryday(er.text, reference);
             }
 
             // NOTE: Please do not change the order of following function
             // datetimeperiod>dateperiod>timeperiod>datetime>date>time
             if (!innerResult.getSuccess()) {
-                innerResult = ParseEach(config.getDateTimePeriodExtractor(), config.getDateTimePeriodParser(), er.text, reference);
+                innerResult = parseEach(config.getDateTimePeriodExtractor(), config.getDateTimePeriodParser(), er.text, reference);
             }
 
             if (!innerResult.getSuccess()) {
-                innerResult = ParseEach(config.getDatePeriodExtractor(), config.getDatePeriodParser(), er.text, reference);
+                innerResult = parseEach(config.getDatePeriodExtractor(), config.getDatePeriodParser(), er.text, reference);
             }
 
             if (!innerResult.getSuccess()) {
-                innerResult = ParseEach(config.getTimePeriodExtractor(), config.getTimePeriodParser(), er.text, reference);
+                innerResult = parseEach(config.getTimePeriodExtractor(), config.getTimePeriodParser(), er.text, reference);
             }
 
             if (!innerResult.getSuccess()) {
-                innerResult = ParseEach(config.getDateTimeExtractor(), config.getDateTimeParser(), er.text, reference);
+                innerResult = parseEach(config.getDateTimeExtractor(), config.getDateTimeParser(), er.text, reference);
             }
 
             if (!innerResult.getSuccess()) {
-                innerResult = ParseEach(config.getDateExtractor(), config.getDateParser(), er.text, reference);
+                innerResult = parseEach(config.getDateExtractor(), config.getDateParser(), er.text, reference);
             }
 
             if (!innerResult.getSuccess()) {
-                innerResult = ParseEach(config.getTimeExtractor(), config.getTimeParser(), er.text, reference);
+                innerResult = parseEach(config.getTimeExtractor(), config.getTimeParser(), er.text, reference);
             }
 
             if (innerResult.getSuccess()) {
@@ -109,7 +109,7 @@ public class BaseSetParser implements IDateTimeParser {
         throw new UnsupportedOperationException();
     }
 
-    private DateTimeResolutionResult ParseEachDuration (String text, LocalDateTime refDate) {
+    private DateTimeResolutionResult parseEachDuration(String text, LocalDateTime refDate) {
         DateTimeResolutionResult ret = new DateTimeResolutionResult();
         List<ExtractResult> ers = this.config.getDurationExtractor().extract(text, refDate);
         if (ers.size() != 1 || !StringUtility.isNullOrWhiteSpace(text.substring(ers.get(0).start + ers.get(0).length))) {
@@ -130,10 +130,9 @@ public class BaseSetParser implements IDateTimeParser {
         return ret;
     }
 
-    private DateTimeResolutionResult ParseEachUnit(String text) {
+    private DateTimeResolutionResult parseEachUnit(String text) {
         DateTimeResolutionResult ret = new DateTimeResolutionResult();
         // handle "daily", "weekly"
-        //Matcher match = this.config.getPeriodicRegex().matcher(text);
         Optional<Match> matched = Arrays.stream(RegExpUtility.getMatches(this.config.getPeriodicRegex(), text)).findFirst();
         if (matched.isPresent()) {
 
@@ -181,10 +180,12 @@ public class BaseSetParser implements IDateTimeParser {
         return ret;
     }
 
-    private DateTimeResolutionResult ParserTimeEveryday(String text, LocalDateTime refDate) {
+    private DateTimeResolutionResult parserTimeEveryday(String text, LocalDateTime refDate) {
         DateTimeResolutionResult ret = new DateTimeResolutionResult();
         List<ExtractResult> ers = this.config.getTimeExtractor().extract(text, refDate);
-        if (ers.size() != 1) return ret;
+        if (ers.size() != 1) {
+            return ret;
+        }
 
         String afterStr = text.replace(ers.get(0).text, "");
         Matcher match = this.config.getEachDayRegex().matcher(afterStr);
@@ -201,7 +202,7 @@ public class BaseSetParser implements IDateTimeParser {
         return ret;
     }
 
-    private DateTimeResolutionResult ParseEach(IDateTimeExtractor extractor, IDateTimeParser parser, String text, LocalDateTime refDate) {
+    private DateTimeResolutionResult parseEach(IDateTimeExtractor extractor, IDateTimeParser parser, String text, LocalDateTime refDate) {
         DateTimeResolutionResult ret = new DateTimeResolutionResult();
         List<ExtractResult> ers = null;
 
@@ -244,10 +245,5 @@ public class BaseSetParser implements IDateTimeParser {
         }
 
         return ret;
-    }
-
-    public final Iterable<DateTimeParseResult> FilterResults(String query, Iterable<DateTimeParseResult> candidateResults)
-    {
-        return candidateResults;
     }
 }
