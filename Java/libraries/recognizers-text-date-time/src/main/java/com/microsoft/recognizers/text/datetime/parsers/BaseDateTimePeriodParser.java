@@ -176,7 +176,7 @@ public class BaseDateTimePeriodParser implements IDateTimeParser {
         String timePeriodTimex = timePeriodResolutionResult.getTimex();
 
         // If it is a range type timex
-        if (StringUtility.isNullOrEmpty(timePeriodTimex) && timePeriodTimex.startsWith("(")) {
+        if (!StringUtility.isNullOrEmpty(timePeriodTimex) && timePeriodTimex.startsWith("(")) {
             List<ExtractResult> dateResult = config.getDateExtractor().extract(trimmedText.replace(ers.get(0).text, ""), referenceDate);
             String dateText = trimmedText.replace(ers.get(0).text, "").replace(config.getTokenBeforeDate(), "").trim();
 
@@ -439,7 +439,7 @@ public class BaseDateTimePeriodParser implements IDateTimeParser {
         }
 
         if (bothHaveDates) {
-            result.setTimex(String.format("(%s,%s,PT%dH)", pr1.timexStr, pr2.timexStr, ChronoUnit.HOURS.between(futureBegin, futureEnd)));
+            result.setTimex(String.format("(%s,%s,PT%dH)", pr1.timexStr, pr2.timexStr, Math.round(ChronoUnit.SECONDS.between(futureBegin, futureEnd) / 3600f)));
             // Do nothing
         } else if (beginHasDate) {
             futureEnd = DateUtil.safeCreateFromMinValue(futureBegin.toLocalDate(), futureEnd.toLocalTime());
@@ -745,7 +745,7 @@ public class BaseDateTimePeriodParser implements IDateTimeParser {
                 prefixMatch = Arrays.stream(RegExpUtility.getMatches(config.getFutureRegex(), beforeStr)).findFirst();
                 if (prefixMatch.isPresent() && prefixMatch.get().length == beforeStr.length()) {
                     mod = Constants.AFTER_MOD;
-                    endTime = beginTime.minusSeconds(swiftSeconds);
+                    endTime = beginTime.plusSeconds(swiftSeconds);
                 }
 
                 Optional<Match> suffixMatch = Arrays.stream(RegExpUtility.getMatches(config.getPastRegex(), afterStr)).findFirst();
