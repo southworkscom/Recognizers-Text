@@ -39,9 +39,14 @@ public class FormatUtil {
                 String.format("%02d", second));
     }
 
+    public static String luisTime(LocalDateTime time) {
+        return luisTime(time.getHour(), time.getMinute(), time.getSecond());
+    }
+
     public static String formatDate(LocalDateTime date) {
         return String.join(dateDelimiter, String.format("%04d", date.getYear()),
                 String.format("%02d", date.getMonthValue()), String.format("%02d", date.getDayOfMonth()));
+
     }
 
     public static String formatTime(LocalDateTime time) {

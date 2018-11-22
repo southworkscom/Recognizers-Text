@@ -1,13 +1,17 @@
 package com.microsoft.recognizers.text.utilities;
 
-import org.javatuples.Pair;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.javatuples.Pair;
 
 public abstract class RegExpUtility {
 
@@ -182,7 +186,7 @@ public abstract class RegExpUtility {
                 }
 
                 if (!StringUtility.isNullOrEmpty(match.group(key))) {
-                    int lastCaptureIndex = groups.get(groupKey).captures.length > 0 ? groups.get(groupKey).captures[groups.get(groupKey).captures.length - 1].index + 1 : 0;
+                    int lastCaptureIndex = groups.get(groupKey).captures.length > 0 ? groups.get(groupKey).captures[groups.get(groupKey).captures.length - 1].index + 1 - match.start() : 0;
 
                     int index = match.start() + match.group(0).indexOf(match.group(key), lastCaptureIndex);
                     int length = match.group(key).length();

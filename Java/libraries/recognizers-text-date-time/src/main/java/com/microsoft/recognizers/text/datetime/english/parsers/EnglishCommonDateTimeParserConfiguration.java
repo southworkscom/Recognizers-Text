@@ -115,9 +115,9 @@ public class EnglishCommonDateTimeParserConfiguration extends BaseDateParserConf
         dateParser = new BaseDateParser(new EnglishDateParserConfiguration(this));
         timeParser = new TimeParser(new EnglishTimeParserConfiguration(this));
         dateTimeParser = new BaseDateTimeParser(new EnglishDateTimeParserConfiguration(this));
-        datePeriodParser = new BaseDatePeriodParser(null);
-        timePeriodParser = new BaseTimePeriodParser(null);
-        dateTimePeriodParser = new BaseDateTimePeriodParser(null);
+        datePeriodParser = new BaseDatePeriodParser(new EnglishDatePeriodParserConfiguration(this));
+        timePeriodParser = new BaseTimePeriodParser(new EnglishTimePeriodParserConfiguration(this));
+        dateTimePeriodParser = new BaseDateTimePeriodParser(new EnglishDateTimePeriodParserConfiguration(this));
         dateTimeAltParser = new BaseDateTimeAltParser(null);
     }
 
