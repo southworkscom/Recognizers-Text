@@ -15,8 +15,6 @@ import com.microsoft.recognizers.text.utilities.MatchGroup;
 import com.microsoft.recognizers.text.utilities.RegExpUtility;
 import com.microsoft.recognizers.text.utilities.StringUtility;
 
-import org.javatuples.Pair;
-
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -25,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import org.javatuples.Pair;
 
 public class BaseDateTimePeriodParser implements IDateTimeParser {
 
@@ -40,13 +39,13 @@ public class BaseDateTimePeriodParser implements IDateTimeParser {
     }
 
     @Override
-    public ParseResult parse(ExtractResult extractResult) {
-        return this.parse(extractResult, LocalDateTime.now());
+    public List<DateTimeParseResult> filterResults(String query, List<DateTimeParseResult> candidateResults) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public List<DateTimeParseResult> filterResults(String query, List<DateTimeParseResult> candidateResults) {
-        throw new UnsupportedOperationException();
+    public ParseResult parse(ExtractResult extractResult) {
+        return this.parse(extractResult, LocalDateTime.now());
     }
 
     @Override
@@ -63,34 +62,28 @@ public class BaseDateTimePeriodParser implements IDateTimeParser {
                 innerResult = this.mergeTwoTimePoints(er.text, referenceDate);
             }
 
-            if (!innerResult.getSuccess())
-            {
+            if (!innerResult.getSuccess()) {
                 innerResult = this.parseSpecificTimeOfDay(er.text, referenceDate);
             }
 
-            if (!innerResult.getSuccess())
-            {
+            if (!innerResult.getSuccess()) {
                 innerResult = this.parseDuration(er.text, referenceDate);
             }
 
-            if (!innerResult.getSuccess())
-            {
+            if (!innerResult.getSuccess()) {
                 innerResult = this.parseRelativeUnit(er.text, referenceDate);
             }
 
-            if (!innerResult.getSuccess())
-            {
+            if (!innerResult.getSuccess()) {
                 innerResult = this.parseDateWithPeriodPrefix(er.text, referenceDate);
             }
 
-            if (!innerResult.getSuccess())
-            {
+            if (!innerResult.getSuccess()) {
                 // Cases like "today after 2:00pm", "1/1/2015 before 2:00 in the afternoon"
                 innerResult = this.parseDateWithTimePeriodSuffix(er.text, referenceDate);
             }
 
-            if (innerResult.getSuccess())
-            {
+            if (innerResult.getSuccess()) {
                 if (!isBeforeOrAfterMod(innerResult.getMod())) {
                     Map<String, String> futureResolution = ImmutableMap.<String, String>builder()
                         .put(TimeTypeConstants.START_DATETIME, FormatUtil.formatDateTime(((Pair<LocalDateTime, LocalDateTime>) innerResult.getFutureValue()).getValue0()))

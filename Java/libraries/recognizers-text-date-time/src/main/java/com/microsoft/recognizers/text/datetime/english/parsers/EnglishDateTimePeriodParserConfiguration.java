@@ -312,10 +312,10 @@ public class EnglishDateTimePeriodParserConfiguration extends BaseOptionsConfigu
         int swift = 0;
         if (trimmedText.startsWith("next")) {
             swift = 1;
-        } else if (trimmedText.startsWith("last")){
+        } else if (trimmedText.startsWith("last")) {
             swift = -1;
         }
 
         return swift;
-	}
+    }
 }

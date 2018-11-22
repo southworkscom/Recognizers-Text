@@ -247,7 +247,8 @@ public class BaseDateTimePeriodExtractor implements IDateTimeExtractor {
             if (matchPrefixRegexInSegment(beforeStr, match)) {
 
                 int startToken = match.get().index;
-                match = Arrays.stream(RegExpUtility.getMatches(config.getTimeUnitRegex(), input.substring(duration.getStart(), duration.getStart() + duration.getLength()))).findFirst();
+                int durationLength = duration.getStart() + duration.getLength();
+                match = Arrays.stream(RegExpUtility.getMatches(config.getTimeUnitRegex(), input.substring(duration.getStart(), durationLength))).findFirst();
                 if (match.isPresent()) {
                     results.add(new Token(startToken, duration.getEnd()));
                 }
