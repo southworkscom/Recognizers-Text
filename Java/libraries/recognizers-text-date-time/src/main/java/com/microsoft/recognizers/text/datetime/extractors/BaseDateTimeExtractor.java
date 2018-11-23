@@ -190,7 +190,7 @@ public class BaseDateTimeExtractor implements IDateTimeExtractor {
     // Merge a Date entity and a Time entity, like "at 7 tomorrow"
     public List<Token> mergeDateAndTime(String input, LocalDateTime reference) {
 
-        String SYS_NUM_INTEGER = com.microsoft.recognizers.text.number.Constants.SYS_NUM;
+        String SYS_NUM_INT = com.microsoft.recognizers.text.number.Constants.SYS_NUM;
         List<Token> ret = new ArrayList<>();
         List<ExtractResult> dateErs = this.config.getDatePointExtractor().extract(input, reference);
         if (dateErs.size() == 0) {
@@ -212,7 +212,7 @@ public class BaseDateTimeExtractor implements IDateTimeExtractor {
 
             List<ExtractResult> numErs = new ArrayList<>();
             for (Match timeNumMatch : timeNumMatches) {
-                ExtractResult node = new ExtractResult(timeNumMatch.index, timeNumMatch.length, timeNumMatch.value, SYS_NUM_INTEGER);
+                ExtractResult node = new ExtractResult(timeNumMatch.index, timeNumMatch.length, timeNumMatch.value, SYS_NUM_INT);
                 numErs.add(node);
             }
             ers.addAll(numErs);
@@ -236,7 +236,7 @@ public class BaseDateTimeExtractor implements IDateTimeExtractor {
             ExtractResult ersJ = ers.get(j);
             if (ersI.type == Constants.SYS_DATETIME_DATE && ersJ.type == Constants.SYS_DATETIME_TIME ||
                 ersI.type == Constants.SYS_DATETIME_TIME && ersJ.type == Constants.SYS_DATETIME_DATE ||
-                ersI.type == Constants.SYS_DATETIME_DATE && ersJ.type == SYS_NUM_INTEGER) {
+                ersI.type == Constants.SYS_DATETIME_DATE && ersJ.type == SYS_NUM_INT) {
 
                 int middleBegin = ersI != null ? ersI.start + ersI.length : 0;
                 int middleEnd = ersJ != null ? ersJ.start : 0;
@@ -248,7 +248,7 @@ public class BaseDateTimeExtractor implements IDateTimeExtractor {
                 String middleStr = input.substring(middleBegin, middleEnd).trim().toLowerCase();
                 boolean valid = false;
                 // for cases like "tomorrow 3",  "tomorrow at 3"
-                if (ersJ.type == SYS_NUM_INTEGER) {
+                if (ersJ.type == SYS_NUM_INT) {
 
                     Optional<Match> matches = Arrays.stream(RegExpUtility.getMatches(this.config.getDateNumberConnectorRegex(), input)).findFirst();
                     if (StringUtility.isNullOrEmpty(middleStr) || matches.isPresent()) {
