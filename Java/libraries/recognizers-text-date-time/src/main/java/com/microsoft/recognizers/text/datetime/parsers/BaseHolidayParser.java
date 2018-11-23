@@ -49,19 +49,19 @@ public class BaseHolidayParser implements IDateTimeParser {
             if (innerResult.getSuccess()) {
                 HashMap<String, String> futureResolution = new HashMap<>();
                 futureResolution.put(TimeTypeConstants.DATE,
-                        FormatUtil.formatDate((LocalDateTime) innerResult.getFutureValue()));
+                        FormatUtil.formatDate((LocalDateTime)innerResult.getFutureValue()));
                 innerResult.setFutureResolution(futureResolution);
 
                 HashMap<String, String> pastResolution = new HashMap<>();
                 pastResolution.put(TimeTypeConstants.DATE,
-                        FormatUtil.formatDate((LocalDateTime) innerResult.getPastValue()));
+                        FormatUtil.formatDate((LocalDateTime)innerResult.getPastValue()));
                 innerResult.setPastResolution(pastResolution);
                 value = innerResult;
             }
         }
 
         DateTimeParseResult ret = new DateTimeParseResult(er.start, er.length, er.text, er.type, er.data, value, "",
-                value == null ? "" : ((DateTimeResolutionResult) value).getTimex());
+                value == null ? "" : ((DateTimeResolutionResult)value).getTimex());
 
         return ret;
     }
