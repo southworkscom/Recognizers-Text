@@ -61,7 +61,7 @@ public class BaseTimeParser implements IDateTimeParser {
 
             // Resolve timezome
             if (config.getOptions().match(DateTimeOptions.EnablePreview) && er.data instanceof Map.Entry) {
-                ExtractResult timezoneEr = ((Map.Entry<String, ExtractResult>) er.data).getValue();
+                ExtractResult timezoneEr = ((Map.Entry<String, ExtractResult>)er.data).getValue();
                 ParseResult timezonePr = config.getTimeZoneParser().parse(timezoneEr);
 
                 innerResult = internalParse(er.text.substring(0, timezoneEr.length), referenceTime);
@@ -77,12 +77,12 @@ public class BaseTimeParser implements IDateTimeParser {
 
             if (innerResult.getSuccess()) {
                 ImmutableMap.Builder<String, String> futureResolution = ImmutableMap.builder();
-                futureResolution.put(TimeTypeConstants.TIME, FormatUtil.formatTime((LocalDateTime) innerResult.getFutureValue()));
+                futureResolution.put(TimeTypeConstants.TIME, FormatUtil.formatTime((LocalDateTime)innerResult.getFutureValue()));
 
                 innerResult.setFutureResolution(futureResolution.build());
 
                 ImmutableMap.Builder<String, String> pastResolution = ImmutableMap.builder();
-                pastResolution.put(TimeTypeConstants.TIME, FormatUtil.formatTime((LocalDateTime) innerResult.getPastValue()));
+                pastResolution.put(TimeTypeConstants.TIME, FormatUtil.formatTime((LocalDateTime)innerResult.getPastValue()));
 
                 innerResult.setPastResolution(pastResolution.build());
 
