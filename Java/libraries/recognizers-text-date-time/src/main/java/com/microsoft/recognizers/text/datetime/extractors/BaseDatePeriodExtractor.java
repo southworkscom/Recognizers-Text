@@ -64,7 +64,7 @@ public class BaseDatePeriodExtractor implements IDateTimeExtractor {
                 Optional<Match> matchYear = Arrays.stream(RegExpUtility.getMatches(config.getYearRegex(), match.value)).findFirst();
                 if (matchYear.isPresent() && matchYear.get().length == match.length) {
 
-                    int year = ((BaseDateExtractor) config.getDatePointExtractor()).getYearFromText(matchYear.get());
+                    int year = ((BaseDateExtractor)config.getDatePointExtractor()).getYearFromText(matchYear.get());
                     if (!(year >= Constants.MinYearNum && year <= Constants.MaxYearNum)) {
                         continue;
                     }
