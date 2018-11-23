@@ -40,8 +40,8 @@ public class EnglishDurationExtractorConfiguration extends BaseOptionsConfigurat
     public EnglishDurationExtractorConfiguration(DateTimeOptions options) {
         super(options);
         cardinalExtractor = CardinalExtractor.getInstance();
-        unitMap = (ImmutableMap<String, String>) EnglishDateTime.UnitMap;
-        unitValueMap = (ImmutableMap<String, Long>) EnglishDateTime.UnitValueMap;
+        unitMap = (ImmutableMap<String, String>)EnglishDateTime.UnitMap;
+        unitValueMap = (ImmutableMap<String, Long>)EnglishDateTime.UnitValueMap;
     }
 
     @Override
