@@ -131,7 +131,7 @@ public class BaseDurationParser implements IDateTimeParser {
             Pattern unitRegex = config.getDurationUnitRegex();
             Optional<Match> unitMatch = Arrays.stream(RegExpUtility.getMatches(unitRegex, er.text)).findFirst();
             if (unitMatch.isPresent()) {
-                DateTimeParseResult pr = (DateTimeParseResult) parse(er);
+                DateTimeParseResult pr = (DateTimeParseResult)parse(er);
                 if (pr.value != null) {
                     timexMap.put(unitMatch.get().getGroup("unit").value, pr.timexStr);
                     prs.add(pr);
