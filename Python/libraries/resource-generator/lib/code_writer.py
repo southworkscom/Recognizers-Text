@@ -49,24 +49,28 @@ class DictionaryWriter(CodeWriter):
     def __init__(self, name, key_type, value_type, entries):
         CodeWriter.__init__(self, name)
         self.entries = []
-        key_type = to_python_type(key_type)
-        value_type = to_python_type(value_type)
 
-        key_quote = '\'' if key_type == 'string' else ''
-        value_quote = '\'' if value_type == 'string' else ''
         for key, value in entries.items():
-            k = key.replace(r"\'", '\'').replace('\'', r"\'")
+            key = CreateEntry(key, key_type)
             if isinstance(value, list):
-                value = ', '.join(map(lambda x: json.dumps(x.value).replace("'", r"\'").replace('"', "'"), value))
-                v = f'[{value}]'
+                value = f"[{', '.join(map(lambda x: json.dumps(x.value), value))}]"
             else:
-                v = value.replace(r"\'", '\'').replace('\'', r"\'")
-            self.entries.append(f'({key_quote}{k}{key_quote}, {value_quote}{v}{value_quote})')
+                value = CreateEntry(value, value_type)
+            self.entries.append(f'({key}, {value})')
 
     def write(self):
         spaces = ' ' * (len(f'{self.name} = dict([') + 4)
         joined_entries = f',\n{spaces}'.join(self.entries)
         return f'{self.name} = dict([{joined_entries}])'
+
+
+def CreateEntry(entry, entryType) -> str:
+    quote = "'''" if to_python_type(entryType) == 'string' else ''
+    entry = f'{quote}{entry}{quote}'
+    if entryType == 'string':
+        return f'r{entry}'
+    else:
+        return entry
 
 
 class ArrayWriter(CodeWriter):
@@ -79,7 +83,7 @@ class ArrayWriter(CodeWriter):
 
         for value in entries:
             value = value.replace('\'', '\\\'')
-            self.entries.append(f'{value_quote}{value}{value_quote}')
+            self.entries.append(f'r{value_quote}{value}{value_quote}')
 
     def write(self):
         joined_entries = ', '.join(self.entries)
