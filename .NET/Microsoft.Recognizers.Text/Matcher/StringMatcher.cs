@@ -6,8 +6,6 @@ namespace Microsoft.Recognizers.Text.Matcher
 {
     public class StringMatcher
     {
-        private readonly ITokenizer tokenizer;
-
         public StringMatcher(MatchStrategy matchStrategy = MatchStrategy.TrieTree, ITokenizer tokenizer = null)
         {
             tokenizer = tokenizer ?? new SimpleTokenizer();
@@ -23,6 +21,8 @@ namespace Microsoft.Recognizers.Text.Matcher
                     throw new ArgumentException($"Unsupported match strategy: {matchStrategy.ToString()}");
             }
         }
+
+        private ITokenizer Tokenizer { get; set; }
 
         private IMatcher<string> Matcher { get; set; }
 
@@ -68,7 +68,7 @@ namespace Microsoft.Recognizers.Text.Matcher
 
         public IEnumerable<MatchResult<string>> Find(string queryText)
         {
-            var queryTokens = tokenizer.Tokenize(queryText);
+            var queryTokens = Tokenizer.Tokenize(queryText);
             var tokenizedQueryText = queryTokens.Select(t => t.Text);
 
             foreach (var r in Find(tokenizedQueryText))
@@ -91,7 +91,7 @@ namespace Microsoft.Recognizers.Text.Matcher
 
         private IEnumerable<string>[] GetTokenizedText(IEnumerable<string> values)
         {
-            return values.Select(t => tokenizer.Tokenize(t).Select(i => i.Text)).ToArray();
+            return values.Select(t => Tokenizer.Tokenize(t).Select(i => i.Text)).ToArray();
         }
     }
 }
