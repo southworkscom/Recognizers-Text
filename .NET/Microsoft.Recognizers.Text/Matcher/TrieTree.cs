@@ -5,11 +5,10 @@ namespace Microsoft.Recognizers.Text.Matcher
 {
     public class TrieTree<T> : AbstractMatcher<T>
     {
-        protected readonly Node<T> root = new Node<T>();
+        private readonly Node<T> root = new Node<T>();
 
         public TrieTree()
         {
-
         }
 
         public override void Insert(IEnumerable<T> value, string id)
