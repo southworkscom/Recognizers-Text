@@ -6,12 +6,9 @@ namespace Microsoft.Recognizers.Text.Matcher
 {
     public class StringMatcher
     {
-        private readonly ITokenizer Tokenizer;
-        private IMatcher<string> Matcher { get; set; }
-
         public StringMatcher(MatchStrategy matchStrategy = MatchStrategy.TrieTree, ITokenizer tokenizer = null)
         {
-            Tokenizer = tokenizer ?? new SimpleTokenizer();
+            tokenizer = tokenizer ?? new SimpleTokenizer();
             switch (matchStrategy)
             {
                 case MatchStrategy.AcAutomaton:
@@ -24,6 +21,10 @@ namespace Microsoft.Recognizers.Text.Matcher
                     throw new ArgumentException($"Unsupported match strategy: {matchStrategy.ToString()}");
             }
         }
+
+        private ITokenizer Tokenizer { get; set; }
+
+        private IMatcher<string> Matcher { get; set; }
 
         public void Init(IEnumerable<string> values)
         {
@@ -59,11 +60,6 @@ namespace Microsoft.Recognizers.Text.Matcher
             Matcher.Init(tokenizedValues, ids);
         }
 
-        private IEnumerable<string>[] GetTokenizedText(IEnumerable<string> values)
-        {
-            return values.Select(t => Tokenizer.Tokenize(t).Select(i => i.Text)).ToArray();
-        }
-
         // Return token based entity result
         public IEnumerable<MatchResult<string>> Find(IEnumerable<string> tokenizedQuery)
         {
@@ -88,9 +84,14 @@ namespace Microsoft.Recognizers.Text.Matcher
                     Start = start,
                     Length = length,
                     Text = rtext,
-                    CanonicalValues = r.CanonicalValues
+                    CanonicalValues = r.CanonicalValues,
                 };
             }
+        }
+
+        private IEnumerable<string>[] GetTokenizedText(IEnumerable<string> values)
+        {
+            return values.Select(t => Tokenizer.Tokenize(t).Select(i => i.Text)).ToArray();
         }
     }
 }
