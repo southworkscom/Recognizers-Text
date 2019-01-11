@@ -5,12 +5,13 @@ namespace Microsoft.Recognizers.Text.Matcher
 {
     public class AcAutomaton<T> : AbstractMatcher<T>
     {
-        protected readonly AaNode<T> root = new AaNode<T>();
+        private readonly AaNode<T> root = new AaNode<T>();
 
         public AcAutomaton()
         {
-
         }
+
+        protected AaNode<T> Root => root;
 
         public override void Insert(IEnumerable<T> value, string id)
         {
