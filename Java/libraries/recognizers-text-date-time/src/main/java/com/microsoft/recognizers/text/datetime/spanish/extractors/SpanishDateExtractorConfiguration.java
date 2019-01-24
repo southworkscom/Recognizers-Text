@@ -27,9 +27,6 @@ import java.util.regex.Pattern;
 public class SpanishDateExtractorConfiguration extends BaseOptionsConfiguration implements IDateExtractorConfiguration {
 
     public static final Pattern MonthRegex = RegExpUtility.getSafeRegExp(SpanishDateTime.MonthRegex);
-    public static final Pattern DayRegex = RegExpUtility.getSafeRegExp(SpanishDateTime.DayRegex);
-    public static final Pattern MonthNumRegex = RegExpUtility.getSafeRegExp(SpanishDateTime.MonthNumRegex);
-    public static final Pattern YearRegex = RegExpUtility.getSafeRegExp(SpanishDateTime.YearRegex);
     public static final Pattern WeekDayRegex = RegExpUtility.getSafeRegExp(SpanishDateTime.WeekDayRegex);
     public static final Pattern OnRegex = RegExpUtility.getSafeRegExp(SpanishDateTime.OnRegex);
     public static final Pattern RelaxedOnRegex = RegExpUtility.getSafeRegExp(SpanishDateTime.RelaxedOnRegex);
