@@ -1,6 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Linq;
+
+using Microsoft.Recognizers.Text.Matcher;
 
 namespace Microsoft.Recognizers.Text.DateTime
 {
@@ -27,7 +28,7 @@ namespace Microsoft.Recognizers.Text.DateTime
                             er.Length = newLength;
                             er.Data = new Dictionary<string, object>()
                             {
-                                { Constants.SYS_DATETIME_TIMEZONE, timeZoneEr }
+                                { Constants.SYS_DATETIME_TIMEZONE, timeZoneEr },
                             };
                         }
                     }
@@ -44,15 +45,32 @@ namespace Microsoft.Recognizers.Text.DateTime
 
             if (er.Data is Dictionary<string, object>)
             {
-                var metadata = er.Data as Dictionary<string, object>;
+                var metaData = er.Data as Dictionary<string, object>;
 
-                if (metadata != null && metadata.ContainsKey(Constants.SYS_DATETIME_TIMEZONE))
+                if (metaData != null && metaData.ContainsKey(Constants.SYS_DATETIME_TIMEZONE))
                 {
                     hasTimeZoneData = true;
                 }
             }
 
             return enablePreview && hasTimeZoneData;
+        }
+
+        public static StringMatcher BuildMatcherFromLists(params List<string>[] collections)
+        {
+            StringMatcher matcher = new StringMatcher(MatchStrategy.TrieTree, new NumberWithUnitTokenizer());
+            List<string> matcherList = new List<string>();
+
+            foreach (List<string> collection in collections)
+            {
+                collection.ForEach(o => matcherList.Add(o.Trim().ToLower()));
+            }
+
+            matcherList = matcherList.Distinct().ToList();
+
+            matcher.Init(matcherList);
+
+            return matcher;
         }
     }
 }

@@ -7,10 +7,10 @@ import com.microsoft.recognizers.text.datetime.Constants;
 import com.microsoft.recognizers.text.datetime.TimeTypeConstants;
 import com.microsoft.recognizers.text.datetime.parsers.config.IDateTimePeriodParserConfiguration;
 import com.microsoft.recognizers.text.datetime.parsers.config.MatchedTimeRangeResult;
+import com.microsoft.recognizers.text.datetime.utilities.ConditionalMatch;
 import com.microsoft.recognizers.text.datetime.utilities.DateTimeFormatUtil;
 import com.microsoft.recognizers.text.datetime.utilities.DateTimeResolutionResult;
 import com.microsoft.recognizers.text.datetime.utilities.DateUtil;
-import com.microsoft.recognizers.text.datetime.utilities.FormatUtil;
 import com.microsoft.recognizers.text.datetime.utilities.RangeTimexComponents;
 import com.microsoft.recognizers.text.datetime.utilities.RegexExtension;
 import com.microsoft.recognizers.text.datetime.utilities.TimexUtility;
@@ -91,14 +91,15 @@ public class BaseDateTimePeriodParser implements IDateTimeParser {
             if (innerResult.getSuccess()) {
                 if (!isBeforeOrAfterMod(innerResult.getMod())) {
                     Map<String, String> futureResolution = ImmutableMap.<String, String>builder()
-                            .put(TimeTypeConstants.START_DATETIME, FormatUtil.formatDateTime(((Pair<LocalDateTime, LocalDateTime>)innerResult.getFutureValue()).getValue0()))
-                            .put(TimeTypeConstants.END_DATETIME, FormatUtil.formatDateTime(((Pair<LocalDateTime, LocalDateTime>)innerResult.getFutureValue()).getValue1()))
+                            .put(TimeTypeConstants.START_DATETIME,
+                                    DateTimeFormatUtil.formatDateTime(((Pair<LocalDateTime, LocalDateTime>)innerResult.getFutureValue()).getValue0()))
+                            .put(TimeTypeConstants.END_DATETIME, DateTimeFormatUtil.formatDateTime(((Pair<LocalDateTime, LocalDateTime>)innerResult.getFutureValue()).getValue1()))
                             .build();
                     innerResult.setFutureResolution(futureResolution);
 
                     Map<String, String> pastResolution = ImmutableMap.<String, String>builder()
-                            .put(TimeTypeConstants.START_DATETIME, FormatUtil.formatDateTime(((Pair<LocalDateTime, LocalDateTime>)innerResult.getPastValue()).getValue0()))
-                            .put(TimeTypeConstants.END_DATETIME, FormatUtil.formatDateTime(((Pair<LocalDateTime, LocalDateTime>)innerResult.getPastValue()).getValue1()))
+                            .put(TimeTypeConstants.START_DATETIME, DateTimeFormatUtil.formatDateTime(((Pair<LocalDateTime, LocalDateTime>)innerResult.getPastValue()).getValue0()))
+                            .put(TimeTypeConstants.END_DATETIME, DateTimeFormatUtil.formatDateTime(((Pair<LocalDateTime, LocalDateTime>)innerResult.getPastValue()).getValue1()))
                             .build();
                     innerResult.setPastResolution(pastResolution);
 
@@ -106,23 +107,23 @@ public class BaseDateTimePeriodParser implements IDateTimeParser {
                     if (innerResult.getMod().equals(Constants.AFTER_MOD)) {
                         // Cases like "1/1/2015 after 2:00" there is no EndTime
                         Map<String, String> futureResolution = ImmutableMap.<String, String>builder()
-                                .put(TimeTypeConstants.START_DATETIME, FormatUtil.formatDateTime((LocalDateTime)innerResult.getFutureValue()))
+                                .put(TimeTypeConstants.START_DATETIME, DateTimeFormatUtil.formatDateTime((LocalDateTime)innerResult.getFutureValue()))
                                 .build();
                         innerResult.setFutureResolution(futureResolution);
 
                         Map<String, String> pastResolution = ImmutableMap.<String, String>builder()
-                                .put(TimeTypeConstants.START_DATETIME, FormatUtil.formatDateTime((LocalDateTime)innerResult.getPastValue()))
+                                .put(TimeTypeConstants.START_DATETIME, DateTimeFormatUtil.formatDateTime((LocalDateTime)innerResult.getPastValue()))
                                 .build();
                         innerResult.setPastResolution(pastResolution);
                     } else {
                         // Cases like "1/1/2015 before 5:00 in the afternoon" there is no StartTime
                         Map<String, String> futureResolution = ImmutableMap.<String, String>builder()
-                                .put(TimeTypeConstants.END_DATETIME, FormatUtil.formatDateTime((LocalDateTime)innerResult.getFutureValue()))
+                                .put(TimeTypeConstants.END_DATETIME, DateTimeFormatUtil.formatDateTime((LocalDateTime)innerResult.getFutureValue()))
                                 .build();
                         innerResult.setFutureResolution(futureResolution);
 
                         Map<String, String> pastResolution = ImmutableMap.<String, String>builder()
-                                .put(TimeTypeConstants.END_DATETIME, FormatUtil.formatDateTime((LocalDateTime)innerResult.getPastValue()))
+                                .put(TimeTypeConstants.END_DATETIME, DateTimeFormatUtil.formatDateTime((LocalDateTime)innerResult.getPastValue()))
                                 .build();
                         innerResult.setPastResolution(pastResolution);
                     }
@@ -577,7 +578,7 @@ public class BaseDateTimePeriodParser implements IDateTimeParser {
             int month = date.getMonthValue();
             int year = date.getYear();
 
-            result.setTimex(FormatUtil.formatDate(date) + timeStr);
+            result.setTimex(DateTimeFormatUtil.formatDate(date) + timeStr);
 
             Pair<LocalDateTime, LocalDateTime> resultValue = new Pair<LocalDateTime, LocalDateTime>(
                     DateUtil.safeCreateFromMinValue(year, month, day, beginHour, 0, 0),
@@ -796,10 +797,10 @@ public class BaseDateTimePeriodParser implements IDateTimeParser {
                 }
 
                 result.setTimex(String.format("(%sT%s,%sT%s,%s)",
-                        FormatUtil.luisDate(beginTime),
-                        FormatUtil.luisTime(beginTime),
-                        FormatUtil.luisDate(endTime),
-                        FormatUtil.luisTime(endTime),
+                        DateTimeFormatUtil.luisDate(beginTime),
+                        DateTimeFormatUtil.luisTime(beginTime),
+                        DateTimeFormatUtil.luisDate(endTime),
+                        DateTimeFormatUtil.luisTime(endTime),
                         durationResult.getTimex()
                 ));
 
@@ -876,10 +877,10 @@ public class BaseDateTimePeriodParser implements IDateTimeParser {
                 }
 
                 result.setTimex(String.format("(%sT%s,%sT%s,%s)",
-                        FormatUtil.luisDate(beginTime),
-                        FormatUtil.luisTime(beginTime),
-                        FormatUtil.luisDate(endTime),
-                        FormatUtil.luisTime(endTime),
+                        DateTimeFormatUtil.luisDate(beginTime),
+                        DateTimeFormatUtil.luisTime(beginTime),
+                        DateTimeFormatUtil.luisDate(endTime),
+                        DateTimeFormatUtil.luisTime(endTime),
                         ptTimex
                 ));
 
@@ -1006,8 +1007,8 @@ public class BaseDateTimePeriodParser implements IDateTimeParser {
         text = text.trim();
 
         for (Pattern regex : beforeAfterRegexes) {
-            Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(regex, text)).findFirst();
-            if (match.isPresent() && match.get().length == text.length()) {
+            ConditionalMatch match = RegexExtension.matchExact(regex, text, true);
+            if (match.getSuccess()) {
                 return true;
             }
         }

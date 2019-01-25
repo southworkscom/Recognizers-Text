@@ -1,5 +1,8 @@
+﻿// <copyright file="AssemblyInfo.cs" company="Microsoft Corporation">
+// Copyright (c) Microsoft. All rights reserved.
+// </copyright>
+
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("Microsoft.Recognizers.Text.DataDrivenTests")]
