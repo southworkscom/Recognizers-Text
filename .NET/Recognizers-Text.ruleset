@@ -4,6 +4,14 @@
     <Rule Id="AvoidAsyncVoid" Action="Error" />
     <Rule Id="UseConfigureAwait" Action="Error" />
   </Rules>
+  <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+    <Rule Id="CA1001" Action="Warning" />
+    <Rule Id="CA1021" Action="Warning" />
+    <Rule Id="CA1707" Action="None" />
+    <Rule Id="CA1821" Action="Warning" />
+    <Rule Id="CA2213" Action="Warning" />
+    <Rule Id="CA2231" Action="Warning" />
+  </Rules>
   <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp" RuleNamespace="Microsoft.CodeAnalysis.CSharp">
     <Rule Id="AD0001" Action="Error" />
     <Rule Id="BC2007" Action="Error" />
