@@ -3,13 +3,11 @@ package com.microsoft.recognizers.text.datetime.spanish.parsers;
 import com.google.common.collect.ImmutableMap;
 import com.microsoft.recognizers.text.IExtractor;
 import com.microsoft.recognizers.text.IParser;
-import com.microsoft.recognizers.text.datetime.config.BaseOptionsConfiguration;
 import com.microsoft.recognizers.text.datetime.extractors.IDateExtractor;
 import com.microsoft.recognizers.text.datetime.extractors.IDateTimeExtractor;
 import com.microsoft.recognizers.text.datetime.parsers.IDateTimeParser;
+import com.microsoft.recognizers.text.datetime.parsers.config.DatePeriodParserConfiguration;
 import com.microsoft.recognizers.text.datetime.parsers.config.ICommonDateTimeParserConfiguration;
-import com.microsoft.recognizers.text.datetime.parsers.config.IDatePeriodParserConfiguration;
-import com.microsoft.recognizers.text.datetime.resources.EnglishDateTime;
 import com.microsoft.recognizers.text.datetime.resources.SpanishDateTime;
 import com.microsoft.recognizers.text.datetime.spanish.extractors.SpanishDatePeriodExtractorConfiguration;
 import com.microsoft.recognizers.text.datetime.spanish.extractors.SpanishDurationExtractorConfiguration;
@@ -17,10 +15,12 @@ import com.microsoft.recognizers.text.utilities.Match;
 import com.microsoft.recognizers.text.utilities.RegExpUtility;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-public class SpanishDatePeriodParserConfiguration extends BaseOptionsConfiguration implements IDatePeriodParserConfiguration {
+public class SpanishDatePeriodParserConfiguration extends DatePeriodParserConfiguration {
 
     public static final Pattern nextPrefixRegex = RegExpUtility.getSafeRegExp(SpanishDateTime.NextPrefixRegex);
     public static final Pattern pastPrefixRegex = RegExpUtility.getSafeRegExp(SpanishDateTime.PastPrefixRegex);
@@ -32,6 +32,7 @@ public class SpanishDatePeriodParserConfiguration extends BaseOptionsConfigurati
         super(config.getOptions());
 
         tokenBeforeDate = SpanishDateTime.TokenBeforeDate;
+
         cardinalExtractor = config.getCardinalExtractor();
         ordinalExtractor = config.getOrdinalExtractor();
         integerExtractor = config.getIntegerExtractor();
@@ -86,7 +87,21 @@ public class SpanishDatePeriodParserConfiguration extends BaseOptionsConfigurati
         numbers = config.getNumbers();
         writtenDecades = config.getWrittenDecades();
         specialDecadeCases = config.getSpecialDecadeCases();
+
+        monthTerms = Collections.unmodifiableList(SpanishDateTime.MonthTerms);
+        futureTerms = Collections.unmodifiableList(SpanishDateTime.FutureTerms);
+        lastCardinalTerms =  Collections.unmodifiableList(SpanishDateTime.LastCardinalTerms);
+        monthToDateTerms = Collections.unmodifiableList(SpanishDateTime.MonthToDateTerms);
+        weekendTerms = Collections.unmodifiableList(SpanishDateTime.WeekendTerms);
+        weekTerms = Collections.unmodifiableList(SpanishDateTime.WeekTerms);
+        yearTerms = Collections.unmodifiableList(SpanishDateTime.YearTerms);
+        genericYearTerms = Collections.unmodifiableList(SpanishDateTime.GenericYearTerms);
+        yearToDateTerms = Collections.unmodifiableList(SpanishDateTime.YearToDateTerms);
+
+        afterNextSuffixRegex = RegExpUtility.getSafeRegExp(SpanishDateTime.AfterNextSuffixRegex);
+
     }
+
 
     // Regex
 
@@ -182,6 +197,9 @@ public class SpanishDatePeriodParserConfiguration extends BaseOptionsConfigurati
 
     private final Pattern centurySuffixRegex;
 
+    private final Pattern afterNextSuffixRegex;
+
+
     // Dictionaries
     private final ImmutableMap<String, String> unitMap;
     private final ImmutableMap<String, Integer> cardinalMap;
@@ -191,6 +209,68 @@ public class SpanishDatePeriodParserConfiguration extends BaseOptionsConfigurati
     private final ImmutableMap<String, Integer> writtenDecades;
     private final ImmutableMap<String, Integer> numbers;
     private final ImmutableMap<String, Integer> specialDecadeCases;
+
+    // Lists
+
+    private final List<String> futureTerms;
+    private final List<String> lastCardinalTerms;
+    private final List<String> monthTerms;
+    private final List<String> monthToDateTerms;
+    private final List<String> weekendTerms;
+    private final List<String> weekTerms;
+    private final List<String> yearTerms;
+    private final List<String> genericYearTerms;
+    private final List<String> yearToDateTerms;
+
+    @Override
+    public List<String> getFutureTerms() {
+        return futureTerms;
+    }
+
+    @Override
+    public List<String> getLastCardinalTerms() {
+        return lastCardinalTerms;
+    }
+
+    @Override
+    public Pattern getAfterNextSuffixRegex() {
+        return afterNextSuffixRegex;
+    }
+
+    @Override
+    public List<String> getMonthTerms() {
+        return monthTerms;
+    }
+
+    @Override
+    public List<String> getMonthToDateTerms() {
+        return monthToDateTerms;
+    }
+
+    @Override
+    public List<String> getWeekendTerms() {
+        return weekendTerms;
+    }
+
+    @Override
+    public List<String> getWeekTerms() {
+        return weekTerms;
+    }
+
+    @Override
+    public List<String> getGenericYearTerms() {
+        return genericYearTerms;
+    }
+
+    @Override
+    public List<String> getYearToDateTerms() {
+        return yearToDateTerms;
+    }
+
+    @Override
+    public List<String> getYearTerms() {
+        return yearTerms;
+    }
 
     @Override
     public final String getTokenBeforeDate() {
@@ -526,58 +606,4 @@ public class SpanishDatePeriodParserConfiguration extends BaseOptionsConfigurati
         return swift;
     }
 
-    @Override
-    public boolean isFuture(String text) {
-        String trimmedText = text.trim().toLowerCase();
-
-        Optional<Match> matchThis = Arrays.stream(RegExpUtility.getMatches(thisPrefixRegex, trimmedText)).findFirst();
-        Optional<Match> matchNext = Arrays.stream(RegExpUtility.getMatches(nextPrefixRegex, trimmedText)).findFirst();
-        return matchThis.isPresent() || matchNext.isPresent();
-    }
-
-    @Override
-    public boolean isLastCardinal(String text) {
-        String trimmedText = text.trim().toLowerCase();
-
-        Optional<Match> matchLast = Arrays.stream(RegExpUtility.getMatches(pastPrefixRegex, trimmedText)).findFirst();
-        return matchLast.isPresent();
-    }
-
-    @Override
-    public boolean isMonthOnly(String text) {
-        String trimmedText = text.trim().toLowerCase();
-        return SpanishDateTime.MonthTerms.stream().anyMatch(o -> trimmedText.endsWith(o));
-    }
-
-    @Override
-    public boolean isMonthToDate(String text) {
-        String trimmedText = text.trim().toLowerCase();
-        return SpanishDateTime.MonthToDateTerms.stream().anyMatch(o -> trimmedText.endsWith(o));
-    }
-
-    @Override
-    public boolean isWeekend(String text) {
-        String trimmedText = text.trim().toLowerCase();
-        return SpanishDateTime.WeekendTerms.stream().anyMatch(o -> trimmedText.endsWith(o));
-    }
-
-    @Override
-    public boolean isWeekOnly(String text) {
-        String trimmedText = text.trim().toLowerCase();
-        return SpanishDateTime.WeekTerms.stream().anyMatch(o -> trimmedText.endsWith(o)) &&
-                !SpanishDateTime.WeekendTerms.stream().anyMatch(o -> trimmedText.endsWith(o));
-    }
-
-    @Override
-    public boolean isYearOnly(String text) {
-        String trimmedText = text.trim().toLowerCase();
-        return SpanishDateTime.YearTerms.stream().anyMatch(o -> trimmedText.endsWith(o));
-    }
-
-    @Override
-    public boolean isYearToDate(String text) {
-        String trimmedText = text.trim().toLowerCase();
-
-        return SpanishDateTime.YearToDateTerms.stream().anyMatch(o -> trimmedText.endsWith(o));
-    }
 }

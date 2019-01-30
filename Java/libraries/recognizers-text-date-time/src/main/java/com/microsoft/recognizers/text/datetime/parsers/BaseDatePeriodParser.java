@@ -8,7 +8,7 @@ import com.microsoft.recognizers.text.datetime.DatePeriodTimexType;
 import com.microsoft.recognizers.text.datetime.DateTimeOptions;
 import com.microsoft.recognizers.text.datetime.TimeTypeConstants;
 import com.microsoft.recognizers.text.datetime.extractors.BaseDateExtractor;
-import com.microsoft.recognizers.text.datetime.parsers.config.IDatePeriodParserConfiguration;
+import com.microsoft.recognizers.text.datetime.parsers.config.DatePeriodParserConfiguration;
 import com.microsoft.recognizers.text.datetime.utilities.ConditionalMatch;
 import com.microsoft.recognizers.text.datetime.utilities.DateContext;
 import com.microsoft.recognizers.text.datetime.utilities.DateTimeFormatUtil;
@@ -43,9 +43,9 @@ public class BaseDatePeriodParser implements IDateTimeParser {
     private static final String parserName = Constants.SYS_DATETIME_DATEPERIOD; //"DatePeriod";
     private static boolean inclusiveEndPeriod = false;
 
-    private final IDatePeriodParserConfiguration config;
+    private final DatePeriodParserConfiguration config;
 
-    public BaseDatePeriodParser(IDatePeriodParserConfiguration config) {
+    public BaseDatePeriodParser(DatePeriodParserConfiguration config) {
         this.config = config;
     }
 
