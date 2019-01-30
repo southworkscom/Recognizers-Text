@@ -800,6 +800,8 @@ public class SpanishDateTime {
 
     public static final String NextPrefixRegex = "(pr[oó]xim[oa]|siguiente)\\b";
 
+    public static final String AfterNextSuffixRegex = "";
+
     public static final String PastPrefixRegex = "([uú]ltim[oa])\\b";
 
     public static final String ThisPrefixRegex = "(est[ea])\\b";
@@ -870,6 +872,10 @@ public class SpanishDateTime {
 
     public static final List<String> MinusTwoDayTerms = Arrays.asList("anteayer", "dia antes de ayer");
 
+    public static final List<String> LastCardinalTerms = Arrays.asList("");
+
+    public static final List<String> FutureTerms = Arrays.asList("");
+
     public static final List<String> MonthTerms = Arrays.asList("mes", "meses");
 
     public static final List<String> MonthToDateTerms = Arrays.asList("mes a la fecha", "meses a la fecha");
@@ -879,6 +885,8 @@ public class SpanishDateTime {
     public static final List<String> WeekTerms = Arrays.asList("semana");
 
     public static final List<String> YearTerms = Arrays.asList("año", "años");
+
+    public static final List<String> GenericYearTerms = Arrays.asList("");
 
     public static final List<String> YearToDateTerms = Arrays.asList("año a la fecha", "años a la fecha");
 

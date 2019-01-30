@@ -3,29 +3,30 @@ package com.microsoft.recognizers.text.datetime.english.parsers;
 import com.google.common.collect.ImmutableMap;
 import com.microsoft.recognizers.text.IExtractor;
 import com.microsoft.recognizers.text.IParser;
-import com.microsoft.recognizers.text.datetime.config.BaseOptionsConfiguration;
 import com.microsoft.recognizers.text.datetime.english.extractors.EnglishDatePeriodExtractorConfiguration;
 import com.microsoft.recognizers.text.datetime.english.extractors.EnglishDurationExtractorConfiguration;
 import com.microsoft.recognizers.text.datetime.extractors.IDateExtractor;
 import com.microsoft.recognizers.text.datetime.extractors.IDateTimeExtractor;
 import com.microsoft.recognizers.text.datetime.parsers.IDateTimeParser;
 import com.microsoft.recognizers.text.datetime.parsers.config.ICommonDateTimeParserConfiguration;
-import com.microsoft.recognizers.text.datetime.parsers.config.IDatePeriodParserConfiguration;
+import com.microsoft.recognizers.text.datetime.parsers.config.DatePeriodParserConfiguration;
 import com.microsoft.recognizers.text.datetime.resources.EnglishDateTime;
 import com.microsoft.recognizers.text.utilities.Match;
 import com.microsoft.recognizers.text.utilities.RegExpUtility;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-public class EnglishDatePeriodParserConfiguration extends BaseOptionsConfiguration implements IDatePeriodParserConfiguration {
+
+public class EnglishDatePeriodParserConfiguration extends DatePeriodParserConfiguration {
 
     public EnglishDatePeriodParserConfiguration(ICommonDateTimeParserConfiguration config) {
 
         super(config.getOptions());
-
+        
         tokenBeforeDate = EnglishDateTime.TokenBeforeDate;
 
         cardinalExtractor = config.getCardinalExtractor();
@@ -90,6 +91,16 @@ public class EnglishDatePeriodParserConfiguration extends BaseOptionsConfigurati
         pastPrefixRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.PastPrefixRegex);
         thisPrefixRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.ThisPrefixRegex);
         afterNextSuffixRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.AfterNextSuffixRegex);
+
+        futureTerms = Collections.unmodifiableList(EnglishDateTime.FutureTerms);
+        monthTerms = Collections.unmodifiableList(EnglishDateTime.MonthTerms);
+        lastCardinalTerms =  Collections.unmodifiableList(EnglishDateTime.LastCardinalTerms);
+        monthToDateTerms = Collections.unmodifiableList(EnglishDateTime.MonthToDateTerms);
+        weekendTerms = Collections.unmodifiableList(EnglishDateTime.WeekendTerms);
+        weekTerms = Collections.unmodifiableList(EnglishDateTime.WeekTerms);
+        yearTerms = Collections.unmodifiableList(EnglishDateTime.YearTerms);
+        genericYearTerms = Collections.unmodifiableList(EnglishDateTime.GenericYearTerms);
+        yearToDateTerms = Collections.unmodifiableList(EnglishDateTime.YearToDateTerms);
     }
 
     private final String tokenBeforeDate;
@@ -150,7 +161,18 @@ public class EnglishDatePeriodParserConfiguration extends BaseOptionsConfigurati
     private final Pattern pastPrefixRegex;
     private final Pattern thisPrefixRegex;
     private final Pattern afterNextSuffixRegex;
-
+    
+    // Lists
+    private final List<String> futureTerms;
+    private final List<String> lastCardinalTerms;
+    private final List<String> monthTerms;
+    private final List<String> monthToDateTerms;
+    private final List<String> weekendTerms;
+    private final List<String> weekTerms;
+    private final List<String> yearTerms;
+    private final List<String> genericYearTerms;
+    private final List<String> yearToDateTerms;
+    
     // Dictionaries
     private final ImmutableMap<String, String> unitMap;
     private final ImmutableMap<String, Integer> cardinalMap;
@@ -160,6 +182,56 @@ public class EnglishDatePeriodParserConfiguration extends BaseOptionsConfigurati
     private final ImmutableMap<String, Integer> writtenDecades;
     private final ImmutableMap<String, Integer> numbers;
     private final ImmutableMap<String, Integer> specialDecadeCases;
+
+    @Override
+    public List<String> getFutureTerms() {
+        return futureTerms;
+    }
+
+    @Override
+    public List<String> getLastCardinalTerms() {
+        return lastCardinalTerms;
+    }
+
+    @Override
+    public Pattern getAfterNextSuffixRegex() {
+        return afterNextSuffixRegex;
+    }
+
+    @Override
+    public List<String> getMonthTerms() {
+        return monthTerms;
+    }
+
+    @Override
+    public List<String> getMonthToDateTerms() {
+        return monthToDateTerms;
+    }
+
+    @Override
+    public List<String> getWeekendTerms() {
+        return weekendTerms;
+    }
+
+    @Override
+    public List<String> getWeekTerms() {
+        return weekTerms;
+    }
+
+    @Override
+    public List<String> getGenericYearTerms() {
+        return genericYearTerms;
+    }
+
+    @Override
+    public List<String> getYearToDateTerms() {
+        return yearToDateTerms;
+    }
+
+    @Override
+    public List<String> getYearTerms() {
+        return yearTerms;
+    }
 
     @Override
     public String getTokenBeforeDate() {
@@ -459,14 +531,12 @@ public class EnglishDatePeriodParserConfiguration extends BaseOptionsConfigurati
     @Override
     public int getSwiftDayOrMonth(String text) {
 
-        String trimmedText = text.trim().toLowerCase();
         int swift = 0;
 
-        Optional<Match> matchAfterNext = Arrays.stream(RegExpUtility.getMatches(afterNextSuffixRegex, trimmedText)).findFirst();
-        Optional<Match> matchNext = Arrays.stream(RegExpUtility.getMatches(nextPrefixRegex, trimmedText)).findFirst();
-        Optional<Match> matchPast = Arrays.stream(RegExpUtility.getMatches(pastPrefixRegex, trimmedText)).findFirst();
+        Optional<Match> matchNext = Arrays.stream(RegExpUtility.getMatches(nextPrefixRegex, trimmedText(text))).findFirst();
+        Optional<Match> matchPast = Arrays.stream(RegExpUtility.getMatches(pastPrefixRegex, trimmedText(text))).findFirst();
 
-        if (matchAfterNext.isPresent()) {
+        if (matchAfterNext(trimmedText(text)).isPresent()) {
             swift = 2;
         } else if (matchNext.isPresent()) {
             swift = 1;
@@ -501,77 +571,6 @@ public class EnglishDatePeriodParserConfiguration extends BaseOptionsConfigurati
         return swift;
     }
 
-    @Override
-    public boolean isFuture(String text) {
-        return (startsWithKeyword(EnglishDateTime.FutureTerms, trimmedText(text)));
-    }
 
-    @Override
-    public boolean isLastCardinal(String text) {
-        return equalsKeyword(EnglishDateTime.LastCardinalTerms, trimmedText(text));
-    }
-
-    @Override
-    public boolean isMonthOnly(String text) {
-        return endsWithKeyword(EnglishDateTime.MonthTerms, trimmedText(text)) ||
-            containsKeyword(EnglishDateTime.MonthTerms, trimmedText(text)) && matchAfterNext(trimmedText(text)).isPresent();
-    }
-
-    @Override
-    public boolean isMonthToDate(String text) {
-        String trimmedText = text.trim().toLowerCase();
-        return trimmedText.equals("month to date");
-    }
-
-    @Override
-    public boolean isWeekend(String text) {
-        return endsWithKeyword(EnglishDateTime.WeekendTerms, trimmedText(text)) ||
-            containsKeyword(EnglishDateTime.WeekendTerms, trimmedText(text)) && matchAfterNext(text).isPresent();
-    }
-
-    @Override
-    public boolean isWeekOnly(String text) {
-        return !containsKeyword(EnglishDateTime.WeekendTerms, trimmedText(text)) &&
-            ((endsWithKeyword(EnglishDateTime.WeekTerms,trimmedText(text)) ||
-            containsKeyword(EnglishDateTime.WeekTerms, trimmedText(text)) && matchAfterNext(trimmedText(text)).isPresent()));
-    }
-
-    @Override
-    public boolean isYearOnly(String text) {
-        return containsKeyword(EnglishDateTime.YearTerms, trimmedText(text)) ||
-            containsKeyword(EnglishDateTime.YearTerms,trimmedText(text)) && RegExpUtility.getMatches(afterNextSuffixRegex, trimmedText(text)).length > 0 ||
-            endsWithKeyword(EnglishDateTime.GenericYearTerms, trimmedText(text)) && RegExpUtility.getMatches(unspecificEndOfRangeRegex, trimmedText(text)).length > 0;
-    }
-
-    @Override
-    public boolean isYearToDate(String text) {
-        String trimmedText = text.trim().toLowerCase();
-        return trimmedText.equals("year to date");
-    }
-
-    // Helper methods
-    private Optional<Match> matchAfterNext(String trimmedText) {
-        return Arrays.stream(RegExpUtility.getMatches(afterNextSuffixRegex, trimmedText)).findFirst();
-    }
-
-    private String trimmedText(String text) {
-        return text.trim().toLowerCase();
-    }
-
-    private Boolean containsKeyword(List<String> term, String trimmedText) {
-        return term.stream().anyMatch(o -> trimmedText.contains(o));
-    }
-
-    private Boolean startsWithKeyword(List<String> term, String trimmedText) {
-        return term.stream().anyMatch(o ->  trimmedText.startsWith(o));
-    }
-
-    private Boolean endsWithKeyword(List<String> term, String trimmedText) {
-        return term.stream().anyMatch(o -> trimmedText.endsWith(o));
-    }
-
-    private Boolean equalsKeyword(List<String> term, String trimmedText) {
-        return term.stream().anyMatch(o ->  trimmedText.equals(o));
-    }
 
 }
