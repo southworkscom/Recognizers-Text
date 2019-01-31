@@ -26,7 +26,7 @@ public class EnglishDatePeriodParserConfiguration extends DatePeriodParserConfig
     public EnglishDatePeriodParserConfiguration(ICommonDateTimeParserConfiguration config) {
 
         super(config.getOptions());
-        
+
         tokenBeforeDate = EnglishDateTime.TokenBeforeDate;
 
         cardinalExtractor = config.getCardinalExtractor();
@@ -106,7 +106,6 @@ public class EnglishDatePeriodParserConfiguration extends DatePeriodParserConfig
     private final String tokenBeforeDate;
 
     // InternalParsers
-
     private final IDateExtractor dateExtractor;
     private final IExtractor cardinalExtractor;
     private final IExtractor ordinalExtractor;
@@ -117,7 +116,6 @@ public class EnglishDatePeriodParserConfiguration extends DatePeriodParserConfig
     private final IDateTimeParser durationParser;
 
     // Regex
-
     private final Pattern monthFrontBetweenRegex;
     private final Pattern betweenRegex;
     private final Pattern monthFrontSimpleCasesRegex;
