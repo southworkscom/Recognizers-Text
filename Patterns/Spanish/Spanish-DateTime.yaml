@@ -868,7 +868,13 @@ MinusTwoDayTerms: !list
 FutureTerms: !list
   types: [ string ]
   entries:
-    -
+    - este
+    - esta
+    - siguiente
+    - proximo
+    - próximo
+    - próxima
+    - proxima
 LastCardinalTerms: !list
   types: [ string ]
   entries:
