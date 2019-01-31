@@ -747,6 +747,8 @@ DateTokenPrefix: 'en '
 TimeTokenPrefix: 'a las '
 TokenBeforeDate: 'el '
 TokenBeforeTime: 'la '
+AfterNextSuffixRegex: !simpleRegex
+  def: \b
 NextPrefixRegex: !simpleRegex
   def: (pr[oó]xim[oa]|siguiente)\b
 PastPrefixRegex: !simpleRegex
@@ -863,6 +865,14 @@ MinusTwoDayTerms: !list
     - anteayer
     - dia antes de ayer
 # For DatePeriodParserConfiguration Logic
+FutureTerms: !list
+  types: [ string ]
+  entries:
+    -
+LastCardinalTerms: !list
+  types: [ string ]
+  entries:
+    - 
 MonthTerms: !list
   types: [ string ]
   entries:
@@ -886,6 +896,10 @@ YearTerms: !list
   entries:
     - año
     - años
+GenericYearTerms: !list
+  types: [ string ]
+  entries: 
+    - a
 YearToDateTerms: !list
   types: [ string ]
   entries:
