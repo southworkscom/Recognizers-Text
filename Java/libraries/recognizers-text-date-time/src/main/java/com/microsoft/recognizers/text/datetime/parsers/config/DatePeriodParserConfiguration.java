@@ -20,7 +20,6 @@ import java.util.regex.Pattern;
 
 public abstract class DatePeriodParserConfiguration extends BaseOptionsConfiguration implements IOptionsConfiguration {
 
-
     public DatePeriodParserConfiguration(DateTimeOptions options) {
         super(options);
     }
