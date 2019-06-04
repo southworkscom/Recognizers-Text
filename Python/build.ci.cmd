@@ -14,6 +14,7 @@ CALL python index.py ..\recognizers-number\resource-definitions.json
 CALL python index.py ..\recognizers-number-with-unit\resource-definitions.json
 CALL python index.py ..\recognizers-date-time\resource-definitions.json
 CALL python index.py ..\recognizers-sequence\resource-definitions.json
+CALL python index.py ..\recognizers-choice\resource-definitions.json
 
 popd
 
@@ -28,6 +29,8 @@ pip install -e .\libraries\recognizers-date-time\
 pip install -e .\libraries\recognizers-sequence\
 
 pip install -e .\libraries\recognizers-suite\
+
+pip install -e .\libraries\recognizers-choice\
 
 pip install -r .\tests\requirements.txt
 
