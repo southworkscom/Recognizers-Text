@@ -40,16 +40,16 @@ class TestInitializationChoiceRecognizer():
     def test_with_invalid_culture_and_without_fallback_throw_error(self):
         recognizer = ChoiceRecognizer()
         with pytest.raises(ValueError):
-            recognizer.get_boolean_model(self.invalid_culture, False)
+            recognizer.get_choice_recognizer(self.invalid_culture, False)
 
     def test_with_invalid_culture_as_target_and_without_fallback_throw_error(self):
         recognizer = ChoiceRecognizer(self.invalid_culture)
         with pytest.raises(ValueError):
-            recognizer.get_boolean_model(None, False)
+            recognizer.get_choice_recognizer(None, False)
 
     def test_without_target_culture_and_without_culture_fallback_to_english_culture(self):
         recognizer = ChoiceRecognizer()
-        self.assert_model_equal(self.control_model, recognizer.get_boolean_model())
+        self.assert_models_equal(self.control_model, recognizer.get_choice_recognizer())
 
     def test_initialization_with_int_option_resolve_options_enum(self):
         recognizer = ChoiceRecognizer(self.english_culture, ChoiceOptions.NONE, False)
