@@ -15,10 +15,10 @@ class ChoiceOptions(IntFlag):
 def recognize_boolean(query: str,
                       culture: str,
                       options: ChoiceOptions = ChoiceOptions.NONE,
-                      fallbackToDefaultCulture: bool = True) -> List[ModelResult]:
-        recognizer = ChoiceRecognizer(culture, options)
-        model = recognizer.get_boolean_model(culture, fallbackToDefaultCulture)
-        return model.parse(query)
+                      fallback_to_default_culture: bool = True) -> List[ModelResult]:
+    recognizer = ChoiceRecognizer(culture, options)
+    model = recognizer.get_boolean_model(culture, fallback_to_default_culture)
+    return model.parse(query)
 
 
 class ChoiceRecognizer (Recognizer[ChoiceOptions]):
@@ -28,13 +28,15 @@ class ChoiceRecognizer (Recognizer[ChoiceOptions]):
             raise ValueError()
         super().__init__(target_culture, options, lazy_initialization)
 
+    def __model_creator(self, options) -> Model:
+        return BooleanModel(BooleanParser(),BooleanExtractor(EnglishBooleanExtractorConfiguration()))
 
     def initialize_configuration(self):
-        self.register_model("BooleanModel", Culture.English, 
-        lambda options: BooleanModel(BooleanParser(), BooleanExtractor(EnglishBooleanExtractorConfiguration())))
-    
+        self.register_model('BooleanModel', Culture.English, lambda options: self.__model_creator(options))
+
+    @staticmethod
     def is_valid_option(options: int) -> bool:
         return options >= 0 & options <= ChoiceOptions.NONE
 
     def get_boolean_model(self, culture: str = None, fallback_to_default_culture: bool = True) -> Model:
-        return self.get_model("BooleanModel", culture, fallback_to_default_culture)
+        return self.get_model('BooleanModel', culture, fallback_to_default_culture)

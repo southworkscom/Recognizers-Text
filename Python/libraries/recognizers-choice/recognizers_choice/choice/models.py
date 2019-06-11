@@ -1,54 +1,52 @@
 from abc import ABC, abstractmethod
 from typing import List
-
-from recognizers_text.extractor import Extractor
+from recognizers_text.extractor import Extractor, ExtractResult
 from recognizers_text.model import Model, ModelResult
 from recognizers_text.parser import Parser, ParseResult
 
 
-class ChoiceModel(ABC):
-
+class ChoiceModel(Model):
     @property
-    def model_type_name(self) ->str:
-        return self.model_type_name
+    @abstractmethod
+    def model_type_name(self) -> str:
+        raise NotImplementedError
 
     def __init__(self, parser: Parser, extractor: Extractor):
         self.extractor = extractor
         self.parser = parser
 
-    def parse(self, source: str) -> List[ModelResult]:
+    def parse(self, source: str):
         extract_results = self.extractor.extract(source)
-        parse_results = list(map(lambda r: self.parser.parse(r), extract_results))
-        ret = list(map(lambda o: ParseResult(o), parse_results))
-        return list(map(lambda o: List[ModelResult][
+        parse_results = [self.parser.parse(e) for e in extract_results]
+        return [({
             'start': o.start,
-            'end': o.start + len(o) - 1,
+            'end': o.start + len(o) -1,
             'resolution': self.get_resolution(o),
             'text': o.text,
             'typeName': self.model_type_name
-        ], ret))
+        })for o in parse_results]
+        #return parse_results
 
     @abstractmethod
     def get_resolution(self, data: ParseResult):
-        pass
+        raise NotImplementedError
 
 
-class BooleanModel (ChoiceModel):
+class BooleanModel(ChoiceModel):
+    @property
+    def model_type_name(self) -> str:
+        return 'boolean'
 
-    model_type_name = 'boolean'
-
-    def get_resolution(self, sources:ParseResult):
+    def get_resolution(self, sources: ParseResult):
         results = {
             'value': sources.value,
             'score': sources.data.score
         }
 
         if sources.data.other_matches:
-            results.other_results = list(map(lambda o: ({
-                'text': o.text,
-                'value': o.value,
-                'score': o.data.score
-            }), sources.data.other_matches))
-
+            results.other_results = [{'text': o.text,
+                                      'value': o.value,
+                                      'score': o.data.score}
+                                     for o in sources.data.other_matches]
         return results
 

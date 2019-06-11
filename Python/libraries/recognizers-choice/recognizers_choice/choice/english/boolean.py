@@ -13,7 +13,7 @@ class EnglishBooleanExtractorConfiguration(BooleanExtractorConfiguration):
     only_top_match: bool
 
     def __init__(self, only_top_match: bool = True):
-        regex_true = RegExpUtility.get_safe_reg_exp(EnglishChoice.TrueRegex)
-        regex_false = RegExpUtility.get_safe_reg_exp(EnglishChoice.FalseRegex)
-        token_regex = RegExpUtility.get_safe_reg_exp(EnglishChoice.TokenizerRegex, regex.S)
-        only_top_match = only_top_match
+        self.regex_true = RegExpUtility.get_safe_reg_exp(EnglishChoice.TrueRegex)
+        self.regex_false = RegExpUtility.get_safe_reg_exp(EnglishChoice.FalseRegex)
+        self.token_regex = RegExpUtility.get_safe_reg_exp(EnglishChoice.TokenizerRegex, regex.S)
+        self.only_top_match = only_top_match

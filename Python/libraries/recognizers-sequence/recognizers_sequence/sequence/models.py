@@ -53,6 +53,7 @@ class PhoneNumberModel(AbstractSequenceModel):
             'score': '%g'% data.value
         }
 
+
 class EmailModel(AbstractSequenceModel):
     @property
     def model_type_name(self) -> str:
