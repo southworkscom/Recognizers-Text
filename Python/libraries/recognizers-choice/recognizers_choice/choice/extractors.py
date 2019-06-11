@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 from abc import ABC
+=======
+import re
+from abc import ABC
+from functools import reduce
+>>>>>>> WIP: other matches fail
 from typing import List, Dict
 
 from grapheme.api import slice
@@ -92,7 +98,6 @@ class ChoiceExtractor(Extractor):
     def match_value(self, source: List[str], match: List[str], start_pos: int) -> float:
         matched = 0
         total_deviation = 0
-
         for match_token in match:
             pos = self.__index_of(source, match_token, start_pos)
             if pos >= 0:
@@ -159,7 +164,6 @@ class BooleanExtractorConfiguration(ABC):
     regex_false: regex.Pattern
     token_regex: regex.Pattern
     only_top_match: bool
-
 
 class BooleanExtractor(ChoiceExtractor):
     booleanTrue = Constants.SYS_BOOLEAN_TRUE
