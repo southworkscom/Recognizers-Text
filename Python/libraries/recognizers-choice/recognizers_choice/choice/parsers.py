@@ -1,4 +1,4 @@
-from typing import Dict, Optional, List
+from typing import Dict, List
 
 from recognizers_choice.choice.extractors import ChoiceExtractDataResult
 from recognizers_choice.choice.constants import Constants
