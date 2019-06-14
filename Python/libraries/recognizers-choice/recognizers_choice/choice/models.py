@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List
+
 from recognizers_text.extractor import Extractor, ExtractResult
 from recognizers_text.model import Model, ModelResult
 from recognizers_text.parser import Parser, ParseResult
@@ -18,14 +18,18 @@ class ChoiceModel(Model):
     def parse(self, source: str):
         extract_results = self.extractor.extract(source)
         parse_results = [self.parser.parse(e) for e in extract_results]
-        return [({
-            'start': o.start,
-            'end': o.start + len(o) -1,
-            'resolution': self.get_resolution(o),
-            'text': o.text,
-            'typeName': self.model_type_name
-        })for o in parse_results]
-        #return parse_results
+        result = []
+        for o in parse_results:
+            model_result = ModelResult()
+            model_result.start = o.start
+            model_result.end = o.start + len(o.text) - 1
+            model_result.resolution = self.get_resolution(o)
+            model_result.text = o.text
+            model_result.type_name = self.model_type_name
+
+            result.append(model_result)
+
+        return result
 
     @abstractmethod
     def get_resolution(self, data: ParseResult):

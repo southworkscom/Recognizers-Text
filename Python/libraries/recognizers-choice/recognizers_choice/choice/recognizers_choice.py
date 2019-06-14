@@ -28,11 +28,9 @@ class ChoiceRecognizer (Recognizer[ChoiceOptions]):
             raise ValueError()
         super().__init__(target_culture, options, lazy_initialization)
 
-    def __model_creator(self, options) -> Model:
-        return BooleanModel(BooleanParser(),BooleanExtractor(EnglishBooleanExtractorConfiguration()))
-
     def initialize_configuration(self):
-        self.register_model('BooleanModel', Culture.English, lambda options: self.__model_creator(options))
+        self.register_model('BooleanModel', Culture.English, lambda options: BooleanModel(
+            BooleanParser(),BooleanExtractor(EnglishBooleanExtractorConfiguration())))
 
     @staticmethod
     def is_valid_option(options: int) -> bool:
