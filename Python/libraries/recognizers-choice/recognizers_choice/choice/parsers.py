@@ -25,10 +25,6 @@ class OtherMatchParseResult:
         self.text = text
         self.value = value
 
-    def __init__(self, score=0.0, other_matches=[]):
-        self.score = score
-        self.other_matches = other_matches
-
 
 class ChoiceParserConfiguration:
     resolutions: Dict[str, object]
