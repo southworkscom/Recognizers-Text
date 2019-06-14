@@ -1,10 +1,4 @@
-<<<<<<< HEAD
 from abc import ABC
-=======
-import re
-from abc import ABC
-from functools import reduce
->>>>>>> WIP: other matches fail
 from typing import List, Dict
 
 from grapheme.api import slice

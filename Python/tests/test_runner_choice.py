@@ -10,7 +10,6 @@ def test_choice_recognizer(culture, model, options, context, source, expected_re
     results = get_results(culture, model, source)
     assert len(results) == len(expected_results)
     for actual, expected in zip(results, expected_results):
-        print(type(actual))
         assert actual.type_name == expected['TypeName']
         assert actual.text == expected['Text']
         assert actual.resolution['value'] == expected['Resolution']['value']
