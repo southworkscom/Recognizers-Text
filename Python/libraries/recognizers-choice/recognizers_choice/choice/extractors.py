@@ -65,8 +65,6 @@ class ChoiceExtractor(Extractor):
 
                     partial_results.append(value)
 
-                print("Partial results: ", partial_results[0].text)
-
         if len(partial_results) == 0:
             return results
 
@@ -149,8 +147,6 @@ class ChoiceExtractor(Extractor):
     @staticmethod
     def __get_matches(regexp: regex.Pattern, source: str) -> []:
         matches = list(regex.finditer(regexp, source))
-        print("Found: ", list(regex.finditer("\\U0001f44c", '👌')))
-        print(matches)
         return list(filter(None, map(lambda m: m.group().lower(), matches)))
 
     @staticmethod

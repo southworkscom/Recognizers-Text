@@ -1,6 +1,6 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 
-from recognizers_text.extractor import Extractor, ExtractResult
+from recognizers_text.extractor import Extractor
 from recognizers_text.model import Model, ModelResult
 from recognizers_text.parser import Parser, ParseResult
 

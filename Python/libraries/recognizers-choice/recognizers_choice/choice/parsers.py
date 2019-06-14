@@ -12,7 +12,7 @@ class ChoiceParseDataResult:
 
     def __init__(self, score=0.0, other_matches=[]):
         self.score = score
-        self.other_matches = []
+        self.other_matches = other_matches
 
 
 class OtherMatchParseResult:
@@ -27,7 +27,7 @@ class OtherMatchParseResult:
 
     def __init__(self, score=0.0, other_matches=[]):
         self.score = score
-        self.other_matches = []
+        self.other_matches = other_matches
 
 
 class ChoiceParserConfiguration:
