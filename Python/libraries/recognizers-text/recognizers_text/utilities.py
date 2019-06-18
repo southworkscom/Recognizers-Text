@@ -1,4 +1,4 @@
-from typing import Pattern, Match, Union, List
+from typing import Pattern, Union, List, Match
 import regex
 
 
