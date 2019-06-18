@@ -18,6 +18,8 @@ CALL python index.py ..\recognizers-choice\resource-definitions.json
 
 popd
 
+pip install graphene
+
 pip install -e .\libraries\recognizers-text\
 
 pip install -e .\libraries\recognizers-number\
