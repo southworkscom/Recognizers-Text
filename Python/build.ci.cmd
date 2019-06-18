@@ -18,7 +18,9 @@ CALL python index.py ..\recognizers-choice\resource-definitions.json
 
 popd
 
-pip install graphene
+pip install grapheme
+
+pip install emoji
 
 pip install -e .\libraries\recognizers-text\
 
