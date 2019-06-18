@@ -1,9 +1,8 @@
-from regex import Pattern
-
 import regex
 from recognizers_choice.choice.extractors import BooleanExtractorConfiguration
 from recognizers_choice.resources.english_choice import EnglishChoice
 from recognizers_text.utilities import RegExpUtility
+from typing import Pattern
 
 
 class EnglishBooleanExtractorConfiguration(BooleanExtractorConfiguration):
