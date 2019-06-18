@@ -22,7 +22,7 @@ class ChoiceExtractDataResult:
 
 class ChoiceExtractorConfiguration(ABC):
     regexes_map = Dict[Pattern, str]
-    token_regex: regex.Pattern
+    token_regex: Pattern
     allow_partial_match: bool
     max_distance: int
     only_top_match: bool
