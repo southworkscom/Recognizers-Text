@@ -18,10 +18,6 @@ CALL python index.py ..\recognizers-choice\resource-definitions.json
 
 popd
 
-pip install grapheme
-
-pip install emoji
-
 pip install -e .\libraries\recognizers-text\
 
 pip install -e .\libraries\recognizers-number\
