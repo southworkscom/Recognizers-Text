@@ -1,5 +1,5 @@
 from abc import ABC
-from typing import List, Dict
+from typing import List, Dict, Pattern
 
 from grapheme.api import slice
 from emoji import UNICODE_EMOJI
@@ -21,7 +21,7 @@ class ChoiceExtractDataResult:
 
 
 class ChoiceExtractorConfiguration(ABC):
-    regexes_map = Dict[regex.Pattern, str]
+    regexes_map = Dict[Pattern, str]
     token_regex: regex.Pattern
     allow_partial_match: bool
     max_distance: int
@@ -144,7 +144,7 @@ class ChoiceExtractor(Extractor):
         return tokens
 
     @staticmethod
-    def __get_matches(regexp: regex.Pattern, source: str) -> []:
+    def __get_matches(regexp: Pattern, source: str) -> []:
         matches = list(regex.finditer(regexp, source))
         return list(filter(None, map(lambda m: m.group().lower(), matches)))
 
@@ -154,9 +154,9 @@ class ChoiceExtractor(Extractor):
 
 
 class BooleanExtractorConfiguration(ABC):
-    regex_true: regex.Pattern
-    regex_false: regex.Pattern
-    token_regex: regex.Pattern
+    regex_true: Pattern
+    regex_false: Pattern
+    token_regex: Pattern
     only_top_match: bool
 
 class BooleanExtractor(ChoiceExtractor):
