@@ -10806,16 +10806,16 @@
     ]
   },
   {
-    "Input": "Let's meet on february twenty second at 3:30",
+    "Input": "Let's meet on february 22nd 3:30.",
     "Context": {
       "ReferenceDateTime": "2019-04-25T00:00:00"
     },
     "NotSupported": "python",
     "Results": [
       {
-        "Text": "february twenty second at 3:30",
+        "Text": "february 22nd 3:30",
         "Start": 14,
-        "End": 43,
+        "End": 31,
         "TypeName": "datetimeV2.datetime",
         "Resolution": {
           "values": [
@@ -10845,16 +10845,16 @@
     ]
   },
   {
-    "Input": "Let's meet on february 22nd 3:30.",
+    "Input": "Let's meet on february twenty second at 3:30",
     "Context": {
       "ReferenceDateTime": "2019-04-25T00:00:00"
     },
     "NotSupported": "python",
     "Results": [
       {
-        "Text": "february 22nd 3:30",
+        "Text": "february twenty second at 3:30",
         "Start": 14,
-        "End": 31,
+        "End": 43,
         "TypeName": "datetimeV2.datetime",
         "Resolution": {
           "values": [
