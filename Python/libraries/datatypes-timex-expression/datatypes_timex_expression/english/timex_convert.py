@@ -17,7 +17,6 @@ def convert_date(timex: TimexProperty):
 
     return str(date) + str(abbreviation) + str(month)
 
-
 def convert_time(timex: TimexProperty):
     if timex.hour == 0 and timex.minute == 0 and timex.second ==0:
         return 'midnight'
