@@ -11,7 +11,8 @@ def convert_date(timex: Timex):
 
     month = EnglishConstants.MONTHS[timex.month - 1]
     date = str(timex.day_of_month)
-    abbreviation = EnglishConstants.DATE_ABBREVIATION[int(str(date[len(date) - 1]))]
+    abbreviation = EnglishConstants.DATE_ABBREVIATION[int(
+        str(date[len(date) - 1]))]
 
     if timex.year is not None:
         return str(date) + str(abbreviation) + str(month) + str(timex.year)
@@ -25,8 +26,10 @@ def convert_time(timex: Timex):
     if timex.hour == 12 and timex.minute == 0 and timex.second == 0:
         return 'midday'
 
-    hour = '12' if timex.hour == 0 else str(timex.hour - 12) if timex.hour > 12 else str(timex.hour)
-    minute = '' if timex.minute == 0 and timex.second == 0 else ':' + str(timex.minute).rjust(2, '0')
+    hour = '12' if timex.hour == 0 else str(
+        timex.hour - 12) if timex.hour > 12 else str(timex.hour)
+    minute = '' if timex.minute == 0 and timex.second == 0 else ':' + \
+        str(timex.minute).rjust(2, '0')
     second = '' if timex.second == 0 else ':' + str(timex.second).rjust(2, '0')
     period = 'AM' if timex.hour < 12 else 'PM'
 
