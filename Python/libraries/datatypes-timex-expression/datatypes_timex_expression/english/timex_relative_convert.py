@@ -1,3 +1,5 @@
+from datatypes_timex_expression import TimexConvert
+
 from ..timex_date_helpers import *
 from ..timex_inference import *
 from .timex_constants import EnglishConstants
@@ -68,11 +70,7 @@ def convert_date_range(timex: TimexProperty, date: datetime):
     return ''
 
 
-def convert_date_time_range(day):
-    pass
-
-
-def convert_timex_to_string_relative(timex: TimexProperty, date: datetime):
+def convert_date_time_range(timex: TimexProperty, date: datetime):
     if timex.year is not None and timex.month is not None and timex.day_of_month is not None:
         timex_date = datetime(timex.year, timex.month, timex.day_of_month)
         if timex.part_of_day is not None:
@@ -97,4 +95,16 @@ def convert_timex_to_string_relative(timex: TimexProperty, date: datetime):
     return ''
 
 
+def convert_timex_to_string_relative(timex: TimexProperty, date: datetime):
+    types = timex.types() if len(timex.types()) is not 0 else TimexInference.infer(timex)
+
+    if Constants.TIMEX_TYPES_DATETIMERANGE in types:
+        return convert_date_time_range(timex, date)
+    if Constants.TIMEX_TYPES_DATERANGE in types:
+        return convert_date_range(timex, date)
+    if Constants.TIMEX_TYPES_DATETIME in types:
+        return convert_date_time(timex, date)
+    if Constants.TIMEX_TYPES_DATE in types:
+        return convert_date(timex, date)
+    return TimexConvert.convert_timex_to_string(timex)
 
