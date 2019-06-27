@@ -4,7 +4,6 @@ from datatypes_timex_expression.timex_set import TimexSet
 from .timex_constants import EnglishConstants
 from ..timex_inference import *
 
-
 def convert_date(timex: TimexProperty):
     if timex.day_of_week is not None:
         return EnglishConstants.DAYS[timex.day_of_week - 1]
