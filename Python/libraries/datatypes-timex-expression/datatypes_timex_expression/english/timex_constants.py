@@ -51,7 +51,7 @@ class EnglishConstants:
 
     WEEKS: [str] = ['first', 'second', 'third', 'forth']
 
-    DAY_PARTS:  {str, str} = {
+    DAY_PARTS: {str, str} = {
         'DT': 'daytime',
         'NI': 'night',
         'MO': 'morning',

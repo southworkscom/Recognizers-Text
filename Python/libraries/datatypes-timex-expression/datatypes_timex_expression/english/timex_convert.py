@@ -20,9 +20,9 @@ def convert_date(timex: TimexProperty):
 
 
 def convert_time(timex: TimexProperty):
-    if timex.hour == 0 and timex.minute == 0 and timex.second ==0:
+    if timex.hour == 0 and timex.minute == 0 and timex.second == 0:
         return 'midnight'
-    if timex.hour == 12 and timex.minute == 0 and timex.second ==0:
+    if timex.hour == 12 and timex.minute == 0 and timex.second == 0:
         return 'midday'
 
     hour = '12' if timex.hour == 0 else str(timex.hour - 12) if timex.hour > 12 else str(timex.hour)

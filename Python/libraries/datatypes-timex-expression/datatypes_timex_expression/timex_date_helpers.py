@@ -18,7 +18,7 @@ class TimexDateHelpers:
     def is_date_in_week(self, date, start_of_week):
         d = start_of_week
 
-        for i in range(0,7,1):
+        for i in range(0, 7, 1):
             if self.date_part_equal(date, d):
                 return True
             d = date.now() + timedelta(days=1)

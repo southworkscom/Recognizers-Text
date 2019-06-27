@@ -144,7 +144,7 @@ class TimexProperty:
             elif item.key == 'timeUnit':
                 self.assign_time_duration(source)
 
-    def assign_date_duration(self, source: {str,str}):
+    def assign_date_duration(self, source: {str, str}):
         if source['dateUnit'] == 'Y':
             self.years = float(source['amount'])
         elif source['dateUnit'] == 'M':
@@ -154,7 +154,7 @@ class TimexProperty:
         elif source['dateUnit'] == 'D':
             self.days = float(source['amount'])
 
-    def assign_time_duration(self, source: {str,str}):
+    def assign_time_duration(self, source: {str, str}):
         if source['timeUnit'] == 'H':
             self.hour = float(source['amount'])
         elif source['timeUnit'] == 'M':

@@ -47,7 +47,7 @@ def convert_date_range(timex: TimexProperty, date: datetime):
                 if this_week == timex.week_of_year:
                     return "this weekend" if timex.weekend is not None else "this week"
                 if this_week == timex.week_of_year + 1:
-                    return "last weekend" if timex.weekend  is not None else "last week"
+                    return "last weekend" if timex.weekend is not None else "last week"
                 if this_week == timex.week_of_year - 1:
                     return "next weekend" if timex.weekend is not None else "next week"
 
@@ -107,4 +107,3 @@ def convert_timex_to_string_relative(timex: TimexProperty, date: datetime):
     if Constants.TIMEX_TYPES_DATE in types:
         return convert_date(timex, date)
     return TimexConvert.convert_timex_to_string(timex)
-
