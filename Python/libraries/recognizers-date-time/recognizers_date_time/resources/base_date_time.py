@@ -10,6 +10,8 @@
 # ------------------------------------------------------------------------------
 
 # pylint: disable=line-too-long
+
+
 class BaseDateTime:
     HourRegex = f'(?<hour>2[0-4]|[0-1]?\\d)(h)?'
     TwoDigitHourRegex = f'(?<hour>[0-1]\\d|2[0-4])(h)?'
@@ -20,8 +22,8 @@ class BaseDateTime:
     FourDigitYearRegex = f'\\b(?<![$])(?<year>((1\\d|20)\\d{{2}})|2100)(?!\\.0\\b)\\b'
     IllegalYearRegex = f'([-])({FourDigitYearRegex})([-])'
     RangeConnectorSymbolRegex = f'(--|-|—|——|~|–)'
-    BaseAmDescRegex = f'(am\\b|a\\s*\\.\\s*m\\s*\\.|a(\\.)?\\s*m\\b)'
-    BasePmDescRegex = f'(pm\\b|p\\s*\\.\\s*m\\s*\\.|p(\\.)?\\s*m\\b)'
+    BaseAmDescRegex = f'(am\\b|a\\s*\\.\\s*m\\s*\\.|a[\\.]?\\s*m\\b)'
+    BasePmDescRegex = f'(pm\\b|p\\s*\\.\\s*m\\s*\\.|p[\\.]?\\s*m\\b)'
     BaseAmPmDescRegex = f'(ampm)'
     MinYearNum = '1500'
     MaxYearNum = '2100'
