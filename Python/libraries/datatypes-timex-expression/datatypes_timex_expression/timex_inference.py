@@ -52,7 +52,7 @@ class TimexInference:
 
     @staticmethod
     def __is_present(obj):
-        return obj.now == True
+        return obj.now is True
 
     @staticmethod
     def __is_duration(obj):
