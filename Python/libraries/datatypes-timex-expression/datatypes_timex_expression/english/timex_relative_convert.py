@@ -12,7 +12,7 @@ def get_date_day(date) -> str:
     return EnglishConstants.DAYS[index]
 
 
-def convert_date(timex: TimexProperty, date: datetime):
+def convert_date(timex: Timex, date: datetime):
     if timex.year is not None and timex.month is not None and timex.day_of_month is not None:
         timex_date = datetime(timex.year, timex.month, timex.day_of_month)
         if TimexDateHelpers.date_part_equal(timex_date, date):
@@ -33,11 +33,11 @@ def convert_date(timex: TimexProperty, date: datetime):
     return convert_date(timex)
 
 
-def convert_date_time(timex: TimexProperty, date: datetime):
+def convert_date_time(timex: Timex, date: datetime):
     return str(convert_date(timex, date)) + ' ' + str(convert_time(timex))
 
 
-def convert_date_range(timex: TimexProperty, date: datetime):
+def convert_date_range(timex: Timex, date: datetime):
     if timex.year is not None:
         year = date.year
 
@@ -70,7 +70,7 @@ def convert_date_range(timex: TimexProperty, date: datetime):
     return ''
 
 
-def convert_date_time_range(timex: TimexProperty, date: datetime):
+def convert_date_time_range(timex: Timex, date: datetime):
     if timex.year is not None and timex.month is not None and timex.day_of_month is not None:
         timex_date = datetime(timex.year, timex.month, timex.day_of_month)
         if timex.part_of_day is not None:
@@ -95,7 +95,7 @@ def convert_date_time_range(timex: TimexProperty, date: datetime):
     return ''
 
 
-def convert_timex_to_string_relative(timex: TimexProperty, date: datetime):
+def convert_timex_to_string_relative(timex: Timex, date: datetime):
     types = timex.types() if len(timex.types()) is not 0 else TimexInference.infer(timex)
 
     if Constants.TIMEX_TYPES_DATETIMERANGE in types:

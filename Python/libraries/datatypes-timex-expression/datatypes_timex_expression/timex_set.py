@@ -1,8 +1,8 @@
-from datatypes_timex_expression.timex_property import TimexProperty
+from datatypes_timex_expression.timex import Timex
 
 
 class TimexSet:
-    timex: TimexProperty
+    timex: Timex
 
     def __init__(self, timex):
-        self.timex = TimexProperty(timex)
+        self.timex = Timex(timex)

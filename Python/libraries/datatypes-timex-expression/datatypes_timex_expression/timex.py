@@ -1,115 +1,166 @@
-from decimal import *
+from datatypes_timex_expression import Time, TimexConvert, TimexRelativeConvert
 
-from .time import Time
-from .timex_convert import TimexConvert
-from .timex_format import TimexFormat
-from .timex_inference import TimexInference
-from .timex_parsing import TimexParsing
-from .timex_relative_convert import TimexRelativeConvert
+from .timex_parsing import *
+from .timex_format import *
+from .timex_inference import *
+from datetime import datetime
 
 
 class Timex:
+    time: Time
+    now: bool
+    years: float
+    months: float
+    weeks: float
+    days: float
+    hours: float
+    minutes: float
+    seconds: float
+    year: int
+    month: int
+    day_of_month: int
+    day_of_week: int
+    season: str
+    week_of_year: int
+    weekend: bool
+    week_of_month: int
+    part_of_day: str
 
-    def __init__(self, timex=None):
-        self.now = None
-        self.years = None
-        self.months = None
-        self.weeks = None
-        self.days = None
-        self.hours = None
-        self.minutes = None
-        self.seconds = None
-        self.year = None
-        self.month = None
-        self.day_of_month = None
-        self.day_of_week = None
-        self.season = None
-        self.week_of_year = None
-        self.weekend = None
-        self.week_of_month = None
-        self.part_of_day = None
-        if timex != None:
-            TimexParsing.parse_string(timex, self)
+    def __init__(self, timex):
+        TimexParsing.parse_string(timex, self)
 
-    @classmethod
-    def from_date(date):
-        pass
+    def __init__(self, year, month, day):
+        self.year = year
+        self.month = month
+        self.day_of_month = day
 
-    @classmethod
-    def from_date_time(datetime):
-        pass
+    def __init__(self, hour, minute, second):
+        self.hour = hour
+        self.minute = minute
+        self.second = second
 
-    @classmethod
-    def from_time(time):
-        pass
+    def timex_value(self):
+        TimexFormat.format(self)
 
-    @property
-    def time_value(self):
-        return TimexFormat.format(self)
-
-    @property
     def types(self):
-        return TimexInference.infer(self)
-
-    def __str__(self):
-        return TimexConvert.convert_timex_to_string(self)
-
-    def to_natural_language(self, referene_date):
-        return TimexRelativeConvert.convert_timex_to_string_relative(self)
+        TimexInference.infer(self)
 
     @property
     def hour(self):
-        if hasattr(self, '__time'):
-            return getattr(self, '__time').hour
-        else:
-            return None
+        return self.time.hour
 
     @hour.setter
-    def hour(self, value):
-        if value != None:
-            if not hasattr(self, '__time'):
-                setattr(self, '__time', Time(value, 0, 0))
+    def hour(self, x):
+        if x is not None:
+            if self.time is None:
+                time = Time(x, 0, 0)
             else:
-                getattr(self, '__time').hour = value
+                self.time.hour = x
         else:
-            if hasattr(self, '__time'):
-                delattr(self, '__time')
+            time = None
 
     @property
     def minute(self):
-        if hasattr(self, '__time'):
-            return getattr(self, '__time').minute
-        else:
-            return None
+        return self.time.minute
 
     @minute.setter
-    def minute(self, value):
-        if value != None:
-            if not hasattr(self, '__time'):
-                setattr(self, '__time', Time(0, value, 0))
+    def minute(self, x):
+        if x is not None:
+            if self.time is None:
+                time = Time(0, x, 0)
             else:
-                getattr(self, '__time').minute = value
+                self.time.minute = x
         else:
-            if hasattr(self, '__time'):
-                delattr(self, '__time')
+            time = None
 
     @property
     def second(self):
-        if hasattr(self, '__time'):
-            return getattr(self, '__time').second
-        else:
-            return None
+        return self.time.second
 
     @second.setter
-    def second(self, value):
-        if value != None:
-            if not hasattr(self, '__time'):
-                setattr(self, '__time', Time(0, 0, value))
+    def second(self, x):
+        if x is not None:
+            if self.time is None:
+                time = Time(0, 0, x)
             else:
-                getattr(self, '__time').second = value
+                self.time.second = x
         else:
-            if hasattr(self, '__time'):
-                delattr(self, '__time')
+            time = None
+
+    @staticmethod
+    def from_date(date: datetime):
+        return Timex(date.year, date.month, date.day)
+
+    def from_date_time(self, date: datetime):
+        timex = self.from_date(date)
+        timex.hour = date.hour
+        timex.minute = date.minute
+        timex.second = date.second
+
+        return timex
+
+    @staticmethod
+    def from_time(time: Time):
+        return Timex(time.hour, time.minute, time.second)
+
+    def to_string(self):
+        return TimexConvert.convert_timex_to_string(self)
+
+    def to_natural_language(self, reference_date):
+        return TimexRelativeConvert.convert_timex_to_string_relative(self, reference_date)
+
+    @staticmethod
+    def __switch_assign(place, val):
+        place = int(val)
+
+    def assign_properties(self, source: {str, str}):
+        for item in source:
+            if item.key == 'year':
+                self.year = int(item.get(item.key))
+            elif item.key == 'month':
+                self.month = int(item.get(item.key))
+            elif item.key == 'dayOfMonth':
+                self.day_of_month = int(item.get(item.key))
+            elif item.key == 'dayOfWeek':
+                self.day_of_week = int(item.get(item.key))
+            elif item.key == 'season':
+                self.season = item.get(item.key)
+            elif item.key == 'weekOfYear':
+                self.week_of_year = int(item.get(item.key))
+            elif item.key == 'weekend':
+                self.weekend = True
+            elif item.key == 'weekOfMonth':
+                self.week_of_month = int(item.get(item.key))
+            elif item.key == 'hour':
+                self.hour = int(item.get(item.key))
+            elif item.key == 'minute':
+                self.minute = int(item.get(item.key))
+            elif item.key == 'second':
+                self.second = int(item.get(item.key))
+            elif item.key == 'partOfDay':
+                self.part_of_day = item.get(item.key)
+            elif item.key == 'dateUnit':
+                self.assign_date_duration(source)
+            elif item.key == 'timeUnit':
+                self.assign_time_duration(source)
+
+    def assign_date_duration(self, source: {str, str}):
+        if source['dateUnit'] == 'Y':
+            self.years = float(source['amount'])
+        elif source['dateUnit'] == 'M':
+            self.months = float(source['amount'])
+        elif source['dateUnit'] == 'W':
+            self.weeks = float(source['amount'])
+        elif source['dateUnit'] == 'D':
+            self.days = float(source['amount'])
+
+    def assign_time_duration(self, source: {str, str}):
+        if source['timeUnit'] == 'H':
+            self.hour = float(source['amount'])
+        elif source['timeUnit'] == 'M':
+            self.minutes = float(source['amount'])
+        elif source['timeUnit'] == 'S':
+            self.seconds = float(source['amount'])
 
     def clone(self):
         result = Timex()
@@ -134,52 +185,3 @@ class Timex:
         result.second = self.second
         result.part_of_day = self.part_of_day
         return result
-
-    def assign_properties(self, source):
-        for key, value in source.items():
-            if key == 'year':
-                self.year = int(value)
-            elif key == 'month':
-                self.month = int(value)
-            elif key == 'day_of_month':
-                self.day_of_month = int(value)
-            elif key == 'day_of_week':
-                self.day_of_week = int(value)
-            elif key == 'season':
-                self.season = value
-            elif key == 'week_of_year':
-                self.week_of_year = int(value)
-            elif key == 'weekend':
-                self.weekend = True
-            elif key == 'week_of_month':
-                self.week_of_month = int(value)
-            elif key == 'hour':
-                self.hour = int(value)
-            elif key == 'minute':
-                self.minute = int(value)
-            elif key == 'second':
-                self.second = int(value)
-            elif key == 'part_of_day':
-                self.part_of_day = value
-            elif key == 'date_unit':
-                self.assign_date_duration(source)
-            elif key == 'time_unit':
-                self.assign_time_duration(source)
-
-    def assign_date_duration(self, source):
-        if source['date_unit'] == 'Y':
-            self.years = Decimal(source['amount'])
-        elif source['date_unit'] == 'M':
-            self.months = Decimal(source['amount'])
-        elif source['date_unit'] == 'W':
-            self.weeks = Decimal(source['amount'])
-        elif source['date_unit'] == 'D':
-            self.days = Decimal(source['amount'])
-
-    def assign_time_duration(self, source):
-        if source['time_unit'] == 'H':
-            self.hours = Decimal(source['amount'])
-        elif source['time_unit'] == 'M':
-            self.minutes = Decimal(source['amount'])
-        elif source['time_unit'] == 'S':
-            self.seconds = Decimal(source['amount'])

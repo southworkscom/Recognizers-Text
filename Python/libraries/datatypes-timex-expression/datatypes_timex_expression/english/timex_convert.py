@@ -1,11 +1,11 @@
-from datatypes_timex_expression.timex_property import TimexProperty
+from datatypes_timex_expression.timex import Timex
 from datatypes_timex_expression.timex_set import TimexSet
 
 from .timex_constants import EnglishConstants
 from ..timex_inference import *
 
 
-def convert_date(timex: TimexProperty):
+def convert_date(timex: Timex):
     if timex.day_of_week is not None:
         return EnglishConstants.DAYS[timex.day_of_week - 1]
 
@@ -19,7 +19,7 @@ def convert_date(timex: TimexProperty):
     return str(date) + str(abbreviation) + str(month)
 
 
-def convert_time(timex: TimexProperty):
+def convert_time(timex: Timex):
     if timex.hour == 0 and timex.minute == 0 and timex.second == 0:
         return 'midnight'
     if timex.hour == 12 and timex.minute == 0 and timex.second == 0:
@@ -40,7 +40,7 @@ def convert_duration_property_to_string(value, prop, include_single_count):
         return str(value) + str(prop) + 's'
 
 
-def convert_timex_duration_to_string(timex: TimexProperty, include_single_count):
+def convert_timex_duration_to_string(timex: Timex, include_single_count):
     if timex.years is not None:
         return convert_duration_property_to_string(timex.years, 'year', include_single_count)
     if timex.months is not None:
@@ -58,11 +58,11 @@ def convert_timex_duration_to_string(timex: TimexProperty, include_single_count)
     return ''
 
 
-def convert_duration(timex: TimexProperty):
+def convert_duration(timex: Timex):
     return convert_timex_duration_to_string(timex, True)
 
 
-def convert_date_range(timex: TimexProperty):
+def convert_date_range(timex: Timex):
     season = EnglishConstants.SEASONS[timex.season] if timex.season is not None else ''
     year = str(timex.year) if timex.year is not None else ''
     if timex.week_of_year is not None and timex.weekend is not None:
@@ -77,21 +77,21 @@ def convert_date_range(timex: TimexProperty):
     return str(season).strip() + str(year).strip()
 
 
-def convert_time_range(timex: TimexProperty):
+def convert_time_range(timex: Timex):
     return EnglishConstants.DAY_PARTS[timex.part_of_day]
 
 
-def convert_date_time(timex: TimexProperty):
+def convert_date_time(timex: Timex):
     return str(convert_time(timex)) + ' ' + str(convert_date(timex))
 
 
-def convert_date_time_range(timex: TimexProperty):
+def convert_date_time_range(timex: Timex):
     if Constants.TIMEX_TYPES_TIMERANGE in timex.types():
         return str(convert_time(timex)) + ' ' + str(convert_time_range(timex))
     return ''
 
 
-def convert_timex_to_string(timex: TimexProperty):
+def convert_timex_to_string(timex: Timex):
     types = timex.types() if len(timex.types()) != 0 else TimexInference.infer(timex)
 
     if Constants.TIMEX_TYPES_PRESENT in types:
