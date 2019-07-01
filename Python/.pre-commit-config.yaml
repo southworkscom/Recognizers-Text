@@ -10,4 +10,4 @@ repos:
     rev: master
     hooks:
     - id: autopep8
-      args: ['--config=Python/setup.cfg']
+      args: ['--global-config=Python/setup.cfg']
