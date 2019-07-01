@@ -30,7 +30,8 @@ class TimexCreator:
 
     @staticmethod
     def today(date=None):
-        TimexProperty.from_date(datetime.now() if date is None else date).timex_value()
+        TimexProperty.from_date(
+            datetime.now() if date is None else date).timex_value()
 
     @staticmethod
     def tomorrow(date=None):
@@ -92,4 +93,3 @@ class TimexCreator:
         t = TimexProperty.from_date(start)
         t.days = n * 7
         return t.timex_value()
-

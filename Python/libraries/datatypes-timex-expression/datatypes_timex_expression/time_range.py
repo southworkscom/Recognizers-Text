@@ -15,6 +15,8 @@ class TimeRange:
                     self.start.get_time() <= range2.start.get_time())) or (self.start.get_time() > range2.end.get_time()) and (self.start.get_time() <= range2.start.get_time())
 
     def collapse_overlapping(self, range2):
-        start = Time.from_seconds(max(self.start.get_time(), range2.start.get_time()))
-        end = Time.from_seconds(min(self.end.get_time(), range2.end.get_time()))
+        start = Time.from_seconds(
+            max(self.start.get_time(), range2.start.get_time()))
+        end = Time.from_seconds(
+            min(self.end.get_time(), range2.end.get_time()))
         return TimeRange(start, end)

@@ -17,4 +17,3 @@ class Constants:
         'SATURDAY': 5,
         'SUNDAY': 6
     }
-

@@ -30,7 +30,7 @@ class TimexConstraintsHelper:
                 if self.is_overlapping(r1, r2):
                     del ranges[i:1]
                     del ranges[j-1:1]
-                    ranges.append(self.collapse_overlapping(r1,r2))
+                    ranges.append(self.collapse_overlapping(r1, r2))
                     return True
 
         return False
