@@ -161,27 +161,3 @@ class Timex:
             self.minutes = float(source['amount'])
         elif source['timeUnit'] == 'S':
             self.seconds = float(source['amount'])
-
-    def clone(self):
-        result = Timex()
-        result.now = self.now
-        result.years = self.years
-        result.months = self.months
-        result.weeks = self.weeks
-        result.days = self.days
-        result.hours = self.hours
-        result.minutes = self.minutes
-        result.seconds = self.seconds
-        result.year = self.year
-        result.month = self.month
-        result.day_of_month = self.day_of_month
-        result.day_of_week = self.day_of_week
-        result.season = self.season
-        result.week_of_year = self.week_of_year
-        result.weekend = self.weekend
-        result.week_of_month = self.week_of_month
-        result.hour = self.hour
-        result.minute = self.minute
-        result.second = self.second
-        result.part_of_day = self.part_of_day
-        return result
