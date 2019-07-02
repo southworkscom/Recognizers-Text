@@ -1,5 +1,5 @@
-from datatypes_timex_expression.timex import Timex
-from datatypes_timex_expression.timex_set import TimexSet
+from ..timex_set import TimexSet
+from ..timex import Timex
 
 from .timex_constants import EnglishConstants
 from ..timex_inference import *

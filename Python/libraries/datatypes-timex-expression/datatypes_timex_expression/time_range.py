@@ -1,4 +1,4 @@
-from datatypes_timex_expression import Time
+from .time import Time
 
 
 class TimeRange:

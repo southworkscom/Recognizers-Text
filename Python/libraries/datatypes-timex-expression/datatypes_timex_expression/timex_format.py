@@ -1,6 +1,6 @@
+from . import timex_helpers
 from .timex_constants import Constants
 from .timex_date_helpers import TimexDateHelpers
-from . import timex_helpers
 
 
 class TimexFormat:

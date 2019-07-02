@@ -1,6 +1,5 @@
 from datatypes_timex_expression import Time
 
-
 def test_datatypes_time_constructor():
     time = Time(23, 45, 32)
 

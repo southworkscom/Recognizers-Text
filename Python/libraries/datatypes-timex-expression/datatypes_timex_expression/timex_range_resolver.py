@@ -1,6 +1,7 @@
+import copy
+
 from datatypes_timex_expression import Timex, Constants, TimexHelpers, TimeRange, Time, DateRange, TimexDateHelpers
 from datatypes_timex_expression.timex_constraints_helper import TimexConstraintsHelper
-import copy
 
 
 class TimexRangeResolver:

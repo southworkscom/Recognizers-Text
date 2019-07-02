@@ -1,4 +1,4 @@
-from datatypes_timex_expression.timex import Timex
+from .timex import Timex
 
 
 class TimexSet:
