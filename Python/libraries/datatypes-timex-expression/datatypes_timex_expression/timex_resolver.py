@@ -1,15 +1,24 @@
 from _datetime import datetime
-from datatypes_timex_expression import Timex
+from datatypes_timex_expression import Timex, TimexInference, Constants
 from datatypes_timex_expression.resolution import Resolution
 
 
 class TimexResolver:
 
     def resolve(self, timex_array: [str], date: datetime = None):
-        pass
+        resolution = Resolution()
+        for timex in timex_array:
+            t = Timex(timex)
+            r = self.resolve_timex(t, date)
+            resolution.values().extend(r)
+
+        return resolution
 
     def resolve_timex(self, timex: Timex, date: datetime):
-        pass
+        types = timex.types() if len(timex.types()) != 0 else TimexInference.infer(timex)
+
+        if Constants.TIMEX_TYPES_DATETIMERANGE in types:
+            return self.resolve_date_timerange(timex)
 
     def resolve_definite_time(self, timex: Timex):
         pass
