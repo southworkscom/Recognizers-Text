@@ -15,9 +15,9 @@ def convert_date(timex: Timex):
         str(date[len(date) - 1]))]
 
     if timex.year is not None:
-        return str(date) + str(abbreviation) + str(month) + str(timex.year)
+        return  f'{date}{abbreviation}{month}{timex.year}'
 
-    return str(date) + str(abbreviation) + str(month)
+    return f'{date}{abbreviation}{month}'
 
 
 def convert_time(timex: Timex):
@@ -33,14 +33,14 @@ def convert_time(timex: Timex):
     second = '' if timex.second == 0 else ':' + str(timex.second).rjust(2, '0')
     period = 'AM' if timex.hour < 12 else 'PM'
 
-    return str(hour) + str(minute) + str(second) + str(period)
+    return f'{hour}{minute}{second}{period}'
 
 
 def convert_duration_property_to_string(value, prop, include_single_count):
     if value == 1:
-        return "1" + prop if include_single_count else prop
+        return f'1{prop}' if include_single_count else prop
     else:
-        return str(value) + str(prop) + 's'
+        return f'{value}{prop}s'
 
 
 def convert_timex_duration_to_string(timex: Timex, include_single_count):
@@ -77,7 +77,7 @@ def convert_date_range(timex: Timex):
             return str(EnglishConstants.WEEKS[timex.week_of_month - 1]) + "week of " + month
         else:
             return str(month).strip() + str(year).strip()
-    return str(season).strip() + str(year).strip()
+    return f'{season.strip()} {year.strip()}'
 
 
 def convert_time_range(timex: Timex):
@@ -85,12 +85,12 @@ def convert_time_range(timex: Timex):
 
 
 def convert_date_time(timex: Timex):
-    return str(convert_time(timex)) + ' ' + str(convert_date(timex))
+    return f'{convert_time(timex)} {convert_date(timex)}'
 
 
 def convert_date_time_range(timex: Timex):
     if Constants.TIMEX_TYPES_TIMERANGE in timex.types():
-        return str(convert_time(timex)) + ' ' + str(convert_time_range(timex))
+        return f'{convert_time(timex)} {convert_time_range(timex)}'
     return ''
 
 
