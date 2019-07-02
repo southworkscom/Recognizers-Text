@@ -2,6 +2,7 @@ from datatypes_timex_expression import Timex, Constants, TimexHelpers, TimeRange
 from datatypes_timex_expression.timex_constraints_helper import TimexConstraintsHelper
 import copy
 
+
 class TimexRangeResolver:
     def evaluate(self, candidates: [str], constraints: [str]):
         timex_constraints = list(map(lambda tc: Timex(tc), constraints))
@@ -51,7 +52,8 @@ class TimexRangeResolver:
         date_range_constraints = map(lambda t: TimexHelpers.daterange_from_timex(t),
                                      filter(lambda t: Constants.TIMEX_TYPES_DATERANGE in t.types(), timex_constraints))
 
-        collapsed_date_ranges = TimexConstraintsHelper.collapse(TimexConstraintsHelper(), date_range_constraints)
+        collapsed_date_ranges = TimexConstraintsHelper.collapse(
+            TimexConstraintsHelper(), date_range_constraints)
 
         if not any(collapsed_date_ranges):
             return candidates
@@ -76,8 +78,9 @@ class TimexRangeResolver:
 
     def resolve_by_timerange_constraints(self, candidates, timex_constraints):
         timerange_contraints = list(map(lambda ti: TimexHelpers.timerange_from_timex(ti),
-                                        filter(lambda t: Constants.TIMEX_TYPES_TIMERANGE in t.types(),timex_constraints)))
-        collapsed_time_ranges = TimexConstraintsHelper.collapse(TimexConstraintsHelper(),  timerange_contraints)
+                                        filter(lambda t: Constants.TIMEX_TYPES_TIMERANGE in t.types(), timex_constraints)))
+        collapsed_time_ranges = TimexConstraintsHelper.collapse(
+            TimexConstraintsHelper(), timerange_contraints)
 
         if not any(collapsed_time_ranges):
             return candidates
@@ -103,7 +106,8 @@ class TimexRangeResolver:
 
         for contraint in constraints:
             if TimexConstraintsHelper.is_overlapping(candidate, contraint):
-                start = max(candidate.start.get_time(), contraint.start.get_time())
+                start = max(candidate.start.get_time(),
+                            contraint.start.get_time())
                 time = Time.from_seconds(start)
 
                 resolved = copy.copy(timex)
@@ -124,7 +128,8 @@ class TimexRangeResolver:
         result = []
 
         for constraint in constraints:
-            result.extend(self.resolve_time_against_constraint(timex, constraint))
+            result.extend(
+                self.resolve_time_against_constraint(timex, constraint))
 
         return result
 
@@ -146,13 +151,15 @@ class TimexRangeResolver:
             for year in range(year, year <= constraint.end.year):
                 t = copy.copy(timex)
                 t.year = year
-                result.extend(self.resolve_definite_against_constraint(t, constraint))
+                result.extend(
+                    self.resolve_definite_against_constraint(t, constraint))
 
             return result
 
         if timex.day_of_week is not None:
             day = Constants.DAYS['SUNDAY'] if timex.day_of_week == 7 else Constants.DAYS[timex.day_of_week]
-            dates = TimexDateHelpers.dates_matching_day(day, constraint.start, constraint.end)
+            dates = TimexDateHelpers.dates_matching_day(
+                day, constraint.start, constraint.end)
             result = []
 
             for date in dates:
@@ -167,8 +174,8 @@ class TimexRangeResolver:
         return ['']
 
     def resolve_by_time_constraints(self, candidates, timex_constraints):
-        times = list((map( lambda ti: TimexHelpers.time_from_timex(ti),
-                           filter(lambda t: Constants.TIMEX_TYPES_TIME in t.types(), timex_constraints))))
+        times = list((map(lambda ti: TimexHelpers.time_from_timex(ti),
+                          filter(lambda t: Constants.TIMEX_TYPES_TIME in t.types(), timex_constraints))))
         if not any(times):
             return candidates
 
@@ -193,4 +200,3 @@ class TimexRangeResolver:
         if constraint.start.get_time() <= t.get_time() < constraint.end.get_time():
             return [timex.timex_value()]
         return ['']
-

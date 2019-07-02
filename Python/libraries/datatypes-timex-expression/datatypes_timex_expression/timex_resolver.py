@@ -44,7 +44,7 @@ class TimexResolver:
     def week_date_range(self, year: int, week_of_year: int):
         pass
 
-    def resolve_date_range(self, timex: Timex, date: datetime ):
+    def resolve_date_range(self, timex: Timex, date: datetime):
         pass
 
     def resolve_date_time(self, timex: Timex, date: datetime):

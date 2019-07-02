@@ -15,7 +15,7 @@ def convert_date(timex: Timex):
         str(date[len(date) - 1]))]
 
     if timex.year is not None:
-        return  f'{date}{abbreviation}{month}{timex.year}'
+        return f'{date}{abbreviation}{month}{timex.year}'
 
     return f'{date}{abbreviation}{month}'
 

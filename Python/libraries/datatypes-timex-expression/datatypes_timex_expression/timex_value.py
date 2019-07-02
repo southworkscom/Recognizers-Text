@@ -41,4 +41,3 @@ class TimexValue:
             return str(timex_property.seconds)
 
         return ''
-
