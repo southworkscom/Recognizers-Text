@@ -129,9 +129,12 @@ class TimexResolver:
 
     @staticmethod
     def week_date_range(year: int, week_of_year: int):
-        date_in_week = datetime(year, 1, 1) + timedelta(days=(week_of_year-1)*7)
-        start = TimexDateHelpers.date_of_last_day(Constants.DAYS['MONDAY'], date_in_week)
-        end = TimexDateHelpers.date_of_last_day(Constants.DAYS['MONDAY'], date_in_week + timedelta(days=7))
+        date_in_week = datetime(year, 1, 1) + \
+            timedelta(days=(week_of_year-1)*7)
+        start = TimexDateHelpers.date_of_last_day(
+            Constants.DAYS['MONDAY'], date_in_week)
+        end = TimexDateHelpers.date_of_last_day(
+            Constants.DAYS['MONDAY'], date_in_week + timedelta(days=7))
 
         return TimexValue.date_value(Timex(start.year, start.month, start.day)), TimexValue.date_value(
             Timex(end.year, end.month, end.day))
@@ -158,7 +161,8 @@ class TimexResolver:
                 return [entry]
 
             if (timex.year and timex.week_of_year) is not None:
-                date_range = self.week_date_range(timex.year, timex.week_of_year)
+                date_range = self.week_date_range(
+                    timex.year, timex.week_of_year)
                 entry = Entry()
 
                 entry.timex = timex.timex_value()
@@ -170,7 +174,8 @@ class TimexResolver:
 
             if timex.month is not None:
                 y = date.year
-                last_year_date_range = self.month_date_range(y - 1, timex.month)
+                last_year_date_range = self.month_date_range(
+                    y - 1, timex.month)
                 this_year_date_range = self.month_date_range(y, timex.month)
 
                 entry1 = Entry()
@@ -214,7 +219,7 @@ class TimexResolver:
         if timex.part_of_day == 'NI':
             return '20:00:00', '24:00:00'
 
-        return 'not resolved','not resolved'
+        return 'not resolved', 'not resolved'
 
     def resolve_time_range(self, timex: Timex):
         if timex.part_of_day is not None:
@@ -273,4 +278,3 @@ class TimexResolver:
             entry.end = f'{TimexValue.date_value(time_range.end)} {TimexValue.time_value(time_range.end)}'
 
             return [entry]
-
