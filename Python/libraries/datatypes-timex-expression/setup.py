@@ -2,6 +2,7 @@
 # Licensed under the MIT License.
 
 import os
+
 from setuptools import setup, find_packages
 
 

@@ -3,7 +3,6 @@ from datetime import date, timedelta
 from .date_range import DateRange
 from .time import Time
 from .time_range import TimeRange
-from .timex import Timex
 from .timex_constants import Constants
 from .timex_range import TimexRange
 

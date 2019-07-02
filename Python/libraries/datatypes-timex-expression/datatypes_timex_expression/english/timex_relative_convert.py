@@ -1,10 +1,9 @@
-from datatypes_timex_expression import TimexConvert
-
-from ..timex_date_helpers import *
-from ..timex_inference import *
-from .timex_constants import EnglishConstants
-from .timex_convert import *
 from datetime import datetime
+
+from .english_timex_convert import *
+
+from .english_timex_convert import *
+from ..timex_date_helpers import *
 
 
 def get_date_day(date) -> str:
@@ -106,4 +105,4 @@ def convert_timex_to_string_relative(timex: Timex, date: datetime):
         return convert_date_time(timex, date)
     if Constants.TIMEX_TYPES_DATE in types:
         return convert_date(timex, date)
-    return TimexConvert.convert_timex_to_string(timex)
+    return convert_timex_to_string(timex)
