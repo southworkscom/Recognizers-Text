@@ -44,7 +44,7 @@ class TimexCreator:
     @staticmethod
     def yesterday(date=None):
         d = datetime.now() if date is None else date
-        d = d.now() - timedelta(1)
+        d = d - timedelta(1)
         return Timex.from_date(d).timex_value()
 
     @staticmethod
@@ -57,7 +57,7 @@ class TimexCreator:
     @staticmethod
     def week_back_today(date=None):
         d = datetime.now() if date is None else date
-        d = d.now() - timedelta(7)
+        d = d - timedelta(7)
         t = Timex.from_date(d)
         t.days = 7
         return t.timex_value()
@@ -65,7 +65,7 @@ class TimexCreator:
     @staticmethod
     def this_week(date=None):
         d = datetime.now() if date is None else date
-        d = d.now() - timedelta(7)
+        d = d - timedelta(7)
         start = TimexDateHelpers.date_of_next_day(Constants.DAYS['MONDAY'], d)
         t = Timex.from_date(start)
         t.days = 7
@@ -81,9 +81,9 @@ class TimexCreator:
 
     @staticmethod
     def last_week(date=None):
-        d = datetime.now() if date is None else date
+        d = datetime if date is None else date
         start = TimexDateHelpers.date_of_next_day(Constants.DAYS['MONDAY'], d)
-        start = start.now() - timedelta(7)
+        start = start - timedelta(7)
         t = Timex.from_date(start)
         t.days = 7
         return t.timex_value()

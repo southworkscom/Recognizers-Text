@@ -15,9 +15,9 @@ def convert_date(timex: Timex):
         str(date[len(date) - 1]))]
 
     if timex.year is not None:
-        return f'{date}{abbreviation}{month}{timex.year}'
+        return f'{date}{abbreviation} {month} {timex.year}'
 
-    return f'{date}{abbreviation}{month}'
+    return f'{date}{abbreviation} {month}'
 
 
 def convert_time(timex: Timex):
@@ -40,7 +40,7 @@ def convert_duration_property_to_string(value, prop, include_single_count):
     if value == 1:
         return f'1{prop}' if include_single_count else prop
     else:
-        return f'{value}{prop}s'
+        return f'{value} {prop}s'
 
 
 def convert_timex_duration_to_string(timex: Timex, include_single_count):
@@ -95,7 +95,7 @@ def convert_date_time_range(timex: Timex):
 
 
 def convert_timex_to_string(timex: Timex):
-    types = timex.types() if len(timex.types()) != 0 else TimexInference.infer(timex)
+    types = timex.types if len(timex.types) != 0 else TimexInference.infer(timex)
 
     if Constants.TIMEX_TYPES_PRESENT in types:
         return 'now'

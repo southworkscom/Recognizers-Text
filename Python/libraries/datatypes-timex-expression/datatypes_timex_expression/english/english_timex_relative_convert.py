@@ -94,8 +94,8 @@ def convert_date_time_range(timex: Timex, date: datetime):
     return ''
 
 
-def convert_timex_to_string_relative(timex: Timex, date: datetime):
-    types = timex.types() if len(timex.types()) is not 0 else TimexInference.infer(timex)
+def english_convert_timex_to_string_relative(timex: Timex, date: datetime):
+    types = timex.types if len(timex.types) is not 0 else TimexInference.infer(timex)
 
     if Constants.TIMEX_TYPES_DATETIMERANGE in types:
         return convert_date_time_range(timex, date)
@@ -105,4 +105,5 @@ def convert_timex_to_string_relative(timex: Timex, date: datetime):
         return convert_date_time(timex, date)
     if Constants.TIMEX_TYPES_DATE in types:
         return convert_date(timex, date)
+
     return convert_timex_to_string(timex)

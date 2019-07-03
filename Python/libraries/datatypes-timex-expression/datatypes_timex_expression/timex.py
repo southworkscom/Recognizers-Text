@@ -36,16 +36,20 @@ class Timex:
             TimexParsing.parse_string(timex, self)
 
     @classmethod
-    def from_date(cls, year, month, day):
-        return cls(year=year, month=month, day=day)
+    def from_date(cls, date: datetime):
+        return cls(year=date.year, month=date.month, day=date.day)
 
     @classmethod
     def from_date_time(cls, date: datetime):
-        return cls.from_date(date.hour, date.minute, date.second)
+        return cls(year=date.year, month=date.month, day=date.day,
+                   hour=date.hour, minutes=date.minute, seconds=date.second)
 
     @classmethod
     def from_time(cls, time: Time):
         return cls(hour=time.hour, minutes=time.minute, seconds=time.second)
+
+    def timex_value(self):
+        return TimexFormat.format(self)
 
     @property
     def time_value(self):
@@ -55,7 +59,8 @@ class Timex:
     def types(self):
         return TimexInference.infer(self)
 
-    def __str__(self):
+    def to_string(self):
+        from .timex_convert import TimexConvert
         return TimexConvert.convert_timex_to_string(self)
 
     def to_natural_language(self, reference_date):
@@ -70,7 +75,7 @@ class Timex:
 
     @hour.setter
     def hour(self, value):
-        if value != None:
+        if value is not None:
             if not hasattr(self, '__time'):
                 setattr(self, '__time', Time(value, 0, 0))
             else:
@@ -88,7 +93,7 @@ class Timex:
 
     @minute.setter
     def minute(self, value):
-        if value != None:
+        if value is not None:
             if not hasattr(self, '__time'):
                 setattr(self, '__time', Time(0, value, 0))
             else:
@@ -106,7 +111,7 @@ class Timex:
 
     @second.setter
     def second(self, value):
-        if value != None:
+        if value is not None:
             if not hasattr(self, '__time'):
                 setattr(self, '__time', Time(0, 0, value))
             else:

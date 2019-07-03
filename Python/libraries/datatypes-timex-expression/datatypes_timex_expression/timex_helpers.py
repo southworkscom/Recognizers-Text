@@ -1,5 +1,7 @@
 from datetime import date, timedelta
 
+from .timex_inference import TimexInference
+
 from .date_range import DateRange
 from .time import Time
 from .time_range import TimeRange
@@ -11,7 +13,7 @@ class TimexHelpers:
 
     @staticmethod
     def expand_datetime_range(timex):
-        types = timex.types
+        types = timex.types if len(timex.types) != 0 else TimexInference.infer(timex)
 
         if Constants.TIMEX_TYPES_DURATION in types:
             start = TimexHelpers.clone_datetime(timex)
@@ -19,7 +21,7 @@ class TimexHelpers:
             return TimexRange(start, TimexHelpers.timex_datetime_add(start, duration), duration)
 
         else:
-            if timex.year:
+            if timex.year is not None:
                 start = Timex()
                 start.year = timex.year
                 result = TimexRange(start, Timex())

@@ -5,39 +5,43 @@ class TimexDateHelpers:
 
     @staticmethod
     def tomorrow(date: datetime):
-        return date.now() + timedelta(days=1)
+        return date + timedelta(days=1)
 
     @staticmethod
     def yesterday(date):
-        return date.now() - timedelta(days=1)
+        return date - timedelta(days=1)
 
     @staticmethod
     def date_part_equal(date_x, date_y):
         return date_x == date_y
 
-    def is_date_in_week(self, date, start_of_week):
+    @staticmethod
+    def is_date_in_week(date, start_of_week):
         d = start_of_week
 
         for i in range(0, 7, 1):
-            if self.date_part_equal(date, d):
+            if TimexDateHelpers.date_part_equal(date, d):
                 return True
-            d = date.now() + timedelta(days=1)
+            d = date + timedelta(days=1)
 
         return False
 
-    def is_this_week(self, date, reference_date: datetime):
+    @staticmethod
+    def is_this_week(date, reference_date: datetime):
         start_of_week = reference_date
         while start_of_week.weekday() > 0:
-            start_of_week.now() - timedelta(days=1)
-        return self.is_date_in_week(date, start_of_week)
+            start_of_week - timedelta(days=1)
+        return TimexDateHelpers.is_date_in_week(date, start_of_week)
 
-    def is_next_week(self, date, reference_date: datetime):
-        next_week_date = date.now() + timedelta(days=7)
-        return self.is_this_week(date, next_week_date)
+    @staticmethod
+    def is_next_week(date, reference_date):
+        next_week_date = reference_date + timedelta(days=7)
+        return TimexDateHelpers.is_this_week(date, next_week_date)
 
-    def is_last_week(self, date, reference_date):
-        next_week_date = date.now() - timedelta(days=7)
-        return self.is_this_week(date, next_week_date)
+    @staticmethod
+    def is_last_week(date, reference_date):
+        next_week_date = date - timedelta(days=7)
+        return TimexDateHelpers.is_this_week(date, next_week_date)
 
     @staticmethod
     def week_of_year(date: datetime):
@@ -53,7 +57,7 @@ class TimexDateHelpers:
             if is_day_of_week == 7:
                 weeks = weeks + 1
 
-            ds = ds.now() + timedelta(days=1)
+            ds = ds + timedelta(days=1)
 
         return weeks
 
@@ -64,18 +68,18 @@ class TimexDateHelpers:
     @staticmethod
     def date_of_last_day(day: datetime, reference_date: datetime):
         result = reference_date
-        result = result.now() - timedelta(days=1)
+        result = result - timedelta(days=1)
         while result.weekday() != day:
-            result = result.now() - timedelta(days=1)
+            result = result - timedelta(days=1)
 
         return result
 
     @staticmethod
     def date_of_next_day(day: datetime, reference_date: datetime):
         result = reference_date
-        result = result.now() + timedelta(days=1)
+        result = result + timedelta(days=1)
         while result.weekday() != day:
-            result = result.now() + timedelta(days=1)
+            result = result + timedelta(days=1)
 
         return result
 
@@ -85,6 +89,6 @@ class TimexDateHelpers:
         while not self.date_part_equal(d, end):
             if d.weekday() == day:
                 result.append(d)
-            d = d.now() + timedelta(days=1)
+            d = d + timedelta(days=1)
 
         return result

@@ -17,7 +17,7 @@ class TimexFormat:
              Constants.TIMEX_TYPES_DATERANGE in types or
              Constants.TIMEX_TYPES_TIMERANGE in types) and
                 Constants.TIMEX_TYPES_DURATION in types):
-            timex_range = timex_helpers.TimexHelpers.expand_date_time_tange(timex)
+            timex_range = timex_helpers.TimexHelpers.expand_datetime_range(timex)
             return '({},{},{})'.format(
                 TimexFormat.format(timex_range.start),
                 TimexFormat.format(timex_range.end),
@@ -43,6 +43,7 @@ class TimexFormat:
             return TimexFormat.format_duration(timex)
 
         if Constants.TIMEX_TYPES_DATE in types:
+            a = TimexFormat.format_date(timex)
             return TimexFormat.format_date(timex)
 
         if Constants.TIMEX_TYPES_TIME in types:
@@ -92,11 +93,11 @@ class TimexFormat:
 
     @staticmethod
     def format_date(timex):
-        if timex.year is not None and timex.month is not None and timex.day_of_month is not None:
+        if (timex.year and timex.month and timex.day_of_month) is not None:
             return '{}-{}-{}'.format(
-                TimexDateHelpers.fixed_format_number(timex.Year, 4),
-                TimexDateHelpers.fixed_format_number(timex.Month, 2),
-                TimexDateHelpers.fixed_format_number(timex.DayOfMonth, 2))
+                TimexDateHelpers.fixed_format_number(timex.year, 4),
+                TimexDateHelpers.fixed_format_number(timex.month, 2),
+                TimexDateHelpers.fixed_format_number(timex.day_of_month, 2))
 
         if timex.month is not None and timex.day_of_month is not None:
             return 'XXXX-{}-{}'.format(
@@ -126,7 +127,7 @@ class TimexFormat:
 
         if timex.year is not None and timex.month is not None:
             return '{}-{}'.format(TimexDateHelpers.fixed_format_number(timex.year, 4),
-                                  TimexDateHelpers.fixed_format_number(timex.Month, 2))
+                                  TimexDateHelpers.fixed_format_number(timex.month, 2))
 
         if timex.year:
             return '{}'.format(TimexDateHelpers.fixed_format_number(timex.year, 4))
