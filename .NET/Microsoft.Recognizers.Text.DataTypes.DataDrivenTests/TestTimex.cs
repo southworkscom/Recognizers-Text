@@ -17,8 +17,7 @@ namespace Microsoft.Recognizers.Text.DataTypes.TimexExpression.Tests
         [TestMethod]
         public void DataTypes_Timex_FromDateTime()
         {
-            Assert.AreEqual("2017-12-05T23:57:35", 
-            TimexProperty.FromDateTime(new System.DateTime(2017, 12, 5, 23, 57, 35)).TimexValue);
+            Assert.AreEqual("2017-12-05T23:57:35", TimexProperty.FromDateTime(new System.DateTime(2017, 12, 5, 23, 57, 35)).TimexValue);
         }
 
         [TestMethod]
