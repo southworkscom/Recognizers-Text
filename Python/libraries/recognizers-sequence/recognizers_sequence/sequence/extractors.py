@@ -189,3 +189,12 @@ class BaseEmailExtractor(SequenceExtractor):
             # EmailRegex2 will break the code as it's not supported in Python, comment out for now
             # ReVal(RegExpUtility.get_safe_reg_exp(BaseEmail.EmailRegex2), Constants.EMAIL_REGEX),
         ]
+
+
+class BaseGUIDExtractor(SequenceExtractor):
+    @property
+    def regexes(self) -> List[ReVal]:
+        return self._regexes
+
+    def __init__(self):
+        self._regexes = RegExpUtility.get_safe_reg_exp(BaseGUID.GUIDRegex), Constants.GUID_REGEX
