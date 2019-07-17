@@ -41,5 +41,5 @@ class ChineseURLExtractorConfiguration(BaseSequenceExtractorConfiguration):
             culture_info = CultureInfo(Culture.Chinese)
         super().__init__(culture_info)
 
-        self._UrlRegex = RegExpUtility.get_safe_reg_exp(ChinesePhoneNumbers.UrlRegex)
-        self._IpUrlRegex = RegExpUtility.get_safe_reg_exp(ChinesePhoneNumbers.IpUrlRegex)
+        self._UrlRegex = RegExpUtility.get_safe_reg_exp(ChineseURL.UrlRegex)
+        self._IpUrlRegex = RegExpUtility.get_safe_reg_exp(ChineseURL.IpUrlRegex)
