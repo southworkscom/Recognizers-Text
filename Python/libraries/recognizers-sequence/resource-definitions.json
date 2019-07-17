@@ -98,7 +98,7 @@
                 "from .base_url import BaseURL",
                 "",
                 "",
-                "class ChinesePhoneNumbers:"
+                "class ChineseURL:"
             ],
             "footer": [ "# pylint: enable=line-too-long" ]
         }
