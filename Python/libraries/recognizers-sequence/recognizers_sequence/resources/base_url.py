@@ -12,7 +12,7 @@
 # pylint: disable=line-too-long
 
 
-class BaseUrl:
+class BaseURL:
     ProtocolRegex = f'((https?|ftp):\\/\\/)'
     PortRegex = f'(:\\d{{1,5}})'
     ExtractionRestrictionRegex = f'(?<=\\s|[\\\'\"\"\\(\\[:]|^)'

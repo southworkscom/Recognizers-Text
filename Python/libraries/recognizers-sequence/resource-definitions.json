@@ -52,7 +52,7 @@
                 "# pylint: disable=line-too-long",
                 "",
                 "",
-                "class BaseUrl:"
+                "class BaseURL:"
             ],
             "footer": [ "# pylint: enable=line-too-long" ]
         },
@@ -68,10 +68,34 @@
             "footer": [ "# pylint: enable=line-too-long" ]
         },
         {
+            "input": [ "Base-GUID" ],
+            "output": "base_GUID",
+            "header": [
+                "# pylint: disable=line-too-long",
+                "",
+                "",
+                "class BaseGUID:"
+            ],
+            "footer": [ "# pylint: enable=line-too-long" ]
+        },
+        {
             "input": [ "Chinese", "Chinese-PhoneNumbers" ],
             "output": "chinese_phone_numbers",
             "header": [
                 "# pylint: disable=line-too-long",
+                "",
+                "",
+                "class ChinesePhoneNumbers:"
+            ],
+            "footer": [ "# pylint: enable=line-too-long" ]
+        },
+        {
+            "input": [ "Chinese", "Chinese-URL" ],
+            "output": "chinese_url",
+            "header": [
+                "# pylint: disable=line-too-long",
+                "from .base_ip import BaseIp",
+                "from .base_url import BaseURL",
                 "",
                 "",
                 "class ChinesePhoneNumbers:"
