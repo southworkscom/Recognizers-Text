@@ -26,6 +26,7 @@ class ChinesePhoneNumberExtractorConfiguration(BaseSequenceExtractorConfiguratio
         self._NonWordBoundariesRegex = ChinesePhoneNumbers.NonWordBoundariesRegex
         self._EndWordBoundariesRegex = ChinesePhoneNumbers.EndWordBoundariesRegex
 
+
 class ChineseURLExtractorConfiguration(BaseSequenceExtractorConfiguration):
     @property
     def url_regex(self) -> str:
