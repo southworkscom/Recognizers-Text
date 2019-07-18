@@ -53,5 +53,6 @@ class EnglishURLExtractorConfiguration(BaseSequenceExtractorConfiguration):
         self._UrlRegex = RegExpUtility.get_safe_reg_exp(BaseURL.UrlRegex)
         self._IpUrlRegex = RegExpUtility.get_safe_reg_exp(BaseURL.IpUrlRegex)
 
+
 class GUIDExtractor(BaseGUIDExtractor):
     pass

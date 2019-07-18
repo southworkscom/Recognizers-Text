@@ -25,10 +25,11 @@ class StringUtility:
 
 class RegExpUtility:
     @staticmethod
-    def get_safe_reg_exp(source: str, flags: int = regex.I | regex.S) -> Pattern:
-        if '?' in source:
-            source.replace('?', '')
-        return regex.compile(source, flags=flags)
+    def get_safe_reg_exp(source: str, flags: int = regex.I | regex.S, remove_question=False) -> Pattern:
+        source_replaced = source
+        if '?' in source and remove_question:
+            source_replaced = source.replace('?', '')
+        return regex.compile(source_replaced, flags=flags)
 
     @staticmethod
     def get_group(match: Match, group: str, default_val: str = '') -> str:

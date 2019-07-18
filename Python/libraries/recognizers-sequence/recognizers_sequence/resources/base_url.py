@@ -12,6 +12,7 @@
 # pylint: disable=line-too-long
 from .base_ip import BaseIp
 
+
 class BaseURL:
     ProtocolRegex = f'((https?|ftp):\\/\\/)'
     PortRegex = f'(:\\d{{1,5}})'
