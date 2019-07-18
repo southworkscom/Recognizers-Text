@@ -214,5 +214,29 @@ class BaseIpExtractor(SequenceExtractor):
         return self._regexes
 
     def __init__(self):
-        self._regexes = RegExpUtility.get_safe_reg_exp(BaseIp.Ipv4Regex), Constants.IP_REGEX_IPV4
-        self._regexes = RegExpUtility.get_safe_reg_exp(BaseIp.Ipv6Regex), Constants.IP_REGEX_IPV6
+        self._regexes = [
+            ReVal(RegExpUtility.get_safe_reg_exp(BaseIp.Ipv4Regex), Constants.IP_REGEX_IPV4),
+            ReVal(RegExpUtility.get_safe_reg_exp(BaseIp.Ipv6Regex), Constants.IP_REGEX_IPV6)
+        ]
+
+
+class BaseMentionExtractor(SequenceExtractor):
+    @property
+    def regexes(self) -> List[ReVal]:
+        return self._regexes
+
+    def __init__(self):
+        self._regexes = ReVal(RegExpUtility.get_safe_reg_exp(BaseMention.MentionRegex), Constants.MENTION_REGEX)
+
+
+class BaseURLExtractor(SequenceExtractor):
+    @property
+    def regexes(self) -> List[ReVal]:
+        return self._regexes
+
+    @property
+    def ambiguous_time_term(self) -> ReVal:
+        return self._ambiguous_time_term
+
+    def __init__(self):
+        self._regexes = ReVal(RegExpUtility.get_safe_reg_exp(BaseMention.MentionRegex), Constants.MENTION_REGEX)
