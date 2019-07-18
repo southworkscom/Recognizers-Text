@@ -1,6 +1,6 @@
 import regex as re
 from recognizers_sequence.sequence.parsers import SequenceParser
-from recognizers_sequence.resources import BasePhoneNumbers, BaseEmail
+from recognizers_sequence.resources import *
 from recognizers_text.parser import Parser, ParseResult
 from recognizers_text import ExtractResult
 from recognizers_text.utilities import RegExpUtility
@@ -101,3 +101,48 @@ class PhoneNumberParser(SequenceParser):
 
 class EmailParser(SequenceParser):
     pass
+
+
+class GUIDParser(SequenceParser):
+    score_upper_limit = 100
+    score_lower_limit = 0
+    base_score = 100
+    no_boundary_penalty = 10;
+    no_format_penalty = 10;
+    pure_digit_penalty = 15;
+    pure_digit_regex = re.compile('^\\d*$')
+    format_regex = re.compile("-")
+
+    def score_GUID(self, guid_text) -> float:
+        score = self.base_score
+        guid_element_regex = re.compile(BaseGUID.GUIDRegexElement)
+
+        if guid_element_regex.search(guid_text):
+            element_matches = list(
+                guid_element_regex.finditer(guid_text))
+            start_index = element_matches.index()
+            element_guid = element_matches[0]
+
+            if start_index.search(element_guid) == 0:
+                score -= self.noBoundaryPenalty
+            else:
+                score -= 0
+
+            if self.format_regex == 0:
+                score -= self.no_format_penalty
+            else:
+                score -= 0
+
+            if self.pure_digit_regex :
+                score -= self.pure_digit_penalty
+            else:
+                score -= 0
+
+        return max(min(score, self.score_upper_limit), self.score_lower_limit) / (
+            self.score_upper_limit - self.score_lower_limit)
+
+    def parse(self, source: ExtractResult):
+        result = ParseResult(source)
+        result.resolution_str = source.text
+        result.value = self.score_GUID(source.text)
+        return result
