@@ -238,5 +238,11 @@ class BaseURLExtractor(SequenceExtractor):
     def ambiguous_time_term(self) -> ReVal:
         return self._ambiguous_time_term
 
-    def __init__(self):
-        self._regexes = ReVal(RegExpUtility.get_safe_reg_exp(BaseMention.MentionRegex), Constants.MENTION_REGEX)
+    def __init__(self, config):
+        self.config = config
+
+        self._regexes = [
+            ReVal(RegExpUtility.get_safe_reg_exp(BaseURL.UrlRegex), Constants.URL_REGEX)
+        ]
+
+        self.ambiguous_time_term = RegExpUtility.get_safe_reg_exp(BaseURL.AmbiguousTimeTerm)
