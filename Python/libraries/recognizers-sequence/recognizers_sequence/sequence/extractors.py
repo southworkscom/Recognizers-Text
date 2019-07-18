@@ -206,3 +206,13 @@ class BaseGUIDExtractor(SequenceExtractor):
 
     def __init__(self):
         self._regexes = RegExpUtility.get_safe_reg_exp(BaseGUID.GUIDRegex), Constants.GUID_REGEX
+
+
+class BaseIpExtractor(SequenceExtractor):
+    @property
+    def regexes(self) -> List[ReVal]:
+        return self._regexes
+
+    def __init__(self):
+        self._regexes = RegExpUtility.get_safe_reg_exp(BaseIp.Ipv4Regex), Constants.IP_REGEX_IPV4
+        self._regexes = RegExpUtility.get_safe_reg_exp(BaseIp.Ipv6Regex), Constants.IP_REGEX_IPV6
