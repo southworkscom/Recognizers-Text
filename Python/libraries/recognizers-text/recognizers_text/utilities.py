@@ -26,6 +26,8 @@ class StringUtility:
 class RegExpUtility:
     @staticmethod
     def get_safe_reg_exp(source: str, flags: int = regex.I | regex.S) -> Pattern:
+        if '?' in source:
+            source.replace('?', '')
         return regex.compile(source, flags=flags)
 
     @staticmethod

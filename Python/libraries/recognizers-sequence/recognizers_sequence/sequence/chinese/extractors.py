@@ -2,8 +2,6 @@ from recognizers_sequence.resources.chinese_phone_numbers import ChinesePhoneNum
 from recognizers_sequence.resources.chinese_url import ChineseURL
 from recognizers_sequence.sequence.extractors import *
 from recognizers_text.culture import Culture
-from recognizers_sequence.resources import BasePhoneNumbers
-import regex as re
 
 
 class ChinesePhoneNumberExtractorConfiguration(BaseSequenceExtractorConfiguration):
@@ -23,7 +21,7 @@ class ChinesePhoneNumberExtractorConfiguration(BaseSequenceExtractorConfiguratio
         if culture_info is None:
             culture_info = CultureInfo(Culture.Chinese)
         super().__init__(culture_info)
-        self._WordBoundariesRegex = ChinesePhoneNumberse.WordBoundariesRegex
+        self._WordBoundariesRegex = ChinesePhoneNumbers.WordBoundariesRegex
         self._NonWordBoundariesRegex = ChinesePhoneNumbers.NonWordBoundariesRegex
         self._EndWordBoundariesRegex = ChinesePhoneNumbers.EndWordBoundariesRegex
 

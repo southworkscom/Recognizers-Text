@@ -1,9 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import List, Dict, Set, Pattern, Match
-from copy import deepcopy
 from collections import namedtuple
-from itertools import chain
 import regex as re
+from recognizers_sequence.resources.base_GUID import BaseGUID
 
 from .constants import *
 from recognizers_text.utilities import RegExpUtility
@@ -103,7 +102,7 @@ class SequenceExtractor(Extractor):
 class BasePhoneNumberExtractor(SequenceExtractor):
     @property
     def _extract_type(self) -> str:
-        return 'phonenumber'
+        return Constants.SYS_PHONE_NUMBER
 
     @property
     def regexes(self) -> List[ReVal]:
@@ -176,7 +175,7 @@ class BasePhoneNumberExtractor(SequenceExtractor):
 class BaseEmailExtractor(SequenceExtractor):
     @property
     def _extract_type(self) -> str:
-        return 'email'
+        return Constants.SYS_EMAIL
 
     @property
     def regexes(self) -> List[ReVal]:
@@ -184,14 +183,18 @@ class BaseEmailExtractor(SequenceExtractor):
 
     def __init__(self):
         self._regexes = [
-            ReVal(RegExpUtility.get_safe_reg_exp(
-                BaseEmail.EmailRegex), Constants.EMAIL_REGEX),
+            # ReVal(RegExpUtility.get_safe_reg_exp(
+            #    BaseEmail.EmailRegex), Constants.EMAIL_REGEX),
             # EmailRegex2 will break the code as it's not supported in Python, comment out for now
-            # ReVal(RegExpUtility.get_safe_reg_exp(BaseEmail.EmailRegex2), Constants.EMAIL_REGEX),
+            ReVal(RegExpUtility.get_safe_reg_exp(BaseEmail.EmailRegex2), Constants.EMAIL_REGEX),
         ]
 
 
 class BaseGUIDExtractor(SequenceExtractor):
+    @property
+    def _extract_type(self) -> str:
+        return Constants.SYS_GUID
+
     @property
     def regexes(self) -> List[ReVal]:
         return self._regexes
