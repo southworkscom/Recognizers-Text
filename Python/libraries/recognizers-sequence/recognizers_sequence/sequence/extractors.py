@@ -9,8 +9,7 @@ from .constants import *
 from recognizers_text.utilities import RegExpUtility
 from recognizers_text.extractor import Extractor, ExtractResult
 from recognizers_number.culture import CultureInfo
-from recognizers_sequence.resources import BasePhoneNumbers
-from recognizers_sequence.resources import BaseEmail
+from recognizers_sequence.resources import *
 
 ReVal = namedtuple('ReVal', ['re', 'val'])
 MatchesVal = namedtuple('MatchesVal', ['matches', 'val'])
@@ -189,6 +188,15 @@ class BaseEmailExtractor(SequenceExtractor):
             # EmailRegex2 will break the code as it's not supported in Python, comment out for now
             # ReVal(RegExpUtility.get_safe_reg_exp(BaseEmail.EmailRegex2), Constants.EMAIL_REGEX),
         ]
+
+
+class BaseHashTagExtractor(SequenceExtractor):
+    @property
+    def regexes(self) -> List[ReVal]:
+        return self._regexes
+
+    def __init__(self):
+        self._regexes = RegExpUtility.get_safe_reg_exp(BaseHashtag.HashtagRegex), Constants.HASHTAG_REGEX
 
 
 class BaseGUIDExtractor(SequenceExtractor):
