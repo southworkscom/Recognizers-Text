@@ -1,4 +1,5 @@
 from recognizers_sequence.sequence.extractors import *
+from recognizers_sequence.sequence.resources import *
 from recognizers_text.culture import Culture
 import regex as re
 
@@ -26,5 +27,31 @@ class EnglishPhoneNumberExtractorConfiguration(BaseSequenceExtractorConfiguratio
         self._EndWordBoundariesRegex = BasePhoneNumbers.EndWordBoundariesRegex
 
 
+class IpExtractor(BaseIpExtractor):
+    pass
+
+
+class MentionExtractor(BaseMentionExtractor):
+    pass
+
+
 class EmailExtractor(BaseEmailExtractor):
+    pass
+
+
+class EnglishURLExtractorConfiguration(BaseSequenceExtractorConfiguration):
+    @property
+    def url_regex(self) -> str:
+        return self._UrlRegex
+
+    @property
+    def ip_url_regex(self) -> str:
+        return self._IpUrlRegex
+
+    def __init__(self):
+        self._UrlRegex = RegExpUtility.get_safe_reg_exp(BaseURL.UrlRegex)
+        self._IpUrlRegex = RegExpUtility.get_safe_reg_exp(BaseURL.IpUrlRegex)
+
+
+class GUIDExtractor(BaseGUIDExtractor):
     pass
