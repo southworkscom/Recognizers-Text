@@ -107,9 +107,9 @@ class GUIDParser(SequenceParser):
     score_upper_limit = 100
     score_lower_limit = 0
     base_score = 100
-    no_boundary_penalty = 10;
-    no_format_penalty = 10;
-    pure_digit_penalty = 15;
+    no_boundary_penalty = 10
+    no_format_penalty = 10
+    pure_digit_penalty = 15
     pure_digit_regex = re.compile('^\\d*$')
     format_regex = re.compile("-")
 
@@ -133,7 +133,7 @@ class GUIDParser(SequenceParser):
             else:
                 score -= 0
 
-            if self.pure_digit_regex :
+            if self.pure_digit_regex:
                 score -= self.pure_digit_penalty
             else:
                 score -= 0
