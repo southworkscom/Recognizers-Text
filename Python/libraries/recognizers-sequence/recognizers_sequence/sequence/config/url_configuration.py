@@ -6,7 +6,7 @@ class URLConfiguration(BaseSequenceExtractorConfiguration):
 
     def __init__(self, ip_url_regex, url_regex, options: SequenceConfiguration):
         self.__ip_url_regex = ip_url_regex
-        self.__url_regex= url_regex
+        self.__url_regex = url_regex
         self.options = options
 
     @property

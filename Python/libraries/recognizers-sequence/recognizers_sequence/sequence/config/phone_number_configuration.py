@@ -6,8 +6,8 @@ class PhoneNumberConfiguration(BaseSequenceExtractorConfiguration):
 
     def __init__(self, word_boundaries_regex, non_word_boundaries_regex, end_word_boundaries_regex, options: SequenceConfiguration):
         self.__word_boundaries_regex = word_boundaries_regex
-        self.__non_word_boundaries_regex= non_word_boundaries_regex
-        self.__end_word_boundaries_regex= end_word_boundaries_regex
+        self.__non_word_boundaries_regex = non_word_boundaries_regex
+        self.__end_word_boundaries_regex = end_word_boundaries_regex
         self.options = options
 
     @property
