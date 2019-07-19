@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from typing import List
 
-from recognizers_sequence import Constants
+from recognizers_sequence.sequence.constants import Constants
 from recognizers_text.model import Model, ModelResult
 from recognizers_text.extractor import Extractor
 from recognizers_text.parser import Parser, ParseResult

@@ -10,6 +10,7 @@
 # ------------------------------------------------------------------------------
 
 # pylint: disable=line-too-long
+from .base_ip import BaseIp
 
 
 class BaseURL:

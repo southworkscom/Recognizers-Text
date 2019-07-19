@@ -1,5 +1,6 @@
+from recognizers_sequence import *
 from recognizers_sequence.sequence.extractors import *
-from recognizers_sequence.sequence.resources import *
+from recognizers_sequence.resources import *
 from recognizers_text.culture import Culture
 import regex as re
 
@@ -27,11 +28,11 @@ class EnglishPhoneNumberExtractorConfiguration(BaseSequenceExtractorConfiguratio
         self._EndWordBoundariesRegex = BasePhoneNumbers.EndWordBoundariesRegex
 
 
-class IpExtractor(BaseIpExtractor):
+class IpExtractor(BaseIp):
     pass
 
 
-class MentionExtractor(BaseMentionExtractor):
+class MentionExtractor(BaseMention):
     pass
 
 
