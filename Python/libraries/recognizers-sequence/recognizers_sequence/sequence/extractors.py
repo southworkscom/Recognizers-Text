@@ -183,10 +183,11 @@ class BaseEmailExtractor(SequenceExtractor):
 
     def __init__(self):
         self._regexes = [
-            # ReVal(RegExpUtility.get_safe_reg_exp(
-            #    BaseEmail.EmailRegex), Constants.EMAIL_REGEX),
+             ReVal(RegExpUtility.get_safe_reg_exp(
+                BaseEmail.EmailRegex), Constants.EMAIL_REGEX),
             # EmailRegex2 will break the code as it's not supported in Python, comment out for now
-            ReVal(RegExpUtility.get_safe_reg_exp(BaseEmail.EmailRegex2, remove_question=True), Constants.EMAIL_REGEX),
+
+            # ReVal(RegExpUtility.get_safe_reg_exp(source_replaced), Constants.EMAIL_REGEX),
         ]
 
 
