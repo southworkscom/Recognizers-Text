@@ -1,20 +1,26 @@
 from recognizers_sequence.sequence.extractors import *
+from recognizers_sequence.sequence.config.sequence_configuration import SequenceConfiguration
+
 
 class URLConfiguration(BaseSequenceExtractorConfiguration):
 
-    def __init__(self,x):
-        self.__x = x
+    def __init__(self, ip_url_regex, url_regex, options: SequenceConfiguration):
+        self.__ip_url_regex = ip_url_regex
+        self.__url_regex= url_regex
+        self.options = options
 
     @property
-    def get_ip_url_regex(self) -> str:
-        return self.__word_boundaries_regex
+    def ip_url_regex(self) -> str:
+        return self.__ip_url_regex
 
-    def set_get_word_boundaries_regex(self, word_boundaries_regex):
-        self.__word_boundaries_regex = word_boundaries_regex
+    @ip_url_regex.setter
+    def word_boundaries_regex(self, ip_url_regex):
+        self.__ip_url_regex = ip_url_regex
 
     @property
-    def get_non_word_boundaries_regex(self) -> str:
-        return self.__non_word_boundaries_regex
+    def url_regex(self) -> str:
+        return self.__url_regex
 
-    def set_non_get_word_boundaries_regex(self, non_word_boundaries_regex):
-        self.__non_word_boundaries_regex = non_word_boundaries_regex
+    @url_regex.setter
+    def url_regex(self, url_regex):
+        self.__url_regex = url_regex
