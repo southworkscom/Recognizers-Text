@@ -8,8 +8,7 @@ from .constants import *
 from recognizers_text.utilities import RegExpUtility
 from recognizers_text.extractor import Extractor, ExtractResult
 from recognizers_number.culture import CultureInfo
-from recognizers_sequence.resources import BasePhoneNumbers
-from recognizers_sequence.resources import BaseEmail
+from recognizers_sequence.resources import *
 
 ReVal = namedtuple('ReVal', ['re', 'val'])
 MatchesVal = namedtuple('MatchesVal', ['matches', 'val'])
@@ -190,6 +189,15 @@ class BaseEmailExtractor(SequenceExtractor):
         ]
 
 
+class BaseHashTagExtractor(SequenceExtractor):
+    @property
+    def regexes(self) -> List[ReVal]:
+        return self._regexes
+
+    def __init__(self):
+        self._regexes = RegExpUtility.get_safe_reg_exp(BaseHashtag.HashtagRegex), Constants.HASHTAG_REGEX
+
+
 class BaseGUIDExtractor(SequenceExtractor):
     @property
     def _extract_type(self) -> str:
@@ -201,3 +209,43 @@ class BaseGUIDExtractor(SequenceExtractor):
 
     def __init__(self):
         self._regexes = RegExpUtility.get_safe_reg_exp(BaseGUID.GUIDRegex), Constants.GUID_REGEX
+
+
+class BaseIpExtractor(SequenceExtractor):
+    @property
+    def regexes(self) -> List[ReVal]:
+        return self._regexes
+
+    def __init__(self):
+        self._regexes = [
+            ReVal(RegExpUtility.get_safe_reg_exp(BaseIp.Ipv4Regex), Constants.IP_REGEX_IPV4),
+            ReVal(RegExpUtility.get_safe_reg_exp(BaseIp.Ipv6Regex), Constants.IP_REGEX_IPV6)
+        ]
+
+
+class BaseMentionExtractor(SequenceExtractor):
+    @property
+    def regexes(self) -> List[ReVal]:
+        return self._regexes
+
+    def __init__(self):
+        self._regexes = ReVal(RegExpUtility.get_safe_reg_exp(BaseMention.MentionRegex), Constants.MENTION_REGEX)
+
+
+class BaseURLExtractor(SequenceExtractor):
+    @property
+    def regexes(self) -> List[ReVal]:
+        return self._regexes
+
+    @property
+    def ambiguous_time_term(self) -> ReVal:
+        return self._ambiguous_time_term
+
+    def __init__(self, config):
+        self.config = config
+
+        self._regexes = [
+            ReVal(RegExpUtility.get_safe_reg_exp(BaseURL.UrlRegex), Constants.URL_REGEX)
+        ]
+
+        self.ambiguous_time_term = RegExpUtility.get_safe_reg_exp(BaseURL.AmbiguousTimeTerm)

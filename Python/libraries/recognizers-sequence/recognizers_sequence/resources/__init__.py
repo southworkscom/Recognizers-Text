@@ -1,5 +1,4 @@
-from .base_phone_numbers import BasePhoneNumbers
-from .base_email import BaseEmail
+from .base_email import *
 from .base_GUID import *
 from .base_url import *
 from .base_hashtag import *
