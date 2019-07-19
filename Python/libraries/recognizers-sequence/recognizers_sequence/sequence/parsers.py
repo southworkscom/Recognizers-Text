@@ -14,14 +14,14 @@ class SequenceParser(Parser):
 
 
 class BaseIpParser(SequenceParser):
-    def parse(self, extResult: ExtractResult):
+    def parse(self, ext_result: ExtractResult):
         result = ParseResult()
-        result.start = extResult.start
-        result.length = extResult.length
-        result.text = extResult.text
-        result.start = extResult.type
-        result.resolution_str = self.drop_leading_zeros(extResult.text)
-        result.data = extResult.data
+        result.start = ext_result.start
+        result.length = ext_result.length
+        result.text = ext_result.text
+        result.start = ext_result.type
+        result.resolution_str = self.drop_leading_zeros(ext_result.text)
+        result.data = ext_result.data
 
         return result
 

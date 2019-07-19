@@ -3,7 +3,7 @@ from enum import IntFlag
 from recognizers_sequence.sequence.chinese.extractors import ChinesePhoneNumberExtractorConfiguration
 from recognizers_text import Culture, Recognizer
 
-from .english.extractors import EmailExtractor, BasePhoneNumberExtractor, EnglishPhoneNumberExtractorConfiguration
+from .english.extractors import EnglishEmailExtractor, BasePhoneNumberExtractor, EnglishPhoneNumberExtractorConfiguration
 from .english.parsers import PhoneNumberParser, EmailParser
 from .models import *
 from .parsers import *
@@ -21,19 +21,15 @@ class SequenceRecognizer(Recognizer[SequenceOptions]):
         super().__init__(target_culture, options, lazy_initialization)
 
     def initialize_configuration(self):
-        # region English
         self.register_model('PhoneNumberModel', Culture.English,
                             lambda options: PhoneNumberModel(PhoneNumberParser(),
                                                              BasePhoneNumberExtractor(EnglishPhoneNumberExtractorConfiguration())))
         self.register_model('EmailModel', Culture.English,
-                            lambda options: EmailModel(EmailParser(), EmailExtractor()))
-        # endregion
+                            lambda options: EmailModel(EmailParser(), EnglishEmailExtractor()))
 
-        # region Chinese
         self.register_model('PhoneNumberModel', Culture.Chinese,
                             lambda options: PhoneNumberModel(PhoneNumberParser(),
                                                              BasePhoneNumberExtractor(ChinesePhoneNumberExtractorConfiguration())))
-        # endregion
 
     def get_phone_number_model(self, culture: str = None, fallback_to_default_culture: bool = True) -> Model:
         if culture and (culture.lower().startswith("zh-") or culture.lower().startswith("ja-")):

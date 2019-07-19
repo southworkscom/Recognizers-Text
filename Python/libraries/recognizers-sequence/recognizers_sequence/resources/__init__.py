@@ -6,3 +6,4 @@ from .base_ip import *
 from .base_mention import *
 from .chinese_phone_numbers import *
 from .chinese_url import *
+from .base_phone_numbers import *

@@ -2,10 +2,11 @@ from recognizers_sequence import *
 from recognizers_sequence.sequence.extractors import *
 from recognizers_sequence.resources import *
 from recognizers_text.culture import Culture
+from recognizers_sequence.sequence.config import *
 import regex as re
 
 
-class EnglishPhoneNumberExtractorConfiguration(BaseSequenceExtractorConfiguration):
+class EnglishPhoneNumberExtractorConfiguration(PhoneNumberConfiguration):
 
     @property
     def word_boundaries_regex(self) -> str:
@@ -28,31 +29,40 @@ class EnglishPhoneNumberExtractorConfiguration(BaseSequenceExtractorConfiguratio
         self._EndWordBoundariesRegex = BasePhoneNumbers.EndWordBoundariesRegex
 
 
-class IpExtractor(BaseIp):
+class EnglishIpExtractor(BaseIpExtractor):
     pass
 
 
-class MentionExtractor(BaseMention):
+class EnglishMentionExtractor(BaseMentionExtractor):
     pass
 
 
-class EmailExtractor(BaseEmailExtractor):
+class EnglishEmailExtractor(BaseEmailExtractor):
     pass
 
 
-class EnglishURLExtractorConfiguration(BaseSequenceExtractorConfiguration):
+class EnglishURLExtractorConfiguration(URLConfiguration):
     @property
-    def url_regex(self) -> str:
-        return self._UrlRegex
+    def ip_url_regex(self) -> Pattern:
+        return self.__ip_url_regex
+
+    @ip_url_regex.setter
+    def ip_url_regex(self, ip_url_regex):
+        self.__ip_url_regex = ip_url_regex
 
     @property
-    def ip_url_regex(self) -> str:
-        return self._IpUrlRegex
+    def url_regex(self) -> Pattern:
+        return self.__url_regex
 
-    def __init__(self):
-        self._UrlRegex = RegExpUtility.get_safe_reg_exp(BaseURL.UrlRegex)
-        self._IpUrlRegex = RegExpUtility.get_safe_reg_exp(BaseURL.IpUrlRegex)
+    @url_regex.setter
+    def url_regex(self, url_regex):
+        self.__url_regex = url_regex
+
+    def __init__(self, options):
+        self.__ip_url_regex = RegExpUtility.get_safe_reg_exp(BaseURL.UrlRegex)
+        self.__url_regex = RegExpUtility.get_safe_reg_exp(BaseURL.IpUrlRegex)
+        super().__init__(options)
 
 
-class GUIDExtractor(BaseGUIDExtractor):
+class EnglishGUIDExtractor(BaseGUIDExtractor):
     pass

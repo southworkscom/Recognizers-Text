@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 from typing import List, Dict, Set, Pattern, Match
 from collections import namedtuple
 import regex as re
-from recognizers_sequence.resources.base_GUID import BaseGUID
 
 from .constants import *
 from recognizers_text.utilities import RegExpUtility
@@ -12,6 +11,8 @@ from recognizers_sequence.resources import *
 
 ReVal = namedtuple('ReVal', ['re', 'val'])
 MatchesVal = namedtuple('MatchesVal', ['matches', 'val'])
+
+#TODO: remove this class and replace it with the right configuration
 
 
 class BaseSequenceExtractorConfiguration(ABC):
@@ -50,6 +51,7 @@ class SequenceExtractor(Extractor):
         raise NotImplementedError
 
     def extract(self, source: str) -> List[ExtractResult]:
+
         result: List[ExtractResult] = list()
 
         if not self._pre_check_str(source):
@@ -182,10 +184,10 @@ class BaseEmailExtractor(SequenceExtractor):
 
     def __init__(self):
         self._regexes = [
-            # ReVal(RegExpUtility.get_safe_reg_exp(
-            #    BaseEmail.EmailRegex), Constants.EMAIL_REGEX),
+            ReVal(RegExpUtility.get_safe_reg_exp(
+                BaseEmail.EmailRegex), Constants.EMAIL_REGEX),
             # EmailRegex2 will break the code as it's not supported in Python, comment out for now
-            ReVal(RegExpUtility.get_safe_reg_exp(BaseEmail.EmailRegex2, remove_question=True), Constants.EMAIL_REGEX),
+            #ReVal(RegExpUtility.get_safe_reg_exp(BaseEmail.EmailRegex2, remove_question=True), Constants.EMAIL_REGEX),
         ]
 
 
