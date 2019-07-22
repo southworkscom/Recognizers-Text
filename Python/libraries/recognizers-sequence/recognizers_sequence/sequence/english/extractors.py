@@ -64,5 +64,13 @@ class EnglishURLExtractorConfiguration(URLConfiguration):
         super().__init__(options)
 
 
+class ChineseURLExtractorConfiguration(URLConfiguration):
+    pass
+
+
 class EnglishGUIDExtractor(BaseGUIDExtractor):
+    pass
+
+
+class EnglishHashtagExtractor(BaseHashTagExtractor):
     pass
