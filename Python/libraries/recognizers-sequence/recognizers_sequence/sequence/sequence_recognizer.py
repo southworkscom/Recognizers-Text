@@ -125,4 +125,3 @@ def recognize_guid(query: str, culture: str, options: SequenceOptions = Sequence
     recognizer = SequenceRecognizer(culture, options)
     model = recognizer.get_guid_model(culture, fallback_to_default_culture)
     return model.parse(query)
-    
