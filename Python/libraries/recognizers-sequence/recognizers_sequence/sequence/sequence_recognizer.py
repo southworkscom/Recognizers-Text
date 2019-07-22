@@ -36,30 +36,23 @@ class SequenceRecognizer(Recognizer[SequenceOptions]):
             return self.get_model('PhoneNumberModel', Culture.Chinese, fallback_to_default_culture)
         return self.get_model('PhoneNumberModel', culture, fallback_to_default_culture)
 
-
     def get_ip_address_model(self, culture: str = None, fallback_to_default_culture: bool = True) -> Model:
         return self.get_model('IpAddressModel', culture, fallback_to_default_culture)
-
 
     def get_mention_model(self, culture: str = None, fallback_to_default_culture: bool = True) -> Model:
         return self.get_model('MentionModel', culture, fallback_to_default_culture)
 
-
     def get_hashtag_model(self, culture: str = None, fallback_to_default_culture: bool = True) -> Model:
-            return self.get_model('HashtagModel', culture, fallback_to_default_culture)
-
+        return self.get_model('HashtagModel', culture, fallback_to_default_culture)
 
     def get_email_model(self, culture: str = None, fallback_to_default_culture: bool = True) -> Model:
         return self.get_model('EmailModel', culture, fallback_to_default_culture)
 
-
     def get_url_model(self, culture: str = None, fallback_to_default_culture: bool = True) -> Model:
         return self.get_model('URLModel', culture, fallback_to_default_culture)
 
-
     def get_guid_model(self, culture: str = None, fallback_to_default_culture: bool = True) -> Model:
         return self.get_model('GUIDModel', culture, fallback_to_default_culture)
-
 
     def recognize_phone_number(query: str, culture: str, options: SequenceOptions = SequenceOptions.NONE,
                                fallback_to_default_culture: bool = True) -> List[ModelResult]:
@@ -68,30 +61,26 @@ class SequenceRecognizer(Recognizer[SequenceOptions]):
             culture, fallback_to_default_culture)
         return model.parse(query)
 
-
-    def recognize_ip_address(query: str, culture: str, options: SequenceOptions=SequenceOptions.NONE,
-                             fallback_to_default_culture: bool=True) -> List[ModelResult]:
-        recognizer = SequenceRecognizer(culture,options)
+    def recognize_ip_address(query: str, culture: str, options: SequenceOptions = SequenceOptions.NONE,
+                             fallback_to_default_culture: bool = True) -> List[ModelResult]:
+        recognizer = SequenceRecognizer(culture, options)
         model = recognizer.get_ip_address_model(
             culture, fallback_to_default_culture)
         return model.parse(query)
 
-
-    def recognize_mention(query: str, culture: str, options: SequenceOptions=SequenceOptions.NONE,
-                             fallback_to_default_culture: bool=True) -> List[ModelResult]:
-        recognizer = SequenceRecognizer(culture,options)
+    def recognize_mention(query: str, culture: str, options: SequenceOptions = SequenceOptions.NONE,
+                          fallback_to_default_culture: bool = True) -> List[ModelResult]:
+        recognizer = SequenceRecognizer(culture, options)
         model = recognizer.get_mention_model(
             culture, fallback_to_default_culture)
         return model.parse(query)
 
-
-    def recognize_hashtag(query: str, culture: str, options: SequenceOptions=SequenceOptions.NONE,
-                             fallback_to_default_culture: bool=True) -> List[ModelResult]:
-        recognizer = SequenceRecognizer(culture,options)
+    def recognize_hashtag(query: str, culture: str, options: SequenceOptions = SequenceOptions.NONE,
+                          fallback_to_default_culture: bool = True) -> List[ModelResult]:
+        recognizer = SequenceRecognizer(culture, options)
         model = recognizer.get_hashtag_model(
             culture, fallback_to_default_culture)
         return model.parse(query)
-
 
     def recognize_email(query: str, culture: str, options: SequenceOptions = SequenceOptions.NONE,
                         fallback_to_default_culture: bool = True) -> List[ModelResult]:
@@ -99,16 +88,14 @@ class SequenceRecognizer(Recognizer[SequenceOptions]):
         model = recognizer.get_email_model(culture, fallback_to_default_culture)
         return model.parse(query)
 
-
     def recognize_url(query: str, culture: str, options: SequenceOptions = SequenceOptions.NONE,
-                        fallback_to_default_culture: bool = True) -> List[ModelResult]:
+                      fallback_to_default_culture: bool = True) -> List[ModelResult]:
         recognizer = SequenceRecognizer(culture, options)
         model = recognizer.get_url_model(culture, fallback_to_default_culture)
         return model.parse(query)
 
-
     def recognize_guid(query: str, culture: str, options: SequenceOptions = SequenceOptions.NONE,
-                        fallback_to_default_culture: bool = True) -> List[ModelResult]:
+                       fallback_to_default_culture: bool = True) -> List[ModelResult]:
         recognizer = SequenceRecognizer(culture, options)
         model = recognizer.get_guid_model(culture, fallback_to_default_culture)
         return model.parse(query)
