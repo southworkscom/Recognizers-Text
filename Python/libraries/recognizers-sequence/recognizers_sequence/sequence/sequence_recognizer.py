@@ -1,13 +1,8 @@
 from enum import IntFlag
-
 from recognizers_sequence.sequence.chinese.extractors import ChinesePhoneNumberExtractorConfiguration
 from recognizers_text import Culture, Recognizer
-
-from .english.extractors import EnglishEmailExtractor, BasePhoneNumberExtractor, \
-    EnglishPhoneNumberExtractorConfiguration, EnglishHashtagExtractor, EnglishMentionExtractor, EnglishIpExtractor, \
-    BaseURLExtractor, EnglishURLExtractorConfiguration, ChineseURLExtractorConfiguration, EnglishGUIDExtractor
-from .english.parsers import PhoneNumberParser, EmailParser, MentionParser, HashtagParser, IpParser, URLParser, \
-    GUIDParser
+from .english.extractors import *
+from .english.parsers import *
 from .models import *
 from .parsers import *
 
