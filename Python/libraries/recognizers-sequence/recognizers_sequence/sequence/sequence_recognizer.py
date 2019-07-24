@@ -75,7 +75,7 @@ class SequenceRecognizer(Recognizer[SequenceOptions]):
 
 
 def recognize_phone_number(query: str, culture: str, options: SequenceOptions = SequenceOptions.NONE,
-                    fallback_to_default_culture: bool = True) -> List[ModelResult]:
+                           fallback_to_default_culture: bool = True) -> List[ModelResult]:
     recognizer = SequenceRecognizer(culture, options)
     model = recognizer.get_phone_number_model(culture, fallback_to_default_culture)
     return model.parse(query)
