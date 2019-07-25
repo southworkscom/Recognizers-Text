@@ -66,3 +66,11 @@ class EnglishURLExtractorConfiguration(URLConfiguration):
 
 class EnglishGUIDExtractor(BaseGUIDExtractor):
     pass
+
+
+class ChineseURLExtractorConfiguration(URLConfiguration):
+    pass
+
+
+class EnglishHashtagExtractor(BaseHashTagExtractor):
+    pass
