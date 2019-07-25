@@ -54,7 +54,7 @@ class SequenceRecognizer(Recognizer[SequenceOptions]):
     def get_phone_number_model(self, culture: str = None, fallback_to_default_culture: bool = True) -> Model:
         if culture and (culture.lower().startswith("zh-") or culture.lower().startswith("ja-")):
             return self.get_model('PhoneNumberModel', Culture.Chinese, fallback_to_default_culture)
-        return self.get_model('PhoneNumberModel', Culture.English, fallback_to_default_culture)
+        return self.get_model('PhoneNumberModel', culture, fallback_to_default_culture)
 
     def get_ip_address_model(self, culture: str = None, fallback_to_default_culture: bool = True) -> Model:
         return self.get_model('IpAddressModel', Culture.English, fallback_to_default_culture)
@@ -66,8 +66,8 @@ class SequenceRecognizer(Recognizer[SequenceOptions]):
         return self.get_model('HashtagModel', Culture.English, fallback_to_default_culture)
 
     def get_email_model(self, culture: str = None, fallback_to_default_culture: bool = True) -> Model:
-        return self.get_model('EmailModel', Culture.English, fallback_to_default_culture)
-
+        return self.get_model('EmailModel', culture, fallback_to_default_culture)
+    
     def get_url_model(self, culture: str = None, fallback_to_default_culture: bool = True) -> Model:
         if culture and culture.lower().startswith("zh-") or culture.lower().startswith("ja-"):
             return self.get_model('URLModel', Culture.Chinese, fallback_to_default_culture)
@@ -80,7 +80,8 @@ class SequenceRecognizer(Recognizer[SequenceOptions]):
 def recognize_phone_number(query: str, culture: str, options: SequenceOptions = SequenceOptions.NONE,
                            fallback_to_default_culture: bool = True) -> List[ModelResult]:
     recognizer = SequenceRecognizer(culture, options)
-    model = recognizer.get_phone_number_model(culture, fallback_to_default_culture)
+    model = recognizer.get_phone_number_model(
+        culture, fallback_to_default_culture)
     return model.parse(query)
 
 
