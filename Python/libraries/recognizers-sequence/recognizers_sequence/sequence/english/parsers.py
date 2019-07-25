@@ -101,3 +101,22 @@ class PhoneNumberParser(SequenceParser):
 
 class EmailParser(SequenceParser):
     pass
+
+class IpParser(SequenceParser):
+    pass
+
+
+class MentionParser(SequenceParser):
+    pass
+
+
+class HashtagParser(SequenceParser):
+    pass
+
+
+class URLParser(SequenceParser):
+    pass
+
+
+class GUIDParser(SequenceParser):
+    pass
