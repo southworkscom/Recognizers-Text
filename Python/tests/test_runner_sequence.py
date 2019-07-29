@@ -5,6 +5,7 @@ from recognizers_sequence.sequence.sequence_recognizer import recognize_phone_nu
 MODEL_FUNCTION = {
     'PhoneNumber': recognize_phone_number,
     'Email': recognize_email,
+    'URL': None,
 }
 
 
@@ -13,6 +14,7 @@ MODEL_FUNCTION = {
 def test_sequence_recognizer(
         culture, model, options, context, source, expected_results):
     results = get_results(culture, model, source)
+
     assert len(results) == len(expected_results)
     for actual, expected in zip(results, expected_results):
         assert actual.type_name == expected['TypeName']

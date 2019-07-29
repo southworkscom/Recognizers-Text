@@ -1,19 +1,18 @@
 from abc import ABC, abstractmethod
 from typing import List, Dict, Set, Pattern, Match
-from copy import deepcopy
 from collections import namedtuple
-from itertools import chain
 import regex as re
 
 from .constants import *
 from recognizers_text.utilities import RegExpUtility
 from recognizers_text.extractor import Extractor, ExtractResult
 from recognizers_number.culture import CultureInfo
-from recognizers_sequence.resources import BasePhoneNumbers
-from recognizers_sequence.resources import BaseEmail
+from recognizers_sequence.resources import *
 
 ReVal = namedtuple('ReVal', ['re', 'val'])
 MatchesVal = namedtuple('MatchesVal', ['matches', 'val'])
+
+#TODO: remove this class and replace it with the right configuration
 
 
 class BaseSequenceExtractorConfiguration(ABC):
@@ -52,6 +51,7 @@ class SequenceExtractor(Extractor):
         raise NotImplementedError
 
     def extract(self, source: str) -> List[ExtractResult]:
+
         result: List[ExtractResult] = list()
 
         if not self._pre_check_str(source):
@@ -103,7 +103,7 @@ class SequenceExtractor(Extractor):
 class BasePhoneNumberExtractor(SequenceExtractor):
     @property
     def _extract_type(self) -> str:
-        return 'phonenumber'
+        return Constants.SYS_PHONE_NUMBER
 
     @property
     def regexes(self) -> List[ReVal]:
@@ -176,7 +176,7 @@ class BasePhoneNumberExtractor(SequenceExtractor):
 class BaseEmailExtractor(SequenceExtractor):
     @property
     def _extract_type(self) -> str:
-        return 'email'
+        return Constants.SYS_EMAIL
 
     @property
     def regexes(self) -> List[ReVal]:
@@ -187,5 +187,67 @@ class BaseEmailExtractor(SequenceExtractor):
             ReVal(RegExpUtility.get_safe_reg_exp(
                 BaseEmail.EmailRegex), Constants.EMAIL_REGEX),
             # EmailRegex2 will break the code as it's not supported in Python, comment out for now
-            # ReVal(RegExpUtility.get_safe_reg_exp(BaseEmail.EmailRegex2), Constants.EMAIL_REGEX),
+            #ReVal(RegExpUtility.get_safe_reg_exp(BaseEmail.EmailRegex2, remove_question=True), Constants.EMAIL_REGEX),
         ]
+
+
+class BaseHashTagExtractor(SequenceExtractor):
+    @property
+    def regexes(self) -> List[ReVal]:
+        return self._regexes
+
+    def __init__(self):
+        self._regexes = RegExpUtility.get_safe_reg_exp(BaseHashtag.HashtagRegex), Constants.HASHTAG_REGEX
+
+
+class BaseGUIDExtractor(SequenceExtractor):
+    @property
+    def _extract_type(self) -> str:
+        return Constants.SYS_GUID
+
+    @property
+    def regexes(self) -> List[ReVal]:
+        return self._regexes
+
+    def __init__(self):
+        self._regexes = RegExpUtility.get_safe_reg_exp(BaseGUID.GUIDRegex), Constants.GUID_REGEX
+
+
+class BaseIpExtractor(SequenceExtractor):
+    @property
+    def regexes(self) -> List[ReVal]:
+        return self._regexes
+
+    def __init__(self):
+        self._regexes = [
+            ReVal(RegExpUtility.get_safe_reg_exp(BaseIp.Ipv4Regex), Constants.IP_REGEX_IPV4),
+            ReVal(RegExpUtility.get_safe_reg_exp(BaseIp.Ipv6Regex), Constants.IP_REGEX_IPV6)
+        ]
+
+
+class BaseMentionExtractor(SequenceExtractor):
+    @property
+    def regexes(self) -> List[ReVal]:
+        return self._regexes
+
+    def __init__(self):
+        self._regexes = ReVal(RegExpUtility.get_safe_reg_exp(BaseMention.MentionRegex), Constants.MENTION_REGEX)
+
+
+class BaseURLExtractor(SequenceExtractor):
+    @property
+    def regexes(self) -> List[ReVal]:
+        return self._regexes
+
+    @property
+    def ambiguous_time_term(self) -> ReVal:
+        return self._ambiguous_time_term
+
+    def __init__(self, config):
+        self.config = config
+
+        self._regexes = [
+            ReVal(RegExpUtility.get_safe_reg_exp(BaseURL.UrlRegex), Constants.URL_REGEX)
+        ]
+
+        self.ambiguous_time_term = RegExpUtility.get_safe_reg_exp(BaseURL.AmbiguousTimeTerm)
