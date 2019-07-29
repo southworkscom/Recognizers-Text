@@ -12,32 +12,6 @@ from recognizers_sequence.resources import *
 ReVal = namedtuple('ReVal', ['re', 'val'])
 MatchesVal = namedtuple('MatchesVal', ['matches', 'val'])
 
-#TODO: remove this class and replace it with the right configuration
-
-
-class BaseSequenceExtractorConfiguration(ABC):
-    @property
-    @abstractmethod
-    def word_boundaries_regex(self) -> Pattern:
-        raise NotImplementedError
-
-    @property
-    @abstractmethod
-    def non_word_boundaries_regex(self) -> Pattern:
-        raise NotImplementedError
-
-    @property
-    @abstractmethod
-    def end_word_boundaries_regex(self) -> Pattern:
-        raise NotImplementedError
-
-    @property
-    def culture_info(self) -> CultureInfo:
-        return self._culture_info
-
-    def __init__(self, culture_info: CultureInfo):
-        self._culture_info = culture_info
-
 
 class SequenceExtractor(Extractor):
     @property
@@ -51,28 +25,26 @@ class SequenceExtractor(Extractor):
         raise NotImplementedError
 
     def extract(self, source: str) -> List[ExtractResult]:
-
         result: List[ExtractResult] = list()
-
         if not self._pre_check_str(source):
             return result
 
         matched: List[bool] = [False] * len(source)
-        match_source: Dict[Match, str] = dict()
 
+        match_source: Dict[Match, str] = dict()
+        print(self.regexes)
         matches_list = list(
             map(lambda x: MatchesVal(matches=list(re.finditer(x.re, source)), val=x.val), self.regexes))
         matches_list = list(filter(lambda x: len(x.matches) > 0, matches_list))
 
         for ml in matches_list:
             for m in ml.matches:
-                if self.is_valid_match(m):
-                    for j in range(len(m.group())):
-                        matched[m.start() + j] = True
+                for j in range(len(m.group())):
+                    matched[m.start() + j] = True
                 # Keep Source Data for extra information
-                    match_source[m] = ml.val
-
+                match_source[m] = ml.val
         last = -1
+
         for i in range(len(source)):
             if not matched[i]:
                 last = i
@@ -94,19 +66,17 @@ class SequenceExtractor(Extractor):
                         value.type = self._extract_type
                         value.data = match_source.get(src_match, None)
                         result.append(value)
+
         return result
 
     @staticmethod
     def _pre_check_str(source: str) -> bool:
         return len(source) != 0
 
-    def is_valid_match(match: Match) -> bool:
-        return True
-
 
 class BasePhoneNumberExtractor(SequenceExtractor):
 
-    def __init__(self, config: BaseSequenceExtractorConfiguration):
+    def __init__(self, config):
         self.config = config
         word_boundaries_regex = config.word_boundaries_regex
         non_word_boundaries_regex = config.non_word_boundaries_regex
@@ -175,6 +145,7 @@ class BasePhoneNumberExtractor(SequenceExtractor):
         for m in re.finditer(BasePhoneNumbers.PhoneNumberMaskRegex, source):
             ret = [er for er in ret if er.start <
                    m.start() or er.end > m.end()]
+
         return ret
 
 
@@ -198,11 +169,15 @@ class BaseEmailExtractor(SequenceExtractor):
 
 class BaseHashTagExtractor(SequenceExtractor):
     @property
+    def _extract_type(self) -> str:
+        return Constants.SYS_HASHTAG
+
+    @property
     def regexes(self) -> List[ReVal]:
         return self._regexes
 
     def __init__(self):
-        self._regexes = RegExpUtility.get_safe_reg_exp(BaseHashtag.HashtagRegex), Constants.HASHTAG_REGEX
+        self._regexes = [ReVal(RegExpUtility.get_safe_reg_exp(BaseHashtag.HashtagRegex), Constants.HASHTAG_REGEX)]
 
 
 class BaseGUIDExtractor(SequenceExtractor):
@@ -215,10 +190,14 @@ class BaseGUIDExtractor(SequenceExtractor):
         return self._regexes
 
     def __init__(self):
-        self._regexes = RegExpUtility.get_safe_reg_exp(BaseGUID.GUIDRegex), Constants.GUID_REGEX
+        self._regexes = [RegExpUtility.get_safe_reg_exp(BaseGUID.GUIDRegex), Constants.GUID_REGEX]
 
 
 class BaseIpExtractor(SequenceExtractor):
+    @property
+    def _extract_type(self) -> str:
+        return Constants.SYS_IP
+
     @property
     def regexes(self) -> List[ReVal]:
         return self._regexes
@@ -232,20 +211,28 @@ class BaseIpExtractor(SequenceExtractor):
 
 class BaseMentionExtractor(SequenceExtractor):
     @property
+    def _extract_type(self) -> str:
+        return Constants.SYS_MENTION
+
+    @property
     def regexes(self) -> List[ReVal]:
         return self._regexes
 
     def __init__(self):
-        self._regexes = ReVal(RegExpUtility.get_safe_reg_exp(BaseMention.MentionRegex), Constants.MENTION_REGEX)
+        self._regexes = [ReVal(RegExpUtility.get_safe_reg_exp(BaseMention.MentionRegex), Constants.MENTION_REGEX)]
 
 
 class BaseURLExtractor(SequenceExtractor):
+    @property
+    def _extract_type(self) -> str:
+        return Constants.SYS_URL
+
     @property
     def regexes(self) -> List[ReVal]:
         return self._regexes
 
     @property
-    def ambiguous_time_term(self) -> ReVal:
+    def ambiguous_time_term(self) -> Pattern:
         return self._ambiguous_time_term
 
     def __init__(self, config):
@@ -255,4 +242,4 @@ class BaseURLExtractor(SequenceExtractor):
             ReVal(RegExpUtility.get_safe_reg_exp(BaseURL.UrlRegex), Constants.URL_REGEX)
         ]
 
-        self.ambiguous_time_term = RegExpUtility.get_safe_reg_exp(BaseURL.AmbiguousTimeTerm)
+        self._ambiguous_time_term = RegExpUtility.get_safe_reg_exp(BaseURL.AmbiguousTimeTerm)

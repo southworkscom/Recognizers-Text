@@ -1,7 +1,6 @@
 [
   {
     "Input": "https://abc.com",
-    "NotSupportedByDesign": "python",
     "Results": [
       {
         "Text": "https://abc.com",
@@ -14,7 +13,6 @@
   },
   {
     "Input": "ftp://abc.com",
-    "NotSupportedByDesign": "python",
     "Results": [
       {
         "Text": "ftp://abc.com",
@@ -27,7 +25,6 @@
   },
   {
     "Input": "http://abc.com",
-    "NotSupportedByDesign": "python",
     "Results": [
       {
         "Text": "http://abc.com",
@@ -40,7 +37,6 @@
   },
   {
     "Input": "www.abc.com",
-    "NotSupportedByDesign": "python",
     "Results": [
       {
         "Text": "www.abc.com",
@@ -53,7 +49,6 @@
   },
   {
     "Input": "www.abc.com.cn",
-    "NotSupportedByDesign": "python",
     "Results": [
       {
         "Text": "www.abc.com.cn",
@@ -66,7 +61,6 @@
   },
   {
     "Input": "abc.com",
-    "NotSupportedByDesign": "python",
     "Results": [
       {
         "Text": "abc.com",
@@ -79,7 +73,6 @@
   },
   {
     "Input": "http://abc.com/file_name",
-    "NotSupportedByDesign": "python",
     "Results": [
       {
         "Text": "http://abc.com/file_name",
@@ -92,7 +85,6 @@
   },
   {
     "Input": "http://abc.com/file_path/",
-    "NotSupportedByDesign": "python",
     "Results": [
       {
         "Text": "http://abc.com/file_path/",
@@ -105,7 +97,6 @@
   },
   {
     "Input": "http://abc.com/file_path/123.html",
-    "NotSupportedByDesign": "python",
     "Results": [
       {
         "Text": "http://abc.com/file_path/123.html",
@@ -118,7 +109,6 @@
   },
   {
     "Input": "http://abc.com/search?id=123",
-    "NotSupportedByDesign": "python",
     "Results": [
       {
         "Text": "http://abc.com/search?id=123",
@@ -131,7 +121,6 @@
   },
   {
     "Input": "http://abc.com/search?id=123&name=Alice",
-    "NotSupportedByDesign": "python",
     "Results": [
       {
         "Text": "http://abc.com/search?id=123&name=Alice",
@@ -144,7 +133,6 @@
   },
   {
     "Input": "http://abc.com/123#cite_1",
-    "NotSupportedByDesign": "python",
     "Results": [
       {
         "Text": "http://abc.com/123#cite_1",
@@ -157,7 +145,6 @@
   },
   {
     "Input": "http://abc.com:8080",
-    "NotSupportedByDesign": "python",
     "Results": [
       {
         "Text": "http://abc.com:8080",
@@ -170,7 +157,6 @@
   },
   {
     "Input": "Hi, @Eve, you can find my CV at https://frank.website.com/CV/#cite_2",
-    "NotSupportedByDesign": "python",
     "Results": [
       {
         "Text": "https://frank.website.com/CV/#cite_2",
@@ -183,31 +169,26 @@
   },
   {
     "Input": "Alice@abc.com is an email rather than url",
-    "NotSupportedByDesign": "python",
     "Results": []
   },
   {
     "Input": "https:// is invalid",
-    "NotSupportedByDesign": "python",
     "Results": []
   },
   {
     "Input": "http://# is invalid",
-    "NotSupportedByDesign": "python",
     "Results": []
   },
   {
     "Input": "httt://abc.com is invalid, no such protocol",
-    "NotSupportedByDesign": "python",
     "Results": []
   },
   {
     "Input": "Hello, @Carol, please write to me at Dave@abc.com for more information on task #A1",
-    "NotSupportedByDesign": "python",
     "Results": []
   },
   {
-    "Input": "http://127.0.0.1:8080",
+    "Input": "http://127.0.0.1.com:8080",
     "NotSupportedByDesign": "python",
     "Results": [
       {
@@ -273,7 +254,6 @@
   },
   {
     "Input": "['http://twitter.com/#!/KCGtechnoly/status/9042443475840', None]",
-    "NotSupportedByDesign": "python",
     "Results": [
       {
         "Text": "http://twitter.com/#!/KCGtechnoly/status/9042443475840",
@@ -286,12 +266,10 @@
   },
   {
     "Input": "The DNS server is 8.8.8.8",
-    "NotSupportedByDesign": "python",
     "Results": []
   },
   {
     "Input": "MORE:https://bit.ly/2jm6eu3",
-    "NotSupportedByDesign": "python",
     "Results": [
       {
         "Text": "https://bit.ly/2jm6eu3",
@@ -306,7 +284,6 @@
   },
   {
     "Input": "May 5th.https://t.co/YCUZfuyyHZ",
-    "NotSupportedByDesign": "python",
     "Results": [
       {
         "Text": "https://t.co/YCUZfuyyHZ",
@@ -321,7 +298,6 @@
   },
   {
     "Input": "All of these are valid URLs: bit.ly, nyti.ms, sound.academy, pep.si, lero.aws...",
-    "NotSupportedByDesign": "python",
     "Results": [
       {
         "Text": "bit.ly",
@@ -372,7 +348,6 @@
   },
   {
     "Input": "john.de@cooso.com.au",
-    "NotSupportedByDesign": "python",
     "Results": []
   },
   {
@@ -397,7 +372,6 @@
   },
   {
     "Input": "working..is isn't a valid domain name.",
-    "NotSupportedByDesign": "python",
     "Results": []
   },
   {
@@ -407,7 +381,6 @@
   },
   {
     "Input": "Please visit https://7.am for more information.",
-    "NotSupportedByDesign": "python",
     "Results": [
       {
         "Text": "https://7.am",
@@ -446,7 +419,7 @@
   },
   {
     "Input": "[image: image2.png]http://dafdafdasf-dajfdlkajfkla-fdafd-dafdafafs-dafdafdaf.",
-    "NotSupportedByDesign": "javascript, python",
+    "NotSupportedByDesign": "javascript. python",
     "Results": []
   },
   {
@@ -471,7 +444,6 @@
   },
   {
     "Input": "http://dafdafdasf-dajfdlkajfkla-fdafd-dafdafafs-dafdafdaf.com",
-    "NotSupportedByDesign": "python",
     "Results": [
       {
         "Text": "http://dafdafdasf-dajfdlkajfkla-fdafd-dafdafafs-dafdafdaf.com",
@@ -486,7 +458,6 @@
   },
   {
     "Input": "abc.d-ef.123ghi.com.sa/",
-    "NotSupportedByDesign": "python",
     "Results": [
       {
         "Text": "abc.d-ef.123ghi.com.sa/",
@@ -501,7 +472,6 @@
   },
   {
     "Input": "...",
-    "NotSupportedByDesign": "python",
     "Results": []
   },
   {
@@ -522,12 +492,10 @@
   },
   {
     "Input": "http://362",
-    "NotSupportedByDesign": "python",
     "Results": []
   },
   {
     "Input": "abc.def.ghi.com.sa",
-    "NotSupportedByDesign": "python",
     "Results": [
       {
         "Text": "abc.def.ghi.com.sa",
@@ -542,7 +510,6 @@
   },
   {
     "Input": "https://web.archive.org/web/20160308231823/http://63-characters-is-the-longest-possible-domain-name-for-a-website.com/",
-    "NotSupportedByDesign": "python",
     "Results": [
       {
         "Text": "https://web.archive.org/web/20160308231823/http://63-characters-is-the-longest-possible-domain-name-for-a-website.com/",

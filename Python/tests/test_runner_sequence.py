@@ -1,11 +1,14 @@
 import pytest
 from runner import get_specs
-from recognizers_sequence.sequence.sequence_recognizer import recognize_phone_number, recognize_email
+from recognizers_sequence.sequence.sequence_recognizer import *
 
 MODEL_FUNCTION = {
     'PhoneNumber': recognize_phone_number,
     'Email': recognize_email,
-    'URL': None,
+    'URL': recognize_url,
+    'GUID': recognize_guid,
+    'Mention': recognize_mention,
+    'Hashtag': recognize_hashtag
 }
 
 
