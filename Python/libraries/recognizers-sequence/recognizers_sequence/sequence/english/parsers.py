@@ -1,8 +1,8 @@
 import regex as re
-from recognizers_sequence.sequence.parsers import SequenceParser
-from recognizers_sequence.resources import BasePhoneNumbers, BaseEmail
+from recognizers_sequence.sequence.parsers import SequenceParser, BaseIpParser
+from recognizers_sequence.resources import BasePhoneNumbers, BaseEmail, BaseGUID
 from recognizers_text.parser import Parser, ParseResult
-from recognizers_text import ExtractResult
+from recognizers_text import ExtractResult, Pattern, regex
 from recognizers_text.utilities import RegExpUtility
 
 
@@ -103,7 +103,7 @@ class EmailParser(SequenceParser):
     pass
 
 
-class IpParser(SequenceParser):
+class IpParser(BaseIpParser):
     pass
 
 
@@ -120,4 +120,21 @@ class URLParser(SequenceParser):
 
 
 class GUIDParser(SequenceParser):
-    pass
+    score_upper_limit = 100
+    score_lower_limit = 0
+    base_score = 100
+    no_boundary_penalty = 10
+    no_format_penalty = 10
+    pure_digit_penalty = 15
+    pureDigitRegex = "^\\d*$"
+    formatRegex = "-"
+
+    def score_guid(self, guid_text):
+        score = self.base_score
+        guid_element_regex = BaseGUID.GUIDRegexElement
+
+        element_match = regex.finditer(guid_element_regex, guid_text)
+        start_index = len(element_match)
+        element_guid = element_match[0]
+        score = self.no_boundary_penalty if start_index == 0 else 0
+        score = self.formatRegex
