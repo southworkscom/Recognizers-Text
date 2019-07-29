@@ -59,8 +59,9 @@ class EnglishURLExtractorConfiguration(URLConfiguration):
         self.__url_regex = url_regex
 
     def __init__(self, options):
-        self.__ip_url_regex = RegExpUtility.get_safe_reg_exp(BaseURL.UrlRegex)
-        self.__url_regex = RegExpUtility.get_safe_reg_exp(BaseURL.IpUrlRegex)
+        self.__ip_url_regex = RegExpUtility.get_safe_reg_exp(BaseURL.IpUrlRegex)
+        self.__url_regex = RegExpUtility.get_safe_reg_exp(BaseURL.UrlRegex)
+
         super().__init__(options)
 
 

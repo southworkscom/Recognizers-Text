@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List, Dict, Set, Pattern, Match
 from collections import namedtuple
 import regex as re
-
+from recognizers_sequence.sequence.config.url_configuration import URLConfiguration
 from .constants import *
 from recognizers_text.utilities import RegExpUtility
 from recognizers_text.extractor import Extractor, ExtractResult
@@ -72,6 +72,9 @@ class SequenceExtractor(Extractor):
     @staticmethod
     def _pre_check_str(source: str) -> bool:
         return len(source) != 0
+
+    def _is_valid_match(self, source: str) -> bool:
+        return True
 
 
 class BasePhoneNumberExtractor(SequenceExtractor):
@@ -228,6 +231,23 @@ class BaseURLExtractor(SequenceExtractor):
         return Constants.SYS_URL
 
     @property
+    def config(self) -> URLConfiguration:
+        return self._config
+
+    @config.setter
+    def config(self, config):
+        self._config = config
+
+    def _is_valid_match(self, source: Match) -> bool:
+        is_valid_tld = False
+        is_ip_URL = source.groups('IPurl')
+
+        if is_ip_URL is not True:
+            tld_string = source.groups('Tld')
+
+        return True
+
+    @property
     def regexes(self) -> List[ReVal]:
         return self._regexes
 
@@ -239,7 +259,9 @@ class BaseURLExtractor(SequenceExtractor):
         self.config = config
 
         self._regexes = [
-            ReVal(RegExpUtility.get_safe_reg_exp(BaseURL.UrlRegex), Constants.URL_REGEX)
+            ReVal(RegExpUtility.get_safe_reg_exp(BaseURL.UrlRegex), Constants.URL_REGEX),
+            ReVal(RegExpUtility.get_safe_reg_exp(BaseURL.IpUrlRegex), Constants.URL_REGEX),
+            ReVal(RegExpUtility.get_safe_reg_exp(BaseURL.UrlRegex2), Constants.URL_REGEX)
         ]
 
         self._ambiguous_time_term = RegExpUtility.get_safe_reg_exp(BaseURL.AmbiguousTimeTerm)
