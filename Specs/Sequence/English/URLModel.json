@@ -188,7 +188,7 @@
     "Results": []
   },
   {
-    "Input": "http://127.0.0.1.com:8080",
+    "Input": "http://127.0.0.1:8080",
     "NotSupportedByDesign": "python",
     "Results": [
       {
