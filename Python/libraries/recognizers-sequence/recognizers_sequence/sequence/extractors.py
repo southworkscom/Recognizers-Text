@@ -8,6 +8,8 @@ from recognizers_text.utilities import RegExpUtility
 from recognizers_text.extractor import Extractor, ExtractResult
 from recognizers_number.culture import CultureInfo
 from recognizers_sequence.resources import *
+from urllib.parse import urlparse
+from os.path import splitext
 
 ReVal = namedtuple('ReVal', ['re', 'val'])
 MatchesVal = namedtuple('MatchesVal', ['matches', 'val'])
@@ -39,10 +41,11 @@ class SequenceExtractor(Extractor):
 
         for ml in matches_list:
             for m in ml.matches:
-                for j in range(len(m.group())):
-                    matched[m.start() + j] = True
-                # Keep Source Data for extra information
-                match_source[m] = ml.val
+                if self._is_valid_match(m):
+                    for j in range(len(m.group())):
+                        matched[m.start() + j] = True
+                    # Keep Source Data for extra information
+                    match_source[m] = ml.val
         last = -1
 
         for i in range(len(source)):
@@ -231,6 +234,10 @@ class BaseURLExtractor(SequenceExtractor):
         return Constants.SYS_URL
 
     @property
+    def ambiguous_time_term(self) -> ReVal:
+        return self._ambiguous_time_term
+
+    @property
     def config(self) -> URLConfiguration:
         return self._config
 
@@ -238,22 +245,60 @@ class BaseURLExtractor(SequenceExtractor):
     def config(self, config):
         self._config = config
 
+    @property
+    def tld_matcher(self) -> Match:
+        return self._tld_matcher
+
+    @tld_matcher.setter
+    def tld_matcher(self, tld_matcher):
+        self._tld_matcher = tld_matcher
+
     def _is_valid_match(self, source: Match) -> bool:
+
         is_valid_tld = False
-        is_ip_URL = source.groups('IPurl')
 
-        if is_ip_URL is not True:
-            tld_string = source.groups('Tld')
+        match = source.group(0)
 
-        return True
+        validate_ip_URL = MatchesVal(matches=list(re.finditer(self.regexes[1].re, match)), val=self.regexes[1].val)
+
+        if validate_ip_URL.matches.__len__() == 0:
+            is_ip_URL = False
+        else:
+            is_ip_URL = True
+
+        if is_ip_URL is False:
+            tld_string = [BaseURL.TldList]
+
+            max = str(urlparse(match).hostname).split('.').__len__()
+            ext = str(urlparse(match).hostname).split('.')[max - 1]
+
+            if ext != 'None':
+                validate_tld_string = list(filter(lambda x: ext == x, tld_string[0]))
+            else:
+                try:
+                    extlast = self.get_ext(match).split('.')[1]
+                    validate_tld_string = list(filter(lambda x: extlast == x, tld_string[0]))
+                except Exception:
+                    max2 = match.split('.').__len__()
+                    extexc = match.split('.')[max2 - 2]
+                    validate_tld_string = list(filter(lambda x: extexc == x, tld_string[0]))
+
+            if validate_tld_string.__len__() > 0:
+                is_valid_tld = True
+
+        validate_ambiguous_time_term = MatchesVal(matches=list(re.finditer(self.ambiguous_time_term.re, match)),
+                                                  val=self.ambiguous_time_term.val)
+
+        validate_URL = MatchesVal(matches=list(re.finditer(self.regexes[0].re, match)), val=self.regexes[0].val)
+
+        if validate_ambiguous_time_term[0].__len__() != 0 and validate_URL.matches.__len__() > 0:
+            return False
+
+        return is_valid_tld or is_ip_URL
 
     @property
     def regexes(self) -> List[ReVal]:
         return self._regexes
-
-    @property
-    def ambiguous_time_term(self) -> Pattern:
-        return self._ambiguous_time_term
 
     def __init__(self, config):
         self.config = config
@@ -264,4 +309,24 @@ class BaseURLExtractor(SequenceExtractor):
             ReVal(RegExpUtility.get_safe_reg_exp(BaseURL.UrlRegex2), Constants.URL_REGEX)
         ]
 
-        self._ambiguous_time_term = RegExpUtility.get_safe_reg_exp(BaseURL.AmbiguousTimeTerm)
+        self._ambiguous_time_term = ReVal(RegExpUtility.get_safe_reg_exp("^(\\D1?[0-9]|2?[0-9]).[ap]m$"), Constants.URL_REGEX)
+
+    @staticmethod
+    def get_ext(url):
+        """Return the filename extension from url, or ''."""
+        parsed = urlparse(url)
+        root, ext = splitext(parsed.path)
+        return ext  # or ext[1:] if you don't want the leading '.'
+
+
+'''
+        probando2 = prueba2
+        probando = prueba
+
+        matches_list = list(
+            map(lambda x: MatchesVal(matches=list(re.finditer(x.re, test)), val=x.val), self.regexes))
+        matches_list = list(filter(lambda x: len(x.matches) > 0, matches_list))
+
+
+        ver = matches_list
+'''

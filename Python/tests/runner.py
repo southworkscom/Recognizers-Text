@@ -24,12 +24,12 @@ def split_all(path):
 
 def get_suite_config(json_path):
     parts = split_all(json_path)
-    filename = os.path.splitext(parts[5])[0]
+    filename = os.path.splitext(parts[4])[0]
     model, entity, options = ENTITY_PATTERN.search(filename).groups()
     if model == 'Merged' and entity == 'Parser':
         entity = f'{model}{entity}'
-    return {'recognizer': parts[3], 'model': model,
-            'entity': entity, 'options': options, 'language': parts[4]}
+    return {'recognizer': parts[2], 'model': model,
+            'entity': entity, 'options': options, 'language': parts[3]}
 
 
 def get_suite(json_path):
@@ -39,7 +39,7 @@ def get_suite(json_path):
 
 
 def get_all_specs():
-    files = glob.glob('../../Specs/**/*.json', recursive=True)
+    files = glob.glob('../Specs/**/*.json', recursive=True)
     result = list(map(get_suite, files))
     return result
 
