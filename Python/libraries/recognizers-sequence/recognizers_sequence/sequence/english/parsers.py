@@ -136,5 +136,8 @@ class GUIDParser(SequenceParser):
         element_match = regex.finditer(guid_element_regex, guid_text)
         start_index = len(element_match)
         element_guid = element_match[0]
-        score = self.no_boundary_penalty if start_index == 0 else 0
-        score = self.formatRegex
+        score -= self.no_boundary_penalty if start_index == 0 else 0
+        score -= 0 if self.formatRegex.search(element_guid) else self.no_format_penalty
+        score -= 0 if self.pureDigitRegex.search(guid_text) else self.pure_digit_penalty
+
+        return max(min(score, self.score_upper_limit), self.score_lower_limit)/(self.score_upper_limit - self.score_lower_limit)
