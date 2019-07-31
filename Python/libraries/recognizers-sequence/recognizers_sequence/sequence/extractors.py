@@ -288,11 +288,10 @@ class BaseURLExtractor(SequenceExtractor):
 
         validate_ambiguous_time_term = MatchesVal(matches=list(re.finditer(self.ambiguous_time_term.re, match)),
                                                   val=self.ambiguous_time_term.val)
-
-        validate_URL = MatchesVal(matches=list(re.finditer(self.regexes[0].re, match)), val=self.regexes[0].val)
-
-        if validate_ambiguous_time_term[0].__len__() != 0 and validate_URL.matches.__len__() > 0:
-            return False
+        #si comienza con numero
+        if validate_ambiguous_time_term[0].__len__() != 0:
+            if source.string[0].isdigit():
+                return False
 
         return is_valid_tld or is_ip_URL
 
@@ -309,7 +308,7 @@ class BaseURLExtractor(SequenceExtractor):
             ReVal(RegExpUtility.get_safe_reg_exp(BaseURL.UrlRegex2), Constants.URL_REGEX)
         ]
 
-        self._ambiguous_time_term = ReVal(RegExpUtility.get_safe_reg_exp("^(\\D1?[0-9]|2?[0-9]).[ap]m$"), Constants.URL_REGEX)
+        self._ambiguous_time_term = ReVal(RegExpUtility.get_safe_reg_exp(r"^(\D1?[0-9]|2?[0-9]).[ap]m$"), Constants.URL_REGEX)
 
     @staticmethod
     def get_ext(url):
