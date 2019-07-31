@@ -189,7 +189,6 @@
   },
   {
     "Input": "http://127.0.0.1:8080",
-    "NotSupportedByDesign": "",
     "Results": [
       {
         "Text": "http://127.0.0.1:8080",
@@ -202,7 +201,6 @@
   },
   {
     "Input": "http://localhost:8080",
-    "NotSupportedByDesign": "",
     "Results": [
       {
         "Text": "http://localhost:8080",
@@ -215,7 +213,6 @@
   },
   {
     "Input": "http://localhost:8080#123",
-    "NotSupportedByDesign": "",
     "Results": [
       {
         "Text": "http://localhost:8080#123",
@@ -228,7 +225,6 @@
   },
   {
     "Input": "http://localhost:8080/#/123",
-    "NotSupportedByDesign": "",
     "Results": [
       {
         "Text": "http://localhost:8080/#/123",
@@ -241,7 +237,6 @@
   },
   {
     "Input": "http://127.0.0.1:8080/#/123",
-    "NotSupportedByDesign": "",
     "Results": [
       {
         "Text": "http://127.0.0.1:8080/#/123",
@@ -352,7 +347,6 @@
   },
   {
     "Input": "Please visit https://luis.ai?action=add for more information",
-    "NotSupportedByDesign": "",
     "Results": [
       {
         "Text": "https://luis.ai?action=add",
@@ -376,7 +370,6 @@
   },
   {
     "Input": "7.am is more likely a datetime string rather than a valid domain name.",
-    "NotSupportedByDesign": "",
     "Results": []
   },
   {
@@ -395,7 +388,6 @@
   },
   {
     "Input": "Please visit 27.pm and s7.am for more information.",
-    "NotSupportedByDesign": "",
     "Results": [
       {
         "Text": "27.pm",
@@ -439,7 +431,6 @@
   },
   {
     "Input": "http://dafdafdasf-dajfdlkajfkla-fdafd-dafdafafs-dafdafdaf.",
-    "NotSupportedByDesign": "",
     "Results": []
   },
   {
@@ -477,7 +468,6 @@
   {
     "Input": "http://a.b-.co",
     "NotSupportedBy": "dotnet,python,java",
-    "NotSupportedByDesign": "",
     "Results": [
       {
         "Text": "http://a.b-.co",
