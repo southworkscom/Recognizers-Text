@@ -1,7 +1,6 @@
 from enum import IntFlag
-from recognizers_sequence.sequence.chinese.extractors import ChinesePhoneNumberExtractorConfiguration, \
-    BasePhoneNumberExtractor
-from recognizers_text import Culture, Recognizer
+from .chinese.extractors import *
+from recognizers_text import *
 from .english.extractors import *
 from .english.parsers import *
 from .models import *
@@ -67,6 +66,8 @@ class SequenceRecognizer(Recognizer[SequenceOptions]):
         return self.get_model('HashtagModel', culture, fallback_to_default_culture)
 
     def get_url_model(self, culture: str = None, fallback_to_default_culture: bool = True) -> Model:
+        if culture and (culture.lower().startswith("zh-") or culture.lower().startswith("ja-")):
+            return self.get_model('URLModel', Culture.Chinese, fallback_to_default_culture)
         return self.get_model('URLModel', culture, fallback_to_default_culture)
 
     def get_guid_model(self, culture: str = None, fallback_to_default_culture: bool = True) -> Model:

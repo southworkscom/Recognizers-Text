@@ -59,4 +59,5 @@ class ChineseURLExtractorConfiguration(URLConfiguration):
     def __init__(self, options):
         self.__url_regex = RegExpUtility.get_safe_reg_exp(ChineseURL.UrlRegex)
         self.__ip_url_regex = RegExpUtility.get_safe_reg_exp(ChineseURL.IpUrlRegex)
+
         super().__init__(options)
