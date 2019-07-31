@@ -32,7 +32,6 @@ class SequenceExtractor(Extractor):
         matched: List[bool] = [False] * len(source)
 
         match_source: Dict[Match, str] = dict()
-        print(self.regexes)
         matches_list = list(
             map(lambda x: MatchesVal(matches=list(re.finditer(x.re, source)), val=x.val), self.regexes))
         matches_list = list(filter(lambda x: len(x.matches) > 0, matches_list))
@@ -194,7 +193,7 @@ class BaseGUIDExtractor(SequenceExtractor):
         return self._regexes
 
     def __init__(self):
-        self._regexes = [RegExpUtility.get_safe_reg_exp(BaseGUID.GUIDRegex), Constants.GUID_REGEX]
+        self._regexes = [ReVal(RegExpUtility.get_safe_reg_exp(BaseGUID.GUIDRegex), Constants.GUID_REGEX)]
 
 
 class BaseIpExtractor(SequenceExtractor):
@@ -206,9 +205,49 @@ class BaseIpExtractor(SequenceExtractor):
     def regexes(self) -> List[ReVal]:
         return self._regexes
 
-    @property
-    def _extract_type(self) -> str:
-        pass
+    def extract(self, source: str) -> List[ExtractResult]:
+        result: List[ExtractResult] = list()
+        if not self._pre_check_str(source):
+            return result
+
+        matched: List[bool] = [False] * len(source)
+
+        match_source: Dict[Match, str] = dict()
+        matches_list = list(
+            map(lambda x: MatchesVal(matches=list(re.finditer(x.re, source)), val=x.val), self.regexes))
+        matches_list = list(filter(lambda x: len(x.matches) > 0, matches_list))
+
+        for ml in matches_list:
+            for m in ml.matches:
+                for j in range(len(m.group())):
+                    matched[m.start() + j] = True
+                # Keep Source Data for extra information
+                match_source[m] = ml.val
+        last = -1
+
+        for i in range(len(source)):
+            if not matched[i]:
+                last = i
+            else:
+                if i + 1 == len(source) or not matched[i + 1]:
+                    start = last + 1
+                    length = i - last
+                    substring = source[start:start + length].strip()
+
+                    src_match = next(
+                        (x for x in iter(match_source) if (x.start() ==
+                                                           start and (x.end() - x.start()) == length)),
+                        None)
+
+                    if src_match is not None:
+                        value = ExtractResult()
+                        value.start = start
+                        value.length = length
+                        value.text = substring
+                        value.type = self._extract_type
+                        value.data = match_source.get(src_match, None)
+                        result.append(value)
+        return result
 
     def __init__(self):
         self._regexes = [
@@ -244,15 +283,7 @@ class BaseURLExtractor(SequenceExtractor):
         return self._regexes
 
     @property
-<<<<<<< HEAD
-    def _extract_type(self) -> str:
-        pass
-
-    @property
-    def ambiguous_time_term(self) -> ReVal:
-=======
     def ambiguous_time_term(self) -> Pattern:
->>>>>>> b47549102fcbdf9175e19c7ed91876f29102be26
         return self._ambiguous_time_term
 
     @ambiguous_time_term.setter

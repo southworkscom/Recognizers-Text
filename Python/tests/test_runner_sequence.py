@@ -8,7 +8,8 @@ MODEL_FUNCTION = {
     'URL': recognize_url,
     'GUID': recognize_guid,
     'Mention': recognize_mention,
-    'Hashtag': recognize_hashtag
+    'Hashtag': recognize_hashtag,
+    'IpAddress': recognize_ip_address
 }
 
 

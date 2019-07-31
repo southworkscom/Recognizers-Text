@@ -477,7 +477,6 @@
   {
     "Input": "http://a.b-.co",
     "NotSupportedBy": "dotnet,python,java",
-    "NotSupportedByDesign": "python",
     "Results": [
       {
         "Text": "http://a.b-.co",
