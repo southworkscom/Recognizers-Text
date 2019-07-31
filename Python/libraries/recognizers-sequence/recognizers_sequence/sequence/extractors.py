@@ -245,16 +245,8 @@ class BaseURLExtractor(SequenceExtractor):
     def config(self, config):
         self._config = config
 
-    @property
-    def tld_matcher(self) -> Match:
-        return self._tld_matcher
-
-    @tld_matcher.setter
-    def tld_matcher(self, tld_matcher):
-        self._tld_matcher = tld_matcher
-
     def _is_valid_match(self, match: Match) -> bool:
-        #For cases like "7.am" or "8.pm" which are more likely time terms.
+        # For cases like "7.am" or "8.pm" which are more likely time terms.
         return re.match(self.ambiguous_time_term.re, match.group(0)) is None
 
     @property
