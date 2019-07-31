@@ -64,11 +64,11 @@ class EnglishURLExtractorConfiguration(URLConfiguration):
         super().__init__(options)
 
 
-class EnglishGUIDExtractor(BaseGUIDExtractor):
+class ChineseURLExtractorConfiguration(URLConfiguration):
     pass
 
 
-class ChineseURLExtractorConfiguration(URLConfiguration):
+class EnglishGUIDExtractor(BaseGUIDExtractor):
     pass
 
 

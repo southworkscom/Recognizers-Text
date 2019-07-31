@@ -52,6 +52,7 @@ class PhoneNumberModel(AbstractSequenceModel):
         return Constants.MODEL_PHONE_NUMBER
 
     def parse(self, query: str) -> List[ModelResult]:
+
         model_results: List[ModelResult] = list()
         parse_results = []
 

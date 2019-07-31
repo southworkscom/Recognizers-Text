@@ -6,40 +6,32 @@ namespace Microsoft.Recognizers.Text.NumberWithUnit.Tests
     [TestClass]
     public class TestNumberWithUnit_Turkish : TestBase
     {
-        public static TestResources TestResources { get; protected set; }
-
-        [ClassInitialize]
-        public static void ClassInitialize(TestContext context)
+        [NetCoreTestDataSource]
+        [TestMethod]
+        public void AgeModel(TestModel testSpec)
         {
-            TestResources = new TestResources();
-            TestResources.InitFromTestContext(context);
+            TestNumberWithUnit(testSpec);
         }
 
-        [TestInitialize]
-        public void TestInitialize()
+        [NetCoreTestDataSource]
+        [TestMethod]
+        public void DimensionModel(TestModel testSpec)
         {
-            TestSpecInitialize(TestResources);
+            TestNumberWithUnit(testSpec);
         }
 
-        [DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "AgeModel-Turkish.csv", "AgeModel-Turkish#csv", DataAccessMethod.Sequential)]
+        [NetCoreTestDataSource]
         [TestMethod]
-        public void AgeModel()
+        public void TemperatureModel(TestModel testSpec)
         {
-            TestNumberWithUnit();
-        } 
-
-        [DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "DimensionModel-Turkish.csv", "DimensionModel-Turkish#csv", DataAccessMethod.Sequential)]
-        [TestMethod]
-        public void DimensionModel()
-        {
-            TestNumberWithUnit();
+            TestNumberWithUnit(testSpec);
         }
 
-        [DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "TemperatureModel-Turkish.csv", "TemperatureModel-Turkish#csv", DataAccessMethod.Sequential)]
+        [NetCoreTestDataSource]
         [TestMethod]
-        public void TemperatureModel()
+        public void CurrencyModel(TestModel testSpec)
         {
-            TestNumberWithUnit();
+            TestCurrency(testSpec);
         }
     }
 }

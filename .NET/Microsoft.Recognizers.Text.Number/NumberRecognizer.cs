@@ -48,9 +48,7 @@ namespace Microsoft.Recognizers.Text.Number
 
         public static List<ModelResult> RecognizePercentage(string query, string culture, NumberOptions options = NumberOptions.None, bool fallbackToDefaultCulture = true)
         {
-            var recognizer = new NumberRecognizer(options);
-            var model = recognizer.GetPercentageModel(culture, fallbackToDefaultCulture);
-            return model.Parse(query);
+            return RecognizeByModel(recognizer => recognizer.GetPercentageModel(culture, fallbackToDefaultCulture), query, options);
         }
 
         public static List<ModelResult> RecognizeNumberRange(string query, string culture, NumberOptions options = NumberOptions.None, bool fallbackToDefaultCulture = true)
@@ -309,13 +307,11 @@ namespace Microsoft.Recognizers.Text.Number
                     AgnosticNumberParserFactory.GetParser(AgnosticNumberParserType.Ordinal, new TurkishNumberParserConfiguration()),
                     Turkish.OrdinalExtractor.GetInstance()));
 
-            /*TO DO Uncomment once the PercentModel test passes */
-
-            /*RegisterModel<PercentModel>(
+            RegisterModel<PercentModel>(
                 Culture.Turkish,
                 (options) => new PercentModel(
                     AgnosticNumberParserFactory.GetParser(AgnosticNumberParserType.Percentage, new TurkishNumberParserConfiguration()),
-                    new Turkish.PercentageExtractor(options)));*/
+                    new Turkish.PercentageExtractor(options)));
         }
 
         private static List<ModelResult> RecognizeByModel(Func<NumberRecognizer, IModel> getModelFunc, string query, NumberOptions options)

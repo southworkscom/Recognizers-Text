@@ -89,9 +89,11 @@ namespace Microsoft.Recognizers.Definitions.Turkish
       public static readonly Func<string, string> DoubleWithoutIntegralRegex = (placeholder) => $@"(?<=\s|^)(?<!(\d+)),\d+(?!(,\d+))(?={placeholder})";
       public static readonly string DoubleWithRoundNumber = $@"(((?<!\d+\s*)-\s*)|((?<=\b)(?<!\d+,)))\d+,\d+\s+{RoundNumberIntegerRegex}(?=\b)";
       public static readonly string DoubleAllFloatRegex = $@"((?<=\b){AllFloatRegex}(?=\b))";
-      public const string ConnectorRegex = @"(?<spacer>ve)";
-      public static readonly string NumberWithPrefixPercentage = $@"(%|(eksi\s)?yüzde\s)({BaseNumbers.NumberReplaceToken}|{AllIntRegex})";
-      public static readonly string NumberWithSuffixPercentage = $@"(((({TensNumberIntegerRegex}\s)?(birin|ikinin|üçün|dördün|beşin|altının|yedinin|sekizin|dokuzun)|onun|yirminin|otuzun|kırkın|ellinin|altmışın|yetmişin|seksenin|doksanın)\s(yüzdesi))|(\d*(1'in|2'nin|3'ün|4'ün|5'in|6'nın|7'nin|8'in|9'un|10'un|20'nin|30'un|40'ın|50'nin|60'ın|70'in|80'in|90'ın)\s(yüzdesi)))";
+      public const string ConnectorRegex = @"(?<spacer>\s)";
+      public const string NumberWithSuffixPercentage = @"(((({TensNumberIntegerRegex}\s)?(birin|ikinin|üçün|dördün|beşin|altının|yedinin|sekizin|dokuzun)|onun|yirminin|otuzun|kırkın|ellinin|altmışın|yetmişin|seksenin|doksanın)\s(yüzdesi))|(\d*(1'in|2'nin|3'ün|4'ün|5'in|6'nın|7'nin|8'in|9'un|10'un|20'nin|30'un|40'ın|50'nin|60'ın|70'in|80'in|90'ın)\s(yüzdesi)))";
+      public const string FractionNumberWithSuffixPercentage = @"(\d+,\d+((1|5|8|70|80)'i|(2|7|20|50)'si|(3|4|100)'ü|6'sı|(9|10|30)'u|(40|60|90)'ı))";
+      public static readonly string NumberWithPrefixPercentage = $@"(%|eksi\syüzde\s|yüzde\s)({BaseNumbers.NumberReplaceToken}|{AllIntRegex})";
+      public static readonly string NumberWithPrepositionPercentage = $@"({BaseNumbers.NumberReplaceToken})\s*(üzerinden)\s*({BaseNumbers.NumberReplaceToken})";
       public const string TillRegex = @"(-|—|——|–|~)";
       public const string MoreRegex = @"(büyük(tür)?|(?<!<|=)>)";
       public const string LessRegex = @"(küçük(tür)?|(?<!>|=)<)";
@@ -126,7 +128,7 @@ namespace Microsoft.Recognizers.Definitions.Turkish
       public static readonly string[] WrittenDecimalSeparatorTexts = { @"nokta" };
       public static readonly string[] WrittenGroupSeparatorTexts = { @"nokta" };
       public static readonly string[] WrittenIntegerSeparatorTexts = { @"\s" };
-      public static readonly string[] WrittenFractionSeparatorTexts = { @"nokta" };
+      public static readonly string[] WrittenFractionSeparatorTexts = { @"\s" };
       public const string HalfADozenRegex = @"yarım\s+düzine";
       public static readonly string DigitalNumberRegex = $@"((?<=\b)(yüz|bin|milyon|milyar|trilyon|düzine)(?=\b))|((?<=(\d|\b)){BaseNumbers.MultiplierLookupRegex}(?=\b))";
       public static readonly Dictionary<string, long> CardinalNumberMap = new Dictionary<string, long>
