@@ -9,29 +9,29 @@ from recognizers_text.utilities import RegExpUtility
 
 
 class PhoneNumberParser(SequenceParser):
-    scoreUpperLimit = 100
-    scoreLowerLimit = 0
-    baseScore = 30
-    countryCodeAward = 40
-    areaCodeAward = 30
-    formattedAward = 20
-    lengthAward = 10
-    typicalFormatDeductionScore = 40
-    continueDigitDeductionScore = 10
-    tailSameDeductionScore = 10
-    continueFormatIndicatorDeductionScore = 20
-    wrongFormatIndicatorDeductionScore = 20
-    maxFormatIndicatorNum = 3
-    maxLengthAwardNum = 3
-    tailSameLimit = 2
-    phoneNumberLengthBase = 8
-    pureDigitLengthLimit = 11
-    completeBracketRegex = re.compile('\\(.*\\)')
-    singleBracketRegex = re.compile('\\(|\\)')
-    tailSameDigitRegex = re.compile('([\\d])\\1{2,10}$')
-    pureDigitRegex = re.compile('^\\d*$')
-    continueDigitRegex = re.compile('\\d{5}\\d*')
-    digitRegex = re.compile('\\d')
+    score_upper_limit = 100
+    score_lower_limit = 0
+    base_score = 30
+    country_code_award = 40
+    area_code_award = 30
+    formatted_award = 20
+    length_award = 10
+    typical_format_deduction_score = 40
+    continue_digit_deduction_score = 10
+    tail_same_deduction_score = 10
+    continue_format_indicator_deduction_score = 20
+    wrong_format_indicator_deduction_score = 20
+    max_format_indicator_num = 3
+    max_length_award_num = 3
+    tail_same_limit = 2
+    phone_number_length_base = 8
+    pure_digit_length_limit = 11
+    complete_bracket_regex = re.compile('\\(.*\\)')
+    single_bracket_regex = re.compile('\\(|\\)')
+    tail_same_digit_regex = re.compile('([\\d])\\1{2,10}$')
+    pure_digit_regex = re.compile('^\\d*$')
+    continue_digit_regex = re.compile('\\d{5}\\d*')
+    digit_regex = re.compile('\\d')
 
     def score_phone_number(self, phone_number_text) -> float:
         score = self.baseScore
@@ -128,8 +128,8 @@ class GUIDParser(SequenceParser):
     no_boundary_penalty = 10
     no_format_penalty = 10
     pure_digit_penalty = 15
-    pureDigitRegex = re.compile('^\\d*$')
-    formatRegex = re.compile('-')
+    pure_digit_regex = re.compile('^\\d*$')
+    format_regex = re.compile('-')
 
     def parse(self, source: ExtractResult) -> Optional[ParseResult]:
         res = ParseResult(source)
