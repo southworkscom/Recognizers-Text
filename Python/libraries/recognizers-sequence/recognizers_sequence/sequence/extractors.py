@@ -230,6 +230,16 @@ class BaseIpExtractor(SequenceExtractor):
                     length = i - last
                     substring = source[start:start + length].strip()
 
+                    if substring.startswith(Constants.IPV6_ELLIPSIS) and (
+                            start > 0 and (str.isdigit(source[start - 1]) or
+                                           str.isalpha(source[start - 1]))):
+                        continue
+
+                    if substring.endswith(Constants.IPV6_ELLIPSIS) and (
+                            i + 1 < len(source) and (str.isdigit(source[i + 1]) or
+                                                     str.isalpha(source[i + 1]))):
+                        continue
+
                     src_match = next(
                         (x for x in iter(match_source) if (x.start() ==
                                                            start and (x.end() - x.start()) == length)),
