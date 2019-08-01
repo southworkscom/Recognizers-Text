@@ -1,3 +1,5 @@
+from typing import Optional
+
 import regex as re
 from recognizers_sequence.sequence.parsers import SequenceParser, BaseIpParser
 from recognizers_sequence.resources import BasePhoneNumbers, BaseEmail, BaseGUID
@@ -126,18 +128,29 @@ class GUIDParser(SequenceParser):
     no_boundary_penalty = 10
     no_format_penalty = 10
     pure_digit_penalty = 15
-    pureDigitRegex = "^\\d*$"
-    formatRegex = "-"
+    pureDigitRegex = re.compile('^\\d*$')
+    formatRegex = re.compile('-')
+
+    def parse(self, source: ExtractResult) -> Optional[ParseResult]:
+        res = ParseResult(source)
+        res.resolution_str = source.text
+        res.start = source.start
+        res.length = source.length
+        res.text = source.text
+        res.type = source.type
+        res.value = self.score_guid(source.text)
+        return res
 
     def score_guid(self, guid_text):
         score = self.base_score
         guid_element_regex = BaseGUID.GUIDRegexElement
+        element_match = list(regex.finditer(guid_element_regex, guid_text))
+        element_match = list(filter(None, map(lambda m: m.group().lower(), element_match)))
 
-        element_match = regex.finditer(guid_element_regex, guid_text)
-        start_index = len(element_match)
-        element_guid = element_match[0]
-        score -= self.no_boundary_penalty if start_index == 0 else 0
-        score -= 0 if self.formatRegex.search(element_guid) else self.no_format_penalty
-        score -= 0 if self.pureDigitRegex.search(guid_text) else self.pure_digit_penalty
+        for match in element_match:
+            start_index = guid_text.index(match)
+            score -= self.no_boundary_penalty if start_index == 0 else 0
+            score -= 0 if self.formatRegex.search(match) else self.no_format_penalty
+            score -= self.pure_digit_penalty if self.pureDigitRegex.search(guid_text) else 0
 
         return max(min(score, self.score_upper_limit), self.score_lower_limit)/(self.score_upper_limit - self.score_lower_limit)
