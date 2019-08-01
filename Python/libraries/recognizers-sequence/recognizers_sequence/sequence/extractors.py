@@ -3,6 +3,7 @@ from typing import List, Dict, Set, Pattern, Match
 from collections import namedtuple
 import regex as re
 
+
 from .constants import *
 from recognizers_text.utilities import RegExpUtility
 from recognizers_text.extractor import Extractor, ExtractResult
