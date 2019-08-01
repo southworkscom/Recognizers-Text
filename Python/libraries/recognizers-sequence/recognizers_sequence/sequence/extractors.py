@@ -235,7 +235,7 @@ class BaseIpExtractor(SequenceExtractor):
                                            str.isalpha(source[start - 1]))):
                         continue
 
-                    if substring.endswith(Constants.IPV6_ELLIPSIS) and (
+                    elif substring.endswith(Constants.IPV6_ELLIPSIS) and (
                             i + 1 < len(source) and (str.isdigit(source[i + 1]) or
                                                      str.isalpha(source[i + 1]))):
                         continue
