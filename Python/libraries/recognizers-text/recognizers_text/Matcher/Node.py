@@ -1,8 +1,8 @@
-from typing import List, Dict, Generic, TypeVar, Callable, Optional
+from typing import TypeVar
 
 
 class Node(object):
-    def __init__(self, s: int, l: int):
+    def __init__(self):
         self.__values = set(),
         self.__children = dict(),
 

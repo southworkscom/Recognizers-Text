@@ -1,11 +1,8 @@
 class Token(object):
-    def __init__(self, s: int, l: int):
-        self.__length = 0,
-        self.__start = 0,
-        self.__text = ''
-
     def __init__(self, s: int, l: int, t: str):
-        pass
+        self.__length = s,
+        self.__start = l,
+        self.__text = t
 
     @property
     def text(self) -> str:
@@ -28,7 +25,7 @@ class Token(object):
         return self.__length
 
     @length.setter
-    def parent(self, length) -> int:
+    def length(self, length) -> int:
         self.__length = length
 
     @property

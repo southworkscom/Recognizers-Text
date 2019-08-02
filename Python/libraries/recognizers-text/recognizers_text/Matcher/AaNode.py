@@ -1,24 +1,15 @@
-from typing import List, Dict, Generic, TypeVar, Callable, Optional
+from typing import TypeVar
 from .Node import Node
 
 
 class AaNode(Node):
-    def __init__(self, s: int, l: int):
-        self.__word = 0,
-        self.__depth = 0,
-        self.__parent = '',
-        self.__fail = 0
-
     T = TypeVar('T')
 
-    def __init__(self):
-        pass
-
-    def __init__(self, c: [T], depth: int):
-        pass
-
-    def __init__(self, c: [T], depth: int, parent):
-        pass
+    def __init__(self, c: [T] = [], depth: int = 0, parent=[]):
+        self.__word = c,
+        self.__depth = depth,
+        self.__parent = parent,
+        self.__fail = 0
 
     def __getitem__(self, c: [T]):
         pass
