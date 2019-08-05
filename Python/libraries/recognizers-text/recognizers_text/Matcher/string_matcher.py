@@ -1,14 +1,14 @@
-from .ITokenizer import ITokenizer
+from .ITokenizer import Tokenizer
 from .match_strategy import MatchStrategy
 from .simple_tokenizer import SimpleTokenizer
-from .IMatcher import IMatcher
+from .IMatcher import Matcher
 from .TrieTree import TrieTree
 from .ac_automaton import AcAutomaton
 
 
 class StringMatcher:
 
-    def __init__(self, match_strategy: MatchStrategy = MatchStrategy.TrieTree, tokenizer: ITokenizer = None):
+    def __init__(self, match_strategy: MatchStrategy = MatchStrategy.TrieTree, tokenizer: Tokenizer = None):
         self.tokenizer = tokenizer or SimpleTokenizer()
         self.__matcher = self.switch_demo(match_strategy)
 
@@ -24,7 +24,7 @@ class StringMatcher:
             raise ValueError('Unsupported match strategy: {}'.format(match_strategy))
 
     @property
-    def tokenizer(self) -> ITokenizer:
+    def tokenizer(self) -> Tokenizer:
         return self.__tokenizer
 
     @tokenizer.setter
@@ -32,29 +32,18 @@ class StringMatcher:
         self.__tokenizer = tokenizer
 
     @property
-    def matcher(self) -> IMatcher:
+    def matcher(self) -> Matcher:
         return self.__matcher
 
     @matcher.setter
     def matcher(self, matcher) -> int:
         self.__matcher = matcher
 
-    def init(self, values: list()) -> None:
+    def init(self, values: list(), ids: [] = [], values_dictionary: dict() = dict(),
+             tokenized_values: list() = list()) -> None:
         pass
 
-    def init(self, values: list(), ids: []) -> None:
-        pass
-
-    def init(self, values_dictionary: dict()) -> None:
-        pass
-
-    def init(self, tokenized_values: list([]), ids: []) -> None:
-        pass
-
-    def find(self, tokenized_query: list()) -> list():
-        pass
-
-    def find(self, query_text: str) -> list():
+    def find(self, tokenized_query: list(), query_text: str = "") -> list():
         pass
 
     def get_tokenized_text(self, values: list()) -> list():

@@ -1,7 +1,7 @@
-from .ITokenizer import ITokenizer
+from .ITokenizer import Tokenizer
 
 
-class SimpleTokenizer(ITokenizer):
+class SimpleTokenizer(Tokenizer):
 
     def tokenize(self, _input: str) -> list():
         pass

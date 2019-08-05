@@ -3,8 +3,6 @@ from typing import TypeVar
 
 class MatchResult(object):
 
-    T = TypeVar('T')
-
     def __init__(self, start: int = 0, length: int = 0, ids: set[str] = []):
         self.__length = length,
         self.__start = start,
@@ -40,15 +38,15 @@ class MatchResult(object):
         return self.start + self.length
 
     @property
-    def text(self) -> [T]:
+    def text(self) -> []:
         return self.__text
 
     @text.setter
-    def text(self, text) -> [T]:
+    def text(self, text) -> []:
         self.__text = text
 
     @property
-    def canonical_values(self) -> [T]:
+    def canonical_values(self) -> []:
         return self.__canonical_values
 
     @canonical_values.setter
