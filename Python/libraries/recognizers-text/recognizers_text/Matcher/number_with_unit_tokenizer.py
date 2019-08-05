@@ -7,9 +7,9 @@ class NumberWithUnitTokenizer(SimpleTokenizer):
         self.__special_tokens_characters = None
 
     @property
-    def special_tokens_characters(self) -> set():
-        self.__special_tokens_characters = set()
-        self.__special_tokens_characters.add('$')
+    def special_tokens_characters(self) -> []:
+        self.__special_tokens_characters = []
+        self.__special_tokens_characters.append('$')
         return self.__special_tokens_characters
 
     def tokenize(self, _input: str) -> []:
