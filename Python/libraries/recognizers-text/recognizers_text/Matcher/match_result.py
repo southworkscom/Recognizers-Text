@@ -1,7 +1,4 @@
-from typing import TypeVar
-
-
-class MatchResult(object):
+class MatchResult:
 
     def __init__(self, start: int = 0, length: int = 0, ids: set[str] = []):
         self.__length = length,
