@@ -12,7 +12,7 @@ class NumberWithUnitTokenizer(SimpleTokenizer):
         self.__special_tokens_characters.add('$')
         return self.__special_tokens_characters
 
-    def tokenize(self, _input: str) -> list():
+    def tokenize(self, _input: str) -> []:
         pass
 
     def is_splittable_unit(self, cur_char: chr, pre_char: chr):

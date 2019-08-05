@@ -39,12 +39,12 @@ class StringMatcher:
     def matcher(self, matcher) -> int:
         self.__matcher = matcher
 
-    def init(self, values: list(), ids: [] = [], values_dictionary: dict() = dict(),
-             tokenized_values: list() = list()) -> None:
+    def init(self, values: [], ids: [] = [], values_dictionary: {} = {},
+             tokenized_values: [] = []) -> None:
         pass
 
-    def find(self, tokenized_query: list(), query_text: str = "") -> list():
+    def find(self, tokenized_query: [], query_text: str = "") -> []:
         pass
 
-    def get_tokenized_text(self, values: list()) -> list():
+    def get_tokenized_text(self, values: []) -> []:
         pass

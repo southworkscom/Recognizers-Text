@@ -3,7 +3,7 @@ from .ITokenizer import Tokenizer
 
 class SimpleTokenizer(Tokenizer):
 
-    def tokenize(self, _input: str) -> list():
+    def tokenize(self, _input: str) -> []:
         pass
 
     @staticmethod
