@@ -1,8 +1,8 @@
 from .AaNode import AaNode
-from .match_result import MatchResult
+from .abstract_matcher import AbstractMatcher
 
 
-class AcAutomaton:
+class AcAutomaton(AbstractMatcher):
 
     def __init__(self):
         self.__root = AaNode()
