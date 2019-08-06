@@ -5,7 +5,7 @@ from .Token import Token
 class NumberWithUnitTokenizer(SimpleTokenizer):
 
     def __init__(self):
-        self.__special_tokens_characters = set('$')
+        self.__special_tokens_characters = ['$']
 
     @property
     def special_tokens_characters(self) -> []:

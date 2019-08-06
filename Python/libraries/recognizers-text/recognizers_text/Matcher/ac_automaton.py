@@ -56,10 +56,7 @@ class AcAutomaton(AbstractMatcher):
 
             node.fail = fail[node.word] if fail[node.word] is not None else self.root
 
-            if node.fail == node:
-                node.fail = self.root
-            else:
-                node.fail = node.fail
+            node.fail = self.root if node.fail == node else node.fail
 
         self.convert_dict_to_list(self.root)
 
