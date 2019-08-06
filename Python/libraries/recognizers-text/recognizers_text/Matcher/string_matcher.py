@@ -8,6 +8,7 @@ from recognizers_text.Matcher import Token
 from multipledispatch import dispatch
 from recognizers_text.Matcher import MatchResult
 
+
 class StringMatcher:
 
     def __init__(self, match_strategy: MatchStrategy = MatchStrategy.TrieTree, tokenizer: Tokenizer = None):
@@ -60,7 +61,7 @@ class StringMatcher:
             end_token = query_tokens[r.start + r.length - 1]
             start = query_tokens.start
             length = end_token.end - start_token.start
-            r_text = query_text[ start : start + length]
+            r_text = query_text[start: start + length]
 
             match_result: MatchResult
             yield match_result
