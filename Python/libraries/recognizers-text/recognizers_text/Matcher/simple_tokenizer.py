@@ -18,17 +18,20 @@ class SimpleTokenizer(Tokenizer):
             c = chars[i]
             if str.isspace(c):
                 if in_token:
-                    tokens.append(Token(token_start, i - token_start, input[token_start: i - token_start]))
+                    tokens.append(Token(token_start, i - token_start,
+                                        input[token_start: token_start + (i - token_start)]))
                     in_token = False
             elif not (str.isdigit(c) or str.isalpha(c)) or self.is_cjk(c):
 
                 # Non-splittable currency units (as "$") are treated as regular letters. For instance, 'us$' should be
                 # a single token
                 if in_token:
-                    tokens.append(Token(token_start, i - token_start, input[token_start: i - token_start]))
+
+                    tokens.append(Token(token_start, i - token_start,
+                                        input[token_start: token_start + (i - token_start)]))
                     in_token = False
 
-                tokens.append(Token(i, 1, input[i:1]))
+                tokens.append(Token(i, 1, input[i: token_start + (i - token_start) + 1]))
 
             else:
 
@@ -37,7 +40,8 @@ class SimpleTokenizer(Tokenizer):
                     in_token = True
 
         if in_token:
-            tokens.append(Token(token_start, len(chars) - token_start, input[token_start: len(chars) - token_start]))
+            tokens.append(Token(token_start, len(chars) - token_start,
+                                input[token_start: token_start + (len(chars) - token_start)]))
 
         return tokens
 
