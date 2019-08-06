@@ -4,7 +4,9 @@ from .simple_tokenizer import SimpleTokenizer
 from .IMatcher import Matcher
 from .TrieTree import TrieTree
 from .ac_automaton import AcAutomaton
-
+from recognizers_text.Matcher import Token
+from multipledispatch import dispatch
+from recognizers_text.Matcher import MatchResult
 
 class StringMatcher:
 
@@ -43,8 +45,31 @@ class StringMatcher:
              tokenized_values: [] = []) -> None:
         pass
 
-    def find(self, tokenized_query: [], query_text: str = "") -> []:
-        pass
+    @dispatch(object, object)
+    def find(self, tokenized_query: []) -> []:
+        return self.find(tokenized_query)
+
+    @dispatch(object, str)
+    def find(self, query_text: str = "") -> []:
+        query_tokens = self.__tokenizer.tokenize(query_text)
+        t: Token
+        tokenized_query_text = query_tokens.select(t)
+
+        for r in self.find(tokenized_query_text):
+            start_token = query_tokens[r.start]
+            end_token = query_tokens[r.start + r.length - 1]
+            start = query_tokens.start
+            length = end_token.end - start_token.start
+            r_text = query_text[ start : start + length]
+
+            match_result: MatchResult
+            yield match_result
+            match_result.start = start
+            match_result.length = length
+            match_result.text = r_text,
+            match_result.canonical_values = r.canonical_values,
+
+            return match_result
 
     def get_tokenized_text(self, values: []) -> []:
         pass
