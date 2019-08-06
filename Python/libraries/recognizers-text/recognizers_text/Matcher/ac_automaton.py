@@ -1,3 +1,7 @@
+from typing import List
+
+from recognizers_text import ModelResult
+
 from .AaNode import AaNode
 from .abstract_matcher import AbstractMatcher
 import queue
@@ -5,6 +9,13 @@ from .match_result import MatchResult
 
 
 class AcAutomaton(AbstractMatcher):
+
+    @property
+    def model_type_name(self) -> str:
+        pass
+
+    def parse(self, source: str) -> List[ModelResult]:
+        pass
 
     def __init__(self):
         self.__root = AaNode()

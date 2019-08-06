@@ -23,8 +23,7 @@ class NumberWithUnitTokenizer(SimpleTokenizer, Token):
         token_start = 0
         chars = list(_input)
 
-        i = 0
-        while i < len(chars):
+        for i in range(0, len(chars)):
             c = chars[i]
             if str.isspace(c):
                 if in_token:
@@ -52,8 +51,6 @@ class NumberWithUnitTokenizer(SimpleTokenizer, Token):
                 if not in_token:
                     token_start = i
                     in_token = True
-
-            i += 1
 
         if in_token:
             tokens.append(Token(token_start, len(chars) - token_start, _input[token_start: len(chars) - token_start]))
