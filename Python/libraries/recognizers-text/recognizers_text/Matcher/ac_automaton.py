@@ -4,18 +4,11 @@ from recognizers_text import ModelResult
 
 from .AaNode import AaNode
 from .abstract_matcher import AbstractMatcher
-import queue
+from queue import Queue
 from .match_result import MatchResult
 
 
 class AcAutomaton(AbstractMatcher):
-
-    @property
-    def model_type_name(self) -> str:
-        pass
-
-    def parse(self, source: str) -> List[ModelResult]:
-        pass
 
     def __init__(self):
         self.__root = AaNode()
@@ -32,7 +25,8 @@ class AcAutomaton(AbstractMatcher):
             child = node[item]
 
             if child is None:
-                child = node[item] = AaNode(item, i, node)
+                node[item] = AaNode(item, i, node)
+                child = node[item]
 
             node = child
             i += 1
@@ -41,7 +35,7 @@ class AcAutomaton(AbstractMatcher):
 
     def init(self, values: [], ids: []) -> None:
         self.batch_insert(values, ids)
-        _queue = queue.Queue()
+        _queue = Queue()
         _queue.put(self.root)
 
         while any(_queue):
@@ -60,10 +54,7 @@ class AcAutomaton(AbstractMatcher):
             while fail[node.word] is None & fail != self.root:
                 fail = fail.fail
 
-            if fail[node.word] is not None:
-                node.fail = fail[node.word]
-            else:
-                node.fail = self.root
+            node.fail = fail[node.word] if fail[node.word] is not None else self.root
 
             if node.fail == node:
                 node.fail = self.root
@@ -80,10 +71,7 @@ class AcAutomaton(AbstractMatcher):
             while node[c] is None & node != self.root:
                 node = node.fail
 
-            if node[c] is not None:
-                node = node[c]
-            else:
-                node = self.root
+            node = node[c] if node[c] is not None else self.root
 
             t = node
 
