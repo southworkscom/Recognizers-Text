@@ -42,18 +42,29 @@ class SimpleTokenizer(Tokenizer):
         return tokens
 
     def is_chinese(self, c: chr):
-        uc = c
+        uc = ord(c)
+        hexa_list = [0x4E00, 0x9FBF, 0x3400, 0x4DBF]
+        char_list = self.to_ord(hexa_list)
 
-        return (uc >= 0x4E00 & uc <= 0x9FBF) or (uc >= 0x3400 & uc <= 0x4DBF)
+        return (uc >= char_list[0] and uc <= char_list[1]) or (uc >= char_list[2] and uc <= char_list[3])
 
     def is_japanese(self, c: chr):
-        uc = c
-        return (uc >= 0x3040 & uc <= 0x309F) or (uc >= 0x30A0 & uc <= 0x30FF) or (uc >= 0xFF66 & uc <= 0xFF9D)
+        uc = ord(c)
+        hexa_list = [0x3040, 0x309F, 0x30A0, 0x30FF, 0xFF66, 0xFF9D]
+        char_list = self.to_ord(hexa_list)
+        return (uc >= char_list[0] and uc <= char_list[1]) or (uc >= char_list[2] and uc <= char_list[3]) or \
+               (uc >= char_list[4] and uc <= char_list[5])
 
     def is_korean(self, c: chr):
-        uc = c
-        return (uc >= 0xAC00 & uc <= 0xD7AF) or (uc >= 0x1100 & uc <= 0x11FF) or (uc >= 0x3130 & uc <= 0x318F) or \
-               (uc >= 0xFFB0 & uc <= 0xFFDC)
+        uc = ord(c)
+        hexa_list = [0xAC00, 0xD7AF, 0x1100, 0x11FF, 0x3130, 0x318F, 0xFFB0, 0xFFDC]
+        char_list = self.to_ord(hexa_list)
+        return (uc >= char_list[0] and uc <= char_list[1]) or (uc >= char_list[2] and uc <= char_list[3]) or \
+            (uc >= char_list[4] and uc <= char_list[5]) or (uc >= char_list[6] and uc <= char_list[7])
 
     def is_cjk(self, c: chr):
         return self.is_chinese(c) or self.is_japanese(c) or self.is_korean(c)
+
+    @staticmethod
+    def to_ord(hexa_list):
+        return list(map(lambda a: ord(chr(a)), hexa_list))
