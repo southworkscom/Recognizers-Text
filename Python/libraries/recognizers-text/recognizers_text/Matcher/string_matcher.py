@@ -6,8 +6,7 @@ from .TrieTree import TrieTree
 from .ac_automaton import AcAutomaton
 from recognizers_text.Matcher import Token
 from multipledispatch import dispatch
-from recognizers_text.Matcher import MatchResult
-
+from .match_result import MatchResult
 
 class StringMatcher:
 
@@ -48,13 +47,12 @@ class StringMatcher:
 
     @dispatch(object, object)
     def find(self, tokenized_query: []) -> []:
-        return self.find(tokenized_query)
+        return self.matcher.find(tokenized_query)
 
     @dispatch(object, str)
     def find(self, query_text: str = "") -> []:
         query_tokens = self.__tokenizer.tokenize(query_text)
-        t: Token
-        tokenized_query_text = query_tokens.select(t)
+        tokenized_query_text = map(lambda t: t.Text, query_tokens)
 
         for r in self.find(tokenized_query_text):
             start_token = query_tokens[r.start]
