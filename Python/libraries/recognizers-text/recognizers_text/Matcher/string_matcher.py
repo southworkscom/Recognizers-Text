@@ -13,7 +13,7 @@ class StringMatcher:
 
     def __init__(self, match_strategy: MatchStrategy = MatchStrategy.TrieTree, tokenizer: Tokenizer = None):
         self.tokenizer = tokenizer or SimpleTokenizer()
-        self.__matcher = self.switch_demo(match_strategy)
+        self.__matcher = self.switch_match(match_strategy)
 
     @staticmethod
     def switch_match(match_strategy: MatchStrategy):
@@ -46,14 +46,15 @@ class StringMatcher:
              tokenized_values: [] = []) -> None:
         pass
 
-    @dispatch(object, object)
+    @dispatch(object)
     def find(self, tokenized_query: []) -> []:
         return self.matcher.find(tokenized_query)
 
-    @dispatch(object, str)
+    @dispatch(str)
     def find(self, query_text: str = "") -> []:
+        print(query_text)
         query_tokens = self.__tokenizer.tokenize(query_text)
-        tokenized_query_text = map(lambda t: t.Text, query_tokens)
+        tokenized_query_text = list(map(lambda t: t.text, query_tokens))
 
         for r in self.find(tokenized_query_text):
             start_token = query_tokens[r.start]
@@ -68,7 +69,7 @@ class StringMatcher:
             match_result.text = r_text,
             match_result.canonical_values = r.canonical_values,
 
-            yield match_result
+            return match_result
 
     def get_tokenized_text(self, values: []) -> []:
         return list(map(lambda x: x.text, list(map(lambda t: self.tokenizer.tokenize(t), values))))
