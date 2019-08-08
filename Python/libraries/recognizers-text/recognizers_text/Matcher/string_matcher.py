@@ -42,8 +42,6 @@ class StringMatcher:
     def matcher(self, matcher) -> int:
         self.__matcher = matcher
 
-    ## values: [], ids: [] = [], values_dictionary: {} = {},tokenized_values: [] = []) -> None:
-
     @dispatch(object)
     def init(self, values: []) -> None:
         self.init(values, list(map(lambda v: str(v), values)))
