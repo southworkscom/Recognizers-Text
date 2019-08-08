@@ -8,7 +8,7 @@ class Node:
             yield item
 
     def __getitem__(self, item):
-        if self.children is not None and self.children.__contains__(item):
+        if self.children is not None and item in self.children:
             return self.children[item]
         else:
             return None
@@ -19,6 +19,7 @@ class Node:
 
         self.children[key] = value
 
+    @property
     def end(self) -> bool:
         return self.values is not None and any(self.values)
 
