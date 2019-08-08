@@ -4,9 +4,9 @@ from .simple_tokenizer import SimpleTokenizer
 from .IMatcher import Matcher
 from .TrieTree import TrieTree
 from .ac_automaton import AcAutomaton
-from recognizers_text.Matcher import Token
 from multipledispatch import dispatch
 from .match_result import MatchResult
+import numpy as np
 
 
 class StringMatcher:
@@ -42,16 +42,16 @@ class StringMatcher:
     def matcher(self, matcher) -> int:
         self.__matcher = matcher
 
-    @dispatch(object)
+    @dispatch(list)
     def init(self, values: []) -> None:
         self.init(values, list(map(lambda v: str(v), values)))
 
-    @dispatch(object, object)
+    @dispatch(list, list)
     def init(self, values: [], ids: [] = []) -> None:
         tokenized_values = self.get_tokenized_text(values)
         self.init(tokenized_values, ids)
 
-    @dispatch(object)
+    @dispatch(dict)
     def init(self, values_dictionary: {}) -> None:
         values = []
         ids = []
@@ -60,13 +60,14 @@ class StringMatcher:
             for value in item.value:
                 values.append(value)
                 ids.append(id)
+
         tokenized_values = self.get_tokenized_text(values)
         self.init(tokenized_values, ids)
 
-    @dispatch(object, object)
-    def init(self, tokenized_values: [] = [], ids: [] = []) -> None:
-        string_matcher = StringMatcher()
-        string_matcher.init(tokenized_values, ids)
+    @dispatch(object, list)
+    def init(self, tokenized_values, ids: [] = []) -> None:
+
+        self.matcher.init(tokenized_values, ids)
 
     @dispatch(object)
     def find(self, tokenized_query: []) -> []:
@@ -94,4 +95,8 @@ class StringMatcher:
             return match_result
 
     def get_tokenized_text(self, values: []) -> []:
-        return list(map(lambda x: x.text, list(map(lambda t: self.tokenizer.tokenize(t), values))))
+
+        source_list = list(map(lambda t: self.tokenizer.tokenize(t), values))
+        source_mapped_list = list(map(lambda x: x[0].text, source_list))
+        array_list = np.array(source_mapped_list)
+        return array_list
