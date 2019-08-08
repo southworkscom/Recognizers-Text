@@ -1,6 +1,6 @@
 class Node:
     def __init__(self):
-        self.__values = [],
+        self.__values = []
         self.__children = {}
 
     def __iter__(self):
@@ -8,7 +8,7 @@ class Node:
             yield item
 
     def __getitem__(self, item):
-        if self.children is not None & self.children.__contains__(item):
+        if self.children is not None and self.children.__contains__(item):
             return self.children[item]
         else:
             return None
@@ -20,7 +20,7 @@ class Node:
         self.children[key] = value
 
     def end(self) -> bool:
-        return self.values is not None & any(self.values)
+        return self.values is not None and any(self.values)
 
     @property
     def values(self) -> []:
