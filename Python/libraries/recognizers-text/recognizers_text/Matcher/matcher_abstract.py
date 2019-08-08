@@ -1,6 +1,7 @@
 from .matcher import Matcher
 from abc import abstractmethod
-from  import Node
+from import Node
+
 
 class AbstractMatcher(Matcher):
     @abstractmethod
