@@ -1,9 +1,9 @@
 class MatchResult:
 
     def __init__(self, start: int = 0, length: int = 0, ids: [] = []):
-        self.__length = length,
-        self.__start = start,
-        self.__canonical_values = ids,
+        self.__length = length
+        self.__start = start
+        self.__canonical_values = ids
         self.__text = ''
 
     @property
@@ -47,5 +47,5 @@ class MatchResult:
         return self.__canonical_values
 
     @canonical_values.setter
-    def canonical_values(self, canonical_values) -> []:
-        self.__canonical_values = canonical_values
+    def canonical_values(self, canonical_values: []) -> []:
+        self.__canonical_values: [] = canonical_values
