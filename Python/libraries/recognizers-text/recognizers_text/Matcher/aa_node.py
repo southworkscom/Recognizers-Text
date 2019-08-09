@@ -1,4 +1,4 @@
-from .Node import Node
+from .node import Node
 
 
 class AaNode(Node):
@@ -30,11 +30,11 @@ class AaNode(Node):
         self.__word = word
 
     @property
-    def depth(self) -> int:
+    def depth(self):
         return self.__depth
 
     @depth.setter
-    def depth(self, depth) -> int:
+    def depth(self, depth):
         self.__depth = depth
 
     @property
@@ -52,9 +52,6 @@ class AaNode(Node):
     @fail.setter
     def fail(self, fail):
         self.__fail = fail
-
-    def get_enumerator(self):
-        map(lambda child: AaNode(child), self.values).getEnumerator
 
     def to_string(self):
         return str(self.__word)

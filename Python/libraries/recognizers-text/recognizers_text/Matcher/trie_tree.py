@@ -2,7 +2,7 @@ from typing import List
 
 from recognizers_text import ModelResult
 
-from .Node import Node
+from .node import Node
 from .abstract_matcher import AbstractMatcher
 from .match_result import MatchResult
 
@@ -31,7 +31,7 @@ class TrieTree(AbstractMatcher):
 
     def init(self, values: [], ids: []) -> None:
         self.batch_insert(values, ids)
-        self.convert_dict_to_list(self.root)
+        list(self.root)
 
     def find(self, query_text: []) -> []:
         query_array = query_text

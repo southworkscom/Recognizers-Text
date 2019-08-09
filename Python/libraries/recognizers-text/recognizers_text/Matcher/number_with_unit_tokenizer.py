@@ -1,5 +1,5 @@
 from .simple_tokenizer import SimpleTokenizer
-from .Token import Token
+from .token import Token
 
 
 class NumberWithUnitTokenizer(SimpleTokenizer):

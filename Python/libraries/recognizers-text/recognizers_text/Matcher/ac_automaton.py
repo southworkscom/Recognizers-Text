@@ -1,8 +1,4 @@
-from typing import List
-
-from recognizers_text import ModelResult
-
-from .AaNode import AaNode
+from .aa_node import AaNode
 from .abstract_matcher import AbstractMatcher
 from queue import Queue
 from .match_result import MatchResult
@@ -35,15 +31,15 @@ class AcAutomaton(AbstractMatcher):
 
     def init(self, values: [], ids: []) -> None:
         self.batch_insert(values, ids)
-        _queue = Queue()
-        _queue.put(self.root)
+        queue = Queue()
+        queue.put(self.root)
 
-        while any(_queue):
-            node = _queue.get()
+        while any(queue):
+            node = queue.get()
 
             if node.children is not None:
                 for child in node:
-                    _queue.put(child)
+                    queue.put(child)
 
             if node == self.root:
                 self.root.fail = self.root
@@ -58,7 +54,7 @@ class AcAutomaton(AbstractMatcher):
 
             node.fail = self.root if node.fail == node else node.fail
 
-        self.convert_dict_to_list(self.root)
+        list(self.root)
 
     def find(self, query_text: []) -> []:
         node = self.root
