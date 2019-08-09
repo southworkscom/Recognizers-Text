@@ -80,17 +80,17 @@ class StringMatcher:
         tokenized_query_text = list(map(lambda t: t.text, query_tokens))
 
         for r in self.find(tokenized_query_text):
-            start_token = query_tokens[r.start[0]]
-            end_token = query_tokens[r.start[0] + r.length[0] - 1]
+            start_token = query_tokens[r.start]
+            end_token = query_tokens[r.start + r.length - 1]
             start = start_token.start
-            length = end_token.end[0] - start_token.start[0]
+            length = end_token.end - start_token.start
             r_text = query_text[start: start + length]
 
-            match_result: MatchResult
+            match_result: MatchResult = MatchResult()
             match_result.start = start
             match_result.length = length
-            match_result.text = r_text,
-            match_result.canonical_values = r.canonical_values,
+            match_result.text = r_text
+            match_result.canonical_values = r.canonical_values
 
             return match_result
 
