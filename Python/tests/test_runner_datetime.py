@@ -1,5 +1,4 @@
 import importlib
-import re
 import datetime
 import pytest
 from runner import get_specs, CULTURES

@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from typing import List, Optional, Pattern, Dict, Match
 from datetime import datetime
 import regex
@@ -8,6 +8,7 @@ from recognizers_text.extractor import ExtractResult
 from .constants import Constants, TimeTypeConstants
 from .extractors import DateTimeExtractor
 from .parsers import DateTimeParser, DateTimeParseResult
+from .utilities import DateTimeOptionsConfiguration
 
 
 class TimeExtractorConfiguration(ABC):
@@ -36,7 +37,8 @@ class BaseTimeExtractor(DateTimeExtractor):
         self.config = config
 
     def extract(self, source: str, reference: datetime = None) -> List[ExtractResult]:
-        from .utilities import merge_all_tokens
+        from recognizers_date_time import DateTimeOptions
+        from .utilities import merge_all_tokens, TimeZoneUtility
 
         if reference is None:
             reference = datetime.now()
@@ -46,6 +48,30 @@ class BaseTimeExtractor(DateTimeExtractor):
         tokens.extend(self.specials_regex_match(source))
 
         result = merge_all_tokens(tokens, source, self.extractor_type_name)
+
+        if (self.config.options & DateTimeOptions.ENABLE_PREVIEW) != 0:
+            result = TimeZoneUtility().merge_time_zones(
+                result,
+                self.config.time_zone_extractor.extract(source, reference),
+                source
+            )
+
+        return result
+
+    def before_after_regex_match(self, source: str) -> []:
+        from recognizers_date_time import DateTimeOptions
+        from .utilities import Token
+        result: List[Token] = list()
+
+        if (self.config.options & DateTimeOptions.CALENDAR) != 0:
+
+            before_after_regex = self.config.time_before_after_regex
+            if before_after_regex.search(source):
+                matches: Match = before_after_regex.match(source)
+                for match in matches:
+                    result.append(Token(source.index(match.group()), source.index(match.group()) +
+                                        (match.end() - match.start())))
+
         return result
 
     def basic_regex_match(self, source: str) -> []:

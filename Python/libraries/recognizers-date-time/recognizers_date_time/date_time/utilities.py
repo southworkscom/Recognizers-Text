@@ -4,7 +4,6 @@ from typing import List, Dict, Pattern, Union
 from datetime import datetime, timedelta
 import calendar
 
-from build.lib.recognizers_date_time import DateTimeOptions
 from datedelta import datedelta
 import regex
 
@@ -14,6 +13,73 @@ from recognizers_date_time.date_time.constants import TimeTypeConstants, Constan
 from recognizers_date_time.date_time.extractors import DateTimeExtractor
 from recognizers_date_time.date_time.parsers import DateTimeParser, DateTimeParseResult
 from recognizers_text.Matcher.string_matcher import StringMatcher, MatchResult
+
+
+class TimeZoneUtility:
+
+    def merge_time_zones(self, original_ers: [ExtractResult], time_zone_ers: [ExtractResult], text: str):
+
+        for er in original_ers:
+            for time_zone_er in time_zone_ers:
+
+                begin = er.start + er.length
+                end = time_zone_er.start
+
+                if begin < end:
+                    gap_text = text[begin: begin + (end - begin)]
+
+                    if gap_text.isspace() or gap_text is None:
+                        new_length = time_zone_er.start + time_zone_er.length - er.start
+
+                        er.text = text[er.start:new_length]
+                        er.length = new_length
+                        er.data = {Constants.SYS_DATETIME_TIMEZONE, time_zone_er}
+
+                if er.overlap(time_zone_er):
+                    er.data = {Constants.SYS_DATETIME_TIMEZONE, time_zone_er}
+
+        return original_ers
+
+    def should_resolve_time_zone(self, er: ExtractResult, options):
+        enable_preview = (options & DateTimeOptions.ENABLE_PREVIEW) != 0
+
+        if not enable_preview:
+            return False
+
+        has_time_zone_data = False
+
+        if isinstance(er.data, {}):
+            meta_data = er.data
+            if meta_data is not None and Constants.SYS_DATETIME_TIMEZONE in meta_data.keys():
+                has_time_zone_data = True
+
+        return has_time_zone_data
+
+    def build_matcher_from_lists(self, collections: []):
+
+        matcher: StringMatcher = StringMatcher(MatchStrategy.TrieTree, NumberWithUnitTokenizer())
+
+        matcher_list = []
+
+        for collection in collections:
+            list(map(lambda x: matcher_list.append(x.strip().lower()), collection))
+
+        matcher_list = self.distinct(matcher_list)
+
+        matcher.init(matcher_list)
+
+        return matcher
+
+    @staticmethod
+    def distinct(list1):
+
+        unique_list = []
+        for x in list1:
+
+            if x not in unique_list:
+                unique_list.append(x)
+
+        return unique_list
 
 
 class RegexExtension:
@@ -93,7 +159,7 @@ class ConditionalMatch:
 class DateTimeOptionsConfiguration(ABC):
     @property
     @abstractmethod
-    def options(self) -> DateTimeOptions:
+    def options(self):
         raise NotImplementedError
 
     @property
@@ -113,14 +179,82 @@ class DateTimeOptions(IntFlag):
     ENABLE_PREVIEW = 8388608
 
 
+class BaseDateTimeOptionsConfiguration(DateTimeOptionsConfiguration):
+
+    def __init__(self, options=DateTimeOptions.NONE, dmy_date_format=False):
+
+        self._options = options
+        self._dmy_date_format = dmy_date_format
+
+    @property
+    def options(self):
+        return self._options
+
+    @options.setter
+    def options(self, value):
+        self._options = value
+
+    @property
+    def dmy_date_format(self) -> bool:
+        return self._dmy_date_format
+
+    @dmy_date_format.setter
+    def dmy_date_format(self, value):
+        self._dmy_date_format = value
+
+
+class DurationParsingUtil:
+
+    @staticmethod
+    def is_time_duration_unit(uni_str: str):
+
+        if uni_str == 'H':
+            result = True
+        elif uni_str == 'M':
+            result = True
+        elif uni_str == 'S':
+            result = True
+        else:
+            result = False
+
+        return result
+
+
 class Token:
-    def __init__(self, start: int, end: int):
-        self.start: int = start
-        self.end: int = end
+    def __init__(self, start: int, end: int, metadata: Metadata = None):
+        self._start: int = start
+        self._end: int = end
+        self._metadata = metadata
 
     @property
     def length(self) -> int:
-        return self.end - self.start
+        if self._start > self._end:
+            return 0
+        return self._end - self._start
+
+    @property
+    def start(self) -> int:
+        return self._start
+
+    @start.setter
+    def start(self, value) -> int:
+        self._start = value
+
+    @property
+    def end(self) -> int:
+        return self._end
+
+    @end.setter
+    def end(self, value) -> int:
+        self._end = value
+
+    @property
+    def metadata(self):
+        return self._metadata
+
+    @metadata.setter
+    def metadata(self, value):
+        self._metadata = value
 
 
 def merge_all_tokens(tokens: List[Token], source: str, extractor_name: str) -> List[ExtractResult]:
