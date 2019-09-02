@@ -14,18 +14,10 @@ MatchesVal = namedtuple('MatchesVal', ['matches', 'val'])
 
 
 class BaseNumberExtractor(Extractor):
-
-    def __init__(self, options: 0):
-        self.options = options
-
     @property
     @abstractmethod
     def regexes(self) -> List[ReVal]:
         raise NotImplementedError
-
-    @property
-    def ambiguity_filters_dict(self) -> Dict[Pattern, Pattern]:
-        return None
 
     @property
     @abstractmethod
@@ -33,16 +25,10 @@ class BaseNumberExtractor(Extractor):
         raise NotImplementedError
 
     @property
-    @abstractmethod
-    def options(self):
-        return self.options
-
-    @property
     def _negative_number_terms(self) -> Pattern:
-        return None
+        pass
 
     def extract(self, source: str) -> List[ExtractResult]:
-        from recognizers_number.number.number_recognizer import NumberOptions
         if source is None or len(source.strip()) is 0:
             return list()
         result: List[ExtractResult] = list()
@@ -73,20 +59,14 @@ class BaseNumberExtractor(Extractor):
                         x.start() == start and (
                             x.end() - x.start()) == length)), None)
 
-                    if src_match is not None:
-
-                        original_match = min(list(map(lambda y: [match_source[y], y],
-                                                      filter(lambda x: x.start() == start and
-                                                             len(x.group()) == length, list(match_source)))))
-
-                        # extract negative numbers
-                        if self._negative_number_terms is not None:
-                            match = regex.search(self._negative_number_terms,
-                                                 source[0:start])
-                            if match is not None:
-                                start = match.start()
-                                length = length + match.end() - match.start()
-                                substr = source[start:start + length].strip()
+                    # extract negative numbers
+                    if self._negative_number_terms is not None:
+                        match = regex.search(self._negative_number_terms,
+                                             source[0:start])
+                        if match is not None:
+                            start = match.start()
+                            length = length + match.end() - match.start()
+                            substr = source[start:start + length].strip()
 
                     if src_match is not None:
                         value = ExtractResult()

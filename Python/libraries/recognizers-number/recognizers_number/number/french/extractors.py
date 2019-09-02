@@ -1,7 +1,5 @@
-from typing import Pattern, List, NamedTuple, Dict
+from typing import Pattern, List, NamedTuple
 import regex
-
-from recognizers_text import ExtractResult
 
 from recognizers_text.utilities import RegExpUtility
 from recognizers_number.number.models import NumberMode, LongFormatMode
@@ -11,23 +9,6 @@ from recognizers_number.number.constants import Constants
 
 
 class FrenchNumberExtractor(BaseNumberExtractor):
-    @property
-    def ambiguity_filters_dict(self) -> Dict[Pattern, Pattern]:
-        return super().ambiguity_filters_dict()
-
-    @property
-    def options(self):
-        pass
-
-    def extract(self, source: str) -> List[ExtractResult]:
-        return super().extract(source)
-
-    def _filter_ambiguity(self, ers: List[ExtractResult], text: str) -> List[ExtractResult]:
-        return super()._filter_ambiguity(ers, text)
-
-    def _generate_format_regex(self, format_type, placeholder: str = None) -> Pattern:
-        return super()._generate_format_regex(format_type, placeholder)
-
     @property
     def regexes(self) -> List[ReVal]:
         return self.__regexes
@@ -64,27 +45,6 @@ class FrenchNumberExtractor(BaseNumberExtractor):
 
 class FrenchCardinalExtractor(BaseNumberExtractor):
     @property
-    def ambiguity_filters_dict(self) -> Dict[Pattern, Pattern]:
-        return super().ambiguity_filters_dict()
-
-    @property
-    def options(self):
-        pass
-
-    @property
-    def _negative_number_terms(self) -> Pattern:
-        return super()._negative_number_terms()
-
-    def extract(self, source: str) -> List[ExtractResult]:
-        return super().extract(source)
-
-    def _filter_ambiguity(self, ers: List[ExtractResult], text: str) -> List[ExtractResult]:
-        return super()._filter_ambiguity(ers, text)
-
-    def _generate_format_regex(self, format_type, placeholder: str = None) -> Pattern:
-        return super()._generate_format_regex(format_type, placeholder)
-
-    @property
     def regexes(self) -> List[ReVal]:
         return self.__regexes
 
@@ -105,27 +65,6 @@ class FrenchCardinalExtractor(BaseNumberExtractor):
 
 
 class FrenchIntegerExtractor(BaseNumberExtractor):
-    @property
-    def ambiguity_filters_dict(self) -> Dict[Pattern, Pattern]:
-        return super().ambiguity_filters_dict()
-
-    @property
-    def options(self):
-        pass
-
-    @property
-    def _negative_number_terms(self) -> Pattern:
-        return super()._negative_number_terms()
-
-    def extract(self, source: str) -> List[ExtractResult]:
-        return super().extract(source)
-
-    def _filter_ambiguity(self, ers: List[ExtractResult], text: str) -> List[ExtractResult]:
-        return super()._filter_ambiguity(ers, text)
-
-    def _generate_format_regex(self, format_type, placeholder: str = None) -> Pattern:
-        return super()._generate_format_regex(format_type, placeholder)
-
     @property
     def regexes(self) -> List[NamedTuple('re_val', [('re', Pattern), ('val', str)])]:
         return self.__regexes
@@ -177,27 +116,6 @@ class FrenchIntegerExtractor(BaseNumberExtractor):
 
 class FrenchDoubleExtractor(BaseNumberExtractor):
     @property
-    def ambiguity_filters_dict(self) -> Dict[Pattern, Pattern]:
-        return super().ambiguity_filters_dict()
-
-    @property
-    def options(self):
-        pass
-
-    @property
-    def _negative_number_terms(self) -> Pattern:
-        return super()._negative_number_terms()
-
-    def extract(self, source: str) -> List[ExtractResult]:
-        return super().extract(source)
-
-    def _filter_ambiguity(self, ers: List[ExtractResult], text: str) -> List[ExtractResult]:
-        return super()._filter_ambiguity(ers, text)
-
-    def _generate_format_regex(self, format_type, placeholder: str = None) -> Pattern:
-        return super()._generate_format_regex(format_type, placeholder)
-
-    @property
     def regexes(self) -> List[NamedTuple('re_val', [('re', Pattern), ('val', str)])]:
         return self.__regexes
 
@@ -248,27 +166,6 @@ class FrenchDoubleExtractor(BaseNumberExtractor):
 
 class FrenchFractionExtractor(BaseNumberExtractor):
     @property
-    def ambiguity_filters_dict(self) -> Dict[Pattern, Pattern]:
-        return super().ambiguity_filters_dict()
-
-    @property
-    def options(self):
-        pass
-
-    @property
-    def _negative_number_terms(self) -> Pattern:
-        return super()._negative_number_terms()
-
-    def extract(self, source: str) -> List[ExtractResult]:
-        return super().extract(source)
-
-    def _filter_ambiguity(self, ers: List[ExtractResult], text: str) -> List[ExtractResult]:
-        return super()._filter_ambiguity(ers, text)
-
-    def _generate_format_regex(self, format_type, placeholder: str = None) -> Pattern:
-        return super()._generate_format_regex(format_type, placeholder)
-
-    @property
     def regexes(self) -> List[NamedTuple('re_val', [('re', Pattern), ('val', str)])]:
         return self.__regexes
 
@@ -302,27 +199,6 @@ class FrenchFractionExtractor(BaseNumberExtractor):
 
 
 class FrenchOrdinalExtractor(BaseNumberExtractor):
-    @property
-    def ambiguity_filters_dict(self) -> Dict[Pattern, Pattern]:
-        return super().ambiguity_filters_dict()
-
-    @property
-    def options(self):
-        pass
-
-    @property
-    def _negative_number_terms(self) -> Pattern:
-        return super()._negative_number_terms()
-
-    def extract(self, source: str) -> List[ExtractResult]:
-        return super().extract(source)
-
-    def _filter_ambiguity(self, ers: List[ExtractResult], text: str) -> List[ExtractResult]:
-        return super()._filter_ambiguity(ers, text)
-
-    def _generate_format_regex(self, format_type, placeholder: str = None) -> Pattern:
-        return super()._generate_format_regex(format_type, placeholder)
-
     @property
     def regexes(self) -> List[NamedTuple('re_val', [('re', Pattern), ('val', str)])]:
         return self.__regexes
