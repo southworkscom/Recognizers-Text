@@ -4,7 +4,7 @@ Microsoft.Recognizers.Text Recognizers are supported in multiple platforms and s
 
 In order to avoid duplicating unit-tests, written in different languages for each platforms, Microsoft.Recognizers.Text opts to use a shared format to define the assertions used to verify the recognizer's behavior.
 
-These [Specs](../Specs) are defined as a list of test cases, each test case is represented by and input and a result. The result can either be a Parser's or Extractor's result to compare against.
+These [Specs]() are defined as a list of test cases, each test case is represented by and input and a result. The result can either be a Parser's or Extractor's result to compare against.
 
 ## Definining a Test Case
 
@@ -173,7 +173,7 @@ public void {Model}()
 }
 ````
 
-An example is the [`TestNumberWithUnit_Chinese`](../.NET/Microsoft.Recognizers.Text.DataDrivenTests/NumberWithUnit/TestNumberWithUnit_Chinese.cs) Class an its `AgeModel()` Test Method:
+An example is the [`TestNumberWithUnit_Chinese`](../../.NET/Microsoft.Recognizers.Text.DataDrivenTests/NumberWithUnit/TestNumberWithUnit_Chinese.cs) Class an its `AgeModel()` Test Method:
 
 ````C#
 [DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "AgeModel-Chinese.csv", "AgeModel-Chinese#csv", DataAccessMethod.Sequential)]
@@ -190,7 +190,7 @@ The JavaScript Test Runner will run the test cases and resolve the Extractor, Pa
 
 E.g:
 
- - [Specs/NumberWithUnit/English/TemperatureModel.json](../Specs/NumberWithUnit/English/TemperatureModel.json)
+ - [Specs/NumberWithUnit/English/TemperatureModel.json](NumberWithUnit/English/TemperatureModel.json)
 
     Maps to the [NumberWithUnitRecognizer](../JavaScript/src/numberWithUnit/numberWithUnitRecognizer.ts) using the [English TemperatureModel](../JavaScript/src/numberWithUnit/english/dimension.ts).
 
