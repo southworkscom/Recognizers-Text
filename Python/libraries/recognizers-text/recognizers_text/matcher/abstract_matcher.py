@@ -1,6 +1,6 @@
 from .matcher import Matcher
 from abc import abstractmethod
-from recognizers_text.Matcher.node import Node
+from .node import Node
 
 
 class AbstractMatcher(Matcher):
