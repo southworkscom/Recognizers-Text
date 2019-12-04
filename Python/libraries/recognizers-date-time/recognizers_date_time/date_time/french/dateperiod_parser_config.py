@@ -10,6 +10,10 @@ from ..base_dateperiod import DatePeriodParserConfiguration
 
 class FrenchDatePeriodParserConfiguration(DatePeriodParserConfiguration):
     @property
+    def future_suffix_regex(self) -> Pattern:
+        return self._future_suffix_regex
+
+    @property
     def less_than_regex(self) -> Pattern:
         return self._less_than_regex
 
@@ -198,6 +202,7 @@ class FrenchDatePeriodParserConfiguration(DatePeriodParserConfiguration):
         return self._relative_decade_regex
 
     def __init__(self, config: BaseDateParserConfiguration):
+        self._future_suffix_regex = RegExpUtility.get_safe_reg_exp(FrenchDateTime.FutureSuffixRegex)
         self._relative_regex = RegExpUtility.get_safe_reg_exp(
             FrenchDateTime.RelativeRegex)
         self._later_regex = FrenchDateTime.LaterRegex

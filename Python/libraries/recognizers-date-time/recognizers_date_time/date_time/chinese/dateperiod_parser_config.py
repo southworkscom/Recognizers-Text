@@ -14,6 +14,10 @@ from .date_parser import ChineseDateParser
 
 class ChineseDatePeriodParserConfiguration(DatePeriodParserConfiguration):
     @property
+    def future_suffix_regex(self) -> Pattern:
+        return self._future_suffix_regex
+
+    @property
     def less_than_regex(self) -> Pattern:
         return self._check_both_before_after
 
@@ -206,8 +210,6 @@ class ChineseDatePeriodParserConfiguration(DatePeriodParserConfiguration):
         return self._relative_decade_regex
 
     def __init__(self):
-        self._complex_dateperiod_regex = None
-        self._relative_decade_regex = None
         self._relative_regex = RegExpUtility.get_safe_reg_exp(
             ChineseDateTime.RelativeRegex)
         self._date_extractor = ChineseDateExtractor()
@@ -251,6 +253,9 @@ class ChineseDatePeriodParserConfiguration(DatePeriodParserConfiguration):
         self._decade_with_century_regex = None
         self._later_regex = None
         self._ago_regex = None
+        self._future_suffix_regex = None
+        self._complex_dateperiod_regex = None
+        self._relative_decade_regex = None
 
     def get_swift_day_or_month(self, source: str) -> int:
         source = source.strip().lower()
