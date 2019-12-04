@@ -130,10 +130,10 @@ class DurationParsingUtil:
     @staticmethod
     def get_next_business_day(start_date: datetime, is_future: bool = True):
         date_increment = 1 if is_future else -1
-        date = start_date + timedelta(days= date_increment)
+        date = start_date + timedelta(days=date_increment)
 
         while date.weekday() == DayOfWeek.SATURDAY or date.weekday() == DayOfWeek.SUNDAY:
-            date = date + timedelta(days = date_increment)
+            date = date + timedelta(days=date_increment)
 
         return date
 

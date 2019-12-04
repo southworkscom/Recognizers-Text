@@ -1888,7 +1888,7 @@ class BaseDatePeriodParser(DateTimeParser):
                         and DurationParsingUtil.is_date_duration(duration_result.timex) and not after_str:
                     mod_and_date_result = self._get_mod_and_date(begin_date, end_date, reference,
                                                                  duration_result.timex, True)
-                    
+
                     # In _get_mod_and_date, this "future" resolution will add one day to begin_date/end_date,
                     # but for the "within" case it should start from the current day
                     begin_date = mod_and_date_result.begin_date + timedelta(days=-1)
@@ -1902,13 +1902,13 @@ class BaseDatePeriodParser(DateTimeParser):
 
                         mod_and_date_result = self._get_mod_and_date(begin_date, end_date, reference,
                                                                      duration_result.timex, True)
-                        
+
                         # In _get_mod_and_date, this "future" resolution will add one day to begin_date/end_date
                         # but for the "within" case it should start from the current day
                         begin_date = mod_and_date_result.begin_date + timedelta(days=-1)
                         end_date = mod_and_date_result.end_date + timedelta(days=-1)
                         before_str = ''
-                
+
                 if RegExpUtility.is_exact_match(self.config.future_regex, before_str, True):
                     mod_and_date_result = self._get_mod_and_date(begin_date, end_date, reference, duration_result.timex,
                                                                  True)
@@ -1919,27 +1919,27 @@ class BaseDatePeriodParser(DateTimeParser):
                                                                  True)
                     begin_date = mod_and_date_result.begin_date
                     end_date = mod_and_date_result.end_date
-                
+
                 if self.config.future_suffix_regex.match(after_str):
                     mod_and_date_result = self._get_mod_and_date(begin_date, end_date, reference, duration_result.timex,
                                                                  True)
                     begin_date = mod_and_date_result.begin_date
                     end_date = mod_and_date_result.end_date
-                
+
                 # Handle the "in two weeks" case  which means the second week
                 if RegExpUtility.is_exact_match(self.config.in_connector_regex, before_str, True) \
-                    and DurationParsingUtil.is_multiple_duration(duration_result.timex):
+                        and DurationParsingUtil.is_multiple_duration(duration_result.timex):
                     mod_and_date_result = self._get_mod_and_date(begin_date, end_date, reference,
                                                                  duration_result.timex, True)
 
                     # Change the duration value and the begin_date
                     unit = duration_result.timex[len(duration_result.timex) - 1:]
-                    
+
                     duration_result.timex = "P1" + unit
                     begin_date = DurationParsingUtil.shift_date_time(self, duration_result.timex,
                                                                      mod_and_date_result.end_date, False)
                     end_date = mod_and_date_result.end_date
-                
+
                 if mod_and_date_result.mod:
                     duration_parse_result.value.mod = mod_and_date_result.mod
 
@@ -1982,7 +1982,7 @@ class BaseDatePeriodParser(DateTimeParser):
             result.success = True
 
         return result
-            
+
     def _get_mod_and_date(self, begin_date: datetime, end_date: datetime, reference: datetime, timex: str, future: bool):
         begin_date_result = begin_date
         end_date_result = end_date
