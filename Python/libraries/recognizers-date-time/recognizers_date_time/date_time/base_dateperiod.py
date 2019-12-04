@@ -16,7 +16,7 @@ from .parsers import DateTimeParser, DateTimeParseResult
 from .base_date import BaseDateParser
 from .base_duration import BaseDurationParser
 from .utilities import Token, merge_all_tokens, DateTimeFormatUtil, DateTimeResolutionResult, DateUtils, DayOfWeek, \
-    RegExpUtility, DateContext, TimexUtil
+    RegExpUtility, DateContext, TimexUtil, ModAndDateResult, DurationParsingUtil
 
 MatchedIndex = namedtuple('MatchedIndex', ['matched', 'index'])
 
@@ -633,7 +633,7 @@ class BaseDatePeriodExtractor(DateTimeExtractor):
     # 2. Extract cases like within two weeks from/before today/tomorrow/yesterday
 
     def single_time_point_with_patterns(self, source: str, ordinal_extractions:
-                                        [ExtractResult], reference: datetime) -> List[ExtractResult]:
+                                        [ExtractResult], reference: datetime) -> List[Token]:
         result = []
         date_points = self.config.date_point_extractor.extract(source, reference)
 
@@ -833,6 +833,11 @@ class DatePeriodParserConfiguration(ABC):
 
     @property
     @abstractmethod
+    def future_suffix_regex(self) -> Pattern:
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
     def in_connector_regex(self) -> Pattern:
         raise NotImplementedError
 
@@ -975,18 +980,6 @@ class DatePeriodParserConfiguration(ABC):
     @abstractmethod
     def is_year_only(self, source: str) -> bool:
         raise NotImplementedError
-
-
-def match_with_next_prefix(self, sub_str, is_ago, is_less_than_or_with_in, is_more_than):
-    match = self.config.within_next_prefix_regex.match(sub_str)
-    if match and match.success:
-        is_next = match.Groups["next"].value
-
-        # cases like "within the next 5 days before today" is not acceptable
-        if not (is_next and is_ago):
-            is_less_than_or_with_in = True
-    is_less_than_or_with_in = is_less_than_or_with_in or self.config.less_than_regex.match(sub_str).success
-    is_more_than = self.config.more_than_regex.match(sub_str).success
 
 
 class BaseDatePeriodParser(DateTimeParser):
@@ -1552,52 +1545,46 @@ class BaseDatePeriodParser(DateTimeParser):
 
     # Parse entities that are made up by two time points
     def _merge_two_times_points(self, source: str, reference: datetime) -> DateTimeResolutionResult:
-        trimmed_source = source.strip()
         result = DateTimeResolutionResult()
-        parse_results = []
+
+        extract_results = self.config.date_extractor.extract(source, reference)
         parse_result1 = parse_result2 = None
-        extract_results = self.config.date_extractor.extract(trimmed_source, reference)
 
-        if not extract_results or len(extract_results) < 2:
-            extract_results = self.config.date_extractor.extract(
-                self.config.token_before_date + trimmed_source, reference)
-
+        if len(extract_results) < 2:
+            extract_results = self.config.date_extractor.extract(self.config.token_before_date + source, reference)
             if len(extract_results) >= 2:
-                for extract_result in extract_results:
-                    extract_result.start -= len(self.config.token_before_date)
+                extract_results[0].start -= len(self.config.token_before_date)
+                extract_results[1].start -= len(self.config.token_before_date)
             else:
                 now_pr = self._parse_now_as_date(source, reference)
                 if now_pr.value is None or len(extract_results) < 1:
                     return result
 
                 date_pr = self.config.date_parser.parse(extract_results[0], reference)
-
                 parse_result1 = date_pr if date_pr.start < now_pr.start else now_pr
                 parse_result2 = now_pr if date_pr.start < now_pr.start else date_pr
 
-                parse_results.append(now_pr)
-                parse_results.append(date_pr)
-                parse_results = sorted(parse_results, key=lambda x: x.start)
-
-        if extract_results and len(extract_results) >= 2:
+        if len(extract_results) >= 2:
             # Propagate the possible future relative context from the first entity to the second one in the range.
             # Handles cases like "next monday to friday"
             future_match_for_start_date = self.config.future_regex.match(extract_results[0].text)
             future_match_for_end_date = self.config.future_regex.match(extract_results[1].text)
 
-            if future_match_for_start_date and future_match_for_start_date.success and not future_match_for_end_date.success:
-                extract_results[1].text = future_match_for_start_date.value + ' ' + extract_results[1].text
+            if future_match_for_start_date and not future_match_for_end_date:
+                extract_results[1].text = future_match_for_start_date.group() + ' ' + extract_results[1].text
 
             match = self.config.week_with_week_day_range_regex.search(source)
             week_prefix = None
 
-            # Check if weekPrefix is already included in the extractions otherwise include it
             if match:
                 week_prefix = RegExpUtility.get_group(match, Constants.WEEK_GROUP_NAME)
 
+            # Check if weekPrefix is already included in the extractions otherwise include it
             if week_prefix:
-                extract_results[0].text = f'{week_prefix} {extract_results[0].text}'
-                extract_results[1].text = f'{week_prefix} {extract_results[1].text}'
+                if week_prefix not in extract_results[0].text:
+                    extract_results[0].text = week_prefix + ' ' + extract_results[0].text
+                if week_prefix not in extract_results[1].text:
+                    extract_results[1].text = week_prefix + ' ' + extract_results[1].text
 
             date_context = self.get_year_context(self.config, extract_results[0].text, extract_results[1].text, source)
 
@@ -1623,9 +1610,13 @@ class BaseDatePeriodParser(DateTimeParser):
         if past_end < past_begin:
             past_end = future_end
 
-        result.timex = f'({parse_result1.timex_str},{parse_result2.timex_str},P{(future_end - future_begin).days}D)'
-        result.future_value = [future_begin, future_end]
-        result.past_value = [past_begin, past_end]
+        if not future_end and not future_begin:
+            result.timex = f'({parse_result1.timex_str},{parse_result2.timex_str},P{(future_end - future_begin).days}D)'
+        else:
+            result.timex = f'({parse_result1.timex_str},{parse_result2.timex_str})'
+
+        result.future_value = (future_begin, future_end)
+        result.past_value = (past_begin, past_end)
         result.success = True
 
         return result
@@ -1847,86 +1838,188 @@ class BaseDatePeriodParser(DateTimeParser):
 
     def _parse_duration(self, source: str, reference: datetime) -> DateTimeResolutionResult:
         result = DateTimeResolutionResult()
-        extract_results = self.config.duration_extractor.extract(source, reference)
-        begin_date = end_date = reference
+        begin_date = reference
+        end_date = reference
+        duration_timex = ''
         rest_now_sunday = False
-        duration_timex = mod = ''
 
-        if len(extract_results) == 1:
-            parse_result = self.config.duration_parser.parse(extract_results[0])
+        duration_extract_results = self.config.duration_extractor.extract(source, reference)
+        if len(duration_extract_results) == 1:
+            duration_parse_result = self.config.duration_parser.parse(duration_extract_results[0])
 
-            if parse_result is None:
+            if duration_parse_result is None:
                 return result
 
-            before_str = source[0:parse_result.start].strip()
-            duration_result = parse_result.value
+            before_str = source[0:duration_parse_result.start].strip()
+            after_str = source[duration_parse_result.start + duration_parse_result.length:].strip()
 
-            if not duration_result.timex:
-                return result
+            numbers_in_suffix = self.config.cardinal_extractor.extract(before_str)
+            numbers_in_duration = self.config.cardinal_extractor.extract(duration_extract_results[0].text)
 
-            prefix_match = self.config.past_regex.search(before_str)
+            # Handle cases like "2 upcoming days", "5 previous years"
+            if any(numbers_in_suffix) and not any(numbers_in_duration):
+                number_extract_result = next(numbers_in_suffix)
+                number_text = number_extract_result.text
+                duration_text = duration_extract_results[0].text
+                combined_text = f'{number_text} {duration_text}'
+                combined_duration_extract_result = self.config.duration_extractor.extract(combined_text, reference)
 
-            if prefix_match:
-                mod = TimeTypeConstants.BEFORE_MOD
-                begin_date = self.__get_swift_date(end_date, duration_result.timex, False)
+                if any(combined_duration_extract_result):
+                    duration_parse_result = self.config.duration_parser.parse(next(combined_duration_extract_result))
+                    start_index = number_extract_result.start + number_extract_result.lengt
+                    before_str = before_str[start_index:].strip()
 
-            prefix_match = self.config.future_regex.search(before_str)
+            mod_and_date_result = ModAndDateResult(begin_date, end_date)
 
-            if prefix_match and len(prefix_match.string) == len(before_str):
-                mod = TimeTypeConstants.AFTER_MOD
-                begin_date = reference + timedelta(days=1)
-                end_date = self.__get_swift_date(begin_date, duration_result.timex, True)
+            if duration_parse_result.value:
+                duration_result = duration_parse_result.value
 
-            prefix_match = self.config.in_connector_regex.search(before_str)
+                if not duration_result.timex:
+                    return result
 
-            if prefix_match and len(prefix_match.string) == len(before_str):
-                mod = TimeTypeConstants.AFTER_MOD
-                begin_date = reference + timedelta(days=1)
-                end_date = self.__get_swift_date(begin_date, duration_result.timex, True)
-                unit = duration_result.timex[len(duration_result.timex) - 1]
-                duration_result.timex = f'P1{unit}'
-                begin_date = self.__get_swift_date(end_date, duration_result.timex, False)
+                if self.config.past_regex.match(before_str) or self.config.past_regex.match(after_str):
+                    mod_and_date_result = self._get_mod_and_date(begin_date, end_date, reference,
+                                                                 duration_result.timex, False)
+                    begin_date = mod_and_date_result.begin_date
 
-            if mod:
-                parse_result.value.mod = mod
+                # Handle the "within two weeks" case which means from today to the end of next two weeks
+                # Cases like "within 3 days before/after today" is not handled here (4th condition)
+                if self.config.within_next_prefix_regex.match(before_str) \
+                        and DurationParsingUtil.is_date_duration(duration_result.timex) and not after_str:
+                    mod_and_date_result = self._get_mod_and_date(begin_date, end_date, reference,
+                                                                 duration_result.timex, True)
+                    
+                    # In _get_mod_and_date, this "future" resolution will add one day to begin_date/end_date,
+                    # but for the "within" case it should start from the current day
+                    begin_date = mod_and_date_result.begin_date + timedelta(days=-1)
+                    end_date = mod_and_date_result.end_date + timedelta(days=-1)
+                elif self.config.check_both_before_after:
+                    # Check also after_str
+                    if self.config.within_next_prefix_regex.match(after_str) \
+                        and DurationParsingUtil.is_date_duration(duration_result.timex) \
+                        and (RegExpUtility.match_end(self.config.future_regex, before_str, True).success or
+                             not before_str):
 
-            duration_timex = duration_result.timex
-            result.sub_date_time_entities = [parse_result]
+                        mod_and_date_result = self._get_mod_and_date(begin_date, end_date, reference,
+                                                                     duration_result.timex, True)
+                        
+                        # In _get_mod_and_date, this "future" resolution will add one day to begin_date/end_date
+                        # but for the "within" case it should start from the current day
+                        begin_date = mod_and_date_result.begin_date + timedelta(days=-1)
+                        end_date = mod_and_date_result.end_date + timedelta(days=-1)
+                        before_str = ''
+                
+                if RegExpUtility.is_exact_match(self.config.future_regex, before_str, True):
+                    mod_and_date_result = self._get_mod_and_date(begin_date, end_date, reference, duration_result.timex,
+                                                                 True)
+                    begin_date = mod_and_date_result.begin_date
+                    end_date = mod_and_date_result.end_date
+                elif self.config.future_regex.match(after_str):
+                    mod_and_date_result = self._get_mod_and_date(begin_date, end_date, reference, duration_result.timex,
+                                                                 True)
+                    begin_date = mod_and_date_result.begin_date
+                    end_date = mod_and_date_result.end_date
+                
+                if self.config.future_suffix_regex.match(after_str):
+                    mod_and_date_result = self._get_mod_and_date(begin_date, end_date, reference, duration_result.timex,
+                                                                 True)
+                    begin_date = mod_and_date_result.begin_date
+                    end_date = mod_and_date_result.end_date
+                
+                # Handle the "in two weeks" case  which means the second week
+                if RegExpUtility.is_exact_match(self.config.in_connector_regex, before_str, True) \
+                    and DurationParsingUtil.is_multiple_duration(duration_result.timex):
+                    mod_and_date_result = self._get_mod_and_date(begin_date, end_date, reference,
+                                                                 duration_result.timex, True)
 
-        match = self.config.rest_of_date_regex.search(source)
+                    # Change the duration value and the begin_date
+                    unit = duration_result.timex[len(duration_result.timex) - 1:]
+                    
+                    duration_result.timex = "P1" + unit
+                    begin_date = DurationParsingUtil.shift_date_time(self, duration_result.timex,
+                                                                     mod_and_date_result.end_date, False)
+                    end_date = mod_and_date_result.end_date
+                
+                if mod_and_date_result.mod:
+                    duration_parse_result.value.mod = mod_and_date_result.mod
 
+                duration_timex = duration_result.timex
+                result.sub_date_time_entities = [duration_parse_result]
+                if not mod_and_date_result.date_list:
+                    result.list = mod_and_date_result.date_list
+
+        # Parse "rest of"
+        match = self.config.rest_of_date_regex.match(source)
         if match:
-            diff_days = 0
-            duration_str = match.group(TimeTypeConstants.DURATION)
-            duration_unit = self.config.unit_map.get(duration_str)
+            duration_str = RegExpUtility.get_group(match, TimeTypeConstants.DURATION)
+            duration_unit = self.config.unit_map[duration_str]
 
-            if duration_unit == Constants.UNIT_W:
-                diff_days = 7 - begin_date.isoweekday()
-                end_date = reference + timedelta(days=diff_days)
-                rest_now_sunday = diff_days == 0
+            if duration_unit == Constants.TIMEX_WEEK:
+                diff = Constants.WEEK_DAY_COUNT - (Constants.WEEK_DAY_COUNT if begin_date.weekday() == 0 else
+                                                   int(begin_date.weekday()))
+                end_date = begin_date + timedelta(days=diff)
+                duration_timex = "P" + diff + Constants.TIMEX_DAY
 
-            elif duration_unit == Constants.UNIT_MON:
-                end_date = DateUtils.safe_create_from_min_value(
-                    begin_date.year, begin_date.month, DateUtils.last_day_of_month(begin_date.year, begin_date.month))
-                diff_days = end_date.day - begin_date.day + 1
+                if diff == 0:
+                    rest_now_sunday = True
+            elif Constants.TIMEX_MONTH_FULL:
+                end_date = DateUtils.safe_create_from_min_value(begin_date.year, begin_date.month, 1)
+                end_date = end_date.replace(month=end_date.month + 1) + timedelta(days=-1)
+                diff = end_date.day - begin_date.day + 1
+                duration_timex = "P" + str(diff) + Constants.TIMEX_DAY
+            elif Constants.TIMEX_YEAR:
+                end_date = DateUtils.safe_create_from_min_value(begin_date.year, 12, 1)
+                end_date = end_date.replace(month=end_date.month + 1) + timedelta(days=-1)
+                diff = DateUtils.day_of_year(end_date) - DateUtils.day_of_year(begin_date) + 1
+                duration_timex = "P" + str(diff) + Constants.TIMEX_DAY
 
-            elif duration_unit == Constants.UNIT_Y:
-                end_date = DateUtils.safe_create_from_min_value(begin_date.year, 12, 31)
-                diff_days = DateUtils.day_of_year(end_date) - DateUtils.day_of_year(begin_date) + 1
-
-            duration_timex = f'P{diff_days}D'
-
-        if not begin_date == end_date or rest_now_sunday:
-            if self._inclusive_end_period:
-                end_date = end_date + timedelta(days=-1)
+        if begin_date != end_date or rest_now_sunday:
+            end_date = end_date + timedelta(days=-1) if self._inclusive_end_period else end_date
 
             result.timex = f'({DateTimeFormatUtil.luis_date_from_datetime(begin_date)},' \
-                f'{DateTimeFormatUtil.luis_date_from_datetime(end_date)},{duration_timex})'
-            result.future_value = [begin_date, end_date]
-            result.past_value = [begin_date, end_date]
+                           f'{DateTimeFormatUtil.luis_date_from_datetime(end_date)},{duration_timex})'
+            result.future_value = result.past_value = (begin_date, end_date)
             result.success = True
 
         return result
+            
+    def _get_mod_and_date(self, begin_date: datetime, end_date: datetime, reference: datetime, timex: str, future: bool):
+        begin_date_result = begin_date
+        end_date_result = end_date
+        is_business_day = timex.endswith(Constants.TIMEX_BUSINESS_DAY)
+        business_day_count = 0
+        date_list = None
+
+        if is_business_day:
+            business_day_count = int(timex[1: len(timex) - 3])
+
+        if future:
+            mod = TimeTypeConstants.AFTER_MOD
+
+            # For future the begin_date should add 1 first
+            if is_business_day:
+                begin_date_result = DurationParsingUtil.get_next_business_day(reference)
+                end_date_result, date_list = DurationParsingUtil.get_nth_business_day(begin_date_result,
+                                                                                      business_day_count - 1, True)
+                end_date_result = end_date_result + timedelta(days=1)
+
+                return ModAndDateResult(begin_date_result, end_date_result, mod, None)
+            else:
+                begin_date_result = reference + timedelta(days=1)
+                end_date_result = DurationParsingUtil.shift_date_time(self, timex, begin_date_result, True)
+                return ModAndDateResult(begin_date_result, end_date_result, mod, None)
+        else:
+            mod = TimeTypeConstants.BEFORE_MOD
+
+            if is_business_day:
+                end_date_result = DurationParsingUtil.get_next_business_day(end_date_result, False)
+                begin_date_result, date_list = DurationParsingUtil.get_nth_business_day(end_date_result,
+                                                                                        business_day_count - 1, False)
+                end_date_result = end_date_result + timedelta(days=1)
+                return ModAndDateResult(begin_date_result, end_date_result, mod, None)
+            else:
+                begin_date_result = DurationParsingUtil.shift_date_time(self, timex, end_date_result, False)
+                return ModAndDateResult(begin_date_result, end_date_result, mod, None)
 
     # Only handle cases like "within/less than/more than x weeks from/before/after today"
     def __parse_date_point_with_ago_and_later(self, source: str, reference: datetime) -> DateTimeResolutionResult:
@@ -1935,7 +2028,7 @@ class BaseDatePeriodParser(DateTimeParser):
 
         if extract_result:
             before_str = source[0:extract_result.start].strip()
-            after_str = source[extract_result.start + extract_result.length:]
+            after_str = source[int(extract_result.start) + int(extract_result.length):]
             is_ago = self.config.ago_regex.match(extract_result.text)
             is_later = self.config.later_regex.match(extract_result.text)
 
@@ -1943,54 +2036,60 @@ class BaseDatePeriodParser(DateTimeParser):
                 is_less_than_or_with_in = False
                 is_more_than = False
 
-                # TODO: move hardcoded English strings to definition
                 # cases like "within 3 days from yesterday/tomorrow" does not make any sense
-                if "today" in extract_result or "now" in extract_result:
-                    match_with_next_prefix(before_str, is_ago, is_less_than_or_with_in, is_more_than)
+                if Constants.TODAY_LABEL in extract_result or Constants.NOW_LABEL in extract_result:
+                    self.match_with_next_prefix(self, before_str, is_ago, is_less_than_or_with_in, is_more_than)
                 else:
-                    is_less_than_or_with_in = is_less_than_or_with_in or self.config.less_than_regex.match(before_str).success
-                    is_more_than = self.config.less_than_regex.match(before_str).success
+                    is_less_than_or_with_in = is_less_than_or_with_in or self.config.less_than_regex.match(before_str)
+                    is_more_than = self.config.less_than_regex.match(before_str)
 
                 # Check also after_str
                 if self.config.check_both_before_after and is_less_than_or_with_in and is_more_than:
-                    match_with_next_prefix(after_str, is_ago, is_less_than_or_with_in, is_more_than)
+                    self.match_with_next_prefix(self, after_str, is_ago, is_less_than_or_with_in, is_more_than)
 
-                parsing_result = datetime(self.config.date_parser.parse(extract_result, reference))
+                parsing_result = self.config.date_parser.parse(extract_result, reference)
                 duration_extraction_result = next(self.config.duration_extractor.extract(extract_result.text), None)
 
                 if duration_extraction_result:
                     duration = self.config.duration_parser.parse(duration_extraction_result)
-                    duration_in_seconds = DateTimeResolutionResult(duration.value).past_value
+                    duration_in_seconds = duration.value.past_value
 
-                if is_less_than_or_with_in:
-                    start_date: datetime
-                    end_date: datetime
+                    if is_less_than_or_with_in:
+                        if is_ago:
+                            start_date = parsing_result.value.past_value
+                            end_date = start_date.AddSeconds(duration_in_seconds)
+                        else:
+                            end_date = parsing_result.value.future_value
+                            start_date = end_date.AddSeconds(-duration_in_seconds)
 
-                    if is_ago:
-                        start_date = DateTimeResolutionResult(parsing_result.value).past_value
-                        end_date = start_date.AddSeconds(duration_in_seconds)
-                    else:
-                        end_date = DateTimeResolutionResult(parsing_result.value).future_value
-                        start_date = end_date.AddSeconds(-duration_in_seconds)
+                        if start_date != DateUtils.min_value:
+                            start_luis_str = DateTimeFormatUtil.luis_date(start_date, 1, 1)
+                            end_luis_str = DateTimeFormatUtil.luis_date(end_date, 1, 1)
+                            duration_timex = duration.value.timex
 
-                    if start_date != datetime.min:
-                        start_luis_str = DateTimeFormatUtil.luis_date(start_date, 1, 1)
-                        end_luis_str = DateTimeFormatUtil.luis_date(end_date, 1, 1)
-                        duration_timex = DateTimeResolutionResult(duration.value).timex
-
-                        result.timex = "({startLuisStr},{endLuisStr},{durationTimex})"
-                        result.future_value = Dict[start_date, end_date]
-                        result.past_value = Dict[start_date, end_date]
-
-                        result.success = True
-                    else:
-                        if is_more_than:
-                            result.mod = Constants.BEFORE_MOD if is_ago else Constants.AFTER_MOD
-                            result.timex = parsing_result.TimexStr
-                            result.future_value = parsing_result.future_value
-                            result.past_value = parsing_result.past_value
+                            result.timex = f"({start_luis_str},{end_luis_str},{duration_timex})"
+                            result.future_value = (start_date, end_date)
+                            result.past_value = (start_date, end_date)
                             result.success = True
+                    elif is_more_than:
+                        result.mod = TimeTypeConstants.BEFORE_MOD if is_ago else TimeTypeConstants.AFTER_MOD
+                        result.timex = f'{parsing_result.TimexStr}'
+                        result.future_value = parsing_result.value.future_value
+                        result.past_value = parsing_result.value.past_value
+                        result.success = True
         return result
+
+    def match_with_next_prefix(self, sub_str, is_ago, is_less_than_or_with_in, is_more_than):
+        match = self.config.within_next_prefix_regex.match(sub_str)
+        if match and match.success:
+            is_next = match.Groups[Constants.NEXT_GROUP_NAME].value
+
+            # cases like "within the next 5 days before today" is not acceptable
+            if not (is_next and is_ago):
+                is_less_than_or_with_in = True
+
+        is_less_than_or_with_in = is_less_than_or_with_in or self.config.less_than_regex.match(sub_str)
+        is_more_than = self.config.more_than_regex.match(sub_str)
 
     def __parse_decade(self, source: str, reference_date: datetime) -> DateTimeResolutionResult:
         result = DateTimeResolutionResult()
