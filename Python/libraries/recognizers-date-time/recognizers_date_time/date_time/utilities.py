@@ -127,6 +127,104 @@ class DurationParsingUtil:
 
         return result
 
+    @staticmethod
+    def get_next_business_day(start_date: datetime, is_future: bool = True):
+        date_increment = 1 if is_future else -1
+        date = start_date + timedelta(days= date_increment)
+
+        while date.weekday() == DayOfWeek.SATURDAY or date.weekday() == DayOfWeek.SUNDAY:
+            date = date + timedelta(days = date_increment)
+
+        return date
+
+    def get_nth_business_day(self, start_date: datetime, n: int, is_future: bool):
+        date = start_date
+        date_list = [date]
+
+        i = 0
+        if i < n:
+            date = self.get_next_business_day(date, is_future)
+            date_list.append(date)
+            i += 1
+
+        if not is_future:
+            date_list.reverse()
+
+        return date, date_list
+
+    def shift_date_time(self, timex: str, reference: datetime, future: bool):
+        timex_unit_map = self.resolve_duration_timex(timex)
+        result = self.get_shift_result(timex_unit_map, reference, future)
+
+        return result
+
+    @staticmethod
+    def resolve_duration_timex(timex_str):
+        result = {}
+
+        # Resolve duration timex, such as P21DT2H (21 days 2 hours)
+        duration_str = timex_str.replace(Constants.GENERAL_PERIOD_PREFIX, '')
+        number_start = 0
+        is_time = False
+
+        # Resolve business days
+        if duration_str.endswith(Constants.TIMEX_BUSINESS_DAY):
+            num_value = float(duration_str[0:len(duration_str) - 2])
+            if num_value:
+                result[Constants.TIMEX_BUSINESS_DAY] = num_value
+
+            return result
+
+        index = 0
+        if index < len(duration_str):
+            if not duration_str[index].isalpha():
+                if duration_str[index] == 'T':
+                    is_time = True
+                else:
+                    num_str = duration_str[number_start: index - number_start]
+                    number = float(num_str)
+                    if number:
+                        return {}
+
+                    source_timex_unit = duration_str[index: 1]
+                    if not is_time and source_timex_unit == Constants.TIMEX_MONTH:
+                        source_timex_unit = Constants.TIMEX_MONTH_FULL
+
+                    result[source_timex_unit] = number
+
+                number_start = index + 1
+
+        return result
+
+    def get_shift_result(self, timex_unit_map: Dict[str, float], reference: datetime, future: bool):
+        result = reference
+        future_or_past = 1 if future else -1
+        for unit_str, number in timex_unit_map:
+            if unit_str == 'H':
+                result = result + timedelta(hours=number * future_or_past)
+            elif unit_str == 'M':
+                result = result + timedelta(minutes=number * future_or_past)
+            elif unit_str == 'S':
+                result = result + timedelta(seconds=number * future_or_past)
+            elif unit_str == Constants.TIMEX_DAY:
+                result = result + timedelta(days=number * future_or_past)
+            elif unit_str == Constants.TIMEX_WEEK:
+                result = result + timedelta(days=7 * number * future_or_past)
+            elif unit_str == Constants.TIMEX_MONTH_FULL:
+                result = result.replace(month=reference.month + int(number) * future_or_past)
+            elif unit_str == Constants.TIMEX_YEAR:
+                result = result.replace(year=reference.year + int(number) * future_or_past)
+            elif unit_str == Constants.TIMEX_BUSINESS_DAY:
+                result, date_list = self.get_nth_business_day(result, int(number), future)
+            else:
+                return result
+
+        return result
+
+    @staticmethod
+    def is_multiple_duration(cls, timex):
+        pass
+
 
 class Token:
     def __init__(self, start: int, end: int, metadata: Metadata = None):
@@ -225,6 +323,7 @@ class DateTimeResolutionResult:
         self.future_value: object = None
         self.past_value: object = None
         self.sub_date_time_entities: List[object] = list()
+        self.list: List[object] = list()
 
 
 class TimeOfDayResolution:
@@ -566,6 +665,30 @@ class MatchingUtil:
     @staticmethod
     def contains_term_index(source: str, regexp: Pattern) -> bool:
         return MatchingUtil.get_term_index(source, regexp).matched
+
+
+class ModAndDateResult:
+    def __init__(self, begin_date: datetime, end_date: datetime, mod: str = '', date_list: List[datetime] = None):
+        self._begin_date = begin_date
+        self._end_date = end_date
+        self._mod = mod
+        self._date_list = date_list
+
+    @property
+    def begin_date(self) -> datetime:
+        return self._begin_date
+
+    @property
+    def end_date(self) -> datetime:
+        return self._end_date
+
+    @property
+    def mod(self) -> str:
+        return self._mod
+
+    @property
+    def date_list(self) -> List[datetime]:
+        return self._date_list
 
 
 class AgoLaterMode(Enum):
