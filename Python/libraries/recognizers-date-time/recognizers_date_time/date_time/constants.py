@@ -36,6 +36,7 @@ class Constants:
 
     SEMESTER_MONTH_COUNT: int = 6
     TRIMESTER_MONTH_COUNT: int = 3
+    WEEK_DAY_COUNT = 7
     QUARTER_COUNT: int = 4
     FOUR_DIGITS_YEAR_LENGTH: int = 4
     MIN_MONTH: int = 1
@@ -187,6 +188,8 @@ class Constants:
 
     AGO_LABEL = "ago"
     LATER_LABEL = "later"
+    TODAY_LABEL = "today"
+    NOW_LABEL = "now"
 
 
 class TimeTypeConstants:
