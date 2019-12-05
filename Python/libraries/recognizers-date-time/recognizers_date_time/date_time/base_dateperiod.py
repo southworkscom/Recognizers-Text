@@ -721,9 +721,23 @@ class BaseDatePeriodExtractor(DateTimeExtractor):
 
 
 class DatePeriodParserConfiguration(ABC):
+
     @property
     @abstractmethod
     def less_than_regex(self) -> Pattern:
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def cardinal_extractor(self):
+        raise NotImplementedError
+
+    @property
+    def within_next_prefix_regex(self):
+        raise NotImplementedError
+
+    @property
+    def more_than_regex(self):
         raise NotImplementedError
 
     @property
@@ -1936,7 +1950,7 @@ class BaseDatePeriodParser(DateTimeParser):
                     unit = duration_result.timex[len(duration_result.timex) - 1:]
 
                     duration_result.timex = "P1" + unit
-                    begin_date = DurationParsingUtil.shift_date_time(self, duration_result.timex,
+                    begin_date = DurationParsingUtil.shift_date_time(duration_result.timex,
                                                                      mod_and_date_result.end_date, False)
                     end_date = mod_and_date_result.end_date
 
@@ -1983,7 +1997,8 @@ class BaseDatePeriodParser(DateTimeParser):
 
         return result
 
-    def _get_mod_and_date(self, begin_date: datetime, end_date: datetime, reference: datetime, timex: str, future: bool):
+    @staticmethod
+    def _get_mod_and_date(begin_date: datetime, end_date: datetime, reference: datetime, timex: str, future: bool):
         begin_date_result = begin_date
         end_date_result = end_date
         is_business_day = timex.endswith(Constants.TIMEX_BUSINESS_DAY)
@@ -2006,7 +2021,7 @@ class BaseDatePeriodParser(DateTimeParser):
                 return ModAndDateResult(begin_date_result, end_date_result, mod, None)
             else:
                 begin_date_result = reference + timedelta(days=1)
-                end_date_result = DurationParsingUtil.shift_date_time(self, timex, begin_date_result, True)
+                end_date_result = DurationParsingUtil.shift_date_time(timex, begin_date_result, True)
                 return ModAndDateResult(begin_date_result, end_date_result, mod, None)
         else:
             mod = TimeTypeConstants.BEFORE_MOD
@@ -2018,7 +2033,7 @@ class BaseDatePeriodParser(DateTimeParser):
                 end_date_result = end_date_result + timedelta(days=1)
                 return ModAndDateResult(begin_date_result, end_date_result, mod, None)
             else:
-                begin_date_result = DurationParsingUtil.shift_date_time(self, timex, end_date_result, False)
+                begin_date_result = DurationParsingUtil.shift_date_time(timex, end_date_result, False)
                 return ModAndDateResult(begin_date_result, end_date_result, mod, None)
 
     # Only handle cases like "within/less than/more than x weeks from/before/after today"
@@ -2038,14 +2053,14 @@ class BaseDatePeriodParser(DateTimeParser):
 
                 # cases like "within 3 days from yesterday/tomorrow" does not make any sense
                 if Constants.TODAY_LABEL in extract_result or Constants.NOW_LABEL in extract_result:
-                    self.match_with_next_prefix(self, before_str, is_ago, is_less_than_or_with_in, is_more_than)
+                    self.match_with_next_prefix(before_str, is_ago, is_less_than_or_with_in, is_more_than)
                 else:
                     is_less_than_or_with_in = is_less_than_or_with_in or self.config.less_than_regex.match(before_str)
                     is_more_than = self.config.less_than_regex.match(before_str)
 
                 # Check also after_str
                 if self.config.check_both_before_after and is_less_than_or_with_in and is_more_than:
-                    self.match_with_next_prefix(self, after_str, is_ago, is_less_than_or_with_in, is_more_than)
+                    self.match_with_next_prefix(after_str, is_ago, is_less_than_or_with_in, is_more_than)
 
                 parsing_result = self.config.date_parser.parse(extract_result, reference)
                 duration_extraction_result = next(self.config.duration_extractor.extract(extract_result.text), None)
