@@ -1624,7 +1624,7 @@ class BaseDatePeriodParser(DateTimeParser):
         if past_end < past_begin:
             past_end = future_end
 
-        if not future_end and not future_begin:
+        if not DateUtils.is_default_value(future_end) and not DateUtils.is_default_value(future_begin):
             result.timex = f'({parse_result1.timex_str},{parse_result2.timex_str},P{(future_end - future_begin).days}D)'
         else:
             result.timex = f'({parse_result1.timex_str},{parse_result2.timex_str})'
@@ -1969,21 +1969,24 @@ class BaseDatePeriodParser(DateTimeParser):
             duration_unit = self.config.unit_map[duration_str]
 
             if duration_unit == Constants.TIMEX_WEEK:
-                diff = Constants.WEEK_DAY_COUNT - (Constants.WEEK_DAY_COUNT if begin_date.weekday() == 0 else
-                                                   int(begin_date.weekday()))
+                begin_date_wd = begin_date.isoweekday()
+                diff = Constants.WEEK_DAY_COUNT - (Constants.WEEK_DAY_COUNT if begin_date.isoweekday() == 0 else
+                                                   int(begin_date.isoweekday()))
                 end_date = begin_date + timedelta(days=diff)
-                duration_timex = "P" + diff + Constants.TIMEX_DAY
+                duration_timex = "P" + str(diff) + Constants.TIMEX_DAY
 
                 if diff == 0:
                     rest_now_sunday = True
-            elif Constants.TIMEX_MONTH_FULL:
+            elif duration_unit == Constants.TIMEX_MONTH_FULL:
                 end_date = DateUtils.safe_create_from_min_value(begin_date.year, begin_date.month, 1)
-                end_date = end_date.replace(month=end_date.month + 1) + timedelta(days=-1)
+                end_date = end_date + timedelta(days=-1)
+                end_date = end_date.replace(month=end_date.month + 1)
                 diff = end_date.day - begin_date.day + 1
                 duration_timex = "P" + str(diff) + Constants.TIMEX_DAY
-            elif Constants.TIMEX_YEAR:
+            elif duration_unit == Constants.TIMEX_YEAR:
                 end_date = DateUtils.safe_create_from_min_value(begin_date.year, 12, 1)
-                end_date = end_date.replace(month=end_date.month + 1) + timedelta(days=-1)
+                end_date = end_date + timedelta(days=-1)
+                end_date = end_date.replace(month=end_date.month + 1)
                 diff = DateUtils.day_of_year(end_date) - DateUtils.day_of_year(begin_date) + 1
                 duration_timex = "P" + str(diff) + Constants.TIMEX_DAY
 
