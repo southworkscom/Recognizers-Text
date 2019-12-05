@@ -7,12 +7,25 @@ from ...resources.chinese_date_time import ChineseDateTime
 from ..extractors import DateTimeExtractor
 from ..parsers import DateTimeParser
 from ..base_dateperiod import DatePeriodParserConfiguration
+from ..base_configs import BaseDateParserConfiguration
 from .duration_extractor import ChineseDurationExtractor
 from .date_extractor import ChineseDateExtractor
 from .date_parser import ChineseDateParser
 
 
 class ChineseDatePeriodParserConfiguration(DatePeriodParserConfiguration):
+    @property
+    def cardinal_extractor(self):
+        return self._cardinal_extractor
+
+    @property
+    def within_next_prefix_regex(self):
+        return self._within_next_prefix_regex
+
+    @property
+    def more_than_regex(self):
+        return self._more_than_regex
+
     @property
     def future_suffix_regex(self) -> Pattern:
         return self._future_suffix_regex
@@ -209,7 +222,8 @@ class ChineseDatePeriodParserConfiguration(DatePeriodParserConfiguration):
     def relative_decade_regex(self) -> Pattern:
         return self._relative_decade_regex
 
-    def __init__(self):
+    def __init__(self, config: BaseDateParserConfiguration):
+        self._cardinal_extractor = config.cardinal_extractor
         self._relative_regex = RegExpUtility.get_safe_reg_exp(
             ChineseDateTime.RelativeRegex)
         self._date_extractor = ChineseDateExtractor()
@@ -255,6 +269,8 @@ class ChineseDatePeriodParserConfiguration(DatePeriodParserConfiguration):
         self._ago_regex = None
         self._future_suffix_regex = None
         self._complex_dateperiod_regex = None
+        self._more_than_regex = None
+        self._within_next_prefix_regex = None
         self._relative_decade_regex = None
 
     def get_swift_day_or_month(self, source: str) -> int:

@@ -10,6 +10,18 @@ from ..base_dateperiod import DatePeriodParserConfiguration
 
 class SpanishDatePeriodParserConfiguration(DatePeriodParserConfiguration):
     @property
+    def cardinal_extractor(self):
+        return self._cardinal_extractor
+
+    @property
+    def within_next_prefix_regex(self):
+        return self._within_next_prefix_regex
+
+    @property
+    def more_than_regex(self):
+        return self._more_than_regex
+
+    @property
     def future_suffix_regex(self) -> Pattern:
         return self._future_suffix_regex
 
@@ -202,6 +214,9 @@ class SpanishDatePeriodParserConfiguration(DatePeriodParserConfiguration):
         return self._relative_decade_regex
 
     def __init__(self, config: BaseDateParserConfiguration):
+        self._more_than_regex = RegExpUtility.get_safe_reg_exp(SpanishDateTime.MoreThanRegex)
+        self._within_next_prefix_regex = RegExpUtility.get_safe_reg_exp(SpanishDateTime.WithinNextPrefixRegex)
+        self._cardinal_extractor = config.cardinal_extractor
         self._future_suffix_regex = RegExpUtility.get_safe_reg_exp(SpanishDateTime.FutureSuffixRegex)
         self._relative_regex = RegExpUtility.get_safe_reg_exp(
             SpanishDateTime.RelativeRegex)

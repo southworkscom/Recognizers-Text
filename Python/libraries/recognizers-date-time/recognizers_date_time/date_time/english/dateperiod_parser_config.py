@@ -10,6 +10,18 @@ from ..base_dateperiod import DatePeriodParserConfiguration
 
 class EnglishDatePeriodParserConfiguration(DatePeriodParserConfiguration):
     @property
+    def cardinal_extractor(self):
+        return self._cardinal_extractor
+
+    @property
+    def within_next_prefix_regex(self):
+        return self._within_next_prefix_regex
+
+    @property
+    def more_than_regex(self):
+        return self._more_than_regex
+
+    @property
     def future_suffix_regex(self) -> Pattern:
         return self._future_suffix_regex
 
@@ -202,6 +214,9 @@ class EnglishDatePeriodParserConfiguration(DatePeriodParserConfiguration):
         return self._check_both_before_after
 
     def __init__(self, config: BaseDateParserConfiguration):
+        self._more_than_regex = RegExpUtility.get_safe_reg_exp(EnglishDateTime.MoreThanRegex)
+        self._within_next_prefix_regex = RegExpUtility.get_safe_reg_exp(EnglishDateTime.WithinNextPrefixRegex)
+        self._cardinal_extractor = config.cardinal_extractor
         self._future_suffix_regex = RegExpUtility.get_safe_reg_exp(EnglishDateTime.FutureSuffixRegex)
         self._check_both_before_after = EnglishDateTime.CheckBothBeforeAfter
         self._later_regex = RegExpUtility.get_safe_reg_exp(
