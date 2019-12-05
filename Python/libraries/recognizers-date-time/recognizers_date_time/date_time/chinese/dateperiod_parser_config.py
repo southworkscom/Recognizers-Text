@@ -222,8 +222,8 @@ class ChineseDatePeriodParserConfiguration(DatePeriodParserConfiguration):
     def relative_decade_regex(self) -> Pattern:
         return self._relative_decade_regex
 
-    def __init__(self, config: BaseDateParserConfiguration):
-        self._cardinal_extractor = config.cardinal_extractor
+    def __init__(self):
+        self._cardinal_extractor = None
         self._relative_regex = RegExpUtility.get_safe_reg_exp(
             ChineseDateTime.RelativeRegex)
         self._date_extractor = ChineseDateExtractor()
