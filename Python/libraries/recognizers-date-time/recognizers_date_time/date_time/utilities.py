@@ -175,18 +175,17 @@ class DurationParsingUtil:
 
             return result
 
-        index = 0
-        if index < len(duration_str):
-            if not duration_str[index].isalpha():
+        for index in range(0, len(duration_str)):
+            if duration_str[index].isalpha():
                 if duration_str[index] == 'T':
                     is_time = True
                 else:
                     num_str = duration_str[number_start: index - number_start]
                     number = float(num_str)
-                    if number:
+                    if not number:
                         return {}
 
-                    source_timex_unit = duration_str[index: 1]
+                    source_timex_unit = duration_str[index: index + 1]
                     if not is_time and source_timex_unit == Constants.TIMEX_MONTH:
                         source_timex_unit = Constants.TIMEX_MONTH_FULL
 
@@ -200,7 +199,7 @@ class DurationParsingUtil:
     def get_shift_result(timex_unit_map, reference: datetime, future: bool):
         result = reference
         future_or_past = 1 if future else -1
-        for unit_str, number in timex_unit_map:
+        for unit_str, number in timex_unit_map.items():
             if unit_str == 'H':
                 result = result + timedelta(hours=number * future_or_past)
             elif unit_str == 'M':
@@ -452,6 +451,7 @@ class DayOfWeek(IntEnum):
 
 class DateUtils:
     min_value = datetime(1, 1, 1, 0, 0, 0, 0)
+    default_datetime = datetime(1, 1, 1, 0, 0, 0, 0)
 
     @staticmethod
     def int_try_parse(value):
@@ -490,6 +490,10 @@ class DateUtils:
     @staticmethod
     def is_valid_time(hour: int, minute: int, second: int) -> bool:
         return 0 <= hour < 24 and 0 <= minute < 60 and second >= 0 and minute < 60
+
+    @staticmethod
+    def is_default_value(date: datetime):
+        return date == DateUtils.default_datetime
 
     @staticmethod
     def this(from_date: datetime, day_of_week: DayOfWeek) -> datetime:
