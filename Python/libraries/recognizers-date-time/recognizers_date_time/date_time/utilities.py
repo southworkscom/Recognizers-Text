@@ -137,24 +137,24 @@ class DurationParsingUtil:
 
         return date
 
-    def get_nth_business_day(self, start_date: datetime, n: int, is_future: bool):
+    @staticmethod
+    def get_nth_business_day(start_date: datetime, n: int, is_future: bool):
         date = start_date
         date_list = [date]
 
-        i = 0
-        if i < n:
-            date = self.get_next_business_day(date, is_future)
+        for i in range(0, n):
+            date = DurationParsingUtil.get_next_business_day(date, is_future)
             date_list.append(date)
-            i += 1
 
         if not is_future:
             date_list.reverse()
 
         return date, date_list
 
-    def shift_date_time(self, timex: str, reference: datetime, future: bool):
-        timex_unit_map = self.resolve_duration_timex(timex)
-        result = self.get_shift_result(timex_unit_map, reference, future)
+    @staticmethod
+    def shift_date_time(timex: str, reference: datetime, future: bool):
+        timex_unit_map = DurationParsingUtil.resolve_duration_timex(timex)
+        result = DurationParsingUtil.get_shift_result(timex_unit_map, reference, future)
 
         return result
 
@@ -196,7 +196,8 @@ class DurationParsingUtil:
 
         return result
 
-    def get_shift_result(self, timex_unit_map: Dict[str, float], reference: datetime, future: bool):
+    @staticmethod
+    def get_shift_result(timex_unit_map, reference: datetime, future: bool):
         result = reference
         future_or_past = 1 if future else -1
         for unit_str, number in timex_unit_map:
@@ -215,15 +216,36 @@ class DurationParsingUtil:
             elif unit_str == Constants.TIMEX_YEAR:
                 result = result.replace(year=reference.year + int(number) * future_or_past)
             elif unit_str == Constants.TIMEX_BUSINESS_DAY:
-                result, date_list = self.get_nth_business_day(result, int(number), future)
+                result, date_list = DurationParsingUtil.get_nth_business_day(result, int(number), future)
             else:
                 return result
 
         return result
 
     @staticmethod
-    def is_multiple_duration(cls, timex):
-        pass
+    def is_time_duration(unit_str: str) -> bool:
+        if unit_str == 'H':
+            result = True
+        elif unit_str == 'M':
+            result = True
+        elif unit_str == 'S':
+            result = True
+        else:
+            result = False
+
+        return result
+
+    @staticmethod
+    def is_multiple_duration(timex: str):
+        date_dict = DurationParsingUtil.resolve_duration_timex(timex)
+
+        return len(date_dict) > 1
+
+    @staticmethod
+    def is_date_duration(timex: str):
+        date_dict = DurationParsingUtil.resolve_duration_timex(timex)
+
+        return all(not DurationParsingUtil.is_time_duration_unit(unit) for unit in date_dict.keys())
 
 
 class Token:
