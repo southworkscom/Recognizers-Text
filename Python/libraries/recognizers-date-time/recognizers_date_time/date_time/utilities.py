@@ -211,7 +211,22 @@ class DurationParsingUtil:
             elif unit_str == Constants.TIMEX_WEEK:
                 result = result + timedelta(days=7 * number * future_or_past)
             elif unit_str == Constants.TIMEX_MONTH_FULL:
-                result = result.replace(month=reference.month + int(number) * future_or_past)
+                if future_or_past == 1 and 12 - result.month > int(number) * future_or_past:
+                    result = result.replace(month=result.month + int(number) * future_or_past)
+                else:
+                    for index in range(0, int(number)):
+                        if future_or_past == 1:
+                            if result.month != 12:
+                                result = result.replace(month=result.month + 1)
+                            else:
+                                result = result.replace(month=1)
+                                result = result.replace(year=result.year + 1)
+                        else:
+                            if result.month != 1:
+                                result = result.replace(month=result.month - 1)
+                            else:
+                                result = result.replace(month=12)
+                                result.replace(year=result.year - 1)
             elif unit_str == Constants.TIMEX_YEAR:
                 result = result.replace(year=reference.year + int(number) * future_or_past)
             elif unit_str == Constants.TIMEX_BUSINESS_DAY:
