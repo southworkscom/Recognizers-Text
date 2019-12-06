@@ -1969,7 +1969,6 @@ class BaseDatePeriodParser(DateTimeParser):
             duration_unit = self.config.unit_map[duration_str]
 
             if duration_unit == Constants.TIMEX_WEEK:
-                begin_date_wd = begin_date.isoweekday()
                 diff = Constants.WEEK_DAY_COUNT - (Constants.WEEK_DAY_COUNT if begin_date.isoweekday() == 0 else
                                                    int(begin_date.isoweekday()))
                 end_date = begin_date + timedelta(days=diff)
@@ -1979,14 +1978,20 @@ class BaseDatePeriodParser(DateTimeParser):
                     rest_now_sunday = True
             elif duration_unit == Constants.TIMEX_MONTH_FULL:
                 end_date = DateUtils.safe_create_from_min_value(begin_date.year, begin_date.month, 1)
+                end_date = end_date.replace(month=end_date.month + 1) if end_date.month != 12 else\
+                    end_date.replace(month=1)
+                end_date = end_date.replace(year=end_date.year + 1) if end_date.month == end_date.day == 1 else \
+                    end_date.replace(year=end_date.year)
                 end_date = end_date + timedelta(days=-1)
-                end_date = end_date.replace(month=end_date.month + 1)
                 diff = end_date.day - begin_date.day + 1
                 duration_timex = "P" + str(diff) + Constants.TIMEX_DAY
             elif duration_unit == Constants.TIMEX_YEAR:
                 end_date = DateUtils.safe_create_from_min_value(begin_date.year, 12, 1)
+                end_date = end_date.replace(month=end_date.month + 1) if end_date.month != 12 else\
+                    end_date.replace(month=1)
+                end_date = end_date.replace(year=end_date.year + 1) if end_date.month == end_date.day == 1 else\
+                    end_date.replace(year=end_date.year)
                 end_date = end_date + timedelta(days=-1)
-                end_date = end_date.replace(month=end_date.month + 1)
                 diff = DateUtils.day_of_year(end_date) - DateUtils.day_of_year(begin_date) + 1
                 duration_timex = "P" + str(diff) + Constants.TIMEX_DAY
 
