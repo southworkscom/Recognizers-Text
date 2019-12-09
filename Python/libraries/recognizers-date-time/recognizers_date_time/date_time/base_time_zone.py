@@ -1,5 +1,6 @@
 import time
 from typing import List
+from datetime import timedelta
 from datetime import datetime
 from .parsers import DateTimeParser, DateTimeParseResult
 from .constants import Constants
@@ -44,12 +45,15 @@ class BaseTimeZoneParser(DateTimeParser):
 
         return offset_in_minutes
 
+    @staticmethod
     def convert_offset_in_mins_to_offset_string(self, offset_mins: int) -> str:
         return f'UTC' + "+" if offset_mins >= 0 else "-" + self.convert_mins_to_regular_format(abs(offset_mins))
 
+    @staticmethod
     def convert_mins_to_regular_format(self, offset_mins: int) -> str:
-        pass
+        return timedelta(minutes = offset_mins)
 
+    @staticmethod
     def normalize_text(self, text: str) -> str:
         pass
 
