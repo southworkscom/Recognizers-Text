@@ -4,7 +4,8 @@ from .parsers import DateTimeParser, DateTimeParseResult
 from .constants import Constants
 from recognizers_text import ExtractResult, ParseResult
 from .utilities import DateTimeResolutionResult
-
+from recognizers_date_time import DateTimeZoneExtractor
+from .utilities import Token
 
 class BaseTimeZoneParser(DateTimeParser):
     @property
@@ -34,3 +35,27 @@ class BaseTimeZoneParser(DateTimeParser):
 
     def get_datetime_resolution_result(self, offset_mins: int, text: str) -> DateTimeResolutionResult:
         pass
+
+
+class BaseTimeZoneExtractor(DateTimeZoneExtractor):
+    @property
+    def extractor_type_name(self) -> str:
+        return Constants.SYS_DATETIME_TIME
+
+    @property
+    def extractor_name(self) -> str:
+        return Constants.SYS_DATETIME_TIMEZONE
+
+    def extract(self, source: str, reference: datetime = None) -> List[ExtractResult]:
+        pass
+
+    def remove_ambiguous_time_zone(self, extract_result: ExtractResult) -> List[ExtractResult]:
+        pass
+
+    def match_location_times(self, text: str, tokens: List[Token]) -> List[Token]:
+        ret = []
+        return ret
+
+    def match_timezones(self, text: str) -> List[Token]:
+        ret = []
+        return ret
