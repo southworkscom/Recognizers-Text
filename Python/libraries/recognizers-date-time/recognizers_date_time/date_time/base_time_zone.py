@@ -29,7 +29,8 @@ class BaseTimeZoneParser(DateTimeParser):
             tokens = list(utc_offset.split(":"))
             hour = int(tokens[0])
             minutes = int(tokens[1])
-        elif time.strptime(utc_offset):
+        elif time.strptime(utc_offset) != 0:
+            hour = time.strptime(utc_offset).tm_hour
             minutes = 0
 
         if hour > Constants.HALF_DAY_HOUR_COUNT:
