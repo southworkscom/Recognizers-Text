@@ -169,7 +169,7 @@ export namespace EnglishDateTime {
     export const SuffixAfterRegex = `\\b(((at)\\s)?(or|and)\\s+(above|after|later|greater)(?!\\s+than))\\b`;
     export const PrepositionRegex = `(?<prep>^(at|on|of)(\\s+the)?$)`;
     export const LaterEarlyRegex = `((?<early>early(\\s+|-))|(?<late>late(r?\\s+|-)))`;
-    export const MealTimeRegex = `\\b(?<mealTime>breakfast|brunch|lunch(time)?|dinner(time)?|supper)\\b`;
+    export const MealTimeRegex = `\\b(at\\s+)?(?<mealTime>breakfast|brunch|lunch(\\s*time)?|dinner(\\s*time)?|supper)\\b`;
     export const UnspecificTimePeriodRegex = `(${MealTimeRegex})`;
     export const TimeOfDayRegex = `\\b(?<timeOfDay>((((in\\s+(the)?\\s+)?${LaterEarlyRegex}?(in\\s+(the)?\\s+)?(morning|afternoon|night|evening)))|${MealTimeRegex}|(((in\\s+(the)?\\s+)?)(daytime|business\\s+hour)))s?)\\b`;
     export const SpecificTimeOfDayRegex = `\\b((${StrictRelativeRegex}\\s+${TimeOfDayRegex})\\b|\\btonight)s?\\b`;
@@ -195,7 +195,7 @@ export namespace EnglishDateTime {
     export const MoreThanRegex = `\\b(more\\s+than)\\b`;
     export const DurationUnitRegex = `(?<unit>${DateUnitRegex}|h(ou)?rs?|h|min(ute)?s?|sec(ond)?s?)\\b`;
     export const SuffixAndRegex = `(?<suffix>\\s*(and)\\s+(an?\\s+)?(?<suffix_num>half|quarter))`;
-    export const PeriodicRegex = `\\b(?<periodic>daily|monthly|weekly|biweekly|yearly|annual(ly)?)\\b`;
+    export const PeriodicRegex = `\\b(?<periodic>daily|monthly|weekly|biweekly|quarterly|yearly|annual(ly)?)\\b`;
     export const EachUnitRegex = `(?<each>(each|every|once an?)(?<other>\\s+other)?\\s*(${DurationUnitRegex}|${WeekDayRegex}))`;
     export const EachPrefixRegex = `\\b(?<each>(each|(every)|once an?)\\s*$)`;
     export const SetEachRegex = `\\b(?<each>(each|(every))(?<other>\\s+other)?\\s*)`;
