@@ -7,6 +7,7 @@ from .utilities import DateTimeResolutionResult
 from recognizers_date_time import DateTimeZoneExtractor
 from .utilities import Token
 
+
 class BaseTimeZoneParser(DateTimeParser):
     @property
     def parser_name(self) -> str:
