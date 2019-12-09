@@ -188,6 +188,14 @@ class Constants:
     AGO_LABEL = "ago"
     LATER_LABEL = "later"
 
+    # These are some particular values for timezone recognition
+    INVALID_OFFSET_VALUE = -10000
+    POSITIVE_SIGN = 1
+    NEGATIVE_SIGN = -1
+
+    # hours of one half day
+    HALF_DAY_HOUR_COUNT = 12
+
 
 class TimeTypeConstants:
     DATE: str = 'date'
