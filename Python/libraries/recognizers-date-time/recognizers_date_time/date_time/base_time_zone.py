@@ -1,4 +1,4 @@
-from typing import List, Pattern
+from typing import List
 from datetime import datetime
 from .parsers import DateTimeParser, DateTimeParseResult
 from .constants import Constants
@@ -23,7 +23,7 @@ class BaseTimeZoneParser(DateTimeParser):
     def normalize_text(self, text: str) -> str:
         pass
 
-    def parse(self, extract_result: ExtractResult) -> ParseResult:
+    def parse(self, extract_result: ExtractResult, ref_date: datetime = None) -> ParseResult:
         pass
 
     def filter_results(self, query: str, candidate_results: List[DateTimeParseResult]) -> List[DateTimeParseResult]:
