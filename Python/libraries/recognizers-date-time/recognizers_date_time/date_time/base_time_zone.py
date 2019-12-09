@@ -45,7 +45,7 @@ class BaseTimeZoneParser(DateTimeParser):
         return offset_in_minutes
 
     def convert_offset_in_mins_to_offset_string(self, offset_mins: int) -> str:
-        pass
+        return f'UTC' + "+" if offset_mins >=0 else "-" + self.convert_mins_to_regular_format(abs(offset_mins))
 
     def convert_mins_to_regular_format(self, offset_mins: int) -> str:
         pass
