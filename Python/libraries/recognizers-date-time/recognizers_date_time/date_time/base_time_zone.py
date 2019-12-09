@@ -51,7 +51,7 @@ class BaseTimeZoneParser(DateTimeParser):
 
     @staticmethod
     def convert_mins_to_regular_format(self, offset_mins: int) -> str:
-        return timedelta(minutes = offset_mins)
+        return timedelta(minutes=offset_mins)
 
     @staticmethod
     def normalize_text(self, text: str) -> str:
