@@ -7,7 +7,7 @@ from .constants import Constants
 from recognizers_text import ExtractResult, ParseResult
 from .utilities import DateTimeResolutionResult
 from recognizers_text import RegExpUtility
-
+from recognizers_text_number_with_unit import
 
 class BaseTimeZoneParser(DateTimeParser):
     @property
@@ -77,7 +77,16 @@ class BaseTimeZoneParser(DateTimeParser):
         pass
 
     def parse(self, extract_result: ExtractResult, ref_date: datetime) -> DateTimeParseResult:
-        pass
+        datetime_result = DateTimeParseResult()
+        datetime_result.start = extract_result.start
+        datetime_result.length = extract_result.length
+        datetime_result.text = extract_result.text
+        datetime_result.type = extract_result.type
+
+        text = extract_result.text
+        normalized_text = self.normalize_text(text)
+        matched = re.match()
+        offset_minutes = self.compute_minutes(matched)
 
     def get_datetime_resolution_result(self, offset_mins: int, text: str) -> DateTimeResolutionResult:
         pass
