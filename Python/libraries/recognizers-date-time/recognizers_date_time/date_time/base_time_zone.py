@@ -5,9 +5,9 @@ from datetime import datetime
 from .parsers import DateTimeParser, DateTimeParseResult
 from .constants import Constants
 from recognizers_text import ExtractResult, ParseResult
-from .utilities import DateTimeResolutionResult
+from .utilities import DateTimeResolutionResult, TimeZoneResolutionResult
 from recognizers_text import RegExpUtility
-from recognizers_text_number_with_unit import
+
 
 class BaseTimeZoneParser(DateTimeParser):
     @property
@@ -89,4 +89,14 @@ class BaseTimeZoneParser(DateTimeParser):
         offset_minutes = self.compute_minutes(matched)
 
     def get_datetime_resolution_result(self, offset_mins: int, text: str) -> DateTimeResolutionResult:
-        pass
+        datetime_resolution = DateTimeResolutionResult()
+        datetime_resolution.success = True
+
+        timezone_resolution = TimeZoneResolutionResult()
+        timezone_resolution.value = self.convert_offset_in_mins_to_offset_string(offset_mins)
+        timezone_resolution.utc_offset_mins = offset_mins
+        timezone_resolution.time_zone_text = text
+
+        datetime_resolution.timezone_resolution = timezone_resolution
+
+        return datetime_resolution
