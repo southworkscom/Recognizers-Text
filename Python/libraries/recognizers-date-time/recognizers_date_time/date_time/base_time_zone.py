@@ -1,17 +1,26 @@
 import time
-from typing import List
-from datetime import timedelta
+import regex as re
+from typing import List, Pattern
 from datetime import datetime
 from .parsers import DateTimeParser, DateTimeParseResult
 from .constants import Constants
 from recognizers_text import ExtractResult, ParseResult
 from .utilities import DateTimeResolutionResult
+from recognizers_text import RegExpUtility
 
 
 class BaseTimeZoneParser(DateTimeParser):
     @property
     def parser_name(self) -> str:
         return Constants.SYS_DATETIME_TIMEZONE
+
+    @property
+    def time_zone_end_regex(self) -> Pattern:
+        return self._time_zone_end_regex
+
+    def __init__(self):
+        self._time_zone_end_regex = RegExpUtility.get_safe_reg_exp(
+            "time$|timezone$")
 
     @staticmethod
     def compute_minutes(utc_offset: str) -> int:
@@ -58,7 +67,9 @@ class BaseTimeZoneParser(DateTimeParser):
 
     @staticmethod
     def normalize_text(self, text: str) -> str:
-        pass
+        text = re.sub(r'\s+', ' ', text)
+        text = self._time_zone_end_regex.sub(text, ' ')
+        return text.strip()
 
     def parse(self, extract_result: ExtractResult, ref_date: datetime = None) -> ParseResult:
         pass
