@@ -919,4 +919,3 @@ class TimeZoneResolutionResult:
     @property
     def time_zone_text(self) -> str:
         return self._time_zone_text
-    
