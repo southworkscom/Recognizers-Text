@@ -1,4 +1,3 @@
-from typing import List
 from datetime import datetime
 from .parsers import DateTimeParser, DateTimeParseResult
 from .constants import Constants
@@ -9,8 +8,9 @@ from .utilities import Token
 from .utilities import DateTimeOptionsConfiguration
 from recognizers_text.matcher.string_matcher import StringMatcher
 from abc import abstractmethod
+from typing import List, Optional, Pattern, Match, Dict
 import regex
-
+from recognizers_text.matcher.match_result import MatchResult
 
 class BaseTimeZoneParser(DateTimeParser):
     @property
@@ -87,4 +87,17 @@ class BaseTimeZoneExtractor(DateTimeZoneExtractor):
         pass
 
     def match_timezones(self, text: str) -> List[Token]:
-        pass
+        ret: List[Token] = List[Token]
+        match: Match
+
+        # Direct UTC matches
+        if self.config.direct_utc_regex:
+            direct_utc = regex.finditer(self.config.direct_utc_regex, text)
+            for match in direct_utc:
+                ret.append(Token(match.start(), match.end() + match.start()))
+
+            matches = self.config.time_zone_matcher.find(text)
+            for match in matches:
+                ret.append(Token(match.start(), match.end() + match.start()))
+
+        return ret
