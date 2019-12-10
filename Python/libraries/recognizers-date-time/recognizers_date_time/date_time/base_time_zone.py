@@ -12,6 +12,7 @@ from typing import List, Optional, Pattern, Match, Dict
 import regex
 from recognizers_text.matcher.match_result import MatchResult
 
+
 class BaseTimeZoneParser(DateTimeParser):
     @property
     def parser_name(self) -> str:
