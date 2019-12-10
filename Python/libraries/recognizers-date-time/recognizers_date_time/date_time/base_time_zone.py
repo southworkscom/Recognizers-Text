@@ -34,7 +34,7 @@ class BaseTimeZoneParser(DateTimeParser):
             if utc_offset.startswith("-"):
                 sign = Constants.NEGATIVE_SIGN  # Earlier than utc 0
 
-        hour, minutes = 0
+        hour = minutes = 0
         if utc_offset.contains("+"):
             tokens = list(utc_offset.split(":"))
             hour = int(tokens[0])
@@ -46,24 +46,23 @@ class BaseTimeZoneParser(DateTimeParser):
         if hour > Constants.HALF_DAY_HOUR_COUNT:
             return Constants.INVALID_OFFSET_VALUE
 
-        if minutes != 0 and minutes != 15 and minutes != 30 and minutes != 45 and minutes != 60:
+        if minutes not in [0, 15, 30, 45, 60]:
             return Constants.INVALID_OFFSET_VALUE
 
-        offset_in_minutes = (hour * 60) + minutes
-        offset_in_minutes *= sign
+        offset_in_minutes = ((hour * 60) + minutes) * sign
 
         return offset_in_minutes
 
     @staticmethod
     def convert_offset_in_mins_to_offset_string(self, offset_mins: int) -> str:
-        return f'UTC' + "+" if offset_mins >= 0 else "-" + self.convert_mins_to_regular_format(abs(offset_mins))
+        return f'UTC {"+" if offset_mins >= 0 else "-"} {self.convert_mins_to_regular_format(abs(offset_mins))}'
 
     @staticmethod
     def convert_mins_to_regular_format(self, offset_mins: int) -> str:
         tokens = list((str(offset_mins/60)).split("."))
         hour = int(tokens[0])
         min = int(tokens[1])
-        return str(hour) + ":" + str(min)
+        return f'{hour} : {min}'
 
     @staticmethod
     def normalize_text(self, text: str) -> str:
