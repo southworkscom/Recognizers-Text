@@ -100,3 +100,4 @@ class BaseTimeZoneParser(DateTimeParser):
         datetime_resolution.timezone_resolution = timezone_resolution
 
         return datetime_resolution
+        
