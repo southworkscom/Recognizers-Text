@@ -71,7 +71,7 @@ class BaseTimeZoneParser(DateTimeParser):
         return text.strip()
 
     def parse(self, extract_result: ExtractResult, ref_date: datetime = None) -> ParseResult:
-        pass
+        return self.parse(extract_result, datetime.today())
 
     def filter_results(self, query: str, candidate_results: List[DateTimeParseResult]) -> List[DateTimeParseResult]:
         pass
