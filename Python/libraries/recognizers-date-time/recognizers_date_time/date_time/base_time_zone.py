@@ -6,6 +6,10 @@ from recognizers_text import ExtractResult, ParseResult
 from .utilities import DateTimeResolutionResult
 from recognizers_date_time import DateTimeZoneExtractor
 from .utilities import Token
+from .utilities import DateTimeOptionsConfiguration
+from recognizers_text.matcher.string_matcher import StringMatcher
+from abc import abstractmethod
+import regex
 
 
 class BaseTimeZoneParser(DateTimeParser):
@@ -38,25 +42,49 @@ class BaseTimeZoneParser(DateTimeParser):
         pass
 
 
+class TimeZoneExtractorConfiguration(DateTimeOptionsConfiguration):
+    @property
+    @abstractmethod
+    def direct_utc_regex(self) -> regex:
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def location_time_suffix_regex(self) -> regex:
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def location_matcher(self) -> StringMatcher:
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def time_zone_matcher(self) -> StringMatcher:
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def ambiguous_time_zone_list(self) -> List[str]:
+        raise NotImplementedError
+
+
 class BaseTimeZoneExtractor(DateTimeZoneExtractor):
     @property
     def extractor_type_name(self) -> str:
         return Constants.SYS_DATETIME_TIME
 
-    @property
-    def extractor_name(self) -> str:
-        return Constants.SYS_DATETIME_TIMEZONE
+    def __init__(self, config: TimeZoneExtractorConfiguration):
+        self.config = config
 
     def extract(self, source: str, reference: datetime = None) -> List[ExtractResult]:
         pass
 
-    def remove_ambiguous_time_zone(self, extract_result: ExtractResult) -> List[ExtractResult]:
-        pass
+    def remove_ambiguous_time_zone(self, extract_result: List[ExtractResult]) -> List[ExtractResult]:
+        return [item for item in extract_result if self.config.ambiguous_time_zone_list in item.text]
 
     def match_location_times(self, text: str, tokens: List[Token]) -> List[Token]:
-        ret = []
-        return ret
+        pass
 
     def match_timezones(self, text: str) -> List[Token]:
-        ret = []
-        return ret
+        pass
