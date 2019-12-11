@@ -208,6 +208,22 @@ class QueryProcessor:
     def float_or_int(source: Union[float, int]) -> Union[float, int]:
         return float(source) if source % 1 else int(source)
 
+    def remove_diacritics(self, query: str) -> str:
+        if not query:
+            return None
+
+        # FormD indicates that a Unicode string is normalized using full canonical decomposition.
+        # TODO: Add linq equivalent code here.
+
+        # FormC indicates that a Unicode string is normalized using full canonical decomposition,
+        # followed by the replacement of sequences with their primary composites, if possible.
+        # TODO: add normalized_query
+
+        # TODO: uncomment return
+        # return normalized_query
+
+        # TODO: remove pass
+        pass
 
 def flatten(result):
     return [item for sublist in result for item in sublist]
