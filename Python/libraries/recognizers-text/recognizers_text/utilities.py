@@ -225,5 +225,6 @@ class QueryProcessor:
         # TODO: remove pass
         pass
 
+
 def flatten(result):
     return [item for sublist in result for item in sublist]
