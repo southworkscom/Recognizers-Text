@@ -7,6 +7,7 @@ from .constants import Constants
 from recognizers_text import ExtractResult, ParseResult
 from .utilities import DateTimeResolutionResult, TimeZoneResolutionResult
 from recognizers_text import RegExpUtility
+from ..resources import TimeZoneDefinitions
 
 
 class BaseTimeZoneParser(DateTimeParser):
@@ -90,8 +91,35 @@ class BaseTimeZoneParser(DateTimeParser):
 
         text = extract_result.text
         normalized_text = self.normalize_text(text)
-        matched = re.match()
+        matched = (re.search(TimeZoneDefinitions.DirectUtcRegex, text)).group(2).value
         offset_minutes = self.compute_minutes(matched)
+
+        if offset_minutes != Constants.INVALID_OFFSET_VALUE:
+            datetime_result.value = self.get_datetime_resolution_result(offset_minutes, text);
+            datetime_result.resolution_str = Constants.UTC_OFFSET_MINS_KEY + ": " + offset_minutes
+        elif normalized_text in TimeZoneDefinitions.AbbrToMinMapping and TimeZoneDefinitions.AbbrToMinMapping[normalized_text] != Constants.INVALID_OFFSET_VALUE:
+            utc_minute_shift = TimeZoneDefinitions.AbbrToMinMapping[normalized_text]
+
+            datetime_result.value = self.get_datetime_resolution_result(utc_minute_shift, text);
+            datetime_result.resolution_str = Constants.UTC_OFFSET_MINS_KEY + ": " + utc_minute_shift
+        elif normalized_text in TimeZoneDefinitions.FullToMinMapping and TimeZoneDefinitions.FullToMinMapping[normalized_text] != Constants.INVALID_OFFSET_VALUE:
+            utc_minute_shift = TimeZoneDefinitions.FullToMinMapping[normalized_text]
+
+            datetime_result.value = self.get_datetime_resolution_result(utc_minute_shift, text);
+            datetime_result.resolution_str = Constants.UTC_OFFSET_MINS_KEY + ": " + utc_minute_shift
+        else:
+            datetime_resolution = DateTimeResolutionResult()
+            datetime_resolution.success = True
+
+            timezone_resolution = TimeZoneResolutionResult()
+            timezone_resolution.value = "UTC+XX:XX"
+            timezone_resolution.utc_offset_mins = Constants.INVALID_OFFSET_VALUE
+            timezone_resolution.time_zone_text = text
+
+            datetime_resolution.timezone_resolution = timezone_resolution
+            datetime_resolution.resolution_str = Constants.UTC_OFFSET_MINS_KEY + ": XX:XX"
+
+        return datetime_resolution
 
     def get_datetime_resolution_result(self, offset_mins: int, text: str) -> DateTimeResolutionResult:
         datetime_resolution = DateTimeResolutionResult()
