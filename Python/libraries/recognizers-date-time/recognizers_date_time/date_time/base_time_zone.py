@@ -11,6 +11,10 @@ from recognizers_text import RegExpUtility
 
 class BaseTimeZoneParser(DateTimeParser):
     @property
+    def parser_type_name(self) -> str:
+        pass
+
+    @property
     def parser_name(self) -> str:
         return Constants.SYS_DATETIME_TIMEZONE
 
