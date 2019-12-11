@@ -190,6 +190,7 @@ class Constants:
 
     # These are some particular values for timezone recognition
     INVALID_OFFSET_VALUE = -10000
+    UTC_OFFSET_MINS_KEY = "utcOffsetMins"
     POSITIVE_SIGN = 1
     NEGATIVE_SIGN = -1
 
