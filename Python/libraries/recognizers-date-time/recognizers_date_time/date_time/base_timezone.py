@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from recognizers_text.matcher.string_matcher import StringMatcher
-from typing import Pattern
+from typing import List, Pattern
 
 
 class TimeZoneExtractorConfiguration(ABC):
