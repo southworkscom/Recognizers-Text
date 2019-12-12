@@ -79,13 +79,12 @@ class BaseTimeZoneExtractor(DateTimeZoneExtractor):
         self.config = config
 
     def extract(self, source: str, reference: datetime = None) -> List[ExtractResult]:
+        from .utilities import merge_all_tokens
         tokens: List[Token] = list()
         normalized_text = QueryProcessor.remove_diacritics(source)
-        # tokens.add
-        # tokens.add
-        # return Token.merge_all_tokens(tokens, source, self.extractor_type_name)
-        #return None
-        pass
+        tokens.append(self.match_timezones(normalized_text))
+        tokens.append(self.match_location_times(normalized_text, tokens))
+        return merge_all_tokens(tokens, source, self.extractor_type_name)
 
     def remove_ambiguous_time_zone(self, extract_result: List[ExtractResult]) -> List[ExtractResult]:
         return [item for item in extract_result if self.config.ambiguous_time_zone_list in item.text]
