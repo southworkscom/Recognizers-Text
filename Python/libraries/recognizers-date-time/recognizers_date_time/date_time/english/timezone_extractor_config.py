@@ -4,6 +4,7 @@ from ..base_timezone import TimeZoneExtractorConfiguration
 from recognizers_text.utilities import RegExpUtility
 from recognizers_date_time.resources.english_time_zone import TimeZoneDefinitions
 from ..utilities import DateTimeOptions
+from recognizers_text.utilities import QueryProcessor
 
 
 class EnglishDateExtractorConfiguration(TimeZoneExtractorConfiguration):
@@ -38,7 +39,7 @@ class EnglishDateExtractorConfiguration(TimeZoneExtractorConfiguration):
     def __init__(self):
         options: DateTimeOptions = DateTimeOptions.NONE
         if options and DateTimeOptions.ENABLE_PREVIEW != 0:
-            self.location_matcher.init()
+            self.location_matcher.init(map(lambda o: QueryProcessor.remove_diacritics(o), TimeZoneDefinitions.MajorLocations))
 
         self._direct_utc_regex = RegExpUtility.get_safe_reg_exp(
             TimeZoneDefinitions.DirectUtcRegex,
