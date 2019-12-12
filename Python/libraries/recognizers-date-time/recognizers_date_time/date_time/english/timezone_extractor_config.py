@@ -36,7 +36,7 @@ class EnglishDateExtractorConfiguration(TimeZoneExtractorConfiguration):
         return self._ambiguous_timezone_list
 
     def __init__(self):
-        options: DateTimeOptions = DateTimeOptions.NONE,
+        options: DateTimeOptions = DateTimeOptions.NONE
         if options and DateTimeOptions.ENABLE_PREVIEW != 0:
             self.location_matcher.init()
 
