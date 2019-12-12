@@ -208,6 +208,10 @@ class QueryProcessor:
     def float_or_int(source: Union[float, int]) -> Union[float, int]:
         return float(source) if source % 1 else int(source)
 
+    @staticmethod
+    def remove_diacritics(query: str) -> str:
+        pass
+
 
 def flatten(result):
     return [item for sublist in result for item in sublist]
