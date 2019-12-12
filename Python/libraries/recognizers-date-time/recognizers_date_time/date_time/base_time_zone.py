@@ -2,7 +2,7 @@ from datetime import datetime
 from .parsers import DateTimeParser, DateTimeParseResult
 from .constants import Constants
 from recognizers_text import ExtractResult, ParseResult, QueryProcessor
-from .utilities import DateTimeResolutionResult
+from .utilities import DateTimeResolutionResult, MatchingUtil
 from recognizers_date_time import DateTimeZoneExtractor
 from .utilities import Token
 from .utilities import DateTimeOptionsConfiguration
@@ -83,10 +83,9 @@ class BaseTimeZoneExtractor(DateTimeZoneExtractor):
         normalized_text = QueryProcessor.remove_diacritics(source)
         # tokens.add
         # tokens.add
-        # TODO: fix this reference
         # return Token.merge_all_tokens(tokens, source, self.extractor_type_name)
-
-        return None
+        #return None
+        pass
 
     def remove_ambiguous_time_zone(self, extract_result: List[ExtractResult]) -> List[ExtractResult]:
         return [item for item in extract_result if self.config.ambiguous_time_zone_list in item.text]
@@ -115,8 +114,26 @@ class BaseTimeZoneExtractor(DateTimeZoneExtractor):
                 if not is_all_suffix_inside_tokens:
                     break
 
-        # if len(time_match) != 0 and not is_all_suffix_inside_tokens:
-        # TODO: There is a block still needed to be ported here
+        if len(time_match) != 0 and not is_all_suffix_inside_tokens:
+            last_match_index = time_match[len(time_match)-1]
+            matches = self.config.location_matcher.find(text[0: last_match_index])
+            location_matches = MatchingUtil.remove_sub_matches(matches.find(text))
+
+            i = 0
+            for match in time_match:
+                has_city_before = False
+                while i < len(location_matches) and location_matches[i].end <= match.index:
+                    has_city_before = True
+                    i += 1
+
+                    if i == len(location_matches):
+                        break
+
+                if has_city_before and location_matches[i - 1].end == match.index:
+                    result.append(Token(location_matches[i - 1].start, match.index + match.lenght))
+                if i == len(location_matches):
+                    break
+
         return result
 
     def match_timezones(self, text: str) -> List[Token]:
