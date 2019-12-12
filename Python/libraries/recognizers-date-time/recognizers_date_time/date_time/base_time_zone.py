@@ -95,7 +95,7 @@ class BaseTimeZoneExtractor(DateTimeZoneExtractor):
         if not self.config.location_time_suffix_regex:
             return result
 
-        time_match = regex.match(self.config.location_time_suffix_regex, text)
+        time_match = list(regex.finditer(self.config.location_time_suffix_regex, text))
 
         # Before calling a Find() in location matcher, check if all the matched suffixes by
         # LocationTimeSuffixRegex are already inside tokens extracted by TimeZone matcher.
@@ -115,8 +115,8 @@ class BaseTimeZoneExtractor(DateTimeZoneExtractor):
 
         if len(time_match) != 0 and not is_all_suffix_inside_tokens:
             last_match_index = time_match[len(time_match)-1]
-            matches = self.config.location_matcher.find(text[0: last_match_index])
-            location_matches = MatchingUtil.remove_sub_matches(matches.find(text))
+            matches = regex.finditer(self.config.location_matcher, text[0: last_match_index])
+            location_matches = MatchingUtil.remove_sub_matches(regex.finditer(self.config.location_matcher, text[0: last_match_index]))
 
             i = 0
             for match in time_match:
@@ -145,7 +145,7 @@ class BaseTimeZoneExtractor(DateTimeZoneExtractor):
             for match in direct_utc:
                 result.append(Token(match.start(), match.end() + match.start()))
 
-            matches = self.config.time_zone_matcher.find(text)
+            matches = regex.finditer(self.config.time_zone_matcher, text)
             for match in matches:
                 result.append(Token(match.start(), match.end() + match.start()))
 
