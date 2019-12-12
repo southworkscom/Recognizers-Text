@@ -7,7 +7,7 @@ from ..utilities import DateTimeOptions
 from recognizers_text.utilities import QueryProcessor
 
 
-class EnglishDateExtractorConfiguration(TimeZoneExtractorConfiguration):
+class EnglishTimeZoneExtractorConfiguration(TimeZoneExtractorConfiguration):
     @property
     def direct_utc_regex(self) -> Pattern:
         return self._direct_utc_regex
