@@ -168,7 +168,7 @@ class EnglishDateTimePeriodExtractorConfiguration(DateTimePeriodExtractorConfigu
             EnglishDurationExtractorConfiguration())
         self._time_period_extractor = BaseTimePeriodExtractor(
             EnglishTimePeriodExtractorConfiguration())
-        self.timezone_extractor = BaseTimeZoneExtractor(
+        self._timezone_extractor = BaseTimeZoneExtractor(
             EnglishTimeZoneExtractorConfiguration())
         self._simple_cases_regexes = [
             RegExpUtility.get_safe_reg_exp(EnglishDateTime.PureNumFromTo),
