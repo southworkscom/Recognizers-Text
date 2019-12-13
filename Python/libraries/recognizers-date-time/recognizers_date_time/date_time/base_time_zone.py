@@ -168,6 +168,9 @@ class BaseTimeZoneExtractor(DateTimeZoneExtractor):
     def __init__(self, config: TimeZoneExtractorConfiguration):
         self.config = config
 
+    def extract(self, text: str, reference: datetime = None) -> List[ExtractResult]:
+        return self.extract(text, datetime.now)
+
     def extract(self, source: str, reference: datetime = None) -> List[ExtractResult]:
         from .utilities import merge_all_tokens
         tokens: List[Token] = list()
