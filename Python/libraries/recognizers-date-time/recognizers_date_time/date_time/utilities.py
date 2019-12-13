@@ -225,6 +225,7 @@ class DateTimeResolutionResult:
         self.future_value: object = None
         self.past_value: object = None
         self.sub_date_time_entities: List[object] = list()
+        self.timezone_resolution: TimeZoneResolutionResult()
 
 
 class TimeOfDayResolution:
@@ -904,3 +905,17 @@ class TimexUtil:
         date_period_timex = f'P{unit_count}{date_period_timex_type_to_suffix[timex_type]}'
 
         return f'({DateTimeFormatUtil.luis_date(begin.year, begin.month, begin.day)},{DateTimeFormatUtil.luis_date(end.year, end.month, end.day)},{date_period_timex})'
+
+
+class TimeZoneResolutionResult:
+    @property
+    def value(self) -> str:
+        return self._value
+
+    @property
+    def utc_offset_mins(self) -> int:
+        return self._utc_offset_mins
+
+    @property
+    def time_zone_text(self) -> str:
+        return self._time_zone_text

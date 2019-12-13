@@ -208,7 +208,8 @@ class QueryProcessor:
     def float_or_int(source: Union[float, int]) -> Union[float, int]:
         return float(source) if source % 1 else int(source)
 
-    def remove_diacritics(self, query: str) -> str:
+    @staticmethod
+    def remove_diacritics(query: str) -> str:
         pass
 
 
