@@ -79,6 +79,9 @@ class BaseTimeZoneExtractor(DateTimeZoneExtractor):
         self.config = config
 
     def extract(self, source: str, reference: datetime = None) -> List[ExtractResult]:
+        return self.extract(source, datetime.now())
+
+    def extract(self, source: str, reference: datetime = None) -> List[ExtractResult]:
         from .utilities import merge_all_tokens
         tokens: List[Token] = list()
         normalized_text = QueryProcessor.remove_diacritics(source)
@@ -116,7 +119,7 @@ class BaseTimeZoneExtractor(DateTimeZoneExtractor):
         if len(time_match) != 0 and not is_all_suffix_inside_tokens:
             last_match_index = time_match[len(time_match)-1]
             matches = regex.finditer(self.config.location_matcher, text[0: last_match_index])
-            location_matches = MatchingUtil.remove_sub_matches(regex.finditer(self.config.location_matcher, text[0: last_match_index]))
+            location_matches = MatchingUtil.remove_sub_matches(matches)
 
             i = 0
             for match in time_match:
