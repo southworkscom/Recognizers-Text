@@ -1,6 +1,6 @@
 from typing import List, Pattern
 from recognizers_text.matcher.string_matcher import StringMatcher
-from ..base_timezone import TimeZoneExtractorConfiguration
+from ..base_time_zone import TimeZoneExtractorConfiguration
 from recognizers_text.utilities import RegExpUtility
 from recognizers_date_time.resources.english_time_zone import TimeZoneDefinitions
 from ..utilities import DateTimeOptions

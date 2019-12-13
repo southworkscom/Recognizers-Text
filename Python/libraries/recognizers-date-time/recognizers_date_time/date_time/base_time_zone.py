@@ -1,22 +1,46 @@
 import time
 import regex as re
 from typing import List, Pattern
+from abc import ABC, abstractmethod
 from datetime import datetime
+from .utilities import DateTimeResolutionResult, TimeZoneResolutionResult
 from .parsers import DateTimeParser, DateTimeParseResult
 from .constants import Constants
-from recognizers_text import ExtractResult, ParseResult
-from .utilities import DateTimeResolutionResult, TimeZoneResolutionResult
-from recognizers_text import RegExpUtility
 from ..resources import TimeZoneDefinitions
+from recognizers_text import ExtractResult, ParseResult, RegExpUtility
+from recognizers_text.matcher.string_matcher import StringMatcher
+
+
+class TimeZoneExtractorConfiguration(ABC):
+    @property
+    @abstractmethod
+    def direct_utc_regex(self) -> Pattern:
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def location_time_suffix_regex(self) -> Pattern:
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def location_matcher(self) -> StringMatcher:
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def timezone_matcher(self) -> StringMatcher:
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def ambiguous_timezone_list(self) -> List[str]:
+        raise NotImplementedError
 
 
 class BaseTimeZoneParser(DateTimeParser):
     @property
     def parser_type_name(self) -> str:
-        pass
-
-    @property
-    def parser_name(self) -> str:
         return Constants.SYS_DATETIME_TIMEZONE
 
     @property
