@@ -2,6 +2,7 @@ import time
 import regex as re
 from typing import List, Pattern, Match
 from abc import ABC, abstractmethod
+from multipledispatch import dispatch
 from datetime import datetime
 from .utilities import DateTimeResolutionResult, TimeZoneResolutionResult, Token, MatchingUtil
 from .parsers import DateTimeParser, DateTimeParseResult
@@ -100,13 +101,15 @@ class BaseTimeZoneParser(DateTimeParser):
         text = self._time_zone_end_regex.sub(text, ' ')
         return text.strip()
 
-    def parse(self, extract_result: ExtractResult, ref_date: datetime = None) -> ParseResult:
+    @dispatch(ExtractResult)
+    def parse(self, extract_result: ExtractResult) -> ParseResult:
         return self.parse(extract_result, datetime.today())
 
     @staticmethod
     def filter_results(self, query: str, candidate_results: List[DateTimeParseResult]) -> List[DateTimeParseResult]:
         return candidate_results
 
+    @dispatch(ExtractResult, datetime)
     def parse(self, extract_result: ExtractResult, ref_date: datetime) -> DateTimeParseResult:
         datetime_result = DateTimeParseResult()
         datetime_result.start = extract_result.start
@@ -168,10 +171,12 @@ class BaseTimeZoneExtractor(DateTimeZoneExtractor):
     def __init__(self, config: TimeZoneExtractorConfiguration):
         self.config = config
 
-    def extract(self, text: str, reference: datetime = None) -> List[ExtractResult]:
+    @dispatch(str)
+    def extract(self, text: str) -> List[ExtractResult]:
         return self.extract(text, datetime.now)
 
-    def extract(self, source: str, reference: datetime = None) -> List[ExtractResult]:
+    @dispatch(str, datetime)
+    def extract(self, source: str, reference: datetime) -> List[ExtractResult]:
         from .utilities import merge_all_tokens
         tokens: List[Token] = list()
         normalized_text = QueryProcessor.remove_diacritics(source)
