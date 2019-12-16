@@ -121,7 +121,7 @@ class BaseTimeZoneParser(DateTimeParser):
 
         if offset_minutes != Constants.INVALID_OFFSET_VALUE:
             datetime_result.value = self.get_datetime_resolution_result(offset_minutes, text)
-            datetime_result.resolution_str = Constants.UTC_OFFSET_MINS_KEY + ": " + offset_minutes
+            datetime_result.resolution_str = f'{Constants.UTC_OFFSET_MINS_KEY}:{offset_minutes}'
         elif normalized_text in TimeZoneDefinitions.AbbrToMinMapping and TimeZoneDefinitions.AbbrToMinMapping[normalized_text] != Constants.INVALID_OFFSET_VALUE:
             utc_minute_shift = TimeZoneDefinitions.AbbrToMinMapping[normalized_text]
 
