@@ -116,7 +116,7 @@ class BaseTimeZoneParser(DateTimeParser):
 
         text = extract_result.text
         normalized_text = self.normalize_text(text)
-        matched = (re.search(TimeZoneDefinitions.DirectUtcRegex, text)).group(2).value
+        matched = TimeZoneDefinitions.DirectUtcRegex.search(text).group(2).value
         offset_minutes = self.compute_minutes(matched)
 
         if offset_minutes != Constants.INVALID_OFFSET_VALUE:
