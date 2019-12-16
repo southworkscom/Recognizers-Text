@@ -1,5 +1,6 @@
 from typing import List, Pattern
 
+from recognizers_date_time import FrenchTimeZoneExtractorConfiguration
 from recognizers_text.utilities import RegExpUtility
 from recognizers_text.extractor import Extractor
 from recognizers_number.number.french.extractors import FrenchIntegerExtractor

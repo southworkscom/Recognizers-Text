@@ -2,12 +2,11 @@ import time
 import regex as re
 from typing import List, Pattern, Match
 from abc import ABC, abstractmethod
+from multipledispatch import dispatch
 from datetime import datetime
 from .utilities import DateTimeResolutionResult, TimeZoneResolutionResult, Token, MatchingUtil
 from .parsers import DateTimeParser, DateTimeParseResult
-from recognizers_date_time import DateTimeZoneExtractor
 from .constants import Constants
-from ..resources import TimeZoneDefinitions
 from recognizers_text import ExtractResult, ParseResult, RegExpUtility, QueryProcessor
 from recognizers_text.matcher.string_matcher import StringMatcher
 
@@ -100,13 +99,15 @@ class BaseTimeZoneParser(DateTimeParser):
         text = self._time_zone_end_regex.sub(text, ' ')
         return text.strip()
 
-    def parse(self, extract_result: ExtractResult, ref_date: datetime = None) -> ParseResult:
+    @dispatch(ExtractResult)
+    def parse(self, extract_result: ExtractResult) -> ParseResult:
         return self.parse(extract_result, datetime.today())
 
     @staticmethod
     def filter_results(self, query: str, candidate_results: List[DateTimeParseResult]) -> List[DateTimeParseResult]:
         return candidate_results
 
+    @dispatch(ExtractResult, datetime)
     def parse(self, extract_result: ExtractResult, ref_date: datetime) -> DateTimeParseResult:
         datetime_result = DateTimeParseResult()
         datetime_result.start = extract_result.start
@@ -116,12 +117,12 @@ class BaseTimeZoneParser(DateTimeParser):
 
         text = extract_result.text
         normalized_text = self.normalize_text(text)
-        matched = (re.search(TimeZoneDefinitions.DirectUtcRegex, text)).group(2).value
+        matched = TimeZoneDefinitions.DirectUtcRegex.search(text).group(2).value
         offset_minutes = self.compute_minutes(matched)
 
         if offset_minutes != Constants.INVALID_OFFSET_VALUE:
             datetime_result.value = self.get_datetime_resolution_result(offset_minutes, text)
-            datetime_result.resolution_str = Constants.UTC_OFFSET_MINS_KEY + ": " + offset_minutes
+            datetime_result.resolution_str = f'{Constants.UTC_OFFSET_MINS_KEY}:{offset_minutes}'
         elif normalized_text in TimeZoneDefinitions.AbbrToMinMapping and TimeZoneDefinitions.AbbrToMinMapping[normalized_text] != Constants.INVALID_OFFSET_VALUE:
             utc_minute_shift = TimeZoneDefinitions.AbbrToMinMapping[normalized_text]
 
@@ -171,7 +172,8 @@ class BaseTimeZoneExtractor(DateTimeZoneExtractor):
     def extract(self, text: str, reference: datetime = None) -> List[ExtractResult]:
         return self.extract(text, datetime.now)
 
-    def extract(self, source: str, reference: datetime = None) -> List[ExtractResult]:
+    @dispatch(str, datetime)
+    def extract(self, source: str, reference: datetime) -> List[ExtractResult]:
         return self.extract(source, datetime.now())
 
     def extract(self, source: str, reference: datetime = None) -> List[ExtractResult]:
