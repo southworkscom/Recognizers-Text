@@ -7,6 +7,7 @@ from ...resources.spanish_date_time import SpanishDateTime
 from ..extractors import DateTimeExtractor
 from ..base_timeperiod import TimePeriodExtractorConfiguration, MatchedIndex
 from ..base_time import BaseTimeExtractor
+from ..base_time_zone import BaseTimeZoneExtractor
 from .time_extractor_config import SpanishTimeExtractorConfiguration
 from .base_configs import SpanishDateTimeUtilityConfiguration
 from ..utilities import DateTimeOptions
@@ -54,6 +55,10 @@ class SpanishTimePeriodExtractorConfiguration(TimePeriodExtractorConfiguration):
     def pure_number_regex(self) -> List[Pattern]:
         return self._pure_number_regex
 
+    @property
+    def timezone_extractor(self) -> DateTimeExtractor:
+        return self._timezone_extractor
+
     def __init__(self):
         super().__init__()
         self._single_time_extractor = BaseTimeExtractor(
@@ -82,6 +87,8 @@ class SpanishTimePeriodExtractorConfiguration(TimePeriodExtractorConfiguration):
         self._token_before_date = SpanishDateTime.TokenBeforeDate
         self._pure_number_regex = [SpanishDateTime.PureNumFromTo, SpanishDateTime.PureNumFromTo]
         self._options = DateTimeOptions.NONE
+        self._timezone_extractor = BaseTimeZoneExtractor(
+            SpanishTimeZoneExtractorConfiguration())
 
     def get_from_token_index(self, source: str) -> MatchedIndex:
         match = self.from_regex.search(source)
