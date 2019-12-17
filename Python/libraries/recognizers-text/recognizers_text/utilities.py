@@ -210,8 +210,15 @@ class QueryProcessor:
 
     @staticmethod
     def remove_diacritics(query: str) -> str:
-        pass
+        if query is None:
+            return None
 
+        # 'NFC' indicates that a Unicode string is normalized using full canonical decomposition.
+        c = unicodedata.normalize('NFC', query) if unicodedata.category(unicodedata.normalize('NFC', query)) is not 'NSM' else None
+
+        # 'NFD' indicates that a Unicode string is normalized using full canonical decomposition,
+        # followed by the replacement of sequences with their primary composites, if possible.
+        return unicodedata.normalize('NFD', c)
 
 def flatten(result):
     return [item for sublist in result for item in sublist]
