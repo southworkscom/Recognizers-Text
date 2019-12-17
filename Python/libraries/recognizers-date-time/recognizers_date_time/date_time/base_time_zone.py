@@ -6,7 +6,7 @@ from multipledispatch import dispatch
 from datetime import datetime
 from .utilities import DateTimeResolutionResult, TimeZoneResolutionResult, Token, MatchingUtil
 from .parsers import DateTimeParser, DateTimeParseResult
-from recognizers_date_time import DateTimeZoneExtractor
+from .datetime_zone_extractor import DateTimeZoneExtractor
 from .constants import Constants
 from ..resources import TimeZoneDefinitions
 from recognizers_text import ExtractResult, ParseResult, RegExpUtility, QueryProcessor
