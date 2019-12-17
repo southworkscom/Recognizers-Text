@@ -220,5 +220,6 @@ class QueryProcessor:
         # followed by the replacement of sequences with their primary composites, if possible.
         return unicodedata.normalize('NFD', c)
 
+
 def flatten(result):
     return [item for sublist in result for item in sublist]
