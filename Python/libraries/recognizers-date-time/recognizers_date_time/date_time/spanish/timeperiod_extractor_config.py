@@ -11,6 +11,7 @@ from ..base_time_zone import BaseTimeZoneExtractor
 from .time_extractor_config import SpanishTimeExtractorConfiguration
 from .base_configs import SpanishDateTimeUtilityConfiguration
 from ..utilities import DateTimeOptions
+from .timezone_extractor_config import SpanishTimeZoneExtractorConfiguration
 
 
 class SpanishTimePeriodExtractorConfiguration(TimePeriodExtractorConfiguration):
