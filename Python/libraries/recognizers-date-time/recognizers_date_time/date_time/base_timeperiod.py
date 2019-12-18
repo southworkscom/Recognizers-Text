@@ -69,6 +69,11 @@ class TimePeriodExtractorConfiguration(DateTimeOptionsConfiguration):
     def pure_number_regex(self) -> List[Pattern]:
         raise NotImplementedError
 
+    @property
+    @abstractmethod
+    def time_zone_extractor(self) -> DateTimeParser:
+        raise NotImplementedError
+
 
 class BaseTimePeriodExtractor(DateTimeExtractor):
     @property
