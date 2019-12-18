@@ -33,10 +33,6 @@ class EnglishMergedExtractorConfiguration(MergedExtractorConfiguration):
         return self._check_both_before_after
 
     @property
-    def time_zone_extractor(self):
-        return self._time_zone_extractor
-
-    @property
     def datetime_alt_extractor(self):
         return self._datetime_alt_extractor
 
@@ -79,6 +75,10 @@ class EnglishMergedExtractorConfiguration(MergedExtractorConfiguration):
     @property
     def holiday_extractor(self) -> DateTimeExtractor:
         return self._holiday_extractor
+
+    @property
+    def time_zone_extractor(self):
+        return self._time_zone_extractor
 
     @property
     def duration_extractor(self) -> DateTimeExtractor:

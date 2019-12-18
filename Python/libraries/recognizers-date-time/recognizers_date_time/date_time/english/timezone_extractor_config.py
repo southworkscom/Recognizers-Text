@@ -1,14 +1,12 @@
 from typing import List, Pattern
 from recognizers_text.matcher.string_matcher import StringMatcher
-from ..base_time_zone import TimeZoneExtractorConfiguration
-from recognizers_text.utilities import RegExpUtility
-from recognizers_date_time.resources.english_time_zone import TimeZoneDefinitions
-from ..utilities import DateTimeOptions
 from recognizers_text.utilities import QueryProcessor
-from ..utilities import TimeZoneUtility
+from ..base_time_zone import TimeZoneExtractorConfiguration
+from ...resources.english_time_zone import TimeZoneDefinitions
+from ..utilities import DateTimeOptionsConfiguration, TimeZoneUtility, RegExpUtility, DateTimeOptions
 
 
-class EnglishTimeZoneExtractorConfiguration(TimeZoneExtractorConfiguration):
+class EnglishTimeZoneExtractorConfiguration(DateTimeOptionsConfiguration, TimeZoneExtractorConfiguration):
     @property
     def direct_utc_regex(self) -> Pattern:
         return self._direct_utc_regex
@@ -46,9 +44,8 @@ class EnglishTimeZoneExtractorConfiguration(TimeZoneExtractorConfiguration):
             TimeZoneDefinitions.DirectUtcRegex)
         self._abbreviations_list: List[str] = list(TimeZoneDefinitions.AbbreviationsList)
         self._full_name_list: List[str] = list(TimeZoneDefinitions.FullNameList)
-        self._location_time_suffix_regex = RegExpUtility.get_safe_reg_exp(
-            TimeZoneDefinitions.LocationTimeSuffixRegex)
-        self._timezone_matcher = TimeZoneUtility.build_matcher_from_lists([self.full_name_list, self.abbreviations_list])
+        self._timezone_matcher = TimeZoneUtility.build_matcher_from_lists(
+            [self.full_name_list, self.abbreviations_list])
         self._location_time_suffix_regex = RegExpUtility.get_safe_reg_exp(
             TimeZoneDefinitions.LocationTimeSuffixRegex)
         self._location_matcher = StringMatcher()

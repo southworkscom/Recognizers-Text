@@ -40,6 +40,10 @@ class EnglishTimePeriodExtractorConfiguration(TimePeriodExtractorConfiguration):
         return self._single_time_extractor
 
     @property
+    def timezone_extractor(self) -> DateTimeExtractor:
+        return self._timezone_extractor
+
+    @property
     def integer_extractor(self) -> Extractor:
         return self._integer_extractor
 
@@ -50,10 +54,6 @@ class EnglishTimePeriodExtractorConfiguration(TimePeriodExtractorConfiguration):
     @property
     def pure_number_regex(self) -> List[Pattern]:
         return self._pure_number_regex
-
-    @property
-    def timezone_extractor(self) -> DateTimeExtractor:
-        return self._timezone_extractor
 
     def __init__(self):
         super().__init__()
@@ -70,11 +70,11 @@ class EnglishTimePeriodExtractorConfiguration(TimePeriodExtractorConfiguration):
         self._single_time_extractor = BaseTimeExtractor(
             EnglishTimeExtractorConfiguration())
         self._integer_extractor = EnglishIntegerExtractor()
+        self._timezone_extractor = BaseTimeZoneExtractor(
+            EnglishTimeZoneExtractorConfiguration())
         self._token_before_date = EnglishDateTime.TokenBeforeDate
         self._pure_number_regex = [EnglishDateTime.PureNumFromTo, EnglishDateTime.PureNumFromTo]
         self._options = DateTimeOptions.NONE
-        self._timezone_extractor = BaseTimeZoneExtractor(
-            EnglishTimeZoneExtractorConfiguration())
 
     def get_from_token_index(self, source: str) -> MatchedIndex:
         index = -1
