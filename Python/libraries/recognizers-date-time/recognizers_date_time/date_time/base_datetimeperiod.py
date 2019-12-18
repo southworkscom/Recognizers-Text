@@ -205,6 +205,11 @@ class DateTimePeriodExtractorConfiguration(DateTimeOptionsConfiguration):
     def check_both_before_after(self) -> Pattern:
         raise NotImplementedError
 
+    @property
+    @abstractmethod
+    def time_zone_extractor(self) -> DateTimeParser:
+        raise NotImplementedError
+
 
 class BaseDateTimePeriodExtractor(DateTimeExtractor):
     @property
