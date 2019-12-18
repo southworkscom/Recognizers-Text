@@ -44,15 +44,12 @@ class EnglishTimeZoneExtractorConfiguration(TimeZoneExtractorConfiguration):
 
         self._direct_utc_regex = RegExpUtility.get_safe_reg_exp(
             TimeZoneDefinitions.DirectUtcRegex)
-        self._abbreviations_list = list(TimeZoneDefinitions.AbbreviationsList)
-        self._full_name_list = list(TimeZoneDefinitions.FullNameList)
+        self._abbreviations_list: List[str] = list(TimeZoneDefinitions.AbbreviationsList)
+        self._full_name_list: List[str] = list(TimeZoneDefinitions.FullNameList)
         self._location_time_suffix_regex = RegExpUtility.get_safe_reg_exp(
             TimeZoneDefinitions.LocationTimeSuffixRegex)
-        self._timezone_matcher = RegExpUtility.get_safe_reg_exp(
-            TimeZoneUtility.build_matcher_from_lists(self.full_name_list, self.abbreviations_list))
+        self._timezone_matcher = TimeZoneUtility.build_matcher_from_lists(self.full_name_list, self.abbreviations_list)
         self._location_time_suffix_regex = RegExpUtility.get_safe_reg_exp(
             TimeZoneDefinitions.LocationTimeSuffixRegex)
         self._location_matcher = StringMatcher()
         self._ambiguous_timezone_list = list(TimeZoneDefinitions.AmbiguousTimezoneList)
-
-
