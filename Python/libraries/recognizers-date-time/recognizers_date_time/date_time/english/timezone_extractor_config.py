@@ -5,6 +5,7 @@ from recognizers_text.utilities import RegExpUtility
 from recognizers_date_time.resources.english_time_zone import TimeZoneDefinitions
 from ..utilities import DateTimeOptions
 from recognizers_text.utilities import QueryProcessor
+from ..base_datetimeperiod import DateTimeOptionsConfiguration
 
 
 class EnglishTimeZoneExtractorConfiguration(TimeZoneExtractorConfiguration):
@@ -50,7 +51,7 @@ class EnglishTimeZoneExtractorConfiguration(TimeZoneExtractorConfiguration):
             TimeZoneDefinitions.FullNameList)
         self._location_time_suffix_regex = RegExpUtility.get_safe_reg_exp(
             TimeZoneDefinitions.LocationTimeSuffixRegex,
-            flags=self.direct_utc_regex.IGNORECASE or self.direct_utc_regex.MULTILINE)
+            flags=self._location_time_suffix_regex.IGNORECASE or self._location_time_suffix_regex.MULTILINE)
         self._location_matcher = StringMatcher()
         self._ambiguous_timezone_list = RegExpUtility.get_safe_reg_exp(
             list(TimeZoneDefinitions.AmbiguousTimezoneList))
