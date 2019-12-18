@@ -25,6 +25,8 @@ from .datetimeperiod_extractor_config import EnglishDateTimePeriodExtractorConfi
 from .set_extractor_config import EnglishSetExtractorConfiguration
 from .holiday_extractor_config import EnglishHolidayExtractorConfiguration
 from ...resources.base_date_time import BaseDateTime
+from ..base_time_zone import BaseTimeZoneExtractor
+from .timezone_extractor_config import EnglishTimeZoneExtractorConfiguration
 
 
 class EnglishMergedExtractorConfiguration(MergedExtractorConfiguration):
@@ -205,7 +207,8 @@ class EnglishMergedExtractorConfiguration(MergedExtractorConfiguration):
             EnglishDateTime.FailFastRegex
         )
         self._check_both_before_after = EnglishDateTime.CheckBothBeforeAfter
+        self._time_zone_extractor = BaseTimeZoneExtractor(
+            EnglishTimeZoneExtractorConfiguration())
         # TODO When the implementation for these properties is added, change the None values to their respective Regexps
-        self._time_zone_extractor = None
         self._term_filter_regexes = None
         self._datetime_alt_extractor = None
