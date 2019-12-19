@@ -712,7 +712,7 @@ class DateTimePeriodParserConfiguration:
 
     @property
     @abstractmethod
-    def time_zone_parser(self) -> DateTimeExtractor:
+    def time_zone_parser(self) -> DateTimeParser:
         raise NotImplementedError
 
     @property
