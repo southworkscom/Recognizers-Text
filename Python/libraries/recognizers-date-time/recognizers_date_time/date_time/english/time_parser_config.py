@@ -1,6 +1,6 @@
 from typing import List, Pattern, Dict
 import regex
-from recognizers_date_time import DateTimeParser
+from ..parsers import DateTimeParser
 
 from recognizers_text.utilities import RegExpUtility
 from ...resources.english_date_time import EnglishDateTime
