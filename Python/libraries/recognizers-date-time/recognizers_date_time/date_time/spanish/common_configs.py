@@ -203,4 +203,4 @@ class SpanishCommonDateTimeParserConfiguration(BaseDateParserConfiguration):
             SpanishDateTimeParserConfiguration(self))
         self._date_time_period_parser = BaseDateTimePeriodParser(
             SpanishDateTimePeriodParserConfiguration(self))
-        self._time_zone_parser = None
+        self._time_zone_parser = BaseTimeZoneParser()
