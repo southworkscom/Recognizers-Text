@@ -66,7 +66,7 @@ class BaseTimeZoneParser(DateTimeParser):
                 sign = Constants.NEGATIVE_SIGN  # Earlier than utc 0
 
         hour = minutes = 0
-        if utc_offset.contains("+"):
+        if '+' in utc_offset:
             tokens = list(utc_offset.split(":"))
             hour = int(tokens[0])
             minutes = int(tokens[1])
