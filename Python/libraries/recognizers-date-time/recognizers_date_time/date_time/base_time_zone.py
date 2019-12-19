@@ -105,10 +105,6 @@ class BaseTimeZoneParser(DateTimeParser):
     def parse(self, extract_result: ExtractResult) -> ParseResult:
         return self.parse(extract_result, datetime.today())
 
-    @staticmethod
-    def filter_results(self, query: str, candidate_results: List[DateTimeParseResult]) -> List[DateTimeParseResult]:
-        return candidate_results
-
     @dispatch(ExtractResult, datetime)
     def parse(self, extract_result: ExtractResult, ref_date: datetime) -> DateTimeParseResult:
         datetime_result = DateTimeParseResult()
