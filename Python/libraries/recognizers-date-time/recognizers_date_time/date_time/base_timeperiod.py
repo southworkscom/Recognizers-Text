@@ -294,6 +294,11 @@ class TimePeriodParserConfiguration:
 
     @property
     @abstractmethod
+    def time_zone_parser(self) -> DateTimeParser:
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
     def pure_number_from_to_regex(self) -> Pattern:
         raise NotImplementedError
 
