@@ -20,7 +20,6 @@ from .datetime_extractor_config import FrenchDateTimeExtractorConfiguration
 
 
 class FrenchDateTimePeriodExtractorConfiguration(DateTimePeriodExtractorConfiguration):
-
     @property
     def check_both_before_after(self) -> Pattern:
         return self._check_both_before_after
@@ -52,6 +51,10 @@ class FrenchDateTimePeriodExtractorConfiguration(DateTimePeriodExtractorConfigur
     @property
     def time_period_extractor(self) -> DateTimeExtractor:
         return self._time_period_extractor
+
+    @property
+    def time_zone_extractor(self) -> DateTimeExtractor:
+        return self._time_zone_extractor
 
     @property
     def timezone_extractor(self) -> DateTimeExtractor:
@@ -214,7 +217,7 @@ class FrenchDateTimePeriodExtractorConfiguration(DateTimePeriodExtractorConfigur
             FrenchDurationExtractorConfiguration())
         self._time_period_extractor = BaseTimePeriodExtractor(
             FrenchTimePeriodExtractorConfiguration())
-        self._timezone_extractor = BaseTimeZoneExtractor(
+        self._time_zone_extractor = BaseTimeZoneExtractor(
             FrenchTimeZoneExtractorConfiguration())
         self._within_next_prefix_regex = RegExpUtility.get_safe_reg_exp(
             FrenchDateTime.WithinNextPrefixRegex
