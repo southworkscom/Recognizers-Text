@@ -11,6 +11,10 @@ from ..base_configs import BaseDateParserConfiguration
 
 class EnglishDateTimePeriodParserConfiguration(DateTimePeriodParserConfiguration):
 
+    @property
+    def time_zone_parser(self) -> DateTimeExtractor:
+        return self._time_zone_parser
+
     def __init__(self, config: BaseDateParserConfiguration):
         self._pure_number_from_to_regex = RegExpUtility.get_safe_reg_exp(
             EnglishDateTime.PureNumFromTo)
@@ -40,6 +44,7 @@ class EnglishDateTimePeriodParserConfiguration(DateTimePeriodParserConfiguration
         self._date_time_parser = config.date_time_parser
         self._time_period_parser = config.time_period_parser
         self._duration_parser = config.duration_parser
+        self._time_zone_parser = config.time_zone_parser
         self.morning_start_end_regex = RegExpUtility.get_safe_reg_exp(
             EnglishDateTime.MorningStartEndRegex)
         self.afternoon_start_end_regex = RegExpUtility.get_safe_reg_exp(
