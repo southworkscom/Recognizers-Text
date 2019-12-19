@@ -11,6 +11,7 @@ from ..constants import Constants
 from ..utilities import TimexUtil
 from ..base_time_zone import BaseTimeZoneParser
 
+
 class SpanishTimePeriodParserConfiguration(TimePeriodParserConfiguration):
     @property
     def time_extractor(self) -> DateTimeExtractor:
