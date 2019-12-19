@@ -1,11 +1,11 @@
 from typing import Pattern, Dict
-
 from recognizers_text.utilities import RegExpUtility
 from ...resources.french_date_time import FrenchDateTime
 from ..base_datetimeperiod import DateTimePeriodParserConfiguration, MatchedTimeRange
 from ..extractors import DateTimeExtractor
 from ..parsers import DateTimeParser
 from ..base_configs import BaseDateParserConfiguration
+from ..base_time_zone import BaseTimeZoneParser
 
 
 class FrenchDateTimePeriodParserConfiguration(DateTimePeriodParserConfiguration):
@@ -64,6 +64,7 @@ class FrenchDateTimePeriodParserConfiguration(DateTimePeriodParserConfiguration)
             FrenchDateTime.RelativeTimeUnitRegex)
         self._rest_of_date_time_regex = RegExpUtility.get_safe_reg_exp(
             FrenchDateTime.RestOfDateTimeRegex)
+        self._time_zone_parser = config.time_zone_parser
 
     @property
     def pure_number_from_to_regex(self) -> Pattern:
@@ -144,6 +145,10 @@ class FrenchDateTimePeriodParserConfiguration(DateTimePeriodParserConfiguration)
     @property
     def duration_parser(self) -> DateTimeParser:
         return self._duration_parser
+
+    @property
+    def time_zone_parser(self) -> DateTimeParser:
+        return self._time_zone_parser
 
     def get_matched_time_range(self, source: str) -> MatchedTimeRange:
         trimmed_source = source.strip().lower()
