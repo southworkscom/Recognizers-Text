@@ -183,11 +183,6 @@ class MergedExtractorConfiguration:
     def filter_word_regex_list(self) -> List[Pattern]:
         raise NotImplementedError
 
-    @property
-    @abstractmethod
-    def time_zone_extractor(self) -> DateTimeParser:
-        raise NotImplementedError
-
 
 class BaseMergedExtractor(DateTimeExtractor):
     @property

@@ -207,7 +207,7 @@ class DateTimePeriodExtractorConfiguration(DateTimeOptionsConfiguration):
 
     @property
     @abstractmethod
-    def time_zone_extractor(self) -> DateTimeParser:
+    def time_zone_extractor(self) -> DateTimeExtractor:
         raise NotImplementedError
 
 

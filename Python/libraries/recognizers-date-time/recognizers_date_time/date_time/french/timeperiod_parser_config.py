@@ -51,7 +51,7 @@ class FrenchTimePeriodParserConfiguration(TimePeriodParserConfiguration):
         return self._utility_configuration
 
     @property
-    def time_zone_parser(self) -> BaseTimeZoneParser:
+    def time_zone_parser(self) -> DateTimeParser:
         return self._time_zone_parser
 
     def __init__(self, config: BaseDateParserConfiguration):
@@ -68,7 +68,7 @@ class FrenchTimePeriodParserConfiguration(TimePeriodParserConfiguration):
             FrenchDateTime.TimeOfDayRegex)
         self._till_regex = RegExpUtility.get_safe_reg_exp(
             FrenchDateTime.TillRegex)
-        self._time_zone_parser = BaseTimeZoneParser()
+        self._time_zone_parser = config.time_zone_parser
 
     def get_matched_timex_range(self, source: str) -> MatchedTimeRegex:
         trimmed_text = source.strip().lower()

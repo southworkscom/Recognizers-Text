@@ -6,7 +6,7 @@ from ...resources.french_date_time import FrenchDateTime
 from ..base_time import TimeParserConfiguration, AdjustParams
 from ..base_configs import BaseDateParserConfiguration, DateTimeUtilityConfiguration
 from .time_extractor_config import FrenchTimeExtractorConfiguration
-from ..base_time_zone import BaseTimeZoneParser
+from ..parsers import DateTimeParser
 
 
 class FrenchTimeParserConfiguration(TimeParserConfiguration):
@@ -31,7 +31,7 @@ class FrenchTimeParserConfiguration(TimeParserConfiguration):
         return self._utility_configuration
 
     @property
-    def time_zone_parser(self) -> BaseTimeZoneParser:
+    def time_zone_parser(self) -> DateTimeParser:
         return self._time_zone_parser
 
     def __init__(self, config: BaseDateParserConfiguration):
@@ -47,7 +47,7 @@ class FrenchTimeParserConfiguration(TimeParserConfiguration):
 
         self._utility_configuration = config.utility_configuration
         self._numbers: Dict[str, int] = config.numbers
-        self._time_zone_parser = BaseTimeZoneParser()
+        self._time_zone_parser = config.time_zone_parser
 
     def adjust_by_prefix(self, prefix: str, adjust: AdjustParams):
         delta_min = 0
