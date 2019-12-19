@@ -130,7 +130,7 @@ class EnglishDateTimePeriodParserConfiguration(DateTimePeriodParserConfiguration
         return self._duration_parser
 
     @property
-    def time_zone_parser(self) -> DateTimeExtractor:
+    def time_zone_parser(self) -> DateTimeParser:
         return self._time_zone_parser
 
     def get_matched_time_range(self, source: str) -> MatchedTimeRange:
