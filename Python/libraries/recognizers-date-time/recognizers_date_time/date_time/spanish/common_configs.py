@@ -158,7 +158,7 @@ class SpanishCommonDateTimeParserConfiguration(BaseDateParserConfiguration):
         BaseDateParserConfiguration.__init__(self)
 
         self._utility_configuration = SpanishDateTimeUtilityConfiguration()
-
+        self._time_zone_parser = BaseTimeZoneParser()
         self._unit_map = SpanishDateTime.UnitMap
         self._unit_value_map = SpanishDateTime.UnitValueMap
         self._season_map = SpanishDateTime.SeasonMap
@@ -168,7 +168,6 @@ class SpanishCommonDateTimeParserConfiguration(BaseDateParserConfiguration):
         self._numbers = SpanishDateTime.Numbers
         self._double_numbers = SpanishDateTime.DoubleNumbers
         self._check_both_before_after = SpanishDateTime.CheckBothBeforeAfter
-
         self._cardinal_extractor = SpanishCardinalExtractor()
         self._integer_extractor = SpanishIntegerExtractor()
         self._ordinal_extractor = SpanishOrdinalExtractor()
@@ -203,4 +202,4 @@ class SpanishCommonDateTimeParserConfiguration(BaseDateParserConfiguration):
             SpanishDateTimeParserConfiguration(self))
         self._date_time_period_parser = BaseDateTimePeriodParser(
             SpanishDateTimePeriodParserConfiguration(self))
-        self._time_zone_parser = BaseTimeZoneParser()
+
