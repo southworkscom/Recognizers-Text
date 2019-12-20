@@ -6,7 +6,7 @@ from ...resources.english_time_zone import TimeZoneDefinitions
 from ..utilities import DateTimeOptionsConfiguration, TimeZoneUtility, RegExpUtility, DateTimeOptions
 
 
-class EnglishTimeZoneExtractorConfiguration(DateTimeOptionsConfiguration, TimeZoneExtractorConfiguration):
+class EnglishTimeZoneExtractorConfiguration(TimeZoneExtractorConfiguration):
     @property
     def direct_utc_regex(self) -> Pattern:
         return self._direct_utc_regex
@@ -36,10 +36,6 @@ class EnglishTimeZoneExtractorConfiguration(DateTimeOptionsConfiguration, TimeZo
         return self._ambiguous_timezone_list
 
     def __init__(self):
-        options: DateTimeOptions = DateTimeOptions.NONE
-        if options and DateTimeOptions.ENABLE_PREVIEW != 0:
-            self.location_matcher.init(map(lambda o: QueryProcessor.remove_diacritics(o), TimeZoneDefinitions.MajorLocations))
-
         self._direct_utc_regex = RegExpUtility.get_safe_reg_exp(
             TimeZoneDefinitions.DirectUtcRegex)
         self._abbreviations_list: List[str] = list(TimeZoneDefinitions.AbbreviationsList)
@@ -49,4 +45,4 @@ class EnglishTimeZoneExtractorConfiguration(DateTimeOptionsConfiguration, TimeZo
         self._location_time_suffix_regex = RegExpUtility.get_safe_reg_exp(
             TimeZoneDefinitions.LocationTimeSuffixRegex)
         self._location_matcher = StringMatcher()
-        self._ambiguous_timezone_list = list(TimeZoneDefinitions.AmbiguousTimezoneList)
+        self._ambiguous_timezone_list: List[str] = list(TimeZoneDefinitions.AmbiguousTimezoneList)

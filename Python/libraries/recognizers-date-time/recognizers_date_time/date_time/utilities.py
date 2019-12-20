@@ -62,7 +62,7 @@ class TimeZoneUtility:
     @staticmethod
     def build_matcher_from_lists(collections: List[str]) -> StringMatcher:
 
-        matcher: StringMatcher = StringMatcher(MatchStrategy.TrieTree, NumberWithUnitTokenizer())
+        matcher = StringMatcher(MatchStrategy.TrieTree, NumberWithUnitTokenizer())
 
         matcher_list = []
 
