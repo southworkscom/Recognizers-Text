@@ -947,29 +947,29 @@ class TimexUtil:
         return f'({DateTimeFormatUtil.luis_date(begin.year, begin.month, begin.day)},{DateTimeFormatUtil.luis_date(end.year, end.month, end.day)},{date_period_timex})'
 
     @staticmethod
-        def is_range_timex(timex: str) -> bool:
-            return timex and timex.startswith("(")
+    def is_range_timex(timex: str) -> bool:
+        return timex and timex.startswith("(")
 
-        @staticmethod
-        def get_range_timex_components(range_timex: str) -> RangeTimexComponents:
-            range_timex = range_timex.replace('(', '').replace(')', '')
-            components = range_timex.split(',')
-            result = RangeTimexComponents()
-            if len(components) == 3:
-                result.begin_timex = components[0]
-                result.end_timex = components[1]
-                result.duration_timex = components[2]
-                result.is_valid = True
+    @staticmethod
+    def get_range_timex_components(range_timex: str) -> RangeTimexComponents:
+        range_timex = range_timex.replace('(', '').replace(')', '')
+        components = range_timex.split(',')
+        result = RangeTimexComponents()
+        if len(components) == 3:
+            result.begin_timex = components[0]
+            result.end_timex = components[1]
+            result.duration_timex = components[2]
+            result.is_valid = True
 
-            return result
+        return result
 
-        @staticmethod
-        def combine_date_and_time_timex(date_timex: str, time_timex: str):
-            return f'{date_timex}{time_timex}'
+    @staticmethod
+    def combine_date_and_time_timex(date_timex: str, time_timex: str):
+        return f'{date_timex}{time_timex}'
 
-        @staticmethod
-        def generate_date_time_period_timex(begin_timex: str, end_timex: str, duration_timex: str):
-            return f'({begin_timex},{end_timex},{duration_timex})'
+    @staticmethod
+    def generate_date_time_period_timex(begin_timex: str, end_timex: str, duration_timex: str):
+        return f'({begin_timex},{end_timex},{duration_timex})'
 
 
 class TimeZoneResolutionResult:

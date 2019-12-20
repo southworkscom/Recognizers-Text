@@ -18,7 +18,7 @@ from ..base_datetimeperiod import BaseDateTimePeriodParser
 from ..base_duration import BaseDurationParser
 from ..base_set import BaseSetParser
 from ..base_merged import MergedParserConfiguration
-from ...resources.spanish_date_time import SpanishDateTime
+from ...resources.spanish_date_time import SpanishDateTime, BaseDateTime
 from ..parsers import DateTimeParser
 
 
