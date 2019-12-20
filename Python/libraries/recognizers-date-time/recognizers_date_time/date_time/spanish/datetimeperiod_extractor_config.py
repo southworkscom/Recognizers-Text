@@ -22,6 +22,14 @@ from .timezone_extractor_config import SpanishTimeZoneExtractorConfiguration
 
 class SpanishDateTimePeriodExtractorConfiguration(DateTimePeriodExtractorConfiguration):
     @property
+    def future_regex(self) -> BaseNumberExtractor:
+        return self._future_regex
+
+    @property
+    def past_regex(self) -> BaseNumberExtractor:
+        return self._past_regex
+
+    @property
     def check_both_before_after(self) -> Pattern:
         return self._check_both_before_after
 
@@ -167,11 +175,11 @@ class SpanishDateTimePeriodExtractorConfiguration(DateTimePeriodExtractorConfigu
 
     def __init__(self):
         super().__init__()
+        self._check_both_before_after = SpanishDateTime.CheckBothBeforeAfter
         self._simple_cases_regexes = [
             RegExpUtility.get_safe_reg_exp(SpanishDateTime.PureNumFromTo),
             RegExpUtility.get_safe_reg_exp(SpanishDateTime.PureNumBetweenAnd)
         ]
-
         self._preposition_regex = RegExpUtility.get_safe_reg_exp(
             SpanishDateTime.PrepositionRegex)
         self._till_regex = RegExpUtility.get_safe_reg_exp(
@@ -187,7 +195,7 @@ class SpanishDateTimePeriodExtractorConfiguration(DateTimePeriodExtractorConfigu
         self._past_prefix_regex = RegExpUtility.get_safe_reg_exp(
             SpanishDateTime.PastRegex)
         self._next_prefix_regex = RegExpUtility.get_safe_reg_exp(
-            SpanishDateTime.FutureRegex)
+            SpanishDateTime.NextPrefixRegex)
         self._number_combined_with_unit = RegExpUtility.get_safe_reg_exp(
             SpanishDateTime.DateTimePeriodNumberCombinedWithUnit)
         self._week_day_regex = RegExpUtility.get_safe_reg_exp(
@@ -205,8 +213,8 @@ class SpanishDateTimePeriodExtractorConfiguration(DateTimePeriodExtractorConfigu
 
         self.from_regex = RegExpUtility.get_safe_reg_exp(
             SpanishDateTime.FromRegex)
-        self.connector_and_regex = RegExpUtility.get_safe_reg_exp(
-            SpanishDateTime.ConnectorAndRegex)
+        self.range_connector_regex = RegExpUtility.get_safe_reg_exp(
+            SpanishDateTime.RangeConnectorRegex)
         self.between_regex = RegExpUtility.get_safe_reg_exp(
             SpanishDateTime.BetweenRegex)
 
@@ -260,6 +268,12 @@ class SpanishDateTimePeriodExtractorConfiguration(DateTimePeriodExtractorConfigu
             SpanishDateTime.SuffixRegex
         )
         self._check_both_before_after = SpanishDateTime.CheckBothBeforeAfter
+        self._past_regex = RegExpUtility.get_safe_reg_exp(
+            SpanishDateTime.PastRegex
+        )
+        self._future_regex = RegExpUtility.get_safe_reg_exp(
+            SpanishDateTime.FutureRegex
+        )
 
     def get_from_token_index(self, source: str) -> MatchedIndex:
         match = self.from_regex.search(source)
@@ -276,7 +290,7 @@ class SpanishDateTimePeriodExtractorConfiguration(DateTimePeriodExtractorConfigu
         return MatchedIndex(False, -1)
 
     def has_connector_token(self, source: str) -> MatchedIndex:
-        match = self.connector_and_regex.search(source)
+        match = self.range_connector_regex.search(source)
         if match:
             return MatchedIndex(True, match.start())
 

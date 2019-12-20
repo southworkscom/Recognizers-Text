@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Microsoft.Recognizers.Definitions.Spanish;
+using Microsoft.Recognizers.Text.Number;
+using Microsoft.Recognizers.Text.Utilities;
 
 namespace Microsoft.Recognizers.Text.DateTime.Spanish
 {
@@ -57,8 +59,8 @@ namespace Microsoft.Recognizers.Text.DateTime.Spanish
         private static readonly Regex FromRegex =
             new Regex(DateTimeDefinitions.FromRegex, RegexFlags);
 
-        private static readonly Regex ConnectorAndRegex =
-            new Regex(DateTimeDefinitions.ConnectorAndRegex, RegexFlags);
+        private static readonly Regex RangeConnectorRegex =
+            new Regex(DateTimeDefinitions.RangeConnectorRegex, RegexFlags);
 
         private static readonly Regex BetweenRegex =
             new Regex(DateTimeDefinitions.BetweenRegex, RegexFlags);
@@ -68,7 +70,15 @@ namespace Microsoft.Recognizers.Text.DateTime.Spanish
         {
             TokenBeforeDate = DateTimeDefinitions.TokenBeforeDate;
 
-            CardinalExtractor = Number.Spanish.CardinalExtractor.GetInstance();
+            var numOptions = NumberOptions.None;
+            if ((config.Options & DateTimeOptions.NoProtoCache) != 0)
+            {
+                numOptions = NumberOptions.NoProtoCache;
+            }
+
+            var numConfig = new BaseNumberOptionsConfiguration(config.Culture, numOptions);
+
+            CardinalExtractor = Number.Spanish.CardinalExtractor.GetInstance(numConfig);
 
             SingleDateExtractor = new BaseDateExtractor(new SpanishDateExtractorConfiguration(this));
             SingleTimeExtractor = new BaseTimeExtractor(new SpanishTimeExtractorConfiguration(this));
@@ -176,7 +186,7 @@ namespace Microsoft.Recognizers.Text.DateTime.Spanish
 
         public bool HasConnectorToken(string text)
         {
-            return ConnectorAndRegex.IsMatch(text);
+            return RangeConnectorRegex.IsExactMatch(text, true);
         }
     }
 }

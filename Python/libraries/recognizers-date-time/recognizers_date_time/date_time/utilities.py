@@ -1,6 +1,6 @@
 from enum import Enum, IntEnum, IntFlag
 from abc import ABC, abstractmethod
-from typing import List, Dict, Pattern, Union
+from typing import List, Dict, Pattern, Union, Match
 from datetime import datetime, timedelta
 import calendar
 
@@ -209,9 +209,17 @@ def get_tokens_from_regex(pattern: Pattern, source: str) -> List[Token]:
 
 
 class ResolutionStartEnd:
-    def __init__(self, start=None, end=None):
-        self.start = start
-        self.end = end
+    def __init__(self, _start=None, _end=None):
+        self.start = _start
+        self.end = _end
+
+    @property
+    def _start(self):
+        return self.start
+
+    @property
+    def _end(self):
+        return self.end
 
 
 class DateTimeResolutionResult:
@@ -220,6 +228,7 @@ class DateTimeResolutionResult:
         self.timex: str = ''
         self.is_lunar: bool = False
         self.mod: str = ''
+        self.has_range_changing_mod: bool = False
         self.comment: str = ''
         self.future_resolution: Dict[str, str] = dict()
         self.past_resolution: Dict[str, str] = dict()
@@ -227,6 +236,7 @@ class DateTimeResolutionResult:
         self.past_value: object = None
         self.sub_date_time_entities: List[object] = list()
         self.timezone_resolution: TimeZoneResolutionResult()
+        self.list: List[object] = list()
 
 
 class TimeOfDayResolution:
@@ -268,6 +278,23 @@ class DateTimeFormatUtil:
     @staticmethod
     def luis_date_time(time: datetime) -> str:
         return DateTimeFormatUtil.luis_date_from_datetime(time) + 'T' + DateTimeFormatUtil.luis_time_from_datetime(time)
+
+    @staticmethod
+    def luis_time_span(begin_time: datetime, end_time: datetime) -> str:
+        timex_builder = f'{Constants.GENERAL_PERIOD_PREFIX}{Constants.TIME_TIMEX_PREFIX}'
+
+        total_hours = end_time.hour - begin_time.hour
+        total_minutes = end_time.minute - begin_time.minute
+        total_seconds = end_time.second - begin_time.second
+
+        if total_hours > 0:
+            timex_builder += f'{total_hours}H'
+        if total_minutes > 0:
+            timex_builder += f'{total_minutes}M'
+        if total_seconds > 0:
+            timex_builder += f'{total_seconds}S'
+
+        return str(timex_builder)
 
     @staticmethod
     def format_date(date: datetime) -> str:
@@ -668,8 +695,8 @@ class AgoLaterUtil:
                                           duration_parser: DateTimeParser,
                                           unit_map: Dict[str, str],
                                           unit_regex: Pattern,
-                                          utility_configuration: DateTimeUtilityConfiguration,
-                                          mode: AgoLaterMode) -> DateTimeResolutionResult:
+                                          utility_configuration: DateTimeUtilityConfiguration)\
+            -> DateTimeResolutionResult:
         result = DateTimeResolutionResult()
 
         if duration_extractor:
@@ -698,12 +725,16 @@ class AgoLaterUtil:
             duration_result.timex) - 1].replace(Constants.UNIT_P, '').replace(Constants.UNIT_T, '')
         num = int(num_str)
 
-        if not num:
-            return result
+        mode = AgoLaterMode.DATE
+        if pr.timex_str.__contains__("T"):
+            mode = AgoLaterMode.DATETIME
 
-        return AgoLaterUtil.get_ago_later_result(
-            pr, num, unit_map, src_unit, after_str, before_str, reference,
-            utility_configuration, mode)
+        if pr.value:
+            return AgoLaterUtil.get_ago_later_result(
+                pr, num, unit_map, src_unit, after_str, before_str, reference,
+                utility_configuration, mode)
+
+        return result
 
     @staticmethod
     def __matched_string(regexp, string):
@@ -840,6 +871,14 @@ date_period_timex_type_to_suffix = {
 }
 
 
+class RangeTimexComponents:
+    def __init__(self):
+        self.begin_timex = ''
+        self.end_timex = ''
+        self.duration_timex = ''
+        self.is_valid = False
+
+
 class TimexUtil:
 
     @staticmethod
@@ -906,6 +945,31 @@ class TimexUtil:
         date_period_timex = f'P{unit_count}{date_period_timex_type_to_suffix[timex_type]}'
 
         return f'({DateTimeFormatUtil.luis_date(begin.year, begin.month, begin.day)},{DateTimeFormatUtil.luis_date(end.year, end.month, end.day)},{date_period_timex})'
+
+    @staticmethod
+        def is_range_timex(timex: str) -> bool:
+            return timex and timex.startswith("(")
+
+        @staticmethod
+        def get_range_timex_components(range_timex: str) -> RangeTimexComponents:
+            range_timex = range_timex.replace('(', '').replace(')', '')
+            components = range_timex.split(',')
+            result = RangeTimexComponents()
+            if len(components) == 3:
+                result.begin_timex = components[0]
+                result.end_timex = components[1]
+                result.duration_timex = components[2]
+                result.is_valid = True
+
+            return result
+
+        @staticmethod
+        def combine_date_and_time_timex(date_timex: str, time_timex: str):
+            return f'{date_timex}{time_timex}'
+
+        @staticmethod
+        def generate_date_time_period_timex(begin_timex: str, end_timex: str, duration_timex: str):
+            return f'({begin_timex},{end_timex},{duration_timex})'
 
 
 class TimeZoneResolutionResult:
