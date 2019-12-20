@@ -197,7 +197,7 @@ class EnglishDateTimePeriodParserConfiguration(DateTimePeriodParserConfiguration
     @property
     def time_zone_parser(self) -> DateTimeParser:
         return self._time_zone_parser
-        
+
     def get_matched_time_range(self, source: str):
         trimmed_source = source.strip()
 
