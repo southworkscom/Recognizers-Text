@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.Recognizers.Text.Utilities;
@@ -563,7 +564,9 @@ namespace Microsoft.Recognizers.Text.DateTime
             bool ambiguous = true;
 
             var er = this.config.OrdinalExtractor.Extract(trimmedText);
-            if (er.Count == 0)
+
+            // check if the extraction is empty or a relative ordinal (e.g. "next", "previous")
+            if (er.Count == 0 || er[0].Metadata.IsOrdinalRelative)
             {
                 er = this.config.IntegerExtractor.Extract(trimmedText);
             }
@@ -735,7 +738,7 @@ namespace Microsoft.Recognizers.Text.DateTime
                 day = this.config.DayOfMonth[dayStr];
                 if (!string.IsNullOrEmpty(yearStr))
                 {
-                    year = int.Parse(yearStr);
+                    year = int.Parse(yearStr, CultureInfo.InvariantCulture);
                     if (year < 100 && year >= Constants.MinTwoDigitYearPastNum)
                     {
                         year += 1900;
