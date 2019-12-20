@@ -207,5 +207,4 @@ class EnglishMergedExtractorConfiguration(MergedExtractorConfiguration):
         self._time_zone_extractor = BaseTimeZoneExtractor(
             EnglishTimeZoneExtractorConfiguration())
         # TODO When the implementation for these properties is added, change the None values to their respective Regexps
-        self._term_filter_regexes = None
         self._datetime_alt_extractor = None
