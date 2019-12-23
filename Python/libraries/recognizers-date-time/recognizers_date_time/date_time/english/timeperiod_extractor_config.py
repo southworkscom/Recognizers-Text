@@ -7,7 +7,7 @@ from ...resources.english_date_time import EnglishDateTime
 from ..extractors import DateTimeExtractor
 from ..base_timeperiod import TimePeriodExtractorConfiguration, MatchedIndex
 from ..base_time import BaseTimeExtractor
-from ..base_time_zone import BaseTimeZoneExtractor
+from ..base_timezone import BaseTimeZoneExtractor
 from .time_extractor_config import EnglishTimeExtractorConfiguration
 from .timezone_extractor_config import EnglishTimeZoneExtractorConfiguration
 from ..utilities import DateTimeOptions

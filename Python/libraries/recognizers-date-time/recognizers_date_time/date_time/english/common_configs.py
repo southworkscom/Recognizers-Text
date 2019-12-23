@@ -32,7 +32,7 @@ from .datetime_extractor_config import EnglishDateTimeExtractorConfiguration
 from .datetime_parser_config import EnglishDateTimeParserConfiguration
 from .datetimeperiod_extractor_config import EnglishDateTimePeriodExtractorConfiguration
 from .datetimeperiod_parser_config import EnglishDateTimePeriodParserConfiguration
-from ..base_time_zone import BaseTimeZoneParser
+from ..base_timezone import BaseTimeZoneParser
 
 
 class EnglishCommonDateTimeParserConfiguration(BaseDateParserConfiguration):

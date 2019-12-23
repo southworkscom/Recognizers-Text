@@ -25,7 +25,7 @@ from .datetimeperiod_extractor_config import EnglishDateTimePeriodExtractorConfi
 from .set_extractor_config import EnglishSetExtractorConfiguration
 from .holiday_extractor_config import EnglishHolidayExtractorConfiguration
 from ...resources.base_date_time import BaseDateTime
-from ..base_time_zone import BaseTimeZoneExtractor
+from ..base_timezone import BaseTimeZoneExtractor
 from .timezone_extractor_config import EnglishTimeZoneExtractorConfiguration
 
 

@@ -4,7 +4,7 @@ from recognizers_text.utilities import RegExpUtility
 from ...resources.french_date_time import FrenchDateTime
 from ..base_time import TimeExtractorConfiguration
 from ..utilities import DateTimeOptions
-from ..base_time_zone import BaseTimeZoneExtractor
+from ..base_timezone import BaseTimeZoneExtractor
 from .timezone_extractor_config import FrenchTimeZoneExtractorConfiguration
 
 

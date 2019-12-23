@@ -1,7 +1,7 @@
 from typing import List, Pattern
 from recognizers_text.matcher.string_matcher import StringMatcher
 from recognizers_text.utilities import QueryProcessor
-from ..base_time_zone import TimeZoneExtractorConfiguration
+from ..base_timezone import TimeZoneExtractorConfiguration
 from ...resources.english_time_zone import TimeZoneDefinitions
 from ..utilities import DateTimeOptionsConfiguration, TimeZoneUtility, RegExpUtility, DateTimeOptions
 

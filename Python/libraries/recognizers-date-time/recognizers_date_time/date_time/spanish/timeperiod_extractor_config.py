@@ -7,7 +7,7 @@ from ...resources.spanish_date_time import SpanishDateTime
 from ..extractors import DateTimeExtractor
 from ..base_timeperiod import TimePeriodExtractorConfiguration, MatchedIndex
 from ..base_time import BaseTimeExtractor
-from ..base_time_zone import BaseTimeZoneExtractor
+from ..base_timezone import BaseTimeZoneExtractor
 from .time_extractor_config import SpanishTimeExtractorConfiguration
 from .base_configs import SpanishDateTimeUtilityConfiguration
 from ..utilities import DateTimeOptions

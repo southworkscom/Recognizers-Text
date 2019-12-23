@@ -7,7 +7,7 @@ from ...resources.french_date_time import FrenchDateTime
 from ..extractors import DateTimeExtractor
 from ..base_timeperiod import TimePeriodExtractorConfiguration, MatchedIndex
 from ..base_time import BaseTimeExtractor
-from ..base_time_zone import BaseTimeZoneExtractor
+from ..base_timezone import BaseTimeZoneExtractor
 from .time_extractor_config import FrenchTimeExtractorConfiguration
 from .base_configs import FrenchDateTimeUtilityConfiguration
 from .timezone_extractor_config import FrenchTimeZoneExtractorConfiguration

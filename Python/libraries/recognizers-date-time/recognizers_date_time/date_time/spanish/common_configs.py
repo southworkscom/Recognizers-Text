@@ -15,7 +15,7 @@ from ..base_dateperiod import BaseDatePeriodExtractor, BaseDatePeriodParser
 from ..base_timeperiod import BaseTimePeriodExtractor, BaseTimePeriodParser
 from ..base_datetime import BaseDateTimeExtractor, BaseDateTimeParser
 from ..base_datetimeperiod import BaseDateTimePeriodExtractor, BaseDateTimePeriodParser
-from ..base_time_zone import BaseTimeZoneParser
+from ..base_timezone import BaseTimeZoneParser
 from .base_configs import SpanishDateTimeUtilityConfiguration
 from .date_extractor_config import SpanishDateExtractorConfiguration
 from .date_parser_config import SpanishDateParserConfiguration

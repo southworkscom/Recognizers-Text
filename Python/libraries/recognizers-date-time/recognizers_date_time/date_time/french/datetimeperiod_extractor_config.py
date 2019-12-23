@@ -10,7 +10,7 @@ from ..base_time import BaseTimeExtractor
 from ..base_duration import BaseDurationExtractor
 from ..base_timeperiod import BaseTimePeriodExtractor
 from ..base_datetime import BaseDateTimeExtractor
-from ..base_time_zone import BaseTimeZoneExtractor
+from ..base_timezone import BaseTimeZoneExtractor
 from .date_extractor_config import FrenchDateExtractorConfiguration
 from .time_extractor_config import FrenchTimeExtractorConfiguration
 from .duration_extractor_config import FrenchDurationExtractorConfiguration

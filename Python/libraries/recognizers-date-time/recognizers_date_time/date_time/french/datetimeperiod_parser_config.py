@@ -5,7 +5,7 @@ from ..base_datetimeperiod import DateTimePeriodParserConfiguration, MatchedTime
 from ..extractors import DateTimeExtractor
 from ..parsers import DateTimeParser
 from ..base_configs import BaseDateParserConfiguration
-from ..base_time_zone import BaseTimeZoneParser
+from ..base_timezone import BaseTimeZoneParser
 
 
 class FrenchDateTimePeriodParserConfiguration(DateTimePeriodParserConfiguration):

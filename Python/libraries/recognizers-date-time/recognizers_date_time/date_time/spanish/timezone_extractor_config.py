@@ -1,6 +1,6 @@
 from typing import List, Pattern
 from recognizers_text.matcher.string_matcher import StringMatcher
-from ..base_time_zone import TimeZoneExtractorConfiguration
+from ..base_timezone import TimeZoneExtractorConfiguration
 
 
 class SpanishTimeZoneExtractorConfiguration(TimeZoneExtractorConfiguration):

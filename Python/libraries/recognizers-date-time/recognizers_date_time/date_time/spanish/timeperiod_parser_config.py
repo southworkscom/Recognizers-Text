@@ -9,7 +9,7 @@ from ..base_configs import BaseDateParserConfiguration, DateTimeUtilityConfigura
 from ..base_timeperiod import TimePeriodParserConfiguration, MatchedTimeRegex
 from ..constants import Constants
 from ..utilities import TimexUtil
-from ..base_time_zone import BaseTimeZoneParser
+from ..base_timezone import BaseTimeZoneParser
 
 
 class SpanishTimePeriodParserConfiguration(TimePeriodParserConfiguration):
