@@ -1,9 +1,10 @@
 import time
-import regex as re
+import regex
 from typing import List, Pattern, Match
 from abc import ABC, abstractmethod
 from datetime import datetime
-from .utilities import DateTimeResolutionResult, TimeZoneResolutionResult, Token, MatchingUtil
+from .utilities import DateTimeOptionsConfiguration, DateTimeResolutionResult, TimeZoneResolutionResult, Token,\
+    MatchingUtil
 from .parsers import DateTimeParser, DateTimeParseResult
 from .datetime_zone_extractor import DateTimeZoneExtractor
 from .constants import Constants
@@ -12,10 +13,15 @@ from recognizers_text import ExtractResult, ParseResult, RegExpUtility, QueryPro
 from recognizers_text.matcher.string_matcher import StringMatcher
 
 
-class TimeZoneExtractorConfiguration(ABC):
+class TimeZoneExtractorConfiguration(DateTimeOptionsConfiguration):
     @property
     @abstractmethod
     def direct_utc_regex(self) -> Pattern:
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def timezone_matcher(self):
         raise NotImplementedError
 
     @property
@@ -26,11 +32,6 @@ class TimeZoneExtractorConfiguration(ABC):
     @property
     @abstractmethod
     def location_matcher(self) -> StringMatcher:
-        raise NotImplementedError
-
-    @property
-    @abstractmethod
-    def timezone_matcher(self) -> StringMatcher:
         raise NotImplementedError
 
     @property
@@ -96,7 +97,7 @@ class BaseTimeZoneParser(DateTimeParser):
 
     @staticmethod
     def normalize_text(self, text: str) -> str:
-        text = re.sub(r'\s+', ' ', text)
+        text = regex.sub(r'\s+', ' ', text)
         text = self._time_zone_end_regex.sub(text, ' ')
         return text.strip()
 
@@ -163,10 +164,13 @@ class BaseTimeZoneExtractor(DateTimeZoneExtractor):
 
     def extract(self, source: str, reference: datetime = None) -> List[ExtractResult]:
         from .utilities import merge_all_tokens
-        tokens: List[Token] = list()
+        tokens = []
+
         normalized_text = QueryProcessor.remove_diacritics(source)
-        tokens.append(self.match_timezones(normalized_text))
-        tokens.append(self.match_location_times(normalized_text, tokens))
+
+        tokens.extend(self.match_timezones(normalized_text))
+        tokens.extend(self.match_location_times(normalized_text, tokens))
+
         return merge_all_tokens(tokens, source, self.extractor_type_name)
 
     def remove_ambiguous_time_zone(self, extract_result: List[ExtractResult]) -> List[ExtractResult]:
@@ -178,7 +182,7 @@ class BaseTimeZoneExtractor(DateTimeZoneExtractor):
         if not self.config.location_time_suffix_regex:
             return result
 
-        time_match = list(re.finditer(self.config.location_time_suffix_regex, text))
+        time_match = list(regex.finditer(self.config.location_time_suffix_regex, text))
 
         # Before calling a Find() in location matcher, check if all the matched suffixes by
         # LocationTimeSuffixRegex are already inside tokens extracted by TimeZone matcher.
@@ -190,15 +194,16 @@ class BaseTimeZoneExtractor(DateTimeZoneExtractor):
                 if token.start <= match.index and token.end >= match.index + match.lenght:
                     is_inside = True
                     break
-                if not is_inside:
-                    is_all_suffix_inside_tokens = False
 
-                if not is_all_suffix_inside_tokens:
-                    break
+            if not is_inside:
+                is_all_suffix_inside_tokens = False
+
+            if not is_all_suffix_inside_tokens:
+                break
 
         if len(time_match) != 0 and not is_all_suffix_inside_tokens:
-            last_match_index = time_match[len(time_match)-1]
-            matches = re.finditer(self.config.location_matcher, text[0: last_match_index])
+            last_match_index = time_match[len(time_match) - 1].start()
+            matches = self.config.location_matcher.find(text[0: last_match_index])
             location_matches = MatchingUtil.remove_sub_matches(matches)
 
             i = 0
@@ -219,16 +224,15 @@ class BaseTimeZoneExtractor(DateTimeZoneExtractor):
         return result
 
     def match_timezones(self, text: str) -> List[Token]:
-        result: List[Token] = list()
-        match: Match
+        result = []
 
         # Direct UTC matches
         if self.config.direct_utc_regex:
-            direct_utc = re.finditer(self.config.direct_utc_regex, text)
+            direct_utc = list(regex.finditer(self.config.direct_utc_regex, text))
             for match in direct_utc:
                 result.append(Token(match.start(), match.end() + match.start()))
 
-            matches = re.finditer(self.config.time_zone_matcher, text)
+            matches = self.config.timezone_matcher.find(text)
             for match in matches:
                 result.append(Token(match.start(), match.end() + match.start()))
 
