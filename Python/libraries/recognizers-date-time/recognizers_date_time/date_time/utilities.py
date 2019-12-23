@@ -60,12 +60,10 @@ class TimeZoneUtility:
         return has_time_zone_data
 
     @staticmethod
-    def build_matcher_from_lists(collections: List[str]) -> StringMatcher:
-
+    def build_matcher_from_lists(*collections: List[str]) -> StringMatcher:
         matcher = StringMatcher(MatchStrategy.TrieTree, NumberWithUnitTokenizer())
 
         matcher_list = []
-
         for collection in collections:
             list(map(lambda x: matcher_list.append(x.strip().lower()), collection))
 
