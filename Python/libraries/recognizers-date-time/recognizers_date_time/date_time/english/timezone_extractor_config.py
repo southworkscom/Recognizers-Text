@@ -35,8 +35,12 @@ class EnglishTimeZoneExtractorConfiguration(TimeZoneExtractorConfiguration):
     def ambiguous_timezone_list(self) -> List[str]:
         return self._ambiguous_timezone_list
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, config: DateTimeOptionsConfiguration = None):
+        super().__init__(config)
+        self.config = config
+
+        if config and config.options and DateTimeOptions.ENABLE_PREVIEW != 0:
+            self._location_matcher.init(QueryProcessor.remove_diacritics(o.lower()) for o in TimeZoneDefinitions.MajorLocations)
 
         self._direct_utc_regex = RegExpUtility.get_safe_reg_exp(TimeZoneDefinitions.DirectUtcRegex)
         self._abbreviations_list = list(TimeZoneDefinitions.AbbreviationsList)
