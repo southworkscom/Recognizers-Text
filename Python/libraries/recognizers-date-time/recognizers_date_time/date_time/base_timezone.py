@@ -2,7 +2,6 @@ import time
 import regex as re
 from typing import List, Pattern, Match
 from abc import ABC, abstractmethod
-from multipledispatch import dispatch
 from datetime import datetime
 from .utilities import DateTimeResolutionResult, TimeZoneResolutionResult, Token, MatchingUtil
 from .parsers import DateTimeParser, DateTimeParseResult
@@ -101,12 +100,7 @@ class BaseTimeZoneParser(DateTimeParser):
         text = self._time_zone_end_regex.sub(text, ' ')
         return text.strip()
 
-    @dispatch(ExtractResult)
-    def parse(self, extract_result: ExtractResult) -> ParseResult:
-        return self.parse(extract_result, datetime.today())
-
-    @dispatch(ExtractResult, datetime)
-    def parse(self, extract_result: ExtractResult, ref_date: datetime) -> DateTimeParseResult:
+    def parse(self, extract_result: ExtractResult, ref_date: datetime = None) -> DateTimeParseResult:
         datetime_result = DateTimeParseResult()
         datetime_result.start = extract_result.start
         datetime_result.length = extract_result.length
@@ -167,12 +161,7 @@ class BaseTimeZoneExtractor(DateTimeZoneExtractor):
     def __init__(self, config: TimeZoneExtractorConfiguration):
         self.config = config
 
-    @dispatch(str)
-    def extract(self, text: str) -> List[ExtractResult]:
-        return self.extract(text, datetime.now)
-
-    @dispatch(str, datetime)
-    def extract(self, source: str, reference: datetime) -> List[ExtractResult]:
+    def extract(self, source: str, reference: datetime = None) -> List[ExtractResult]:
         from .utilities import merge_all_tokens
         tokens: List[Token] = list()
         normalized_text = QueryProcessor.remove_diacritics(source)
