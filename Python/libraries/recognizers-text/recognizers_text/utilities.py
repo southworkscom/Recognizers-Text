@@ -1,4 +1,5 @@
 import re
+import unicodedata
 from typing import Pattern, Union, List, Match
 import regex
 from emoji import UNICODE_EMOJI
@@ -213,15 +214,15 @@ class QueryProcessor:
 
     @staticmethod
     def remove_diacritics(query: str) -> str:
-        if query is None:
+        if not query:
             return None
 
-        # 'NFC' indicates that a Unicode string is normalized using full canonical decomposition.
-        c = unicodedata.normalize('NFC', query) if unicodedata.category(unicodedata.normalize('NFC', query)) is not 'NSM' else None
+        # NFD indicates that a Unicode string is normalized using full canonical decomposition.
+        chars = ''.join((c for c in unicodedata.normalize('NFD', query) if unicodedata.category(c) != 'Mn'))
 
-        # 'NFD' indicates that a Unicode string is normalized using full canonical decomposition,
+        # NFC indicates that a Unicode string is normalized using full canonical decomposition,
         # followed by the replacement of sequences with their primary composites, if possible.
-        return unicodedata.normalize('NFD', c)
+        return unicodedata.normalize('NFC', chars)
 
 
 def flatten(result):
