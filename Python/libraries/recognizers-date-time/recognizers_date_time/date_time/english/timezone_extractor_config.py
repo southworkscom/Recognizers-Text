@@ -8,6 +8,10 @@ from ..utilities import DateTimeOptionsConfiguration, TimeZoneUtility, RegExpUti
 
 class EnglishTimeZoneExtractorConfiguration(TimeZoneExtractorConfiguration):
     @property
+    def timezone_matcher(self):
+        return self._timezone_matcher
+
+    @property
     def direct_utc_regex(self) -> Pattern:
         return self._direct_utc_regex
 
@@ -18,10 +22,6 @@ class EnglishTimeZoneExtractorConfiguration(TimeZoneExtractorConfiguration):
     @property
     def full_name_list(self) -> List[str]:
         return self._full_name_list
-
-    @property
-    def timezone_matcher(self) -> StringMatcher:
-        return self._timezone_matcher
 
     @property
     def location_time_suffix_regex(self) -> Pattern:
@@ -36,13 +36,12 @@ class EnglishTimeZoneExtractorConfiguration(TimeZoneExtractorConfiguration):
         return self._ambiguous_timezone_list
 
     def __init__(self):
-        self._direct_utc_regex = RegExpUtility.get_safe_reg_exp(
-            TimeZoneDefinitions.DirectUtcRegex)
-        self._abbreviations_list: List[str] = list(TimeZoneDefinitions.AbbreviationsList)
-        self._full_name_list: List[str] = list(TimeZoneDefinitions.FullNameList)
-        self._timezone_matcher = TimeZoneUtility.build_matcher_from_lists(
-            [self.full_name_list, self.abbreviations_list])
-        self._location_time_suffix_regex = RegExpUtility.get_safe_reg_exp(
-            TimeZoneDefinitions.LocationTimeSuffixRegex)
+        super().__init__()
+
+        self._direct_utc_regex = RegExpUtility.get_safe_reg_exp(TimeZoneDefinitions.DirectUtcRegex)
+        self._abbreviations_list = list(TimeZoneDefinitions.AbbreviationsList)
+        self._full_name_list = list(TimeZoneDefinitions.FullNameList)
+        self._timezone_matcher = TimeZoneUtility.build_matcher_from_lists(self.full_name_list, self.abbreviations_list)
+        self._location_time_suffix_regex = RegExpUtility.get_safe_reg_exp(TimeZoneDefinitions.LocationTimeSuffixRegex)
         self._location_matcher = StringMatcher()
-        self._ambiguous_timezone_list: List[str] = list(TimeZoneDefinitions.AmbiguousTimezoneList)
+        self._ambiguous_timezone_list = list(TimeZoneDefinitions.AmbiguousTimezoneList)
