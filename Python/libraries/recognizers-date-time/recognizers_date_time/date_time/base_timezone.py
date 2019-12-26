@@ -191,7 +191,7 @@ class BaseTimeZoneExtractor(DateTimeZoneExtractor):
         for match in time_match:
             is_inside = False
             for token in tokens:
-                if token.start <= match.index and token.end >= match.index + match.lenght:
+                if token.start <= match.start() and token.end >= match.start() + len(match.group()):
                     is_inside = True
                     break
 
@@ -230,10 +230,10 @@ class BaseTimeZoneExtractor(DateTimeZoneExtractor):
         if self.config.direct_utc_regex:
             direct_utc = list(regex.finditer(self.config.direct_utc_regex, text))
             for match in direct_utc:
-                result.append(Token(match.start(), match.end() + match.start()))
+                result.append(Token(match.start(), match.start() + len(match.group())))
 
             matches = self.config.timezone_matcher.find(text)
             for match in matches:
-                result.append(Token(match.start(), match.end() + match.start()))
+                result.append(Token(match.start, match.start + match.length))
 
         return result
