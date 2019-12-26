@@ -203,7 +203,8 @@ class BaseTimeZoneExtractor(DateTimeZoneExtractor):
 
         if len(time_match) != 0 and not is_all_suffix_inside_tokens:
             last_match_index = time_match[len(time_match) - 1].start()
-            matches = self.config.location_matcher.find(text[0: last_match_index])
+            sub_str = text[0:last_match_index]
+            matches = self.config.location_matcher.find(sub_str)
             location_matches = MatchingUtil.remove_sub_matches(matches)
 
             i = 0
