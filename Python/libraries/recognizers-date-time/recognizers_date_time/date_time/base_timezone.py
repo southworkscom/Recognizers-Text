@@ -157,7 +157,7 @@ class BaseTimeZoneParser(DateTimeParser):
 class BaseTimeZoneExtractor(DateTimeZoneExtractor):
     @property
     def extractor_type_name(self) -> str:
-        return Constants.SYS_DATETIME_TIME
+        return Constants.SYS_DATETIME_TIMEZONE
 
     def __init__(self, config: TimeZoneExtractorConfiguration):
         self.config = config
@@ -209,15 +209,15 @@ class BaseTimeZoneExtractor(DateTimeZoneExtractor):
             i = 0
             for match in time_match:
                 has_city_before = False
-                while i < len(location_matches) and location_matches[i].end <= match.index:
+                while i < len(location_matches) and location_matches[i].end <= match.start():
                     has_city_before = True
                     i += 1
 
                     if i == len(location_matches):
                         break
 
-                if has_city_before and location_matches[i - 1].end == match.index:
-                    result.append(Token(location_matches[i - 1].start, match.index + match.lenght))
+                if has_city_before and location_matches[i - 1].end == match.start():
+                    result.append(Token(location_matches[i - 1].start, match.start() + len(match.group())))
                 if i == len(location_matches):
                     break
 

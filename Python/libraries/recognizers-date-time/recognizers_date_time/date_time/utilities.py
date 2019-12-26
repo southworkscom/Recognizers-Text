@@ -165,6 +165,8 @@ class Token:
 
 
 def merge_all_tokens(tokens: List[Token], source: str, extractor_name: str) -> List[ExtractResult]:
+    result = []
+
     merged_tokens: List[Token] = list()
     tokens_ = sorted(filter(None, tokens), key=lambda x: x.start)
 
@@ -188,8 +190,21 @@ def merge_all_tokens(tokens: List[Token], source: str, extractor_name: str) -> L
         if add:
             merged_tokens.append(token)
 
-    result: List[ExtractResult] = list(
-        map(lambda x: __token_to_result(x, source, extractor_name), merged_tokens))
+    for token in merged_tokens:
+        start = token.start
+        length = token.length
+        sub_str = source[start: start + length]
+
+        extracted_result = ExtractResult()
+        extracted_result.start = start
+        extracted_result.length = length
+        extracted_result.text = sub_str
+        extracted_result.type = extractor_name
+        extracted_result.data = None
+        extracted_result.meta_data = token.metadata
+
+        result.append(extracted_result)
+
     return result
 
 
