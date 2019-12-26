@@ -554,8 +554,8 @@ class MatchingUtil:
         match_list = list(match_results)
 
         return list(filter(lambda item: (any(lambda ritem: (ritem.start < item.start and ritem.end >= item.end) or
-                                                               (ritem.start <= item.start and ritem.end > item.end) for
-                                                 ritem in match_list)), match_list))
+                                             (ritem.start <= item.start and ritem.end > item.end) for
+                                             ritem in match_list)), match_list))
 
     @staticmethod
     def get_ago_later_index(source: str, regexp: Pattern, in_suffix) -> MatchedIndex:
