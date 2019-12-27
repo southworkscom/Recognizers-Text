@@ -569,7 +569,7 @@ class MatchingUtil:
 
         match_list = (list(filter(lambda item: not any(list(filter(
             lambda ritem: (ritem.start < item.start and ritem.end >= item.end) or (
-                        ritem.start <= item.start and ritem.end > item.end), match_list))), match_list)))
+                ritem.start <= item.start and ritem.end > item.end), match_list))), match_list)))
 
         return match_list
 
