@@ -97,7 +97,7 @@ class BaseTimeZoneParser(DateTimeParser):
     def normalize_text(self, text: str) -> str:
         text = regex.sub(r'\s+', ' ', text)
         text = self._time_zone_end_regex.sub('', text)
-        return text.strip()
+        return text.strip().lower()
 
     def parse(self, extract_result: ExtractResult, ref_date: datetime = None) -> DateTimeParseResult:
         datetime_result = DateTimeParseResult()
