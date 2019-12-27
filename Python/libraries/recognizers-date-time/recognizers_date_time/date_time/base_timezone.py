@@ -4,7 +4,7 @@ from typing import List, Pattern, Match
 from abc import ABC, abstractmethod
 from datetime import datetime
 from .utilities import DateTimeOptionsConfiguration, DateTimeResolutionResult, TimeZoneResolutionResult, Token,\
-    MatchingUtil
+    MatchingUtil, DateUtils
 from .parsers import DateTimeParser, DateTimeParseResult
 from .datetime_zone_extractor import DateTimeZoneExtractor
 from .constants import Constants
@@ -64,14 +64,15 @@ class BaseTimeZoneParser(DateTimeParser):
         if utc_offset.startswith("+") or utc_offset.startswith("-") or utc_offset.startswith("±"):
             if utc_offset.startswith("-"):
                 sign = Constants.NEGATIVE_SIGN  # Earlier than utc 0
+            utc_offset = utc_offset[1:].strip()
 
         hour = minutes = 0
-        if '+' in utc_offset:
+        if ':' in utc_offset:
             tokens = list(utc_offset.split(":"))
             hour = int(tokens[0])
             minutes = int(tokens[1])
-        elif time.strptime(utc_offset) != 0:
-            hour = time.strptime(utc_offset).tm_hour
+        elif DateUtils.int_try_parse(utc_offset) != 0:
+            hour, is_parsed = DateUtils.int_try_parse(utc_offset)
             minutes = 0
 
         if hour > Constants.HALF_DAY_HOUR_COUNT:
@@ -109,22 +110,22 @@ class BaseTimeZoneParser(DateTimeParser):
         text = extract_result.text
         normalized_text = self.normalize_text(text)
         match = regex.match(TimeZoneDefinitions.DirectUtcRegex, text)
-        matched = match.Groups[2].value if match else ''
+        matched = match.group(2) if match else ''
         offset_minutes = self.compute_minutes(matched)
 
         if offset_minutes != Constants.INVALID_OFFSET_VALUE:
             datetime_result.value = self.get_datetime_resolution_result(offset_minutes, text)
-            datetime_result.resolution_str = f'{Constants.UTC_OFFSET_MINS_KEY}:{offset_minutes}'
+            datetime_result.resolution_str = f'{Constants.UTC_OFFSET_MINS_KEY}: {offset_minutes}'
         elif normalized_text in TimeZoneDefinitions.AbbrToMinMapping and TimeZoneDefinitions.AbbrToMinMapping[normalized_text] != Constants.INVALID_OFFSET_VALUE:
             utc_minute_shift = TimeZoneDefinitions.AbbrToMinMapping[normalized_text]
 
             datetime_result.value = self.get_datetime_resolution_result(utc_minute_shift, text)
-            datetime_result.resolution_str = Constants.UTC_OFFSET_MINS_KEY + ": " + str(utc_minute_shift)
+            datetime_result.resolution_str = f'{Constants.UTC_OFFSET_MINS_KEY}: {utc_minute_shift}'
         elif normalized_text in TimeZoneDefinitions.FullToMinMapping and TimeZoneDefinitions.FullToMinMapping[normalized_text] != Constants.INVALID_OFFSET_VALUE:
             utc_minute_shift = TimeZoneDefinitions.FullToMinMapping[normalized_text]
 
             datetime_result.value = self.get_datetime_resolution_result(utc_minute_shift, text)
-            datetime_result.resolution_str = Constants.UTC_OFFSET_MINS_KEY + ": " + str(utc_minute_shift)
+            datetime_result.resolution_str = f'{Constants.UTC_OFFSET_MINS_KEY}: {utc_minute_shift}'
         else:
             datetime_result.value = DateTimeResolutionResult()
             datetime_result.value.success = True
