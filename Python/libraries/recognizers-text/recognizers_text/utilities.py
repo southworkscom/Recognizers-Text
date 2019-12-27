@@ -222,7 +222,7 @@ class QueryProcessor:
 
         # NFC indicates that a Unicode string is normalized using full canonical decomposition,
         # followed by the replacement of sequences with their primary composites, if possible.
-        return unicodedata.normalize('NFC', chars)
+        return str(unicodedata.normalize('NFC', chars)).lower()
 
 
 def flatten(result):

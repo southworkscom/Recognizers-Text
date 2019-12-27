@@ -565,12 +565,13 @@ class MatchingUtil:
 
     @staticmethod
     def remove_sub_matches(match_results: List[MatchResult]):
-
         match_list = list(match_results)
 
-        return list(filter(lambda item: (any(lambda ritem: (ritem.start < item.start and ritem.end >= item.end) or
-                                             (ritem.start <= item.start and ritem.end > item.end) for
-                                             ritem in match_list)), match_list))
+        match_list = (list(filter(lambda item: not any(list(filter(
+            lambda ritem: (ritem.start < item.start and ritem.end >= item.end) or (
+                ritem.start <= item.start and ritem.end > item.end), match_list))), match_list)))
+
+        return match_list
 
     @staticmethod
     def get_ago_later_index(source: str, regexp: Pattern, in_suffix) -> MatchedIndex:
