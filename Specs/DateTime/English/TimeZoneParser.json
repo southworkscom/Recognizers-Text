@@ -604,7 +604,7 @@
     "Context": {
       "ReferenceDateTime": "2016-11-07T00:00:00"
     },
-    "NotSupported": "dotnet, javascript, java",
+    "NotSupported": "dotnet, javascript, java, python",
     "Results": [
       {
         "Text": "PDT",
