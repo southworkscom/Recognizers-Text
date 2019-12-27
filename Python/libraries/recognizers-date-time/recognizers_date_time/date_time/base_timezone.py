@@ -84,21 +84,19 @@ class BaseTimeZoneParser(DateTimeParser):
 
         return offset_in_minutes
 
-    @staticmethod
     def convert_offset_in_mins_to_offset_string(self, offset_mins: int) -> str:
-        return f'UTC {"+" if offset_mins >= 0 else "-"} {self.convert_mins_to_regular_format(abs(offset_mins))}'
+        return f'UTC{"+" if offset_mins >= 0 else "-"}{self.convert_mins_to_regular_format(abs(offset_mins))}'
 
     @staticmethod
-    def convert_mins_to_regular_format(self, offset_mins: int) -> str:
+    def convert_mins_to_regular_format(offset_mins: int) -> str:
         tokens = list((str(offset_mins/60)).split("."))
         hour = int(tokens[0])
         min = int(tokens[1])
-        return f'{hour} : {min}'
+        return f'{hour}:{min}'
 
-    @staticmethod
     def normalize_text(self, text: str) -> str:
         text = regex.sub(r'\s+', ' ', text)
-        text = self._time_zone_end_regex.sub(text, ' ')
+        text = self._time_zone_end_regex.sub('', text)
         return text.strip()
 
     def parse(self, extract_result: ExtractResult, ref_date: datetime = None) -> DateTimeParseResult:
@@ -110,7 +108,8 @@ class BaseTimeZoneParser(DateTimeParser):
 
         text = extract_result.text
         normalized_text = self.normalize_text(text)
-        matched = TimeZoneDefinitions.DirectUtcRegex.search(text).group(2).value
+        match = regex.match(TimeZoneDefinitions.DirectUtcRegex, text)
+        matched = match.Groups[2].value if match else ''
         offset_minutes = self.compute_minutes(matched)
 
         if offset_minutes != Constants.INVALID_OFFSET_VALUE:

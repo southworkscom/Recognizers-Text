@@ -982,14 +982,7 @@ class TimexUtil:
 
 
 class TimeZoneResolutionResult:
-    @property
-    def value(self) -> str:
-        return self._value
-
-    @property
-    def utc_offset_mins(self) -> int:
-        return self._utc_offset_mins
-
-    @property
-    def time_zone_text(self) -> str:
-        return self._time_zone_text
+    def __init__(self):
+        self.value: str = ''
+        self.utc_offset_mins: int = 0
+        self.time_zone_text: str = ''
