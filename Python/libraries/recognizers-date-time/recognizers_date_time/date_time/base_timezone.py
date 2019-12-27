@@ -124,20 +124,20 @@ class BaseTimeZoneParser(DateTimeParser):
             utc_minute_shift = TimeZoneDefinitions.FullToMinMapping[normalized_text]
 
             datetime_result.value = self.get_datetime_resolution_result(utc_minute_shift, text)
-            datetime_result.resolution_str = Constants.UTC_OFFSET_MINS_KEY + ": " + utc_minute_shift
+            datetime_result.resolution_str = Constants.UTC_OFFSET_MINS_KEY + ": " + str(utc_minute_shift)
         else:
-            datetime_resolution = DateTimeResolutionResult()
-            datetime_resolution.success = True
+            datetime_result = DateTimeResolutionResult()
+            datetime_result.success = True
 
             timezone_resolution = TimeZoneResolutionResult()
             timezone_resolution.value = "UTC+XX:XX"
             timezone_resolution.utc_offset_mins = Constants.INVALID_OFFSET_VALUE
             timezone_resolution.time_zone_text = text
 
-            datetime_resolution.timezone_resolution = timezone_resolution
-            datetime_resolution.resolution_str = Constants.UTC_OFFSET_MINS_KEY + ": XX:XX"
+            datetime_result.timezone_resolution = timezone_resolution
+            datetime_result.resolution_str = Constants.UTC_OFFSET_MINS_KEY + ": XX:XX"
 
-        return datetime_resolution
+        return datetime_result
 
     def get_datetime_resolution_result(self, offset_mins: int, text: str) -> DateTimeResolutionResult:
         datetime_resolution = DateTimeResolutionResult()
