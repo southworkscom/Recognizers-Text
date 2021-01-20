@@ -1,4 +1,4 @@
-package com.microsoft.recognizers.text.sequence.english.extractors;
+package com.microsoft.recognizers.text.sequence.extractors;
 
 import com.microsoft.recognizers.text.sequence.SequenceOptions;
 import com.microsoft.recognizers.text.sequence.config.PhoneNumberConfiguration;
