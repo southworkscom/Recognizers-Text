@@ -12,12 +12,12 @@ public class Resolution {
     public List<Entry> getValues() {
         return this.values;
     }
-    
+
     public Resolution() {
         this.values = new ArrayList<Entry>();
     }
 
-    public class Entry {
+    public static class Entry {
         private String timex;
 
         private String type;

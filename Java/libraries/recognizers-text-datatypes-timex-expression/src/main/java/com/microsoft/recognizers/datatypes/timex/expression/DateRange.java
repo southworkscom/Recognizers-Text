@@ -3,25 +3,25 @@
 
 package com.microsoft.recognizers.datatypes.timex.expression;
 
-import java.util.Date;
+import java.util.Calendar;
 
 public class DateRange {
-    private Date start;
-    private Date end;
+    private Calendar start;
+    private Calendar end;
 
-    public Date getStart() {
+    public Calendar getStart() {
         return start;
     }
 
-    public void setStart(Date withStart) {
+    public void setStart(Calendar withStart) {
         this.start = withStart;
     }
 
-    public Date getEnd() {
+    public Calendar getEnd() {
         return end;
     }
 
-    public void setEnd(Date withEnd) {
+    public void setEnd(Calendar withEnd) {
         this.end = withEnd;
     }
 }

@@ -70,19 +70,17 @@ public class TimexInference {
     }
 
     private static Boolean isDuration(TimexProperty timexProperty) {
-        return timexProperty.getYears() != null || timexProperty.getMonths() != null || timexProperty.getWeeks() != null
-                || timexProperty.getDays() != null | timexProperty.getHours() != null
-                || timexProperty.getMinutes() != null || timexProperty.getSeconds() != null;
+        return timexProperty.getYears() != null || timexProperty.getMonths() != null || timexProperty.getWeeks() != null ||
+            timexProperty.getDays() != null | timexProperty.getHours() != null ||
+            timexProperty.getMinutes() != null || timexProperty.getSeconds() != null;
     }
 
     private static Boolean isTime(TimexProperty timexProperty) {
-        return timexProperty.getHour() != null && timexProperty.getMinute() != null
-                && timexProperty.getSecond() != null;
+        return timexProperty.getHour() != null && timexProperty.getMinute() != null && timexProperty.getSecond() != null;
     }
 
     private static Boolean isDate(TimexProperty timexProperty) {
-        return (timexProperty.getMonth() != null && timexProperty.getDayOfMonth() != null)
-                || timexProperty.getDayOfWeek() != null;
+        return (timexProperty.getMonth() != null && timexProperty.getDayOfMonth() != null) || timexProperty.getDayOfWeek() != null;
     }
 
     private static Boolean isTimeRange(TimexProperty timexProperty) {
@@ -90,16 +88,13 @@ public class TimexInference {
     }
 
     private static Boolean isDateRange(TimexProperty timexProperty) {
-        return (timexProperty.getYear() != null && timexProperty.getDayOfMonth() == null)
-                || (timexProperty.getYear() != null
-                        && timexProperty.getMonth() != null & timexProperty.getDayOfMonth() == null)
-                || (timexProperty.getMonth() != null && timexProperty.getDayOfMonth() == null)
-                || timexProperty.getSeason() != null || timexProperty.getWeekOfYear() != null
-                || timexProperty.getWeekOfMonth() != null;
+        return (timexProperty.getYear() != null && timexProperty.getDayOfMonth() == null) || (timexProperty.getYear() != null &&
+            timexProperty.getMonth() != null & timexProperty.getDayOfMonth() == null) ||
+            (timexProperty.getMonth() != null && timexProperty.getDayOfMonth() == null) ||
+            timexProperty.getSeason() != null || timexProperty.getWeekOfYear() != null || timexProperty.getWeekOfMonth() != null;
     }
 
     private static Boolean isDefinite(TimexProperty timexProperty) {
-        return timexProperty.getYear() != null & timexProperty.getMonth() != null
-                && timexProperty.getDayOfMonth() != null;
+        return timexProperty.getYear() != null & timexProperty.getMonth() != null && timexProperty.getDayOfMonth() != null;
     }
 }

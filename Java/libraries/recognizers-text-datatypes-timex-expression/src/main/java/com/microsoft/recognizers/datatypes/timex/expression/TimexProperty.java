@@ -3,6 +3,7 @@
 
 package com.microsoft.recognizers.datatypes.timex.expression;
 
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -262,19 +263,21 @@ public class TimexProperty {
         this.partOfDay = wthPartOfDay;
     }
 
-    public static TimexProperty fromDate(DateObject date) {
-        return new TimexProperty(){{
-            setYear(date.getYear());
-            setMonth(date.getMonth());
-            setDayOfMonth(date.getDay());
-        }}
+    public static TimexProperty fromDate(Calendar date) {
+        return new TimexProperty() {
+            {
+                setYear(date.get(Calendar.YEAR));
+                setMonth(date.get(Calendar.MONTH));
+                setDayOfMonth(date.get(Calendar.DATE));
+            }
+        };
     }
 
-    public static TimexProperty fromDateTime(DateObject datetime) {
+    public static TimexProperty fromDateTime(Calendar datetime) {
         TimexProperty timex = TimexProperty.fromDate(datetime);
-        timex.setHour(datetime.getHour());
-        timex.setMinute(datetime.getMinute());
-        timex.setSecond(datetime.getSecond());
+        timex.setHour(datetime.get(Calendar.HOUR));
+        timex.setMinute(datetime.get(Calendar.MINUTE));
+        timex.setSecond(datetime.get(Calendar.SECOND));
         return timex;
     }
 
@@ -293,7 +296,7 @@ public class TimexProperty {
         return TimexConvert.convertTimexToString(this);
     }
 
-    public String toNaturalLanguage(DateObject referenceDate) {
+    public String toNaturalLanguage(Calendar referenceDate) {
         return TimexRelativeConvert.convertTimexToStringRelative(this, referenceDate);
     }
 
@@ -369,6 +372,7 @@ public class TimexProperty {
                 case "timeUnit":
                     this.assignTimeDuration(source);
                     break;
+                default:
             }
         }
     }
@@ -387,11 +391,12 @@ public class TimexProperty {
             case "D":
                 this.days = Double.parseDouble(source.get("amount"));
                 break;
+            default:
         }
     }
 
     private void assignTimeDuration(Map<String, String> source) {
-        switch (source.get("dateUnit")) {
+        switch (source.get("timeUnit")) {
             case "H":
                 this.hours = Double.parseDouble(source.get("amount"));
                 break;
@@ -401,6 +406,7 @@ public class TimexProperty {
             case "S":
                 this.seconds = Double.parseDouble(source.get("amount"));
                 break;
+            default:
         }
     }
 }

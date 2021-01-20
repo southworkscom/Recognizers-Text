@@ -5,110 +5,118 @@ package com.microsoft.recognizers.datatypes.timex.expression;
 
 import java.time.DayOfWeek;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class TimexDateHelpers {
-    public static DateObject tomorrow(DateObject date) {
-        return date.addDays(1);
+    public static Calendar tomorrow(Calendar date) {
+        date.add(Calendar.DATE, 1);
+        return date;
     }
 
-    public static DateObject yesterday(DateObject date) {
-        return date.addDays(-1);
+    public static Calendar yesterday(Calendar date) {
+        date.add(Calendar.DATE, -1);
+        return date;
     }
 
-    public static Boolean datePartEquals(DateObject dateX, DateObject dateY) {
-        return (dateX.getYear() == dateY.getYear()) && (dateX.getMonth() == dateY.getMonth())
-                && (dateX.getDay() == dateY.getDay());
+    public static Boolean datePartEquals(Calendar dateX, Calendar dateY) {
+        return (dateX.get(Calendar.YEAR) == dateY.get(Calendar.YEAR)) &&
+            (dateX.get(Calendar.MONTH) == dateY.get(Calendar.MONTH)) &&
+            (dateX.get(Calendar.DATE) == dateY.get(Calendar.DATE));
     }
 
-    public static boolean isDateInWeek(DateObject date, DateObject startOfWeek) {
-        DateObject d = startOfWeek;
+    public static boolean isDateInWeek(Calendar date, Calendar startOfWeek) {
+        Calendar d = startOfWeek;
         for (int i = 0; i < 7; i++) {
             if (TimexDateHelpers.datePartEquals(date, d)) {
                 return true;
             }
 
-            d = d.addDays(1);
+            d.add(Calendar.DATE, 1);
         }
 
         return false;
     }
 
-    public static Boolean isThisWeek(DateObject date, DateObject referenceDate) {
+    public static Boolean isThisWeek(Calendar date, Calendar referenceDate) {
         // Note ISO 8601 week starts on a Monday
-        DateObject startOfWeek = referenceDate;
-        while (startOfWeek.dayOfWeek > DayOfWeek.MONDAY) {
-            startOfWeek = startOfWeek.addDays(-1);
+        Calendar startOfWeek = referenceDate;
+        while (startOfWeek.get(Calendar.DAY_OF_WEEK) > DayOfWeek.MONDAY.getValue()) {
+            startOfWeek.add(Calendar.DATE, -1);
         }
 
         return TimexDateHelpers.isDateInWeek(date, startOfWeek);
     }
 
-    public static Boolean isNextWeek(DateObject date, DateObject referenceDate) {
-        DateObject nextWeekDate = referenceDate.addDays(7);
-        return TimexDateHelpers.isThisWeek(date, referenceDate);
+    public static Boolean isNextWeek(Calendar date, Calendar referenceDate) {
+        Calendar nextWeekDate = referenceDate;
+        nextWeekDate.add(Calendar.DATE, 7);
+        return TimexDateHelpers.isThisWeek(date, nextWeekDate);
     }
 
-    public static Boolean isLastWeek(DateObject date, DateObject referenceDate) {
-        DateObject nextWeekDate = referenceDate.addDays(-7);
-        return TimexDateHelpers.isThisWeek(date, referenceDate);
+    public static Boolean isLastWeek(Calendar date, Calendar referenceDate) {
+        Calendar nextWeekDate = referenceDate;
+        nextWeekDate.add(Calendar.DATE, -7);
+        return TimexDateHelpers.isThisWeek(date, nextWeekDate);
     }
 
-    public static Integer weekOfYear(DateObject date) {
-        DateObject ds = new DateObject(date.getYear(), 1, 1);
-        DateObject de = new DateObject(date.getYear(), date.getMonth(), date.getDay());
+    public static Integer weekOfYear(Calendar date) {
+        Calendar ds = Calendar.getInstance();
+        ds.set(date.get(Calendar.YEAR), 1, 1);
+        Calendar de = Calendar.getInstance();
+        ds.set(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DATE));
         Integer weeks = 1;
 
-        while (ds < de) {
-            DateObject dayOfWeek = ds.getDayOfWeek();
+        while (ds.compareTo(de) < 0) {
+            Integer dayOfWeek = ds.get(Calendar.DAY_OF_WEEK);
 
-            Integer isoDayOfWeek = (dayOfWeek == 0) ? 7 : (Integer) dayOfWeek;
+            Integer isoDayOfWeek = (dayOfWeek == 0) ? 7 : dayOfWeek;
             if (isoDayOfWeek == 7) {
                 weeks++;
             }
 
-            ds = ds.addDays(1);
+            ds.add(Calendar.DATE, 1);
         }
 
         return weeks;
     }
 
     public static String fixedFormatNumber(Integer n, Integer size) {
-        return n.toString().padLeft(size, "0");
+        return String.format("%1$" + size + "s", n.toString()).replace(' ', '0');
     }
 
-    public static DateObject dateOfLastDay(DayOfWeek day, DateObject referenceDate) {
-        DateObject result = referenceDate;
-        result = result.addDays(-1);
+    public static Calendar dateOfLastDay(DayOfWeek day, Calendar referenceDate) {
+        Calendar result = referenceDate;
+        result.add(Calendar.DATE, -1);
 
-        while (result.getDayOfWeek() != day) {
-            result = result.addDays(-1);
+        while (DayOfWeek.of(result.get(Calendar.DAY_OF_WEEK)) != day) {
+            result.add(Calendar.DATE, -1);
         }
 
         return result;
     }
 
-    public static DateObject dateOfNextDay(DayOfWeek day, DateObject referenceDate) {
-        DateObject result = referenceDate;
-        result = result.addDays(1);
+    public static Calendar dateOfNextDay(DayOfWeek day, Calendar referenceDate) {
+        Calendar result = referenceDate;
+        result.add(Calendar.DATE, 1);
 
-        while (result.getDayOfWeek() != day) {
-            result = result.addDays(1);
+        while (DayOfWeek.of(result.get(Calendar.DAY_OF_WEEK)) != day) {
+            result.add(Calendar.DATE, 1);
         }
 
         return result;
     }
 
-    public static List<DateObject> datesMatchingDay(DayOfWeek day, DateObject start, DateObject end) {
-        List<DateObject> result = new ArrayList<DateObject>();
-        DateObject d = start;
+    public static List<Calendar> datesMatchingDay(DayOfWeek day, Calendar start, Calendar end) {
+        List<Calendar> result = new ArrayList<Calendar>();
+        Calendar d = start;
 
         while (!TimexDateHelpers.datePartEquals(d, end)) {
-            if (d.getDayOfWeek == day) {
+            if (DayOfWeek.of(d.get(Calendar.DAY_OF_WEEK)) == day) {
                 result.add(d);
             }
 
-            d = d.addDays(1);
+            d.add(Calendar.DATE, 1);
         }
 
         return result;

@@ -3,15 +3,20 @@
 
 package com.microsoft.recognizers.datatypes.timex.expression.english;
 
-import java.util.HashSet;
-
 import com.microsoft.recognizers.datatypes.timex.expression.Constants;
+import com.microsoft.recognizers.datatypes.timex.expression.TimexInference;
 import com.microsoft.recognizers.datatypes.timex.expression.TimexProperty;
 import com.microsoft.recognizers.datatypes.timex.expression.TimexSet;
+
+import java.util.HashSet;
 
 public class TimexConvertEnglish {
     public static String convertTimexToString(TimexProperty timex) {
         HashSet<String> types = timex.getTypes().size() != 0 ? timex.getTypes() : TimexInference.infer(timex);
+
+        if (types.contains(Constants.TimexTypes.PRESENT)) {
+            return "now";
+        }
 
         if (types.contains(Constants.TimexTypes.DATE_TIME_RANGE)) {
             return TimexConvertEnglish.convertDateTimeRange(timex);
@@ -40,14 +45,14 @@ public class TimexConvertEnglish {
         }
 
         if (types.contains(Constants.TimexTypes.TIME)) {
-            return TimexConvertEnglish.converTime(timex);
+            return TimexConvertEnglish.convertTime(timex);
         }
 
         return new String();
     }
 
     public static String convertTimexSetToString(TimexSet timexSet) {
-        Timex timex = timexSet.getTimex();
+        TimexProperty timex = timexSet.getTimex();
         if (timex.getTypes().contains(Constants.TimexTypes.DURATION)) {
             return String.format("every %s", TimexConvertEnglish.convertTimexDurationToString(timex, false));
         } else {
@@ -64,12 +69,33 @@ public class TimexConvertEnglish {
             return "midday";
         }
 
-        String hour = (timex.getHour() == 0) ? "12" : (timex.getHour() > 12) ? (timex.getHour() - 12).toString() : timex.getHour().toString();
-        String minute = (timex.getMinute() == 0 && timex.getSecond() == 0) ? new String() : ":" + timex.getMinute().toString().padLeft(2, "0");
-        String second = (timex.getSecond == 0) ? new String() : ":" + timex.getSecond().toString().padLeft(2, "0");
+        String hour = (timex.getHour() == 0) ? "12"
+                : (timex.getHour() > 12) ? String.valueOf(timex.getHour() - 12) : String.valueOf(timex.getHour());
+        String minute = (timex.getMinute() == 0 && timex.getSecond() == 0) ? new String()
+                : ":" + String.format("%1$2s", String.valueOf(timex.getMinute())).replace(' ', '0');
+        String second = (timex.getSecond() == 0) ? new String()
+                : ":" + String.format("%1$2s", String.valueOf(timex.getMinute())).replace(' ', '0');
         String period = timex.getHour() < 12 ? "AM" : "PM";
 
         return String.format("%1$s%2$s%3$s%4$s", hour, minute, second, period);
+    }
+
+    public static String convertDate(TimexProperty timex) {
+        if (timex.getDayOfWeek() != null) {
+            return TimexConstantsEnglish.DAYS[timex.getDayOfWeek() - 1];
+        }
+
+        String month = TimexConstantsEnglish.MONTHS[timex.getMonth() - 1];
+        String date = String.valueOf(timex.getDayOfMonth());
+
+        String abbreviation = TimexConstantsEnglish.DATE_ABBREVIATION[Integer
+                .parseInt(String.valueOf(date.charAt(date.length() - 1)))];
+
+        if (timex.getYear() != null) {
+            return String.format("%1$s%2$s %3$s", date, abbreviation, month).trim();
+        }
+
+        return String.format("%1$s%2$s %3$s", date, abbreviation, month);
     }
 
     private static String convertDurationPropertyToString(Double value, String property, Boolean includeSingleCount) {
@@ -82,37 +108,32 @@ public class TimexConvertEnglish {
 
     private static String convertTimexDurationToString(TimexProperty timex, Boolean includeSingleCount) {
         if (timex.getYears() != null) {
-            return TimexConvertEnglish.convertDurationPropertyToString(timex.getYears().getValue(), "year",
-                    includeSingleCount);
+            return TimexConvertEnglish.convertDurationPropertyToString(timex.getYears(), "year", includeSingleCount);
         }
 
         if (timex.getMonths() != null) {
-            return TimexConvertEnglish.convertDurationPropertyToString(timex.getMonths().getValue(), "month",
-                    includeSingleCount);
+            return TimexConvertEnglish.convertDurationPropertyToString(timex.getMonths(), "month", includeSingleCount);
         }
 
         if (timex.getWeeks() != null) {
-            return TimexConvertEnglish.convertDurationPropertyToString(timex.getWeeks().getValue(), "week",
-                    includeSingleCount);
+            return TimexConvertEnglish.convertDurationPropertyToString(timex.getWeeks(), "week", includeSingleCount);
         }
 
         if (timex.getDays() != null) {
-            return TimexConvertEnglish.convertDurationPropertyToString(timex.getDays().getValue(), "day",
-                    includeSingleCount);
+            return TimexConvertEnglish.convertDurationPropertyToString(timex.getDays(), "day", includeSingleCount);
         }
 
         if (timex.getHours() != null) {
-            return TimexConvertEnglish.convertDurationPropertyToString(timex.getHours().getValue(), "hour",
-                    includeSingleCount);
+            return TimexConvertEnglish.convertDurationPropertyToString(timex.getHours(), "hour", includeSingleCount);
         }
 
         if (timex.getMinutes() != null) {
-            return TimexConvertEnglish.convertDurationPropertyToString(timex.getMinutes().getValue(), "minute",
+            return TimexConvertEnglish.convertDurationPropertyToString(timex.getMinutes(), "minute",
                     includeSingleCount);
         }
 
-        if (timex.getSeconds != null) {
-            return TimexConvertEnglish.convertDurationPropertyToString(timex.getSeconds().getValue(), "second",
+        if (timex.getSeconds() != null) {
+            return TimexConvertEnglish.convertDurationPropertyToString(timex.getSeconds(), "second",
                     includeSingleCount);
         }
 
@@ -120,6 +141,10 @@ public class TimexConvertEnglish {
     }
 
     private static String convertDuration(TimexProperty timex) {
+        return TimexConvertEnglish.convertTimexDurationToString(timex, true);
+    }
+
+    private static String convertDateRange(TimexProperty timex) {
         String season = (timex.getSeason() != null) ? TimexConstantsEnglish.SEASONS.get(timex.getSeason())
                 : new String();
 
@@ -132,10 +157,10 @@ public class TimexConvertEnglish {
         }
 
         if (timex.getMonth() != null) {
-            String month = TimexConstantsEnglish.MONTHS[timex.getMonth().getValue() - 1];
+            String month = TimexConstantsEnglish.MONTHS[timex.getMonth() - 1];
             if (timex.getWeekOfMonth() != null) {
-                return String.format("%1$s week of %2$s",
-                        TimexConstantsEnglish.WEEKS[timex.getWeekOfMonth().getValue() - 1], month);
+                return String.format("%1$s week of %2$s", TimexConstantsEnglish.WEEKS[timex.getWeekOfMonth() - 1],
+                        month);
             } else {
                 return String.format("%1$s %2$s", month, year).trim();
             }
@@ -145,7 +170,7 @@ public class TimexConvertEnglish {
     }
 
     private static String convertTimeRange(TimexProperty timex) {
-        return TimexConstantsEnglish.DAY_PARTS.get(timex.getParthOfDay());
+        return TimexConstantsEnglish.DAY_PARTS.get(timex.getPartOfDay());
     }
 
     private static String convertDateTime(TimexProperty timex) {
@@ -154,7 +179,7 @@ public class TimexConvertEnglish {
     }
 
     private static String convertDateTimeRange(TimexProperty timex) {
-        if (timex.getTypes().constains(Constants.TimexTypes.TIME_RANGE)) {
+        if (timex.getTypes().contains(Constants.TimexTypes.TIME_RANGE)) {
             return String.format("%1$s %2$s", TimexConvertEnglish.convertDate(timex),
                     TimexConvertEnglish.convertTimeRange(timex));
         }

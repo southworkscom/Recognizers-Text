@@ -3,10 +3,11 @@
 
 package com.microsoft.recognizers.datatypes.timex.expression;
 
+import java.util.Calendar;
+
 public class TimexValue {
     public static String dateValue(TimexProperty timexProperty) {
-        if (timexProperty.getYear() != null && timexProperty.getMonth() != null
-                && timexProperty.getDayOfMonth() != null) {
+        if (timexProperty.getYear() != null && timexProperty.getMonth() != null && timexProperty.getDayOfMonth() != null) {
             return String.format("%1$s-%2$s-%3$s", TimexDateHelpers.fixedFormatNumber(timexProperty.getYear(), 4),
                     TimexDateHelpers.fixedFormatNumber(timexProperty.getMonth(), 2),
                     TimexDateHelpers.fixedFormatNumber(timexProperty.getDayOfMonth(), 2));
@@ -15,26 +16,17 @@ public class TimexValue {
         return new String();
     }
 
-    public static String timeValue(TimexProperty timexProperty, DateTime date) {
+    public static String timeValue(TimexProperty timexProperty, Calendar date) {
         if (timexProperty.getHour() != null && timexProperty.getMinute() != null && timexProperty.getSecond() != null) {
-            if (date.getKind() == DateTimeKind.UTC) {
-                String timeString = String.format("%1$s:%2$s:%3$s",
-                        TimexDateHelpers.fixedFormatNumber(timexProperty.getHour(), 2),
-                        TimexDateHelpers.fixedFormatNumber(timexProperty.getMinute(), 2),
-                        TimexDateHelpers.fixedFormatNumber(timexProperty.getSecond(), 2));
-                DateTime tempdateTime = DateTime.parse(timeString);
-                return tempdateTime.toUniversalTime().toString("HH:mm:ss");
-            } else {
-                return String.format("%1$s:%2$s:%3$s", TimexDateHelpers.fixedFormatNumber(timexProperty.getHour(), 2),
-                        TimexDateHelpers.fixedFormatNumber(timexProperty.getMinute(), 2),
-                        TimexDateHelpers.fixedFormatNumber(timexProperty.getSecond(), 2));
-            }
+            return String.format("%1$s:%2$s:%3$s", TimexDateHelpers.fixedFormatNumber(timexProperty.getHour(), 2),
+                    TimexDateHelpers.fixedFormatNumber(timexProperty.getMinute(), 2),
+                    TimexDateHelpers.fixedFormatNumber(timexProperty.getSecond(), 2));
         }
 
         return new String();
     }
 
-    public static String datetimeValue(TimexProperty timexProperty, DateTime date) {
+    public static String datetimeValue(TimexProperty timexProperty, Calendar date) {
         return String.format("%1$s %2$s", TimexValue.dateValue(timexProperty),
                 TimexValue.timeValue(timexProperty, date));
     }
@@ -45,7 +37,7 @@ public class TimexValue {
         }
 
         if (timexProperty.getMonths() != null) {
-            return String.valueOf(31536000 * timexProperty.getYears());
+            return String.valueOf(2592000 * timexProperty.getYears());
         }
 
         if (timexProperty.getWeeks() != null) {

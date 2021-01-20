@@ -3,11 +3,12 @@
 
 package com.microsoft.recognizers.datatypes.timex.expression;
 
-import java.util.HashMap;
+import java.util.Calendar;
+import java.util.HashSet;
 
 public class TimexHelpers {
     public static TimexRange expandDateTimeRange(TimexProperty timex) {
-        HashMap<String> types = timex.getTypes().size() != 0 ? timex.getTypes() : TimexInference.infer(timex);
+        HashSet<String> types = timex.getTypes().size() != 0 ? timex.getTypes() : TimexInference.infer(timex);
 
         if (types.contains(Constants.TimexTypes.DURATION)) {
             TimexProperty start = TimexHelpers.cloneDateTime(timex);
@@ -26,9 +27,9 @@ public class TimexHelpers {
                         setStart(new TimexProperty() {
                             {
                                 setYear(timex.getYear());
-                                setEnd(new TimexProperty());
                             }
                         });
+                        setEnd(new TimexProperty());
                     }
                 };
                 if (timex.getMonth() != null) {
@@ -58,7 +59,7 @@ public class TimexHelpers {
     }
 
     public static TimexRange expandTimeRange(TimexProperty timex) {
-        if (!timex.getTypes.contains(Constants.TimexTypes.TIME_RANGE)) {
+        if (!timex.getTypes().contains(Constants.TimexTypes.TIME_RANGE)) {
             throw new IllegalArgumentException("argument must be a timerange: timex");
         }
 
@@ -80,29 +81,36 @@ public class TimexHelpers {
                     timex = new TimexProperty(TimexCreator.NIGHT);
                     break;
                 default:
-                    thjrow new IllegalArgumentException("unrecognized part of day timerange: timex");
+                    throw new IllegalArgumentException("unrecognized part of day timerange: timex");
             }
         }
 
-        TimexProperty start = new TimexProperty() {{
-            setHour(timex.getHour());
-            setMinute(timex.getMinute());
-            setSecond(timex.getSecond());
-        }};
+        Integer hour = timex.getHour();
+        Integer minute = timex.getMinute();
+        Integer second = timex.getSecond();
+        TimexProperty start = new TimexProperty() {
+            {
+                setHour(hour);
+                setMinute(minute);
+                setSecond(second);
+            }
+        };
         TimexProperty duration = TimexHelpers.cloneDuration(timex);
 
-        return new TimexRange(){{
-            setStart(start);
-            setEnd(TimexHelpers.timeAdd(start, duration));
-            setDuration(duration);
-        }};
+        return new TimexRange() {
+            {
+                setStart(start);
+                setEnd(TimexHelpers.timeAdd(start, duration));
+                setDuration(duration);
+            }
+        };
     }
 
     public static TimexProperty timexDateAdd(TimexProperty start, TimexProperty duration) {
         if (start.getDayOfWeek() != null) {
             TimexProperty end = start.clone();
             if (duration.getDays() != null) {
-                end.setDayOfWeek(end.getDayOfWeek() + (Integer) duration.getDays());
+                end.setDayOfWeek(end.getDayOfWeek() + (int)Math.round(duration.getDays()));
             }
 
             return end;
@@ -112,29 +120,29 @@ public class TimexHelpers {
             Double durationDays = duration.getDays();
 
             if (durationDays == null && duration.getWeeks() != null) {
-                durationDays = 7 * duration.getWeeks().getValue();
+                durationDays = 7 * duration.getWeeks();
             }
 
             if (durationDays != null) {
                 if (start.getYear() != null) {
-                    DateObject d = new DateObject(start.getYear().getValue(), start.getMonth().getValue(),
-                            start.getDayOfMonth(), 0, 0, 0);
-                    d = d.addDays((Double) durationDays.getValue());
+                    Calendar d = Calendar.getInstance();
+                    d.set(start.getYear(), start.getMonth(), start.getDayOfMonth(), 0, 0, 0);
+                    d.add(Calendar.DATE, (int)Math.round(durationDays));
                     return new TimexProperty() {
                         {
-                            setYear(d.getYear());
-                            setMonth(d.getMonth());
-                            setDayOfMonth(d.getDay());
+                            setYear(d.get(Calendar.YEAR));
+                            setMonth(d.get(Calendar.MONTH));
+                            setDayOfMonth(d.get(Calendar.DATE));
                         }
                     };
                 } else {
-                    DateObject d = new DateObject(2001, start.getMonth().getValue(), start.getDayOfMonth(), 0, 0, 0);
-                    d = d.addDays((Double) durationDays.getValue());
-
+                    Calendar d = Calendar.getInstance();
+                    d.set(2001, start.getMonth(), start.getDayOfMonth(), 0, 0, 0);
+                    d.add(Calendar.DATE, (int)Math.round(durationDays));
                     return new TimexProperty() {
                         {
-                            setMonth(d.getMonth());
-                            setDayOfMonth(d.getDay());
+                            setMonth(d.get(Calendar.MONTH));
+                            setDayOfMonth(d.get(Calendar.DATE));
                         }
                     };
                 }
@@ -144,7 +152,7 @@ public class TimexHelpers {
                 if (start.getYear() != null) {
                     return new TimexProperty() {
                         {
-                            setYear((Integer) (start.getYear().getValue() + duration.getYears().getValue()));
+                            setYear(start.getYear() + (int)Math.round(duration.getYears()));
                             setMonth(start.getMonth());
                             setDayOfMonth(start.getDayOfMonth());
                         }
@@ -157,7 +165,7 @@ public class TimexHelpers {
                     return new TimexProperty() {
                         {
                             setYear(start.getYear());
-                            setMonth((Integer) (start.getMonth() + duration.getMonths()));
+                            setMonth(start.getMonth() + (int)Math.round(duration.getMonths()));
                             setDayOfMonth(start.getDayOfMonth());
                         }
                     };
@@ -171,26 +179,26 @@ public class TimexHelpers {
     public static TimexProperty timexTimeAdd(TimexProperty start, TimexProperty duration) {
         if (duration.getHours() != null) {
             TimexProperty result = start.clone();
-            result.setHour(result.getHour() + (Integer) duration.getHours().getValue());
-            if (result.getHour().getValue() > 23) {
-                Double days = Math.floor(result.getHour().getValue() / 24d);
-                Double hour = result.getHour().getValue() % 24;
+            result.setHour(result.getHour() + (int)Math.round(duration.getHours()));
+            if (result.getHour() > 23) {
+                Double days = Math.floor(result.getHour() / 24d);
+                Integer hour = result.getHour() % 24;
                 result.setHour(hour);
 
                 if (result.getYear() != null && result.getMonth() != null && result.getDayOfMonth() != null) {
-                    DateObject d = new DateObject(result.getYear().getValue(), result.getMonth().getValue(),
-                            result.getDayOfMonth().getValue(), 0, 0, 0);
-                    d = d.addDays((Double) days);
+                    Calendar d = Calendar.getInstance();
+                    d.set(result.getYear(), result.getMonth(), result.getDayOfMonth(), 0, 0, 0);
+                    d.add(Calendar.DATE, (int)Math.round(days));
 
-                    result.setYear(d.getYear());
-                    result.setMonth(d.getMonth());
-                    result.setDayOfMonth(d.getDay());
+                    result.setYear(d.get(Calendar.YEAR));
+                    result.setMonth(d.get(Calendar.MONTH));
+                    result.setDayOfMonth(d.get(Calendar.DATE));
 
                     return result;
                 }
 
-                if (result.getDayOfWeek != null) {
-                    result.setDayOfWeek(result.getDayOfWeek + days);
+                if (result.getDayOfWeek() != null) {
+                    result.setDayOfWeek(result.getDayOfWeek() + (int)Math.round(days));
                     return result;
                 }
             }
@@ -200,9 +208,9 @@ public class TimexHelpers {
 
         if (duration.getMinutes() != null) {
             TimexProperty result = start.clone();
-            result.setMinute(result.getMinute() + duration.getMinuteS().getValue());
+            result.setMinute(result.getMinute() + (int)Math.round(duration.getMinutes()));
 
-            if (result.getMinute().getValue() > 59) {
+            if (result.getMinute() > 59) {
                 result.setHour(result.getHour() + 1);
                 result.setMinute(0);
             }
@@ -217,14 +225,17 @@ public class TimexHelpers {
         return TimexHelpers.timexDateAdd(TimexHelpers.timexDateAdd(start, duration), duration);
     }
 
-    public static DateObject dateFromTimex(TimexProperty timex) {
+    public static Calendar dateFromTimex(TimexProperty timex) {
         Integer year = timex.getYear() != null ? timex.getYear() : 2001;
         Integer month = timex.getMonth() != null ? timex.getMonth() : 1;
+        Integer day = timex.getDayOfMonth() != null ? timex.getDayOfMonth() : 1;
         Integer hour = timex.getHour() != null ? timex.getHour() : 0;
         Integer minute = timex.getMinute() != null ? timex.getMinute() : 0;
         Integer second = timex.getSecond() != null ? timex.getSecond() : 0;
+        Calendar date = Calendar.getInstance();
+        date.set(year, month, day, hour, minute, second);
 
-        return new DateObject(year, month, hour, minute, second);
+        return date;
     }
 
     public static Time timeFromTimex(TimexProperty timex) {
@@ -245,23 +256,22 @@ public class TimexHelpers {
     }
 
     public static TimeRange timeRangeFromTimex(TimexProperty timex) {
-        TimexRange expanded = TimexHelpers.expandDateTimeRange(timex);
+        TimexRange expanded = TimexHelpers.expandTimeRange(timex);
         return new TimeRange() {
             {
-                setStart(TimexHelpers.dateFromTimex(expanded.getStart()));
-                setEnd(TimexHelpers.dateFromTimex(expanded.getEnd()));
+                setStart(TimexHelpers.timeFromTimex(expanded.getStart()));
+                setEnd(TimexHelpers.timeFromTimex(expanded.getEnd()));
             }
         };
     }
 
     private static TimexProperty timeAdd(TimexProperty start, TimexProperty duration) {
-        Integer hour = (start.getHour() + duration.getHours()) != null ? (start.getHour() + duration.getHours()) : 0;
-        Integer minute = (start.getMinute() + duration.getMinutes()) != null
-                ? (start.getMinute() + duration.getMinutes())
-                : 0;
-        Integer second = (start.getSecond() + duration.getSeconds()) != null
-                ? (start.getSecond() + duration.getSeconds())
-                : 0;
+        Integer hourPreSet = start.getHour() + (int)Math.round(start.getHours());
+        Integer hour = hourPreSet != null ? hourPreSet : 0;
+        Integer minutePreSet = start.getMinute() + (int)Math.round(duration.getMinutes());
+        Integer minute = minutePreSet != null ? minutePreSet : 0;
+        Integer secondPreSet = start.getSecond() + (int)Math.round(duration.getSeconds());
+        Integer second = secondPreSet != null ? secondPreSet : 0;
         return new TimexProperty() {
             {
                 setHour(hour);
@@ -285,8 +295,8 @@ public class TimexHelpers {
 
     private static TimexProperty cloneDuration(TimexProperty timex) {
         TimexProperty result = timex.clone();
-        result.setYears(null);
-        result.setMonths(null);
+        result.setYear(null);
+        result.setMonth(null);
         result.setDayOfMonth(null);
         result.setDayOfWeek(null);
         result.setWeekOfYear(null);

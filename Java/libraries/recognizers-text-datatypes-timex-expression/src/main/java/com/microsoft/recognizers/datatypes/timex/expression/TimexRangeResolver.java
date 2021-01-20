@@ -5,27 +5,24 @@ package com.microsoft.recognizers.datatypes.timex.expression;
 
 import java.time.DayOfWeek;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class TimexRangeResolver {
-    public static List<TimexProperty> evaluate(List<String> candidates, List<String> constraints) {
+    public static List<TimexProperty> evaluate(Set<String> candidates, List<String> constraints) {
         List<TimexProperty> timexConstraints = constraints.stream().map(x -> {
             return new TimexProperty(x);
         }).collect(Collectors.toList());
-        List<String> candidatesWithDurationsResolved = TimexRangeResolver.resolveDurations(candidates,
-                timexConstraints);
-        List<String> candidatesAccordingToDate = TimexRangeResolver
+        Set<String> candidatesWithDurationsResolved = TimexRangeResolver.resolveDurations(candidates, timexConstraints);
+        Set<String> candidatesAccordingToDate = TimexRangeResolver
                 .resolveByDateRangeConstraints(candidatesWithDurationsResolved, timexConstraints);
-        List<String> candidatesWithAddedTime = TimexRangeResolver.resolveByTimeConstraints(candidatesAccordingToDate,
+        Set<String> candidatesWithAddedTime = TimexRangeResolver.resolveByTimeConstraints(candidatesAccordingToDate,
                 timexConstraints);
-        List<String> candidatesFilteredByTime = TimexRangeResolver
-                .resolveByTimerangeConstraitns(candidatesWithAddedTime, timexConstraints);
+        Set<String> candidatesFilteredByTime = TimexRangeResolver.resolveByTimeRangeConstraints(candidatesWithAddedTime,
+                timexConstraints);
 
         List<TimexProperty> timexResults = candidatesFilteredByTime.stream().map(x -> {
             return new TimexProperty(x);
@@ -34,8 +31,8 @@ public class TimexRangeResolver {
         return timexResults;
     }
 
-    public static List<String> resolveDurations(List<String> candidates, List<TimexProperty> constraints) {
-        List<String> results = new ArrayList<String>();
+    public static Set<String> resolveDurations(Set<String> candidates, List<TimexProperty> constraints) {
+        Set<String> results = new HashSet<String>();
         for (String candidate : candidates) {
             TimexProperty timex = new TimexProperty(candidate);
             if (timex.getTypes().contains(Constants.TimexTypes.DURATION)) {
@@ -64,7 +61,7 @@ public class TimexRangeResolver {
         return results;
     }
 
-    private static List<String> resolveByDateRangeConstraints(List<String> candidates,
+    private static Set<String> resolveByDateRangeConstraints(Set<String> candidates,
             List<TimexProperty> timexConstraints) {
         List<DateRange> dateRangeconstraints = timexConstraints.stream().filter(timex -> {
             return timex.getTypes().contains(Constants.TimexTypes.DATE_RANGE);
@@ -72,7 +69,7 @@ public class TimexRangeResolver {
             return TimexHelpers.dateRangeFromTimex(timex);
         }).collect(Collectors.toList());
 
-        List<DateRange> collapseDateRanges = TimexConstraintsHelper.collapse(dateRangeconstraints);
+        List<DateRange> collapseDateRanges = TimexConstraintsHelper.collapseDateRanges(dateRangeconstraints);
 
         if (collapseDateRanges.isEmpty()) {
             return candidates;
@@ -96,7 +93,7 @@ public class TimexRangeResolver {
         return result;
     }
 
-    private static List<String> resolveByTimeRangeConstraints(List<String> candidates,
+    private static Set<String> resolveByTimeRangeConstraints(Set<String> candidates,
             List<TimexProperty> timexConstrainst) {
         List<TimeRange> timeRangeConstraints = timexConstrainst.stream().filter(timex -> {
             return timex.getTypes().contains(Constants.TimexTypes.TIME_RANGE);
@@ -104,7 +101,7 @@ public class TimexRangeResolver {
             return TimexHelpers.timeRangeFromTimex(timex);
         }).collect(Collectors.toList());
 
-        List<TimeRange> collapsedTimeRanges = TimexConstraintsHelper.collapse(timeRangeConstraints);
+        List<TimeRange> collapsedTimeRanges = TimexConstraintsHelper.collapseTimeRanges(timeRangeConstraints);
 
         if (collapsedTimeRanges.isEmpty()) {
             return candidates;
@@ -178,8 +175,8 @@ public class TimexRangeResolver {
     }
 
     private static List<String> resolveDefiniteAgainstConstraint(TimexProperty timex, DateRange constraint) {
-        DateObject timexDate = TimexHelpers.dateFromTimex(timex);
-        if (timexDate >= constraint.getStart() && timexDate < constraint.getEnd()) {
+        Calendar timexDate = TimexHelpers.dateFromTimex(timex);
+        if (timexDate.compareTo(constraint.getStart()) >= 0 && timexDate.compareTo(constraint.getEnd()) < 0) {
             return new ArrayList<String>() {
                 {
                     add(timex.getTimexValue());
@@ -193,7 +190,8 @@ public class TimexRangeResolver {
     private static List<String> resolveDateAgainstConstraint(TimexProperty timex, DateRange constraint) {
         if (timex.getMonth() != null && timex.getDayOfMonth() != null) {
             List<String> result = new ArrayList<String>();
-            for (int year = constraint.getStart().getYear(); year < constraint.getEnd().getYear(); year++) {
+            for (int year = constraint.getStart().get(Calendar.YEAR); year < constraint.getEnd()
+                    .get(Calendar.YEAR); year++) {
                 TimexProperty t = timex.clone();
                 t.setYear(year);
                 result.addAll(TimexRangeResolver.resolveDefiniteAgainstConstraint(timex, constraint));
@@ -205,15 +203,15 @@ public class TimexRangeResolver {
         if (timex.getDayOfWeek() != null) {
             // convert between ISO day of week and .NET day of week
             DayOfWeek day = timex.getDayOfWeek() == 7 ? DayOfWeek.SUNDAY : DayOfWeek.of(timex.getDayOfWeek());
-            List<DateObject> dates = TimexDateHelpers.datesMatchingDay(day, constraint.getStart(), constraint.getEnd());
+            List<Calendar> dates = TimexDateHelpers.datesMatchingDay(day, constraint.getStart(), constraint.getEnd());
             List<String> result = new ArrayList<String>();
 
-            for (DateObject d : dates) {
+            for (Calendar d : dates) {
                 TimexProperty t = timex.clone();
                 t.setDayOfWeek(null);
-                t.setYear(d.getYear());
-                t.setMonth(d.getMonth());
-                t.setDayOfMonth(d.getDay());
+                t.setYear(d.get(Calendar.YEAR));
+                t.setMonth(d.get(Calendar.MONTH));
+                t.setDayOfMonth(d.get(Calendar.DATE));
                 result.add(t.getTimexValue());
             }
 
@@ -222,14 +220,14 @@ public class TimexRangeResolver {
 
         if (timex.getHour() != null) {
             List<String> result = new ArrayList<String>();
-            DateTime day = constraint.getStart();
-            while (day <= constraint.getEnd()) {
+            Calendar day = constraint.getStart();
+            while (day.compareTo(constraint.getEnd()) <= 0) {
                 TimexProperty t = timex.clone();
-                t.setYear(day.getYear());
-                t.setMonth(day.getMonth());
-                t.setDayOfMonth(day.getDayOfMonth());
+                t.setYear(day.get(Calendar.YEAR));
+                t.setMonth(day.get(Calendar.MONTH));
+                t.setDayOfMonth(day.get(Calendar.DATE));
                 result.addAll(TimexRangeResolver.resolveDefiniteAgainstConstraint(t, constraint));
-                day = day.addDays(1);
+                day.add(Calendar.DATE, 1);
             }
 
             return result;
@@ -238,8 +236,7 @@ public class TimexRangeResolver {
         return new ArrayList<String>();
     }
 
-    private static List<String> resolveByTimeConstraints(List<String> candidates,
-            List<TimexProperty> timexConstrainst) {
+    private static Set<String> resolveByTimeConstraints(Set<String> candidates, List<TimexProperty> timexConstrainst) {
         List<Time> times = timexConstrainst.stream().filter(timex -> {
             return timex.getTypes().contains(Constants.TimexTypes.TIME);
         }).map(timex -> {
@@ -252,7 +249,7 @@ public class TimexRangeResolver {
 
         List<String> resolution = new ArrayList<String>();
         for (TimexProperty timex : candidates.stream().map(t -> new TimexProperty(t)).collect(Collectors.toList())) {
-            if (timex.getTypes().contains(Constants.TimexTypes.DATE) && !timex.getTypes().contains(Constants.TimexTypes.TIME))) {
+            if (timex.getTypes().contains(Constants.TimexTypes.DATE) && !timex.getTypes().contains(Constants.TimexTypes.TIME)) {
                 for (Time time : times) {
                     timex.setHour(time.getHour());
                     timex.setMinute(time.getMinute());

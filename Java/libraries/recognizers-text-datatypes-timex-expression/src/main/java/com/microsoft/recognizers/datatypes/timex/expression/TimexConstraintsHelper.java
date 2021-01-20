@@ -3,14 +3,13 @@
 
 package com.microsoft.recognizers.datatypes.timex.expression;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TimexConstraintsHelper {
-    public static List<TimeRange> collapse(List<TimeRange> ranges) {
+    public static List<TimeRange> collapseTimeRanges(List<TimeRange> ranges) {
         List<TimeRange> r = ranges;
 
-        while (TimexConstraintsHelper.innerCollapse(r)) {
+        while (TimexConstraintsHelper.innerCollapseTimeRanges(r)) {
 
         }
 
@@ -19,22 +18,26 @@ public class TimexConstraintsHelper {
         return r;
     }
 
-    public static List<DateRange> collapse(List<DateRange> ranges) {
+    public static List<DateRange> collapseDateRanges(List<DateRange> ranges) {
         List<DateRange> r = ranges;
 
-        while (TimexConstraintsHelper.innerCollapse(r)) {
+        while (TimexConstraintsHelper.innerCollapseDateRanges(r)) {
 
         }
 
-        r.sort((a, b) -> DateObject.compare(a.getStart(), b.getStart()));
-
+        r.sort((a, b) -> a.getStart().compareTo(b.getStart()));
         return r;
     }
 
     public static Boolean isOverlapping(TimeRange r1, TimeRange r2) {
-        return (r1.getEnd().getTime() > r2.getStart().getTime() && r1.getStart().getTime() <= r2.getStart().getTime())
-                || (r1.getStart().getTime() < r2.getEnd().getTime()
-                        && r1.getStart().getTime() >= r2.getStart().getTime());
+        return (r1.getEnd().getTime() > r2.getStart().getTime() && r1.getStart().getTime() <= r2.getStart().getTime()) ||
+            (r1.getStart().getTime() < r2.getEnd().getTime() &&
+            r1.getStart().getTime() >= r2.getStart().getTime());
+    }
+
+    private static Boolean isOverlapping(DateRange r1, DateRange r2) {
+        return (r1.getEnd().compareTo(r2.getStart()) > 0 && r1.getStart().compareTo(r2.getStart()) <= 0) ||
+            (r1.getStart().compareTo(r2.getEnd()) < 0 && r1.getStart().compareTo(r2.getStart()) >= 0);
     }
 
     private static TimeRange collapseOverlapping(TimeRange r1, TimeRange r2) {
@@ -46,12 +49,20 @@ public class TimexConstraintsHelper {
         };
     }
 
-    private static Boolean innerCollapse(List<TimeRange> ranges) {
+    private static DateRange collapseOverlapping(DateRange r1, DateRange r2) {
+        return new DateRange() {
+            {
+                setStart(r1.getStart().compareTo(r2.getStart()) > 0 ? r1.getStart() : r2.getStart());
+                setEnd(r1.getEnd().compareTo(r2.getEnd()) < 0 ? r1.getEnd() : r2.getEnd());
+            }
+        };
+    }
+
+    private static Boolean innerCollapseTimeRanges(List<TimeRange> ranges) {
         if (ranges.size() == 1) {
             return false;
         }
 
-        ArrayList<TimeRange> rangesList = (ArrayList<TimeRange>) ranges;
         for (int i = 0; i < ranges.size(); i++) {
             TimeRange r1 = ranges.get(i);
             for (int j = i + 1; j < ranges.size(); j++) {
@@ -68,21 +79,7 @@ public class TimexConstraintsHelper {
         return false;
     }
 
-    private static Boolean isOverlapping(DateRange r1, DateRange r2) {
-        return (r1.getEnd() > r2.getStart() && r1.getStart() <= r2.getStart()
-                || (r1.getStart() < r2.getEnd() && r1.getStart() >= r2.getStart()));
-    }
-
-    private static DateRange collapseOverlapping(DateRange r1, DateRange r2) {
-        return new DateRange() {
-            {
-                setStart(r1.getStart() > r2.getStart() ? r1.getStart() : r2.getStart());
-                setEnd(r1.getEnd() < r2.getEnd() ? r1.getEnd() : r2.getEnd());
-            }
-        };
-    }
-
-    private static Boolean innerCollapse(List<DateRange> ranges) {
+    private static Boolean innerCollapseDateRanges(List<DateRange> ranges) {
         if (ranges.size() == 1) {
             return false;
         }
