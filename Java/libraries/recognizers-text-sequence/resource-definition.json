@@ -50,7 +50,7 @@
       "input": [
         "Base-Hashtag"
       ],
-      "output": "Base-Hashtag",
+      "output": "BaseHashtag",
       "header": [
         "package com.microsoft.recognizers.text.sequence.resources;",
         "",
