@@ -1,77 +1,181 @@
 {
   "outputPath": "libraries/recognizers-text-sequence/src/main/java/com/microsoft/recognizers/text/sequence/resources/",
-  "configFiles" : [
+  "configFiles": [
     {
-      "input": [ "Base-PhoneNumbers" ],
+      "input": [
+        "Base-PhoneNumbers"
+      ],
       "output": "BasePhoneNumbers",
-      "header": ["package com.microsoft.recognizers.text.sequence.resources;", "", "public class BasePhoneNumbers {"],
-      "footer": ["}"]
+      "header": [
+        "package com.microsoft.recognizers.text.sequence.resources;",
+        "",
+        "import java.util.Arrays;",
+        "import java.util.List;",
+        "",
+        "public class BasePhoneNumbers {"
+      ],
+      "footer": [
+        "}"
+      ]
     },
     {
-      "input": ["Base-Ip"],
+      "input": [
+        "Base-Ip"
+      ],
       "output": "BaseIp",
-      "header": ["package com.microsoft.recognizers.text.sequence.resources;", "", "public class BaseIp {"],
-      "footer": ["}"]
+      "header": [
+        "package com.microsoft.recognizers.text.sequence.resources;",
+        "",
+        "public class BaseIp {"
+      ],
+      "footer": [
+        "}"
+      ]
     },
     {
-      "input": ["Base-Mention"],
+      "input": [
+        "Base-Mention"
+      ],
       "output": "BaseMention",
-      "header": ["package com.microsoft.recognizers.text.sequence.resources;", "", "public class BaseMention {"],
-      "footer": ["}"]
+      "header": [
+        "package com.microsoft.recognizers.text.sequence.resources;",
+        "",
+        "public class BaseMention {"
+      ],
+      "footer": [
+        "}"
+      ]
     },
     {
-      "input": ["Base-Hashtag"],
+      "input": [
+        "Base-Hashtag"
+      ],
       "output": "Base-Hashtag",
-      "header": ["package com.microsoft.recognizers.text.sequence.resources;", "", "public class Base-Hashtag {"],
-      "footer": ["}"]
+      "header": [
+        "package com.microsoft.recognizers.text.sequence.resources;",
+        "",
+        "public class Base-Hashtag {"
+      ],
+      "footer": [
+        "}"
+      ]
     },
     {
-      "input": [ "Base-URL" ],
+      "input": [
+        "Base-URL"
+      ],
       "output": "BaseURL",
-      "header": ["package com.microsoft.recognizers.text.sequence.resources;", "", "public class BaseURL {"],
-      "footer": ["}"]
+      "header": [
+        "package com.microsoft.recognizers.text.sequence.resources;",
+        "",
+        "public class BaseURL {"
+      ],
+      "footer": [
+        "}"
+      ]
     },
     {
-      "input": ["Base-Email"],
+      "input": [
+        "Base-Email"
+      ],
       "output": "BaseEmail",
-      "header": ["package com.microsoft.recognizers.text.sequence.resources;", "", "public class BaseEmail {"],
-      "footer": ["}"]
+      "header": [
+        "package com.microsoft.recognizers.text.sequence.resources;",
+        "",
+        "public class BaseEmail {"
+      ],
+      "footer": [
+        "}"
+      ]
     },
     {
-      "input": ["Base-GUID"],
+      "input": [
+        "Base-GUID"
+      ],
       "output": "BaseGUID",
-      "header": ["package com.microsoft.recognizers.text.sequence.resources;", "", "public class BaseGUID {"],
-      "footer": ["}"]
+      "header": [
+        "package com.microsoft.recognizers.text.sequence.resources;",
+        "",
+        "public class BaseGUID {"
+      ],
+      "footer": [
+        "}"
+      ]
     },
     {
-      "input": ["English", "English-PhoneNumbers"],
+      "input": [
+        "English",
+        "English-PhoneNumbers"
+      ],
       "output": "EnglishPhoneNumbers",
-      "header": ["package com.microsoft.recognizers.text.sequence.resources;", "", "public class EnglishPhoneNumbers {"],
-      "footer": ["}"]
+      "header": [
+        "package com.microsoft.recognizers.text.sequence.resources;",
+        "",
+        "public class EnglishPhoneNumbers {"
+      ],
+      "footer": [
+        "}"
+      ]
     },
     {
-      "input": ["Chinese", "Chinese-URL"],
+      "input": [
+        "Chinese",
+        "Chinese-URL"
+      ],
       "output": "ChineseURL",
-      "header": ["package com.microsoft.recognizers.text.sequence.resources;", "", "public class ChineseURL {"],
-      "footer": ["}"]
+      "header": [
+        "package com.microsoft.recognizers.text.sequence.resources;",
+        "",
+        "public class ChineseURL {"
+      ],
+      "footer": [
+        "}"
+      ]
     },
     {
-      "input": ["Chinese", "Chinese-PhoneNumbers"],
+      "input": [
+        "Chinese",
+        "Chinese-PhoneNumbers"
+      ],
       "output": "ChinesePhoneNumbers",
-      "header": ["package com.microsoft.recognizers.text.sequence.resources;", "", "public class ChinesePhoneNumbers {"],
-      "footer": ["}"]
+      "header": [
+        "package com.microsoft.recognizers.text.sequence.resources;",
+        "",
+        "public class ChinesePhoneNumbers {"
+      ],
+      "footer": [
+        "}"
+      ]
     },
     {
-      "input": ["Chinese", "Chinese-Ip"],
+      "input": [
+        "Chinese",
+        "Chinese-Ip"
+      ],
       "output": "ChineseIp",
-      "header": ["package com.microsoft.recognizers.text.sequence.resources;", "", "public class ChineseIp {"],
-      "footer": ["}"]
+      "header": [
+        "package com.microsoft.recognizers.text.sequence.resources;",
+        "",
+        "public class ChineseIp {"
+      ],
+      "footer": [
+        "}"
+      ]
     },
     {
-      "input": ["Portuguese", "Portuguese-PhoneNumbers"],
+      "input": [
+        "Portuguese",
+        "Portuguese-PhoneNumbers"
+      ],
       "output": "PortuguesePhoneNumbers",
-      "header": ["package com.microsoft.recognizers.text.sequence.resources;", "", "public class PortuguesePhoneNumbers {"],
-      "footer": ["}"]
+      "header": [
+        "package com.microsoft.recognizers.text.sequence.resources;",
+        "",
+        "public class PortuguesePhoneNumbers {"
+      ],
+      "footer": [
+        "}"
+      ]
     }
   ]
 }

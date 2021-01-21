@@ -11,6 +11,9 @@
 
 package com.microsoft.recognizers.text.sequence.resources;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class BasePhoneNumbers {
 
     public static final String NumberReplaceToken = "@builtin.phonenumber";
