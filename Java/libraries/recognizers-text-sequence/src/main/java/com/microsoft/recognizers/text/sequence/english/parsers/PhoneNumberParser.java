@@ -2,6 +2,7 @@ package com.microsoft.recognizers.text.sequence.english.parsers;
 
 import com.microsoft.recognizers.text.ExtractResult;
 import com.microsoft.recognizers.text.ParseResult;
+import com.microsoft.recognizers.text.sequence.resources.BasePhoneNumbers;
 import com.microsoft.recognizers.text.utilities.Match;
 import com.microsoft.recognizers.text.utilities.RegExpUtility;
 
@@ -52,7 +53,7 @@ public class PhoneNumberParser {
         if (formatMatches.length > 0) {
             int formatIndicatorCount = formatMatches.length;
             score += Math.min(formatIndicatorCount, maxFormatIndicatorNum) * formattedAward;
-            boolean anyMatch = Arrays.stream(formatMatches).anyMatch( match -> { return match.value.length() > 1; });
+            boolean anyMatch = Arrays.stream(formatMatches).anyMatch( match -> match.value.length() > 1);
             score -= anyMatch ? continueFormatIndicatorDeductionScore : 0;
             if (Pattern.matches(singleBracketRegex, phoneNumberText) &&
                 !Pattern.matches(completeBracketRegex, phoneNumberText)) {
@@ -65,7 +66,7 @@ public class PhoneNumberParser {
                 phoneNumberLengthBase, maxLengthAwardNum) * lengthAward;
 
         // Same tailing digit deduction
-        Match[] tailSameDigitMatches = RegExpUtility.getMatches(Pattern.compile(tailSameDigitRegex), phoneNumberText)
+        Match[] tailSameDigitMatches = RegExpUtility.getMatches(Pattern.compile(tailSameDigitRegex), phoneNumberText);
         if (tailSameDigitMatches.length > 0) {
             score -= (tailSameDigitMatches[0].value.length() - tailSameLimit) * tailSameDeductionScore;
         }
@@ -78,7 +79,8 @@ public class PhoneNumberParser {
         }
 
         // Special format deduction
-        //score -= BasePhoneNumbers.TypicalDeductionRegexList.Any(o => Regex.IsMatch(phoneNumberText, o)) ? typicalFormatDeductionScore : 0;
+        score -= Arrays.stream(BasePhoneNumbers.TypicalDeductionRegexList.toArray())
+                    .anyMatch(o -> Pattern.matches((String)o, phoneNumberText)) ? typicalFormatDeductionScore : 0;
 
         // Continue digit deduction
         Match[] continueDigitMatches = RegExpUtility.getMatches(Pattern.compile(continueDigitRegex), phoneNumberText);

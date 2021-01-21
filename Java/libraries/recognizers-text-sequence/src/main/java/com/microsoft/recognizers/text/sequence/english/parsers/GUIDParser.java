@@ -3,10 +3,10 @@ package com.microsoft.recognizers.text.sequence.english.parsers;
 import com.microsoft.recognizers.text.ExtractResult;
 import com.microsoft.recognizers.text.ParseResult;
 import com.microsoft.recognizers.text.sequence.parsers.BaseSequenceParser;
+import com.microsoft.recognizers.text.sequence.resources.BaseGUID;
 import com.microsoft.recognizers.text.utilities.Match;
 import com.microsoft.recognizers.text.utilities.RegExpUtility;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class GUIDParser extends BaseSequenceParser {
