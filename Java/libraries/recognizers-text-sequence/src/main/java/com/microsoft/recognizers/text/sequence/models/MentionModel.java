@@ -7,10 +7,10 @@ import com.microsoft.recognizers.text.IExtractor;
 import com.microsoft.recognizers.text.IParser;
 import com.microsoft.recognizers.text.sequence.Constants;
 
-public class MentionNumber extends AbstractSequenceModel {
+public class MentionModel extends AbstractSequenceModel {
     private String modelTypeName = Constants.MODEL_MENTION;
 
-    public MentionNumber(IParser parser, IExtractor extractor) {
+    public MentionModel(IParser parser, IExtractor extractor) {
         super(parser, extractor);
     }
 
