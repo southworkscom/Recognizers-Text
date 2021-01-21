@@ -11,9 +11,9 @@ import java.util.Map.Entry;
 public class TimexProperty {
     private Time time;
 
-    private String timexValue = TimexFormat.format(this);
+    private String timexValue;
 
-    private HashSet<String> types = TimexInference.infer(this);
+    private HashSet<String> types;
 
     private Boolean now;
 
@@ -64,7 +64,7 @@ public class TimexProperty {
     }
 
     public String getTimexValue() {
-        return timexValue;
+        return TimexFormat.format(this);
     }
 
     public void setTimexValue(String withTimexValue) {
@@ -72,7 +72,7 @@ public class TimexProperty {
     }
 
     public HashSet<String> getTypes() {
-        return types;
+        return TimexInference.infer(this);
     }
 
     public void setTypes(HashSet<String> withTypes) {
@@ -214,13 +214,15 @@ public class TimexProperty {
     public void setHour(Integer withHour) {
         if (withHour != null) {
             if (this.time == null) {
-                time = new Time(withHour, 0, 0);
+                this.time = new Time(withHour, 0, 0);
             } else {
-                time.setHour(withHour);
+                this.time.setHour(withHour);
             }
         } else {
-            time = null;
+            this.time = null;
         }
+
+        this.hour = withHour;
     }
 
     public Integer getMinute() {
@@ -235,8 +237,10 @@ public class TimexProperty {
                 time.setMinute(withMinute);
             }
         } else {
-            time = null;
+            this.time = null;
         }
+
+        this.minute = withMinute;
     }
 
     public Integer getSecond() {
@@ -246,13 +250,15 @@ public class TimexProperty {
     public void setSecond(Integer withSecond) {
         if (withSecond != null) {
             if (this.time == null) {
-                time = new Time(0, 0, withSecond);
+                this.time = new Time(0, 0, withSecond);
             } else {
-                time.setSecond(withSecond);
+                this.time.setSecond(withSecond);
             }
         } else {
-            time = null;
+            this.time = null;
         }
+
+        this.second = withSecond;
     }
 
     public String getPartOfDay() {
@@ -264,18 +270,20 @@ public class TimexProperty {
     }
 
     public static TimexProperty fromDate(Calendar date) {
-        return new TimexProperty() {
+        TimexProperty timex = new TimexProperty() {
             {
                 setYear(date.get(Calendar.YEAR));
-                setMonth(date.get(Calendar.MONTH));
+                // We are adding +1 as Calendar starts from 0 (JANUARY)
+                setMonth(date.get(Calendar.MONTH) + 1);
                 setDayOfMonth(date.get(Calendar.DATE));
             }
         };
+        return timex;
     }
 
     public static TimexProperty fromDateTime(Calendar datetime) {
         TimexProperty timex = TimexProperty.fromDate(datetime);
-        timex.setHour(datetime.get(Calendar.HOUR));
+        timex.setHour(datetime.get(Calendar.HOUR_OF_DAY));
         timex.setMinute(datetime.get(Calendar.MINUTE));
         timex.setSecond(datetime.get(Calendar.SECOND));
         return timex;
@@ -291,10 +299,10 @@ public class TimexProperty {
         };
     }
 
-    @Override
-    public String toString() {
-        return TimexConvert.convertTimexToString(this);
-    }
+//    @Override
+//    public String toString() {
+//        return TimexConvert.convertTimexToString(this);
+//    }
 
     public String toNaturalLanguage(Calendar referenceDate) {
         return TimexRelativeConvert.convertTimexToStringRelative(this, referenceDate);

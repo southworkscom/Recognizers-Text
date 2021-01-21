@@ -66,7 +66,7 @@ public class TimexInference {
     }
 
     private static Boolean isPresent(TimexProperty timexProperty) {
-        return timexProperty.getNow() == true;
+        return timexProperty.getNow() != null && timexProperty.getNow() == true;
     }
 
     private static Boolean isDuration(TimexProperty timexProperty) {
