@@ -85,15 +85,15 @@ public abstract class BaseSequenceExtractor implements IExtractor {
         return true;
     }
 
-    public List<ExtractResult>  PostFilter(List<ExtractResult> results) {
+    protected List<ExtractResult>  PostFilter(List<ExtractResult> results) {
         return results;
     }
 
-    public LinkedHashMap<Pattern, String> getRegexes() {
+    protected LinkedHashMap<Pattern, String> getRegexes() {
         return Regexes;
     }
 
-    public String getExtractType() {
+    protected String getExtractType() {
         return ExtractType;
     }
 }
