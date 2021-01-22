@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 package com.microsoft.recognizers.text.sequence.english.parsers;
 
 import com.microsoft.recognizers.text.ExtractResult;
@@ -10,34 +13,36 @@ import com.microsoft.recognizers.text.utilities.RegExpUtility;
 import java.util.regex.Pattern;
 
 public class GUIDParser extends BaseSequenceParser {
-    private static double scoreUpperLimit = 100;
-    private static double scoreLowerLimit = 0;
-    private static double baseScore = 100;
-    private static double noBoundaryPenalty = 10;
-    private static double noFormatPenalty = 10;
-    private static double pureDigitPenalty = 15;
-    private static String pureDigitRegex = "^\\d*$";
-    private static String formatRegex = "-";
+    private static Double SCORE_UPPER_LIMIT = 100d;
+    private static Double SCORE_LOWER_LIMIT = 0d;
+    private static Double BASE_SCORE = 100d;
+    private static Double NO_BOUNDARY_PENALTY = 10d;
+    private static Double NO_FORMAT_PENALTY = 10d;
+    private static Double PURE_DIGIT_PENALTY = 15d;
+    private static String PURE_DIGIT_REGEX = "^\\d*$";
+    private static String FORMAT_REGEX = "-";
 
-    private static final Pattern GuidElementRegex = Pattern.compile(BaseGUID.GUIDRegexElement);
+    private static final Pattern GUID_ELEMENT_REGEX = Pattern.compile(BaseGUID.GUIDRegexElement);
 
-    public static double ScoreGUID(String textGUID) {
-        double score = baseScore;
+    public static Double scoreGUID(String textGUID) {
+        Double score = BASE_SCORE;
 
-        Match[] elementMatch = RegExpUtility.getMatches(GuidElementRegex,textGUID);
+        Match[] elementMatch = RegExpUtility.getMatches(GUID_ELEMENT_REGEX, textGUID);
         if (elementMatch.length > 0) {
-            int startIndex = elementMatch[1].index;
+            Integer startIndex = elementMatch[1].index;
             String guidElement = elementMatch[1].value;
-            score -= startIndex == 0 ? noBoundaryPenalty : 0;
-            score -= Pattern.matches(formatRegex, guidElement) ? 0 : noBoundaryPenalty;
-            score -= Pattern.matches(pureDigitRegex, textGUID) ? pureDigitPenalty : 0;
+            score -= startIndex == 0 ? NO_BOUNDARY_PENALTY : 0;
+            score -= Pattern.matches(FORMAT_REGEX, guidElement) ? 0 : NO_BOUNDARY_PENALTY;
+            score -= Pattern.matches(PURE_DIGIT_REGEX, textGUID) ? PURE_DIGIT_PENALTY : 0;
         }
 
-        return Math.max(Math.min(score, scoreUpperLimit), scoreLowerLimit) / (scoreUpperLimit - scoreLowerLimit);
+        return Math.max(Math.min(score, SCORE_UPPER_LIMIT), SCORE_LOWER_LIMIT)
+                / (SCORE_UPPER_LIMIT - SCORE_LOWER_LIMIT);
     }
 
     @Override
-    public ParseResult Parse(ExtractResult extResult) {
-        return new ParseResult(extResult);
+    public ParseResult parse(ExtractResult extResult) {
+        return new ParseResult(extResult.getStart(), extResult.getLength(), extResult.getText(), extResult.getType(),
+                null, GUIDParser.scoreGUID(extResult.getText()), extResult.getText());
     }
 }

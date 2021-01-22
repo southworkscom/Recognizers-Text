@@ -10,7 +10,8 @@ import com.microsoft.recognizers.text.ParseResult;
 public class BaseSequenceParser implements IParser {
     @Override
     public ParseResult parse(ExtractResult extResult) {
-        ParseResult result = new ParseResult(extResult.getStart(), extResult.getLength(), extResult.getText(), extResult.getType(), null, null, extResult.getText());
+        ParseResult result = new ParseResult(extResult.getStart(), extResult.getLength(), extResult.getText(),
+                extResult.getType(), null, null, extResult.getText());
         return result;
     }
 }

@@ -4,7 +4,9 @@
 package com.microsoft.recognizers.text.sequence.extractors;
 
 import com.microsoft.recognizers.text.ExtractResult;
-import com.microsoft.recognizers.text.IExtractor;
+import com.microsoft.recognizers.text.sequence.Constants;
+import com.microsoft.recognizers.text.sequence.config.IpConfiguration;
+import com.microsoft.recognizers.text.sequence.resources.BaseIp;
 import com.microsoft.recognizers.text.utilities.Match;
 import com.microsoft.recognizers.text.utilities.RegExpUtility;
 
@@ -17,27 +19,35 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-public abstract class BaseSequenceExtractor implements IExtractor {
+import org.apache.commons.lang3.StringUtils;
+
+public class BaseIpExtractor extends BaseSequenceExtractor {
     protected Map<Pattern, String> regexes;
-    protected String extractType = "";
-
-    protected List<ExtractResult> postFilter(List<ExtractResult> results) {
-        return results;
-    }
-
-    protected Map<Pattern, String> getRegexes() {
-        return regexes;
-    }
+    private IpConfiguration config;
+    protected String extractType = Constants.SYS_IP;
 
     protected String getExtractType() {
-        return extractType;
+        return this.extractType;
+    }
+
+    // The Ipv6 address regexes is written following the Recommendation:
+    // https://tools.ietf.org/html/rfc5952
+    public BaseIpExtractor(IpConfiguration config) {
+        Map<Pattern, String> regexes = new HashMap<Pattern, String>() {
+            {
+                put(Pattern.compile(BaseIp.Ipv4Regex), Constants.IP_REGEX_IPV4);
+                put(Pattern.compile(BaseIp.Ipv6Regex), Constants.IP_REGEX_IPV6);
+            }
+        };
+
+        this.regexes = regexes;
     }
 
     @Override
     public List<ExtractResult> extract(String text) {
-        List<ExtractResult> result = new ArrayList<>();
+        List<ExtractResult> result = new ArrayList<ExtractResult>();
 
-        if (text.isEmpty()) {
+        if (StringUtils.isBlank(text)) {
             return result;
         }
 
@@ -54,18 +64,15 @@ public abstract class BaseSequenceExtractor implements IExtractor {
 
         collections.forEach((key, value) -> {
             for (Match match : key) {
-                if (isValidMatch(match)) {
-                    for (int j = 0; j < match.length; j++) {
-                        matched[match.index + j] = true;
-                    }
-
-                    // Keep Source Data for extra information
-                    matchSource.put(match, value);
+                for (int j = 0; j < match.length; j++) {
+                    matched[match.index + j] = true;
                 }
+
+                // Keep Source Data for extra information
+                matchSource.put(match, value);
             }
         });
 
-        // Form the extracted results mark all the matched intervals in the text.
         int lastNotMatched = -1;
         for (int i = 0; i < text.length(); i++) {
             if (matched[i]) {
@@ -73,6 +80,14 @@ public abstract class BaseSequenceExtractor implements IExtractor {
                     int start = lastNotMatched + 1;
                     int length = i - lastNotMatched;
                     String substr = text.substring(start, start + length);
+                    if (substr.startsWith(Constants.IPV6_ELLIPSIS) && (start > 0 && Character.isLetterOrDigit(text.charAt(start - 1)))) {
+                        break;
+                    }
+
+                    if (substr.endsWith(Constants.IPV6_ELLIPSIS) && (i + 1 < text.length() && Character.isLetterOrDigit(text.charAt(i + 1)))) {
+                        break;
+                    }
+
                     Function<Match, Boolean> matchFunc = match -> match.index == start && match.length == length;
 
                     Stream<Object> matchStream = Arrays.stream(matchSource.entrySet().toArray());
@@ -93,10 +108,6 @@ public abstract class BaseSequenceExtractor implements IExtractor {
             }
         }
 
-        return this.postFilter(result);
-    }
-
-    public Boolean isValidMatch(Match match) {
-        return true;
+        return result;
     }
 }

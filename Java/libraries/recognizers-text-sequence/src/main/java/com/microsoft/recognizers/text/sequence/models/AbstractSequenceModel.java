@@ -3,11 +3,6 @@
 
 package com.microsoft.recognizers.text.sequence.models;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
-
 import com.microsoft.recognizers.text.ExtractResult;
 import com.microsoft.recognizers.text.IExtractor;
 import com.microsoft.recognizers.text.IModel;
@@ -15,6 +10,11 @@ import com.microsoft.recognizers.text.IParser;
 import com.microsoft.recognizers.text.ModelResult;
 import com.microsoft.recognizers.text.ParseResult;
 import com.microsoft.recognizers.text.ResolutionKey;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 public abstract class AbstractSequenceModel implements IModel {
     private String modelTypeName;
@@ -58,15 +58,7 @@ public abstract class AbstractSequenceModel implements IModel {
         return extractor;
     }
 
-    private void setExtractor(IExtractor withExtractor) {
-        this.extractor = withExtractor;
-    }
-
     public IParser getParser() {
         return parser;
-    }
-
-    private void setParser(IParser withParser) {
-        this.parser = withParser;
     }
 }
