@@ -39,6 +39,14 @@ import java.util.Locale;
 import java.util.function.Function;
 
 public class SequenceRecognizer extends Recognizer<SequenceOptions> {
+    public SequenceRecognizer() {
+        this(null, SequenceOptions.None, true);
+    }
+
+    public SequenceRecognizer(String culture) {
+        this(culture, SequenceOptions.None, false);
+    }
+
     public SequenceRecognizer(String targetCulture, SequenceOptions options, boolean lazyInitialization) {
         super(targetCulture, options, lazyInitialization);
     }
@@ -67,57 +75,51 @@ public class SequenceRecognizer extends Recognizer<SequenceOptions> {
         this(null, options, true);
     }
 
-    public SequenceRecognizer() {
-        this(null, SequenceOptions.None, true);
-    }
-
     public static List<ModelResult> recognizePhoneNumber(String query, String culture, SequenceOptions options,
             Boolean fallbackToDefaultCulture) {
-        options = options != null ? options : SequenceOptions.None;
         return SequenceRecognizer.recognizeByModel(recognizer -> ((SequenceRecognizer)recognizer).getPhoneNumberModel(culture, fallbackToDefaultCulture),
                 query, options);
     }
 
-    public static List<ModelResult> recognizeIpAddres(String query, String culture, SequenceOptions options,
+    public static List<ModelResult> recognizeIpAddress(String query, String culture, SequenceOptions options,
             Boolean fallbackToDefaultCulture) {
-        options = options != null ? options : SequenceOptions.None;
         return SequenceRecognizer.recognizeByModel(recognizer -> ((SequenceRecognizer)recognizer).getIpAddressModel(culture, fallbackToDefaultCulture),
                 query, options);
     }
 
     public static List<ModelResult> recognizeMention(String query, String culture, SequenceOptions options,
             Boolean fallbackToDefaultCulture) {
-        options = options != null ? options : SequenceOptions.None;
         return SequenceRecognizer.recognizeByModel(recognizer -> ((SequenceRecognizer)recognizer).getMentionModel(culture, fallbackToDefaultCulture),
                 query, options);
     }
 
     public static List<ModelResult> recognizeHashtag(String query, String culture, SequenceOptions options,
             Boolean fallbackToDefaultCulture) {
-        options = options != null ? options : SequenceOptions.None;
         return SequenceRecognizer.recognizeByModel(recognizer -> ((SequenceRecognizer)recognizer).getHashtagModel(culture, fallbackToDefaultCulture),
                 query, options);
     }
 
     public static List<ModelResult> recognizeEmail(String query, String culture, SequenceOptions options,
             Boolean fallbackToDefaultCulture) {
-        options = options != null ? options : SequenceOptions.None;
         return SequenceRecognizer.recognizeByModel(recognizer -> ((SequenceRecognizer)recognizer).getEmailModel(culture, fallbackToDefaultCulture), query,
                 options);
     }
 
     public static List<ModelResult> recognizeURL(String query, String culture, SequenceOptions options,
             Boolean fallbackToDefaultCulture) {
-        options = options != null ? options : SequenceOptions.None;
         return SequenceRecognizer.recognizeByModel(recognizer -> ((SequenceRecognizer)recognizer).getURLModel(culture, fallbackToDefaultCulture), query,
                 options);
     }
 
     public static List<ModelResult> recognizeGUID(String query, String culture, SequenceOptions options,
             Boolean fallbackToDefaultCulture) {
-        options = options != null ? options : SequenceOptions.None;
         return SequenceRecognizer.recognizeByModel(recognizer -> ((SequenceRecognizer)recognizer).getGUIDModel(culture, fallbackToDefaultCulture), query,
                 options);
+    }
+
+    //region Helper methods for less verbosity
+    public IModel getPhoneNumberModel() {
+        return getPhoneNumberModel(null, true);
     }
 
     public IModel getPhoneNumberModel(String culture, Boolean fallbackToDefaultCulture) {
