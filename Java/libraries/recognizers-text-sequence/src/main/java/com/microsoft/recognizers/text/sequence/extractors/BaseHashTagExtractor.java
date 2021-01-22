@@ -3,15 +3,20 @@
 
 package com.microsoft.recognizers.text.sequence.extractors;
 
+import com.microsoft.recognizers.text.sequence.Constants;
+import com.microsoft.recognizers.text.sequence.resources.BaseHashtag;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import com.microsoft.recognizers.text.sequence.Constants;
-
 public class BaseHashTagExtractor extends BaseSequenceExtractor {
     protected Map<Pattern, String> regexes;
     protected final String extractType = Constants.SYS_HASHTAG;
+
+    protected String getExtractType() {
+        return this.extractType;
+    }
     
     public BaseHashTagExtractor() {
         Map<Pattern, String> regexes = new HashMap<Pattern, String>() {
@@ -21,9 +26,5 @@ public class BaseHashTagExtractor extends BaseSequenceExtractor {
         };
 
         this.regexes = regexes;
-    }
-
-    protected String getExtractType() {
-        return this.extractType;
     }
 }

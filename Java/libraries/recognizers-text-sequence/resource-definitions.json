@@ -54,7 +54,7 @@
       "header": [
         "package com.microsoft.recognizers.text.sequence.resources;",
         "",
-        "public class Base-Hashtag {"
+        "public class BaseHashtag {"
       ],
       "footer": [
         "}"

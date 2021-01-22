@@ -3,11 +3,6 @@
 
 package com.microsoft.recognizers.text.sequence.models;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
-
 import com.microsoft.recognizers.text.ExtractResult;
 import com.microsoft.recognizers.text.IExtractor;
 import com.microsoft.recognizers.text.IParser;
@@ -16,6 +11,11 @@ import com.microsoft.recognizers.text.ParseResult;
 import com.microsoft.recognizers.text.ResolutionKey;
 import com.microsoft.recognizers.text.sequence.Constants;
 import com.microsoft.recognizers.text.utilities.QueryProcessor;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 public class PhoneNumberModel extends AbstractSequenceModel {
     private String modelTypeName = Constants.MODEL_PHONE_NUMBER;

@@ -5,12 +5,14 @@ package com.microsoft.recognizers.text.sequence.parsers;
 
 import com.microsoft.recognizers.text.ExtractResult;
 import com.microsoft.recognizers.text.ParseResult;
-import jdk.internal.joptsimple.internal.Strings;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class BaseIpParser extends BaseSequenceParser {
     @Override
     public ParseResult parse(ExtractResult extResult) {
-        ParseResult result = new ParseResult(extResult.getStart(), extResult.getLength(), extResult.getText(), extResult.getType(), extResult.getData(), null, BaseIpParser.dropLeadingZeros(extResult.getText()));
+        ParseResult result = new ParseResult(extResult.getStart(), extResult.getLength(), extResult.getText(),
+                extResult.getType(), extResult.getData(), null, BaseIpParser.dropLeadingZeros(extResult.getText()));
 
         return result;
     }
@@ -21,9 +23,9 @@ public class BaseIpParser extends BaseSequenceParser {
         for (int i = 0; i < text.length(); i++) {
             Character c = text.charAt(i);
             if (c.equals(".") || c.equals(":")) {
-                if (!Strings.isNullOrEmpty(number)) {
+                if (!StringUtils.isBlank(number)) {
                     number = number == "0" ? number : number.replaceFirst("0", "");
-                    number = Strings.isNullOrEmpty(number) ? "0" : number;
+                    number = StringUtils.isBlank(number) ? "0" : number;
                     result += number;
                 }
 
@@ -33,7 +35,7 @@ public class BaseIpParser extends BaseSequenceParser {
                 number += c.toString();
                 if (i == text.length() - 1) {
                     number = number == "0" ? number : number.replaceFirst("0", "");
-                    number = Strings.isNullOrEmpty(number) ? "0" : number;
+                    number = StringUtils.isBlank(number) ? "0" : number;
                     result += number;
                 }
             }

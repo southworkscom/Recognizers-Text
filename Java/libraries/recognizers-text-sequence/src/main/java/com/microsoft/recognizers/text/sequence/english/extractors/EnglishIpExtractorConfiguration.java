@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 package com.microsoft.recognizers.text.sequence.english.extractors;
 
 import com.microsoft.recognizers.text.sequence.SequenceOptions;
@@ -10,7 +13,7 @@ public class EnglishIpExtractorConfiguration extends IpConfiguration {
     public EnglishIpExtractorConfiguration(SequenceOptions options) {
         super(options);
 
-        super.setIpv4Regex(Pattern.compile(BaseIp.Ipv4Regex));
-        super.setIpv6Regex(Pattern.compile(BaseIp.Ipv4Regex));
+        this.setIpv4Regex(Pattern.compile(BaseIp.Ipv4Regex));
+        this.setIpv6Regex(Pattern.compile(BaseIp.Ipv6Regex));
     }
 }
