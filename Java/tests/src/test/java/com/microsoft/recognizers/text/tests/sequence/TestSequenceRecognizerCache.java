@@ -4,40 +4,66 @@
 package com.microsoft.recognizers.text.tests.sequence;
 
 import com.microsoft.recognizers.text.Culture;
+import com.microsoft.recognizers.text.IModel;
+import com.microsoft.recognizers.text.ModelFactory;
+import com.microsoft.recognizers.text.Recognizer;
+import com.microsoft.recognizers.text.sequence.SequenceOptions;
 import com.microsoft.recognizers.text.sequence.SequenceRecognizer;
-import com.microsoft.recognizers.text.sequence.english.extractors.EnglishPhoneNumberExtractorConfiguration;
-import com.microsoft.recognizers.text.sequence.english.parsers.PhoneNumberParser;
-import com.microsoft.recognizers.text.sequence.models.PhoneNumberModel;
-
+import org.javatuples.Triplet;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
+import java.util.Collections;
+import java.util.Map;
 
 public class TestSequenceRecognizerCache {
 
     @Before
     public void initialization() {
         SequenceRecognizer recognizer = new SequenceRecognizer();
-        recognizer.getInternalCache().clear();
+        getInternalModelCache(recognizer).clear();
     }
 
     @Test
-    public void withLazyInitializationCacheEmpty() {
-        SequenceRecognizer recognizer = new SequenceRecognizer(lazyInitialization: true);
-        var internalCache = recognizer.getInternalCache();
-        Assert.assertEquals(0, internalCache.Count);
+    public void withLazyInitializationCacheShouldBeEmpty() {
+        SequenceRecognizer recognizer = new SequenceRecognizer(SequenceOptions.None, true);
+        Map<Triplet<String, Type, String>, IModel> internalCache = getInternalModelCache(recognizer);
+        Assert.assertEquals(0, internalCache.size());
     }
 
     @Test
-    public void withoutLazyInitializationCacheFull() {
-        SequenceRecognizer recognizer = new SequenceRecognizer(lazyInitialization: false);
-        var internalCache = recognizer.getInternalCache();
+    public void withoutLazyInitializationCacheShouldBeFull() {
+        SequenceRecognizer recognizer = new SequenceRecognizer(SequenceOptions.None, false);
+        Map<Triplet<String, Type, String>, IModel> internalCache = getInternalModelCache(recognizer);
         Assert.assertNotEquals(0, internalCache.size());
     }
 
-    public void withoutLazyInitializationAndCultureCacheWithCulture() {
-        SequenceRecognizer recognizer = new SequenceRecognizer(Culture.English, lazyInitialization: false);
-        var internalCache = recognizer.getInternalCache();
-        Assert.assertTrue(internalCache.All(kv => kv.Key.culture == Culture.English));
+    @Test
+    public void withoutLazyInitializationAndCultureCacheForSpecificCultureShouldBeSet() {
+        SequenceRecognizer recognizer = new SequenceRecognizer(Culture.English, SequenceOptions.None, false);
+        Map<Triplet<String, Type, String>, IModel> internalCache = getInternalModelCache(recognizer);
+
+        Assert.assertTrue(internalCache.entrySet().stream().allMatch(kv -> kv.getKey().getValue0() == Culture.English));
+    }
+
+    private static Map<Triplet<String, Type, String>, IModel> getInternalModelCache(SequenceRecognizer recognizer) {
+        try {
+            Field field = Recognizer.class.getDeclaredField("factory");
+            field.setAccessible(true);
+            ModelFactory<SequenceOptions> factory = (ModelFactory<SequenceOptions>) field.get(recognizer);
+            Field cacheField = factory.getClass().getDeclaredField("cache");
+            cacheField.setAccessible(true);
+            Map<Triplet<String, Type, String>, IModel> cache = (Map<Triplet<String, Type, String>, IModel>) cacheField
+                    .get(null);
+
+            return cache;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return Collections.emptyMap();
+        }
+
     }
 }

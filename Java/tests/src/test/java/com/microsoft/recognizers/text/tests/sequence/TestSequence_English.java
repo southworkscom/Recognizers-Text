@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.microsoft.recognizers.text.ModelResult;
+import com.microsoft.recognizers.text.sequence.SequenceOptions;
 import com.microsoft.recognizers.text.sequence.SequenceRecognizer;
 import com.microsoft.recognizers.text.tests.AbstractTest;
 import com.microsoft.recognizers.text.tests.TestCase;
@@ -29,7 +30,6 @@ public class TestSequence_English extends AbstractTest {
     @Override
     protected List<ModelResult> recognize(TestCase currentCase) {
         try {
-
             String culture = getCultureCode(currentCase.language);
             switch (currentCase.modelName) {
                 case "EmailModel": {

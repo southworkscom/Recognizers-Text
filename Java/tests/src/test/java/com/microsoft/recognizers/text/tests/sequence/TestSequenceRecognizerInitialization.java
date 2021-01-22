@@ -18,8 +18,10 @@ import com.microsoft.recognizers.text.sequence.SequenceOptions;
 import com.microsoft.recognizers.text.sequence.SequenceRecognizer;
 import com.microsoft.recognizers.text.sequence.english.extractors.EnglishPhoneNumberExtractorConfiguration;
 import com.microsoft.recognizers.text.sequence.english.parsers.PhoneNumberParser;
+import com.microsoft.recognizers.text.sequence.extractors.BasePhoneNumberExtractor;
 import com.microsoft.recognizers.text.sequence.models.PhoneNumberModel;
 
+import org.javatuples.Pair;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -27,92 +29,87 @@ public class TestSequenceRecognizerInitialization {
     private final String testInput = "1 (877) 609-2233";
 
     private final String englishCulture = Culture.English;
+    private final String spanishCulture = Culture.Spanish;
     private final String invalidCulture = "vo-id";
 
-    private IModel controlModel;
+    private final IModel controlModel;
 
-    public testSequenceRecognizerInitialization() {
+    public TestSequenceRecognizerInitialization() {
         SequenceOptions config = SequenceOptions.None;
 
         controlModel = new PhoneNumberModel(new PhoneNumberParser(),
-                new EnglishPhoneNumberExtractorConfiguration(config));
+                new BasePhoneNumberExtractor(new EnglishPhoneNumberExtractorConfiguration(config)));
     }
 
     @Test
     public void withoutCultureUseTargetCulture() {
-        SequenceRecognizer recognizer = new SequenceRecognizer(this.englishCulture, SequenceOptions.None, true);
-        IModel testedModel = recognizer.getPhoneNumberModel(null, true);
+        SequenceRecognizer recognizer = new SequenceRecognizer(englishCulture);
+        IModel testedModel = recognizer.getPhoneNumberModel();
 
-        this.testPhoneNumber(testedModel, controlModel, testInput);
+        TestSequence(testedModel, controlModel, testInput);
     }
 
     @Test
-    public void withInvalidCultureUseTargetCulture() {
-        SequenceRecognizer recognizer = new SequenceRecognizer(this.englishCulture, SequenceOptions.None, true);
-        IModel testedModel = recognizer.getPhoneNumberModel(this.invalidCulture, true);
+    public void withOtherCultureNotUseTargetCulture() {
+        SequenceRecognizer recognizer = new SequenceRecognizer(spanishCulture);
+        IModel testedModel = recognizer.getPhoneNumberModel(englishCulture, false);
 
-        this.testPhoneNumber(testedModel, controlModel, testInput);
+        TestSequence(testedModel, controlModel, testInput);
     }
 
     @Test
-    public void withInvalidCultureAlwaysUseEnglish() {
-        SequenceRecognizer recognizer = new SequenceRecognizer(null, SequenceOptions.None, true);
-        IModel testedModel = recognizer.getPhoneNumberModel(this.invalidCulture, true);
+    public void withinvalidCultureUseTargetCulture() {
+        SequenceRecognizer recognizer = new SequenceRecognizer(englishCulture);
+        IModel testedModel = recognizer.getPhoneNumberModel(invalidCulture, true);
 
-        this.testPhoneNumber(testedModel, controlModel, testInput);
+        TestSequence(testedModel, controlModel, testInput);
+    }
+
+    @Test
+    public void withinvalidCultureAlwaysUseEnglish() {
+        SequenceRecognizer recognizer = new SequenceRecognizer();
+        IModel testedModel = recognizer.getPhoneNumberModel(invalidCulture, true);
+
+        TestSequence(testedModel, controlModel, testInput);
     }
 
     @Test
     public void withoutTargetCultureAndWithoutCultureFallbackToEnglishCulture() {
-        SequenceRecognizer recognizer = new SequenceRecognizer(null, SequenceOptions.None, true);
-        IModel testedModel = recognizer.getPhoneNumberModel(null, true);
+        SequenceRecognizer recognizer = new SequenceRecognizer();
+        IModel testedModel = recognizer.getPhoneNumberModel();
 
-        this.testPhoneNumber(testedModel, controlModel, testInput);
+        TestSequence(testedModel, controlModel, testInput);
     }
 
     @Test
-    public void withInvalidCultureAsTargetAlwaysUseEnglish() {
-        SequenceRecognizer recognizer = new SequenceRecognizer(this.invalidCulture, SequenceOptions.None, true);
-        Assert.assertEquals(recognizer.getPhoneNumberModel(null, true),
-                recognizer.getPhoneNumberModel(this.englishCulture, true));
+    public void withInvalidCultureAndWithoutFallbackThrowError() {
+        SequenceRecognizer recognizer = new SequenceRecognizer();
+        try {
+            recognizer.getPhoneNumberModel(invalidCulture, false);
+            Assert.fail("should have thrown IllegalArgumentException");
+        } catch (IllegalArgumentException ex) {
+        }
     }
 
-    @Test
-    public void initializationWithIntOptionResolveOptionsEnum() {
-        SequenceRecognizer recognizer = new SequenceRecognizer(this.englishCulture, 0, false);
-        Assert.assertTrue(recognizer.options.equals(SequenceOptions.None));
-    }
-
-    @Test
-    public void initializationWithInvalidOptionsThrowError() {
-        Assert.assertThrows(IllegalArgumentException.class, () -> {
-            new SequenceRecognizer(this.englishCulture, -1, false);
-        });
-    }
-
-    private void testPhoneNumber(IModel testedModel, IModel controlModel, String source) {
+    private void TestSequence(IModel testedModel, IModel controlModel, String source) {
         List<ModelResult> expectedResults = controlModel.parse(source);
         List<ModelResult> actualResults = testedModel.parse(source);
 
-        Assert.assertEquals(expectedResults.size(), actualResults.size());
-        Assert.assertTrue(expectedResults.size() > 0);
+        Assert.assertEquals(source, expectedResults.size(), actualResults.size());
+        Assert.assertTrue(source, expectedResults.size() > 0);
 
-        Map<ModelResult, ModelResult> enumerable = this.zipToMap(expectedResults, actualResults);
+        IntStream.range(0, expectedResults.size())
+                .mapToObj(i -> Pair.with(expectedResults.get(i), actualResults.get(i))).forEach(t -> {
+                    ModelResult expected = t.getValue0();
+                    ModelResult actual = t.getValue1();
 
-        for (Entry<ModelResult, ModelResult> tuple : enumerable.entrySet()) {
-            ModelResult expected = tuple.getKey();
-            ModelResult actual = tuple.getValue();
+                    Assert.assertEquals("typeName", expected.typeName, actual.typeName);
+                    Assert.assertEquals("text", expected.text, actual.text);
+                    Assert.assertEquals("start", expected.start, actual.start);
+                    Assert.assertEquals("end", expected.end, actual.end);
 
-            Assert.assertEquals(expected.typeName, actual.typeName);
-            Assert.assertEquals(expected.text, actual.text);
-
-            Assert.assertEquals(expected.resolution.get(ResolutionKey.Value),
-                    actual.resolution.get(ResolutionKey.Value));
-        }
-
-    }
-
-    private <K, V> Map<K, V> zipToMap(List<K> keys, List<V> values) {
-        return IntStream.range(0, keys.size()).boxed().collect(Collectors.toMap(keys::get, values::get));
+                    Assert.assertEquals("resolution.value", expected.resolution.get(ResolutionKey.Value),
+                            actual.resolution.get(ResolutionKey.Value));
+                });
     }
 }
