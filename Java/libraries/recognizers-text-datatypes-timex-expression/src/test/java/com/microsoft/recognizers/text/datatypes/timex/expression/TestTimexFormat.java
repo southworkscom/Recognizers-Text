@@ -7,8 +7,10 @@ import com.microsoft.recognizers.datatypes.timex.expression.TimexProperty;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+
 public class TestTimexFormat {
-    
+
     @Test
     public void dataTypesFormatDate()
     {
@@ -56,25 +58,25 @@ public class TestTimexFormat {
     public void dataTypesFormatDuration()
     {
         Assert.assertEquals("P50Y", new TimexProperty() {{
-            setYears(50d);
+            setYears(new BigDecimal(50));
         }}.getTimexValue());
         Assert.assertEquals("P6M", new TimexProperty() {{
-            setMonths(6d);
+            setMonths(new BigDecimal(6));
         }}.getTimexValue());
         Assert.assertEquals("P3W", new TimexProperty() {{
-            setWeeks(3d);
+            setWeeks(new BigDecimal(3));
         }}.getTimexValue());
         Assert.assertEquals("P5D", new TimexProperty() {{
-            setDays(5d);
+            setDays(new BigDecimal(5));
         }}.getTimexValue());
         Assert.assertEquals("PT16H", new TimexProperty() {{
-            setHours(16d);
+            setHours(new BigDecimal(16));
         }}.getTimexValue());
         Assert.assertEquals("PT32M", new TimexProperty() {{
-            setMinutes(32d);
+            setMinutes(new BigDecimal(32));
         }}.getTimexValue());
         Assert.assertEquals("PT20S", new TimexProperty() {{
-            setSeconds(20d);
+            setSeconds(new BigDecimal(20));
         }}.getTimexValue());
     }
 

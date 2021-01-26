@@ -10,6 +10,7 @@ import com.microsoft.recognizers.datatypes.timex.expression.TimexProperty;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.util.Calendar;
 
@@ -94,7 +95,7 @@ public class TestTimexCreator {
                 setYear(d.get(Calendar.YEAR));
                 setMonth(d.get(Calendar.MONTH));
                 setDayOfMonth(d.get(Calendar.DATE));
-                setDays(7d);
+                setDays(new BigDecimal(7));
             }
         });
         Assert.assertEquals(expected, TimexCreator.weekFromToday(d));
@@ -119,7 +120,7 @@ public class TestTimexCreator {
                 setYear(d.get(Calendar.YEAR));
                 setMonth(d.get(Calendar.MONTH));
                 setDayOfMonth(d.get(Calendar.DATE));
-                setDays(7d);
+                setDays(new BigDecimal(7));
             }
         });
         Assert.assertEquals(expected, TimexCreator.weekBackFromToday(d));
@@ -138,7 +139,7 @@ public class TestTimexCreator {
     {
         Calendar start = TimexDateHelpers.dateOfNextDay(DayOfWeek.MONDAY, Calendar.getInstance());
         TimexProperty t = TimexProperty.fromDate(start);
-        t.setDays(7d);
+        t.setDays(new BigDecimal(7));
         String expected = t.getTimexValue();
         Assert.assertEquals(expected, TimexCreator.nextWeek(start));
     }
@@ -157,7 +158,7 @@ public class TestTimexCreator {
         Calendar start = TimexDateHelpers.dateOfLastDay(DayOfWeek.MONDAY, Calendar.getInstance());
         start.add(Calendar.DATE, -7);
         TimexProperty t = TimexProperty.fromDate(start);
-        t.setDays(7d);
+        t.setDays(new BigDecimal(7));
         String expected = t.getTimexValue();
         Assert.assertEquals(expected, TimexCreator.lastWeek(start));
     }
@@ -180,7 +181,7 @@ public class TestTimexCreator {
                 setYear(d.get(Calendar.YEAR));
                 setMonth(d.get(Calendar.MONTH));
                 setDayOfMonth(d.get(Calendar.DATE));
-                setDays(14d);
+                setDays(new BigDecimal(14));
             }
         });
         Assert.assertEquals(expected, TimexCreator.nextWeeksFromToday(2, d));

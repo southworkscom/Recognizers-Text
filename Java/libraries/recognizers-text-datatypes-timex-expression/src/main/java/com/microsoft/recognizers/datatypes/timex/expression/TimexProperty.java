@@ -3,6 +3,7 @@
 
 package com.microsoft.recognizers.datatypes.timex.expression;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Map;
@@ -17,19 +18,19 @@ public class TimexProperty {
 
     private Boolean now;
 
-    private Double years;
+    private BigDecimal years;
 
-    private Double months;
+    private BigDecimal months;
 
-    private Double weeks;
+    private BigDecimal weeks;
 
-    private Double days;
+    private BigDecimal days;
 
-    private Double hours;
+    private BigDecimal hours;
 
-    private Double minutes;
+    private BigDecimal minutes;
 
-    private Double seconds;
+    private BigDecimal seconds;
 
     private Integer year;
 
@@ -87,59 +88,59 @@ public class TimexProperty {
         this.now = withNow;
     }
 
-    public Double getYears() {
+    public BigDecimal getYears() {
         return years;
     }
 
-    public void setYears(Double withYears) {
+    public void setYears(BigDecimal withYears) {
         this.years = withYears;
     }
 
-    public Double getMonths() {
+    public BigDecimal getMonths() {
         return months;
     }
 
-    public void setMonths(Double withMonths) {
+    public void setMonths(BigDecimal withMonths) {
         this.months = withMonths;
     }
 
-    public Double getWeeks() {
+    public BigDecimal getWeeks() {
         return weeks;
     }
 
-    public void setWeeks(Double withWeeks) {
+    public void setWeeks(BigDecimal withWeeks) {
         this.weeks = withWeeks;
     }
 
-    public Double getDays() {
+    public BigDecimal getDays() {
         return days;
     }
 
-    public void setDays(Double withDays) {
+    public void setDays(BigDecimal withDays) {
         this.days = withDays;
     }
 
-    public Double getHours() {
+    public BigDecimal getHours() {
         return hours;
     }
 
-    public void setHours(Double withHours) {
+    public void setHours(BigDecimal withHours) {
         this.hours = withHours;
     }
 
-    public Double getMinutes() {
+    public BigDecimal getMinutes() {
         return minutes;
     }
 
-    public void setMinutes(Double withMinutes) {
+    public void setMinutes(BigDecimal withMinutes) {
         this.minutes = withMinutes;
     }
 
-    public Double getSeconds() {
+    public BigDecimal getSeconds() {
         return seconds;
     }
 
-    public void setSeconds(Double withSeconds) {
+    public void setSeconds(BigDecimal withSeconds) {
         this.seconds = withSeconds;
     }
 
@@ -388,16 +389,16 @@ public class TimexProperty {
     private void assignDateDuration(Map<String, String> source) {
         switch (source.get("dateUnit")) {
             case "Y":
-                this.years = Double.parseDouble(source.get("amount"));
+                this.years = new BigDecimal(source.get("amount"));
                 break;
             case "M":
-                this.months = Double.parseDouble(source.get("amount"));
+                this.months = new BigDecimal(source.get("amount"));
                 break;
             case "W":
-                this.weeks = Double.parseDouble(source.get("amount"));
+                this.weeks = new BigDecimal(source.get("amount"));
                 break;
             case "D":
-                this.days = Double.parseDouble(source.get("amount"));
+                this.days = new BigDecimal(source.get("amount"));
                 break;
             default:
         }
@@ -406,13 +407,13 @@ public class TimexProperty {
     private void assignTimeDuration(Map<String, String> source) {
         switch (source.get("timeUnit")) {
             case "H":
-                this.hours = Double.parseDouble(source.get("amount"));
+                this.hours = new BigDecimal(source.get("amount"));
                 break;
             case "M":
-                this.minutes = Double.parseDouble(source.get("amount"));
+                this.minutes = new BigDecimal(source.get("amount"));
                 break;
             case "S":
-                this.seconds = Double.parseDouble(source.get("amount"));
+                this.seconds = new BigDecimal(source.get("amount"));
                 break;
             default:
         }
