@@ -14,7 +14,7 @@ DEL /S /Q libraries\recognizers-text-datatypes-timex-expression\src\main\java\co
 
 ECHO # Generate resources
 CALL set MAVEN_OPTS=-Dfile.encoding=utf-8
-CALL mvn compile exec:java -pl libraries/resource-generator/
+CALL mvn compile exec:java --batch-mode -pl libraries/resource-generator/
 
 ECHO # Building Java platform
 CALL mvn clean package --batch-mode -Dmaven.test.skip=true
