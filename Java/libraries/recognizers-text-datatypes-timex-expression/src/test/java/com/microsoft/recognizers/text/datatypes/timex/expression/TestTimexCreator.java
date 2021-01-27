@@ -12,20 +12,20 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
-import java.util.Calendar;
+import java.time.LocalDateTime;
 
 public class TestTimexCreator {
     
     @Test
     public void dataTypesCreatorToday()
     {
-        Calendar d = Calendar.getInstance();
+        LocalDateTime d = LocalDateTime.now();
         String expected = TimexFormat.format(new TimexProperty()
         {
             {
-                setYear(d.get(Calendar.YEAR));
-                setMonth(d.get(Calendar.MONTH));
-                setDayOfMonth(d.get(Calendar.DATE));
+                setYear(d.getYear());
+                setMonth(d.getMonthValue());
+                setDayOfMonth(d.getDayOfMonth());
             }
         });
         Assert.assertEquals(expected, TimexCreator.today(d));
@@ -34,21 +34,19 @@ public class TestTimexCreator {
     @Test
     public void dataTypesCreatorTodayRelative()
     {
-        Calendar d = Calendar.getInstance();
-        d.set(2017, 10, 5);
+        LocalDateTime d = LocalDateTime.of(2017, 10, 5,0,0);
         Assert.assertEquals("2017-10-05", TimexCreator.today(d));
     }
 
     @Test
     public void dataTypesCreatorTomorrow()
     {
-        Calendar d = Calendar.getInstance();
-        d.add(Calendar.DATE, 1);        
+        LocalDateTime d = LocalDateTime.now().plusDays(1);
         String expected = TimexFormat.format(new TimexProperty() {
         {
-            setYear(d.get(Calendar.YEAR));
-            setMonth(d.get(Calendar.MONTH));
-            setDayOfMonth(d.get(Calendar.DATE));
+            setYear(d.getYear());
+            setMonth(d.getMonthValue());
+            setDayOfMonth(d.getDayOfMonth());
         }});
         Assert.assertEquals(expected, TimexCreator.tomorrow(d));
     }
@@ -56,22 +54,20 @@ public class TestTimexCreator {
     @Test
     public void dataTypesCreatorTomorrowRelative()
     {
-        Calendar d = Calendar.getInstance();
-        d.set(2017, 10 ,5);
+        LocalDateTime d = LocalDateTime.of(2017, 10 ,5,0,0);
         Assert.assertEquals("2017-10-06", TimexCreator.tomorrow(d));
     }
 
     @Test
     public void dataTypesCreatorYesterday()
     {
-        Calendar d = Calendar.getInstance();
-        d.add(Calendar.DATE,-1);
+        LocalDateTime d = LocalDateTime.now().plusDays(-1);
         String expected = TimexFormat.format(new TimexProperty()
         {
             {
-                setYear(d.get(Calendar.YEAR));
-                setMonth(d.get(Calendar.MONTH));
-                setDayOfMonth(d.get(Calendar.DATE));
+                setYear(d.getYear());
+                setMonth(d.getMonthValue());
+                setDayOfMonth(d.getDayOfMonth());
             }
         });
         Assert.assertEquals(expected, TimexCreator.yesterday(d));
@@ -80,21 +76,20 @@ public class TestTimexCreator {
     @Test
     public void dataTypesCreatorYesterdayRelative()
     {
-        Calendar d = Calendar.getInstance();
-        d.set(2017, 10 ,5);
+        LocalDateTime d = LocalDateTime.of(2017, 10 ,5,0,0);
         Assert.assertEquals("2017-10-04", TimexCreator.yesterday(d));
     }
 
     @Test
     public void dataTypesCreatorWeekFromToday()
     {
-        Calendar d = Calendar.getInstance();
+        LocalDateTime d = LocalDateTime.now();
         String expected = TimexFormat.format(new TimexProperty()
         {
             {
-                setYear(d.get(Calendar.YEAR));
-                setMonth(d.get(Calendar.MONTH));
-                setDayOfMonth(d.get(Calendar.DATE));
+                setYear(d.getYear());
+                setMonth(d.getMonthValue());
+                setDayOfMonth(d.getDayOfMonth());
                 setDays(new BigDecimal(7));
             }
         });
@@ -104,22 +99,20 @@ public class TestTimexCreator {
     @Test
     public void dataTypesCreatorWeekFromTodayRelative()
     {
-        Calendar d = Calendar.getInstance();
-        d.set(2017, 10 ,5);
+        LocalDateTime d = LocalDateTime.of(2017, 10 ,5,0,0);
         Assert.assertEquals("(2017-10-05,2017-10-12,P7D)", TimexCreator.weekFromToday(d));
     }
 
     @Test
     public void dataTypesCreatorWeekBackFromToday()
     {
-        Calendar d = Calendar.getInstance();
-        d.add(Calendar.DATE,-7);
+        LocalDateTime d = LocalDateTime.now().plusDays(-7);
         String expected = TimexFormat.format(new TimexProperty()
         {
             {
-                setYear(d.get(Calendar.YEAR));
-                setMonth(d.get(Calendar.MONTH));
-                setDayOfMonth(d.get(Calendar.DATE));
+                setYear(d.getYear());
+                setMonth(d.getMonthValue());
+                setDayOfMonth(d.getDayOfMonth());
                 setDays(new BigDecimal(7));
             }
         });
@@ -129,15 +122,14 @@ public class TestTimexCreator {
     @Test
     public void dataTypesCreatorWeekBackFromTodayRelative()
     {
-        Calendar d = Calendar.getInstance();
-        d.set(2017, 10 ,5);
+        LocalDateTime d = LocalDateTime.of(2017, 10 ,5,0,0);
         Assert.assertEquals("(2017-09-28,2017-10-05,P7D)", TimexCreator.weekBackFromToday(d));
     }
 
     @Test
     public void dataTypesCreatorNextWeek()
     {
-        Calendar start = TimexDateHelpers.dateOfNextDay(DayOfWeek.MONDAY, Calendar.getInstance());
+        LocalDateTime start = TimexDateHelpers.dateOfNextDay(DayOfWeek.MONDAY, LocalDateTime.now());
         TimexProperty t = TimexProperty.fromDate(start);
         t.setDays(new BigDecimal(7));
         String expected = t.getTimexValue();
@@ -147,16 +139,15 @@ public class TestTimexCreator {
     @Test
     public void dataTypesCreatorNextWeekRelative()
     {
-        Calendar d = Calendar.getInstance();
-        d.set(2017, 10 ,5);
+        LocalDateTime d = LocalDateTime.of(2017, 10 ,5,0,0);
         Assert.assertEquals("(2017-10-09,2017-10-16,P7D)", TimexCreator.nextWeek(d));
     }
 
     @Test
     public void dataTypesCreatorLastWeek()
     {
-        Calendar start = TimexDateHelpers.dateOfLastDay(DayOfWeek.MONDAY, Calendar.getInstance());
-        start.add(Calendar.DATE, -7);
+        LocalDateTime start = TimexDateHelpers.dateOfLastDay(DayOfWeek.MONDAY, LocalDateTime.now());
+        start = start.plusDays(-7);
         TimexProperty t = TimexProperty.fromDate(start);
         t.setDays(new BigDecimal(7));
         String expected = t.getTimexValue();
@@ -166,21 +157,20 @@ public class TestTimexCreator {
     @Test
     public void dataTypesCreatorLastWeekRelative()
     {
-        Calendar d = Calendar.getInstance();
-        d.set(2017, 10, 5);
+        LocalDateTime d = LocalDateTime.of(2017, 10, 5,0,0);
         Assert.assertEquals("(2017-09-25,2017-10-02,P7D)", TimexCreator.lastWeek(d));
     }
 
     @Test
     public void dataTypesCreatorNextWeeksFromToday()
     {
-        Calendar d = Calendar.getInstance();
+        LocalDateTime d = LocalDateTime.now();
         String expected = TimexFormat.format(new TimexProperty()
         {
             {
-                setYear(d.get(Calendar.YEAR));
-                setMonth(d.get(Calendar.MONTH));
-                setDayOfMonth(d.get(Calendar.DATE));
+                setYear(d.getYear());
+                setMonth(d.getMonthValue());
+                setDayOfMonth(d.getDayOfMonth());
                 setDays(new BigDecimal(14));
             }
         });
@@ -190,8 +180,7 @@ public class TestTimexCreator {
     @Test
     public void dataTypesCreatorNextWeeksFromTodayRelative()
     {
-        Calendar d = Calendar.getInstance();
-        d.set(2017, 10, 5);
+        LocalDateTime d = LocalDateTime.of(2017, 10, 5,0,0);
         Assert.assertEquals("(2017-10-05,2017-10-19,P14D)", TimexCreator.nextWeeksFromToday(2, d));
     }
 }

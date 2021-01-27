@@ -4,7 +4,7 @@
 package com.microsoft.recognizers.datatypes.timex.expression;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -270,23 +270,22 @@ public class TimexProperty {
         this.partOfDay = wthPartOfDay;
     }
 
-    public static TimexProperty fromDate(Calendar date) {
+    public static TimexProperty fromDate(LocalDateTime date) {
         TimexProperty timex = new TimexProperty() {
             {
-                setYear(date.get(Calendar.YEAR));
-                // We are adding +1 as Calendar starts from 0 (JANUARY)
-                setMonth(date.get(Calendar.MONTH) + 1);
-                setDayOfMonth(date.get(Calendar.DATE));
+                setYear(date.getYear());
+                setMonth(date.getMonthValue());
+                setDayOfMonth(date.getDayOfMonth());
             }
         };
         return timex;
     }
 
-    public static TimexProperty fromDateTime(Calendar datetime) {
+    public static TimexProperty fromDateTime(LocalDateTime datetime) {
         TimexProperty timex = TimexProperty.fromDate(datetime);
-        timex.setHour(datetime.get(Calendar.HOUR_OF_DAY));
-        timex.setMinute(datetime.get(Calendar.MINUTE));
-        timex.setSecond(datetime.get(Calendar.SECOND));
+        timex.setHour(datetime.getHour());
+        timex.setMinute(datetime.getMinute());
+        timex.setSecond(datetime.getSecond());
         return timex;
     }
 
@@ -305,7 +304,7 @@ public class TimexProperty {
 //        return TimexConvert.convertTimexToString(this);
 //    }
 
-    public String toNaturalLanguage(Calendar referenceDate) {
+    public String toNaturalLanguage(LocalDateTime referenceDate) {
         return TimexRelativeConvert.convertTimexToStringRelative(this, referenceDate);
     }
 

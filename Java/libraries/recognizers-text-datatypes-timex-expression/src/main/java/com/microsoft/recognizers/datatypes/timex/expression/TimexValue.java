@@ -3,7 +3,7 @@
 
 package com.microsoft.recognizers.datatypes.timex.expression;
 
-import java.util.Calendar;
+import java.time.LocalDateTime;
 
 public class TimexValue {
     public static String dateValue(TimexProperty timexProperty) {
@@ -16,7 +16,7 @@ public class TimexValue {
         return new String();
     }
 
-    public static String timeValue(TimexProperty timexProperty, Calendar date) {
+    public static String timeValue(TimexProperty timexProperty, LocalDateTime date) {
         if (timexProperty.getHour() != null && timexProperty.getMinute() != null && timexProperty.getSecond() != null) {
             return String.format("%1$s:%2$s:%3$s", TimexDateHelpers.fixedFormatNumber(timexProperty.getHour(), 2),
                     TimexDateHelpers.fixedFormatNumber(timexProperty.getMinute(), 2),
@@ -26,7 +26,7 @@ public class TimexValue {
         return new String();
     }
 
-    public static String datetimeValue(TimexProperty timexProperty, Calendar date) {
+    public static String datetimeValue(TimexProperty timexProperty, LocalDateTime date) {
         return String.format("%1$s %2$s", TimexValue.dateValue(timexProperty),
                 TimexValue.timeValue(timexProperty, date));
     }

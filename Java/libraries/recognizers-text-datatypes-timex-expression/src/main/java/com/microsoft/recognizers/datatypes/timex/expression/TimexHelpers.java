@@ -3,7 +3,7 @@
 
 package com.microsoft.recognizers.datatypes.timex.expression;
 
-import java.util.Calendar;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 
 public class TimexHelpers {
@@ -125,24 +125,22 @@ public class TimexHelpers {
 
             if (durationDays != null) {
                 if (start.getYear() != null) {
-                    Calendar d = Calendar.getInstance();
-                    d.set(start.getYear(), start.getMonth(), start.getDayOfMonth(), 0, 0, 0);
-                    d.add(Calendar.DATE, (int)Math.round(durationDays));
+                    LocalDateTime d = LocalDateTime.of(start.getYear(), start.getMonth(), start.getDayOfMonth(), 0, 0, 0);
+                    LocalDateTime d2 = d.plusDays(Math.round(durationDays));
                     return new TimexProperty() {
                         {
-                            setYear(d.get(Calendar.YEAR));
-                            setMonth(d.get(Calendar.MONTH));
-                            setDayOfMonth(d.get(Calendar.DATE));
+                            setYear(d2.getYear());
+                            setMonth(d2.getMonthValue());
+                            setDayOfMonth(d2.getDayOfMonth());
                         }
                     };
                 } else {
-                    Calendar d = Calendar.getInstance();
-                    d.set(2001, start.getMonth(), start.getDayOfMonth(), 0, 0, 0);
-                    d.add(Calendar.DATE, (int)Math.round(durationDays));
+                    LocalDateTime d = LocalDateTime.of(2001, start.getMonth(), start.getDayOfMonth(), 0, 0, 0);
+                    LocalDateTime d2 = d.plusDays(Math.round(durationDays));
                     return new TimexProperty() {
                         {
-                            setMonth(d.get(Calendar.MONTH));
-                            setDayOfMonth(d.get(Calendar.DATE));
+                            setMonth(d2.getMonthValue());
+                            setDayOfMonth(d2.getDayOfMonth());
                         }
                     };
                 }
@@ -186,13 +184,12 @@ public class TimexHelpers {
                 result.setHour(hour);
 
                 if (result.getYear() != null && result.getMonth() != null && result.getDayOfMonth() != null) {
-                    Calendar d = Calendar.getInstance();
-                    d.set(result.getYear(), result.getMonth(), result.getDayOfMonth(), 0, 0, 0);
-                    d.add(Calendar.DATE, (int)Math.round(days));
+                    LocalDateTime d = LocalDateTime.of(result.getYear(), result.getMonth(), result.getDayOfMonth(), 0, 0, 0);
+                    d = d.plusDays(Math.round(days));
 
-                    result.setYear(d.get(Calendar.YEAR));
-                    result.setMonth(d.get(Calendar.MONTH));
-                    result.setDayOfMonth(d.get(Calendar.DATE));
+                    result.setYear(d.getYear());
+                    result.setMonth(d.getMonthValue());
+                    result.setDayOfMonth(d.getDayOfMonth());
 
                     return result;
                 }
@@ -225,15 +222,14 @@ public class TimexHelpers {
         return TimexHelpers.timexDateAdd(TimexHelpers.timexDateAdd(start, duration), duration);
     }
 
-    public static Calendar dateFromTimex(TimexProperty timex) {
+    public static LocalDateTime dateFromTimex(TimexProperty timex) {
         Integer year = timex.getYear() != null ? timex.getYear() : 2001;
         Integer month = timex.getMonth() != null ? timex.getMonth() : 1;
         Integer day = timex.getDayOfMonth() != null ? timex.getDayOfMonth() : 1;
         Integer hour = timex.getHour() != null ? timex.getHour() : 0;
         Integer minute = timex.getMinute() != null ? timex.getMinute() : 0;
         Integer second = timex.getSecond() != null ? timex.getSecond() : 0;
-        Calendar date = Calendar.getInstance();
-        date.set(year, month, day, hour, minute, second);
+        LocalDateTime date = LocalDateTime.of(year, month, day, hour, minute, second);
 
         return date;
     }
