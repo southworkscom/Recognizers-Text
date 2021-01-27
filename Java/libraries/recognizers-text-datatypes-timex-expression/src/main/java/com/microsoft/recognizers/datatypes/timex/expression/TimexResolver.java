@@ -5,6 +5,8 @@ package com.microsoft.recognizers.datatypes.timex.expression;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalField;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -281,7 +283,8 @@ public class TimexResolver {
         LocalDateTime firstWeekDay = jan1;
         firstWeekDay = firstWeekDay.plusDays(daysOffset);
 
-        Integer firstWeek = jan1.getDayOfYear();
+        TemporalField woy = WeekFields.ISO.weekOfYear();
+        Integer firstWeek = jan1.get(woy);
 
         if ((firstWeek <= 1 || firstWeek >= 52) && daysOffset >= -3) {
             weekOfYear -= 1;
