@@ -3,6 +3,7 @@
 
 package com.microsoft.recognizers.datatypes.timex.expression;
 
+import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.util.Calendar;
 
@@ -40,7 +41,7 @@ public class TimexCreator {
     public static String weekFromToday(Calendar date) {
         Calendar d = (date == null) ? Calendar.getInstance() : date;
         TimexProperty t = TimexProperty.fromDate(d);
-        t.setDays(7d);
+        t.setDays(new BigDecimal(7));
         return t.getTimexValue();
     }
 
@@ -48,7 +49,7 @@ public class TimexCreator {
         Calendar d = (date == null) ? Calendar.getInstance() : date;
         d.add(Calendar.DATE, -7);
         TimexProperty t = TimexProperty.fromDate(d);
-        t.setDays(7d);
+        t.setDays(new BigDecimal(7));
         return t.getTimexValue();
     }
 
@@ -57,7 +58,7 @@ public class TimexCreator {
         d.add(Calendar.DATE, -7);
         Calendar start = TimexDateHelpers.dateOfNextDay(DayOfWeek.MONDAY, d);
         TimexProperty t = TimexProperty.fromDate(start);
-        t.setDays(7d);
+        t.setDays(new BigDecimal(7));
         return t.getTimexValue();
     }
 
@@ -65,7 +66,7 @@ public class TimexCreator {
         Calendar d = (date == null) ? Calendar.getInstance() : date;
         Calendar start = TimexDateHelpers.dateOfNextDay(DayOfWeek.MONDAY, d);
         TimexProperty t = TimexProperty.fromDate(start);
-        t.setDays(7d);
+        t.setDays(new BigDecimal(7));
         return t.getTimexValue();
     }
 
@@ -74,14 +75,14 @@ public class TimexCreator {
         Calendar start = TimexDateHelpers.dateOfNextDay(DayOfWeek.MONDAY, d);
         start.add(Calendar.DATE, -7);
         TimexProperty t = TimexProperty.fromDate(start);
-        t.setDays(7d);
+        t.setDays(new BigDecimal(7));
         return t.getTimexValue();
     }
 
     public static String nextWeeksFromToday(Integer n, Calendar date) {
         Calendar d = (date == null) ? Calendar.getInstance() : date;
         TimexProperty t = TimexProperty.fromDate(d);
-        t.setDays(n * 7d);
+        t.setDays(new BigDecimal(n * 7));
         return t.getTimexValue();
     }
 }

@@ -554,7 +554,7 @@ public class TestTimexParsing {
         Assert.assertNull(timex.getYears());
         Assert.assertNull(timex.getMonths());
         Assert.assertNull(timex.getWeeks());
-        Assert.assertEquals(3, timex.getDays(), 0);
+        Assert.assertEquals(3, timex.getDays().intValue());
         Assert.assertNull(timex.getHours());
         Assert.assertNull(timex.getMinutes());
         Assert.assertNull(timex.getSeconds());
@@ -583,7 +583,7 @@ public class TestTimexParsing {
         Assert.assertNull(timex.getYears());
         Assert.assertNull(timex.getMonths());
         Assert.assertNull(timex.getWeeks());
-        Assert.assertEquals(216, timex.getDays(), 0);
+        Assert.assertEquals(216, timex.getDays().intValue());
         Assert.assertNull(timex.getHours());
         Assert.assertNull(timex.getMinutes());
         Assert.assertNull(timex.getSeconds());
@@ -612,7 +612,7 @@ public class TestTimexParsing {
         Assert.assertNull(timex.getYears());
         Assert.assertNull(timex.getMonths());
         Assert.assertNull(timex.getWeeks());
-        Assert.assertEquals(216, timex.getDays(), 0);
+        Assert.assertEquals(216, timex.getDays().intValue());
         Assert.assertNull(timex.getHours());
         Assert.assertNull(timex.getMinutes());
         Assert.assertNull(timex.getSeconds());
@@ -788,7 +788,7 @@ public class TestTimexParsing {
         Assert.assertNull(timex.getWeeks());
         Assert.assertNull(timex.getDays());
         Assert.assertNull(timex.getHours());
-        Assert.assertEquals(15, timex.getMinutes(), 0);
+        Assert.assertEquals(15, timex.getMinutes().intValue());
         Assert.assertNull(timex.getSeconds());
         Assert.assertNull(timex.getNow());
     }
@@ -875,7 +875,7 @@ public class TestTimexParsing {
         Assert.assertNull(timex.getWeeks());
         Assert.assertNull(timex.getDays());
         Assert.assertNull(timex.getHours());
-        Assert.assertEquals(5, timex.getMinutes(), 0);
+        Assert.assertEquals(5, timex.getMinutes().intValue());
         Assert.assertNull(timex.getSeconds());
         Assert.assertNull(timex.getNow());
     }
@@ -903,7 +903,7 @@ public class TestTimexParsing {
         Assert.assertNull(timex.getMonths());
         Assert.assertNull(timex.getWeeks());
         Assert.assertNull(timex.getDays());
-        Assert.assertEquals(71, timex.getHours(), 0);
+        Assert.assertEquals(71, timex.getHours().intValue());
         Assert.assertNull(timex.getMinutes());
         Assert.assertNull(timex.getSeconds());
         Assert.assertNull(timex.getNow());
@@ -928,7 +928,7 @@ public class TestTimexParsing {
         Assert.assertNull(timex.getSecond());
         Assert.assertNull(timex.getWeekend());
         Assert.assertNull(timex.getPartOfDay());
-        Assert.assertEquals(2, timex.getYears(), 0);
+        Assert.assertEquals(2, timex.getYears().intValue());
         Assert.assertNull(timex.getMonths());
         Assert.assertNull(timex.getWeeks());
         Assert.assertNull(timex.getDays());
@@ -958,7 +958,7 @@ public class TestTimexParsing {
         Assert.assertNull(timex.getWeekend());
         Assert.assertNull(timex.getPartOfDay());
         Assert.assertNull(timex.getYears());
-        Assert.assertEquals(4, timex.getMonths(), 0);
+        Assert.assertEquals(4, timex.getMonths().intValue());
         Assert.assertNull(timex.getWeeks());
         Assert.assertNull(timex.getDays());
         Assert.assertNull(timex.getHours());
@@ -988,7 +988,7 @@ public class TestTimexParsing {
         Assert.assertNull(timex.getPartOfDay());
         Assert.assertNull(timex.getYears());
         Assert.assertNull(timex.getMonths());
-        Assert.assertEquals(6, timex.getWeeks(), 0);
+        Assert.assertEquals(6, timex.getWeeks().intValue());
         Assert.assertNull(timex.getDays());
         Assert.assertNull(timex.getHours());
         Assert.assertNull(timex.getMinutes());
@@ -1017,7 +1017,7 @@ public class TestTimexParsing {
         Assert.assertNull(timex.getPartOfDay());
         Assert.assertNull(timex.getYears());
         Assert.assertNull(timex.getMonths());
-        Assert.assertEquals(2.5d, timex.getWeeks(), 0.5);
+        Assert.assertEquals(2.5d, timex.getWeeks().doubleValue(), 0.5);
         Assert.assertNull(timex.getDays());
         Assert.assertNull(timex.getHours());
         Assert.assertNull(timex.getMinutes());
@@ -1047,7 +1047,7 @@ public class TestTimexParsing {
         Assert.assertNull(timex.getYears());
         Assert.assertNull(timex.getMonths());
         Assert.assertNull(timex.getWeeks());
-        Assert.assertEquals(1, timex.getDays(), 0);
+        Assert.assertEquals(1, timex.getDays().intValue());
         Assert.assertNull(timex.getHours());
         Assert.assertNull(timex.getMinutes());
         Assert.assertNull(timex.getSeconds());
@@ -1077,7 +1077,7 @@ public class TestTimexParsing {
         Assert.assertNull(timex.getMonths());
         Assert.assertNull(timex.getWeeks());
         Assert.assertNull(timex.getDays());
-        Assert.assertEquals(5, timex.getHours(), 0);
+        Assert.assertEquals(5, timex.getHours().intValue());
         Assert.assertNull(timex.getMinutes());
         Assert.assertNull(timex.getSeconds());
         Assert.assertNull(timex.getNow());
@@ -1107,7 +1107,7 @@ public class TestTimexParsing {
         Assert.assertNull(timex.getWeeks());
         Assert.assertNull(timex.getDays());
         Assert.assertNull(timex.getHours());
-        Assert.assertEquals(30, timex.getMinutes(), 0);
+        Assert.assertEquals(30, timex.getMinutes());
         Assert.assertNull(timex.getSeconds());
         Assert.assertNull(timex.getNow());
     }
@@ -1137,7 +1137,7 @@ public class TestTimexParsing {
         Assert.assertNull(timex.getDays());
         Assert.assertNull(timex.getHours());
         Assert.assertNull(timex.getMinutes());
-        Assert.assertEquals(45, timex.getSeconds(), 0);
+        Assert.assertEquals(45, timex.getSeconds());
         Assert.assertNull(timex.getNow());
     }
 }

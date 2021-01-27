@@ -8,6 +8,7 @@ import com.microsoft.recognizers.datatypes.timex.expression.TimexInference;
 import com.microsoft.recognizers.datatypes.timex.expression.TimexProperty;
 import com.microsoft.recognizers.datatypes.timex.expression.TimexSet;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 
 public class TimexConvertEnglish {
@@ -98,8 +99,8 @@ public class TimexConvertEnglish {
         return String.format("%1$s%2$s %3$s", date, abbreviation, month);
     }
 
-    private static String convertDurationPropertyToString(Double value, String property, Boolean includeSingleCount) {
-        if (value == 1) {
+    private static String convertDurationPropertyToString(BigDecimal value, String property, Boolean includeSingleCount) {
+        if (value.intValue() == 1) {
             return includeSingleCount ? "1" + property : property;
         } else {
             return String.format("%1$s %2$ss", value, property);

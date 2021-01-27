@@ -9,6 +9,7 @@ import com.microsoft.recognizers.datatypes.timex.expression.TimexRangeResolver;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -22,7 +23,7 @@ public class TestTimexRangeResolve {
                 setYear(2017);
                 setMonth(9);
                 setDayOfMonth(27);
-                setDays(2d);
+                setDays(new BigDecimal(2));
             }
         };
         ArrayList<String> constraints = new ArrayList<String>() {{
@@ -63,7 +64,7 @@ public class TestTimexRangeResolve {
             setYear(2006);
             setMonth(1);
             setDayOfMonth(1);
-            setYears(2d);
+            setYears(new BigDecimal(2));
         }};
         ArrayList<String> constraints = new ArrayList<String>() {{
             add(timex.getTimexValue());
@@ -255,7 +256,7 @@ public class TestTimexRangeResolve {
         Set<String> candidates = new HashSet<String>(Arrays.asList("T16"));
         TimexProperty timex = new TimexProperty() {{
             setHour(14);
-            setHours(4d);
+            setHours(new BigDecimal(4));
         }};
         ArrayList<String> constraints = new ArrayList<String>() {
             {
@@ -278,7 +279,7 @@ public class TestTimexRangeResolve {
         Set<String> candidates = new HashSet<String>(Arrays.asList("T12", "T16", "T16:30", "T17", "T18"));
         TimexProperty timex = new TimexProperty() {{
             setHour(14);
-            setHours(4d);
+            setHours(new BigDecimal(4));
         }};
         ArrayList<String> constraints = new ArrayList<String>() {
             {
@@ -301,7 +302,7 @@ public class TestTimexRangeResolve {
     {
         TimexProperty timex1 = new TimexProperty() {{
             setHour(16);
-            setHours(4d);
+            setHours(new BigDecimal(4));
         }};
         ArrayList<String> constraints = new ArrayList<String>() {
             {
@@ -320,7 +321,7 @@ public class TestTimexRangeResolve {
 
         TimexProperty timex2 = new TimexProperty() {{
             setHour(14);
-            setHours(4d);
+            setHours(new BigDecimal(4));
         }};
         constraints.add(timex2.getTimexValue());
 
@@ -347,7 +348,7 @@ public class TestTimexRangeResolve {
     {
         TimexProperty timex1 = new TimexProperty() {{
             setHour(16);
-            setHours(4d);
+            setHours(new BigDecimal(4));
         }};
         ArrayList<String> constraints = new ArrayList<String>() {
             {
@@ -368,7 +369,7 @@ public class TestTimexRangeResolve {
 
         TimexProperty timex2 = new TimexProperty() {{
             setHour(14);
-            setHours(4d);
+            setHours(new BigDecimal(4));
         }};
         constraints.add(timex2.getTimexValue());
 
@@ -396,7 +397,7 @@ public class TestTimexRangeResolve {
     {
         TimexProperty timex = new TimexProperty() {{
             setHour(16);
-            setHours(4d);
+            setHours(new BigDecimal(4));
         }};
         ArrayList<String> constraints = new ArrayList<String>() {
             {
@@ -422,7 +423,7 @@ public class TestTimexRangeResolve {
             setYear(2017);
             setMonth(9);
             setDayOfMonth(27);
-            setDays(2d);
+            setDays(new BigDecimal(2));
         }};
         ArrayList<String> constraints = new ArrayList<String>() {
             {
@@ -465,7 +466,7 @@ public class TestTimexRangeResolve {
             setYear(2006);
             setMonth(1);
             setDayOfMonth(1);
-            setYears(2d);
+            setYears(new BigDecimal(2));
         }};
         ArrayList<String> constraints = new ArrayList<String>() {
             {
@@ -555,13 +556,13 @@ public class TestTimexRangeResolve {
             setYear(2017);
             setMonth(10);
             setDayOfMonth(5);
-            setDays(7d);
+            setDays(new BigDecimal(7));
         }};
         TimexProperty timex2 = new TimexProperty() {{
             setHour(0);
             setMinute(0);
             setSecond(0);
-            setHours(24d);
+            setHours(new BigDecimal(24));
         }};
         ArrayList<String> constraints = new ArrayList<String>() {
             {
@@ -588,13 +589,13 @@ public class TestTimexRangeResolve {
             setYear(2017);
             setMonth(10);
             setDayOfMonth(5);
-            setDays(7d);
+            setDays(new BigDecimal(7));
         }};
         TimexProperty timex2 = new TimexProperty() {{
             setHour(12);
             setMinute(0);
             setSecond(0);
-            setHours(8d);
+            setHours(new BigDecimal(8));
         }};
         ArrayList<String> constraints = new ArrayList<String>() {
             {
@@ -714,7 +715,7 @@ public class TestTimexRangeResolve {
             setYear(2017);
             setMonth(10);
             setDayOfMonth(5);
-            setDays(7d);
+            setDays(new BigDecimal(7));
         }};
         ArrayList<String> constraints = new ArrayList<String>() {
             {

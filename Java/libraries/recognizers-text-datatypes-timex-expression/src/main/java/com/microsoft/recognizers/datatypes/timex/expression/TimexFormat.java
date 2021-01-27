@@ -29,7 +29,7 @@ public class TimexFormat {
         }
 
         if (types.contains(Constants.TimexTypes.TIME_RANGE)) {
-            return TimexFormat.formatDateRange(timex);
+            return TimexFormat.formatTimeRange(timex);
         }
 
         if (types.contains(Constants.TimexTypes.DATE_TIME)) {
@@ -69,15 +69,15 @@ public class TimexFormat {
         }
 
         if (timex.getHours() != null) {
-            return String.format("P%sH", timex.getHours());
+            return String.format("PT%sH", timex.getHours());
         }
 
         if (timex.getMinutes() != null) {
-            return String.format("P%sM", timex.getMinutes());
+            return String.format("PT%sM", timex.getMinutes());
         }
 
         if (timex.getSeconds() != null) {
-            return String.format("P%sS", timex.getSeconds());
+            return String.format("PT%sS", timex.getSeconds());
         }
 
         return new String();

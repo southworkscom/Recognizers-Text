@@ -110,17 +110,17 @@ public class TimexHelpers {
         if (start.getDayOfWeek() != null) {
             TimexProperty end = start.clone();
             if (duration.getDays() != null) {
-                end.setDayOfWeek(end.getDayOfWeek() + (int)Math.round(duration.getDays()));
+                end.setDayOfWeek(end.getDayOfWeek() + (int)Math.round(duration.getDays().doubleValue()));
             }
 
             return end;
         }
 
         if (start.getMonth() != null && start.getDayOfMonth() != null) {
-            Double durationDays = duration.getDays();
+            Double durationDays = duration.getDays().doubleValue();
 
             if (durationDays == null && duration.getWeeks() != null) {
-                durationDays = 7 * duration.getWeeks();
+                durationDays = 7 * duration.getWeeks().doubleValue();
             }
 
             if (durationDays != null) {
@@ -152,7 +152,7 @@ public class TimexHelpers {
                 if (start.getYear() != null) {
                     return new TimexProperty() {
                         {
-                            setYear(start.getYear() + (int)Math.round(duration.getYears()));
+                            setYear(start.getYear() + (int)Math.round(duration.getYears().doubleValue()));
                             setMonth(start.getMonth());
                             setDayOfMonth(start.getDayOfMonth());
                         }
@@ -165,7 +165,7 @@ public class TimexHelpers {
                     return new TimexProperty() {
                         {
                             setYear(start.getYear());
-                            setMonth(start.getMonth() + (int)Math.round(duration.getMonths()));
+                            setMonth(start.getMonth() + (int)Math.round(duration.getMonths().doubleValue()));
                             setDayOfMonth(start.getDayOfMonth());
                         }
                     };
@@ -179,7 +179,7 @@ public class TimexHelpers {
     public static TimexProperty timexTimeAdd(TimexProperty start, TimexProperty duration) {
         if (duration.getHours() != null) {
             TimexProperty result = start.clone();
-            result.setHour(result.getHour() + (int)Math.round(duration.getHours()));
+            result.setHour(result.getHour() + (int)Math.round(duration.getHours().doubleValue()));
             if (result.getHour() > 23) {
                 Double days = Math.floor(result.getHour() / 24d);
                 Integer hour = result.getHour() % 24;
@@ -208,7 +208,7 @@ public class TimexHelpers {
 
         if (duration.getMinutes() != null) {
             TimexProperty result = start.clone();
-            result.setMinute(result.getMinute() + (int)Math.round(duration.getMinutes()));
+            result.setMinute(result.getMinute() + (int)Math.round(duration.getMinutes().doubleValue()));
 
             if (result.getMinute() > 59) {
                 result.setHour(result.getHour() + 1);
@@ -266,11 +266,11 @@ public class TimexHelpers {
     }
 
     private static TimexProperty timeAdd(TimexProperty start, TimexProperty duration) {
-        Integer hourPreSet = start.getHour() + (int)Math.round(start.getHours());
+        Integer hourPreSet = start.getHour() + (int)Math.round(start.getHours().doubleValue());
         Integer hour = hourPreSet != null ? hourPreSet : 0;
-        Integer minutePreSet = start.getMinute() + (int)Math.round(duration.getMinutes());
+        Integer minutePreSet = start.getMinute() + (int)Math.round(duration.getMinutes().doubleValue());
         Integer minute = minutePreSet != null ? minutePreSet : 0;
-        Integer secondPreSet = start.getSecond() + (int)Math.round(duration.getSeconds());
+        Integer secondPreSet = start.getSecond() + (int)Math.round(duration.getSeconds().doubleValue());
         Integer second = secondPreSet != null ? secondPreSet : 0;
         return new TimexProperty() {
             {

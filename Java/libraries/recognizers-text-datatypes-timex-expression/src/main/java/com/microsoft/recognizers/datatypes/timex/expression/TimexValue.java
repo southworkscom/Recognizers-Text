@@ -33,27 +33,27 @@ public class TimexValue {
 
     public static String durationValue(TimexProperty timexProperty) {
         if (timexProperty.getYears() != null) {
-            return String.valueOf(31536000 * timexProperty.getYears());
+            return String.valueOf(31536000 * timexProperty.getYears().doubleValue());
         }
 
         if (timexProperty.getMonths() != null) {
-            return String.valueOf(2592000 * timexProperty.getYears());
+            return String.valueOf(2592000 * timexProperty.getYears().doubleValue());
         }
 
         if (timexProperty.getWeeks() != null) {
-            return String.valueOf(604800 * timexProperty.getWeeks());
+            return String.valueOf(604800 * timexProperty.getWeeks().doubleValue());
         }
 
         if (timexProperty.getDays() != null) {
-            return String.valueOf(86400 * timexProperty.getDays());
+            return String.valueOf(86400 * timexProperty.getDays().doubleValue());
         }
 
         if (timexProperty.getHours() != null) {
-            return String.valueOf(3600 * timexProperty.getHours());
+            return String.valueOf(3600 * timexProperty.getHours().doubleValue());
         }
 
         if (timexProperty.getMinutes() != null) {
-            return String.valueOf(60 * timexProperty.getMinutes());
+            return String.valueOf(60 * timexProperty.getMinutes().doubleValue());
         }
 
         if (timexProperty.getSeconds() != null) {
