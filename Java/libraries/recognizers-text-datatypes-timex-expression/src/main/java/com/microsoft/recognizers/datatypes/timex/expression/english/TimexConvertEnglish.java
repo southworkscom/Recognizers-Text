@@ -101,7 +101,7 @@ public class TimexConvertEnglish {
 
     private static String convertDurationPropertyToString(BigDecimal value, String property, Boolean includeSingleCount) {
         if (value.intValue() == 1) {
-            return includeSingleCount ? "1" + property : property;
+            return includeSingleCount ? "1 " + property : property;
         } else {
             return String.format("%1$s %2$ss", value, property);
         }
