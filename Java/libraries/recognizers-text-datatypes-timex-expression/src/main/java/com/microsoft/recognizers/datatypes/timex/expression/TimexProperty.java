@@ -315,28 +315,49 @@ public class TimexProperty {
     }
 
     public TimexProperty clone() {
+        Boolean now = this.getNow();
+        BigDecimal years = this.getYears();
+        BigDecimal months = this.getMonths();
+        BigDecimal weeks = this.getWeeks();
+        BigDecimal days = this.getDays();
+        BigDecimal hours = this.getHours();
+        BigDecimal minutes = this.getMinutes();
+        BigDecimal seconds = this.getSeconds();
+        Integer year = this.getYear();
+        Integer month = this.getMonth();
+        Integer dayOfMonth = this.getDayOfMonth();
+        Integer dayOfWeek = this.getDayOfWeek();
+        String season = this.getSeason();
+        Integer weekOfYear =  this.getWeekOfYear();
+        Boolean weekend = this.getWeekend();
+        Integer innerWeekOfMonth = this.getWeekOfMonth();
+        Integer hour = this.getHour();
+        Integer minute = this.getMinute();
+        Integer second = this.getSecond();
+        String partOfDay = this.getPartOfDay();
+
         return new TimexProperty() {
             {
-                setNow(this.getNow());
-                setYears(this.getYears());
-                setMonths(this.getMonths());
-                setWeeks(this.getWeeks());
-                setDays(this.getDays());
-                setHours(this.getHours());
-                setMinutes(this.getMinutes());
-                setSeconds(this.getSeconds());
-                setYear(this.getYear());
-                setMonth(this.getMonth());
-                setDayOfMonth(this.getDayOfMonth());
-                setDayOfWeek(this.getDayOfWeek());
-                setSeason(this.getSeason());
-                setWeekOfYear(this.getWeekOfYear());
-                setWeekend(this.getWeekend());
-                setWeekOfMonth(this.getWeekOfMonth());
-                setHour(this.getHour());
-                setMinute(this.getMinute());
-                setSecond(this.getSecond());
-                setPartOfDay(this.getPartOfDay());
+                setNow(now);
+                setYears(years);
+                setMonths(months);
+                setWeeks(weeks);
+                setDays(days);
+                setHours(hours);
+                setMinutes(minutes);
+                setSeconds(seconds);
+                setYear(year);
+                setMonth(month);
+                setDayOfMonth(dayOfMonth);
+                setDayOfWeek(dayOfWeek);
+                setSeason(season);
+                setWeekOfYear(weekOfYear);
+                setWeekend(weekend);
+                setWeekOfMonth(innerWeekOfMonth);
+                setHour(hour);
+                setMinute(minute);
+                setSecond(second);
+                setPartOfDay(partOfDay);
             }
         };
     }
