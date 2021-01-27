@@ -63,6 +63,7 @@ public class TestTimexDateHelpers {
 
         dateExpected = LocalDateTime.of(2017,5, 29, 19, 30, 0);
         dateActual = LocalDateTime.of(2017, 5, 29,0,0);
+
         Assert.assertTrue(TimexDateHelpers.datePartEquals(dateExpected, dateActual));
 
         dateExpected = LocalDateTime.of(2017,5, 29,0,0);
