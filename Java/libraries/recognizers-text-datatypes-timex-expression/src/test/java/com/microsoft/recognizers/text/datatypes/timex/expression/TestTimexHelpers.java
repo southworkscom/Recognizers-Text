@@ -7,7 +7,7 @@ import com.microsoft.recognizers.datatypes.timex.expression.*;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Calendar;
+import java.time.LocalDateTime;
 
 public class TestTimexHelpers {
     
@@ -71,11 +71,10 @@ public class TestTimexHelpers {
         TimexProperty timex = new TimexProperty("(2017-09-27,2017-09-29,P2D)");
         DateRange range = TimexHelpers.dateRangeFromTimex(timex);
 
-        Calendar dateExpected = Calendar.getInstance();
-        dateExpected.set(2017, 9, 27);
+        LocalDateTime dateExpected = LocalDateTime.of(2017, 9, 27,0,0);
         Assert.assertEquals(dateExpected, range.getStart());
 
-        dateExpected.set(2017, 9, 29);
+        dateExpected = LocalDateTime.of(2017, 9, 29,0,0);
         Assert.assertEquals(dateExpected, range.getEnd());
     }
 
@@ -92,10 +91,9 @@ public class TestTimexHelpers {
     public void dataTypesHelpersDateFromTimex()
     {
         TimexProperty timex = new TimexProperty("2017-09-27");
-        Calendar date = TimexHelpers.dateFromTimex(timex);
+        LocalDateTime date = TimexHelpers.dateFromTimex(timex);
 
-        Calendar dateExpected = Calendar.getInstance();
-        dateExpected.set(2017, 9, 27);
+        LocalDateTime dateExpected = LocalDateTime.of(2017, 9, 27,0,0);
         Assert.assertEquals(dateExpected, date);
     }
 

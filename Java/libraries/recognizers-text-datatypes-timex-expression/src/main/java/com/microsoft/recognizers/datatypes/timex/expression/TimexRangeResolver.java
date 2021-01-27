@@ -4,8 +4,8 @@
 package com.microsoft.recognizers.datatypes.timex.expression;
 
 import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -175,7 +175,7 @@ public class TimexRangeResolver {
     }
 
     private static List<String> resolveDefiniteAgainstConstraint(TimexProperty timex, DateRange constraint) {
-        Calendar timexDate = TimexHelpers.dateFromTimex(timex);
+        LocalDateTime timexDate = TimexHelpers.dateFromTimex(timex);
         if (timexDate.compareTo(constraint.getStart()) >= 0 && timexDate.compareTo(constraint.getEnd()) < 0) {
             return new ArrayList<String>() {
                 {
@@ -190,8 +190,8 @@ public class TimexRangeResolver {
     private static List<String> resolveDateAgainstConstraint(TimexProperty timex, DateRange constraint) {
         if (timex.getMonth() != null && timex.getDayOfMonth() != null) {
             List<String> result = new ArrayList<String>();
-            for (int year = constraint.getStart().get(Calendar.YEAR); year < constraint.getEnd()
-                    .get(Calendar.YEAR); year++) {
+            for (int year = constraint.getStart().getYear(); year < constraint.getEnd()
+                    .getYear(); year++) {
                 TimexProperty t = timex.clone();
                 t.setYear(year);
                 result.addAll(TimexRangeResolver.resolveDefiniteAgainstConstraint(timex, constraint));
@@ -203,15 +203,15 @@ public class TimexRangeResolver {
         if (timex.getDayOfWeek() != null) {
             // convert between ISO day of week and .NET day of week
             DayOfWeek day = timex.getDayOfWeek() == 7 ? DayOfWeek.SUNDAY : DayOfWeek.of(timex.getDayOfWeek());
-            List<Calendar> dates = TimexDateHelpers.datesMatchingDay(day, constraint.getStart(), constraint.getEnd());
+            List<LocalDateTime> dates = TimexDateHelpers.datesMatchingDay(day, constraint.getStart(), constraint.getEnd());
             List<String> result = new ArrayList<String>();
 
-            for (Calendar d : dates) {
+            for (LocalDateTime d : dates) {
                 TimexProperty t = timex.clone();
                 t.setDayOfWeek(null);
-                t.setYear(d.get(Calendar.YEAR));
-                t.setMonth(d.get(Calendar.MONTH));
-                t.setDayOfMonth(d.get(Calendar.DATE));
+                t.setYear(d.getYear());
+                t.setMonth(d.getMonthValue());
+                t.setDayOfMonth(d.getDayOfMonth());
                 result.add(t.getTimexValue());
             }
 
@@ -220,14 +220,14 @@ public class TimexRangeResolver {
 
         if (timex.getHour() != null) {
             List<String> result = new ArrayList<String>();
-            Calendar day = constraint.getStart();
+            LocalDateTime day = constraint.getStart();
             while (day.compareTo(constraint.getEnd()) <= 0) {
                 TimexProperty t = timex.clone();
-                t.setYear(day.get(Calendar.YEAR));
-                t.setMonth(day.get(Calendar.MONTH));
-                t.setDayOfMonth(day.get(Calendar.DATE));
+                t.setYear(day.getYear());
+                t.setMonth(day.getMonthValue());
+                t.setDayOfMonth(day.getDayOfMonth());
                 result.addAll(TimexRangeResolver.resolveDefiniteAgainstConstraint(t, constraint));
-                day.add(Calendar.DATE, 1);
+                day = day.plusDays(1);
             }
 
             return result;

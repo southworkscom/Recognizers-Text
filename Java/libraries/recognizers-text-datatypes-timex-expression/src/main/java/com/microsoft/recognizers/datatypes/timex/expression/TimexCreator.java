@@ -5,7 +5,7 @@ package com.microsoft.recognizers.datatypes.timex.expression;
 
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
-import java.util.Calendar;
+import java.time.LocalDateTime;
 
 public class TimexCreator {
     // The following constants are consistent with the Recognizer results
@@ -22,65 +22,65 @@ public class TimexCreator {
     public static final String DAYTIME = "(T08,T18,PT10H)";
     public static final String NIGHT = "(T20,T24,PT10H)";
 
-    public static String today(Calendar date) {
-        return TimexProperty.fromDate(date == null ? Calendar.getInstance() : date).getTimexValue();
+    public static String today(LocalDateTime date) {
+        return TimexProperty.fromDate(date == null ? LocalDateTime.now() : date).getTimexValue();
     }
 
-    public static String tomorrow(Calendar date) {
-        Calendar d = (date == null) ? Calendar.getInstance() : date;
-        d.add(Calendar.DATE, 1);
+    public static String tomorrow(LocalDateTime date) {
+        LocalDateTime d = (date == null) ? LocalDateTime.now() : date;
+        d = d.plusDays(1);
         return TimexProperty.fromDate(d).getTimexValue();
     }
 
-    public static String yesterday(Calendar date) {
-        Calendar d = (date == null) ? Calendar.getInstance() : date;
-        d.add(Calendar.DATE, -1);
+    public static String yesterday(LocalDateTime date) {
+        LocalDateTime d = (date == null) ? LocalDateTime.now() : date;
+        d = d.plusDays(-1);
         return TimexProperty.fromDate(d).getTimexValue();
     }
 
-    public static String weekFromToday(Calendar date) {
-        Calendar d = (date == null) ? Calendar.getInstance() : date;
+    public static String weekFromToday(LocalDateTime date) {
+        LocalDateTime d = (date == null) ? LocalDateTime.now() : date;
         TimexProperty t = TimexProperty.fromDate(d);
         t.setDays(new BigDecimal(7));
         return t.getTimexValue();
     }
 
-    public static String weekBackFromToday(Calendar date) {
-        Calendar d = (date == null) ? Calendar.getInstance() : date;
-        d.add(Calendar.DATE, -7);
+    public static String weekBackFromToday(LocalDateTime date) {
+        LocalDateTime d = (date == null) ? LocalDateTime.now() : date;
+        d= d.plusDays(-7);
         TimexProperty t = TimexProperty.fromDate(d);
         t.setDays(new BigDecimal(7));
         return t.getTimexValue();
     }
 
-    public static String thisWeek(Calendar date) {
-        Calendar d = (date == null) ? Calendar.getInstance() : date;
-        d.add(Calendar.DATE, -7);
-        Calendar start = TimexDateHelpers.dateOfNextDay(DayOfWeek.MONDAY, d);
+    public static String thisWeek(LocalDateTime date) {
+        LocalDateTime d = (date == null) ? LocalDateTime.now() : date;
+        d= d.plusDays(-7);
+        LocalDateTime start = TimexDateHelpers.dateOfNextDay(DayOfWeek.MONDAY, d);
         TimexProperty t = TimexProperty.fromDate(start);
         t.setDays(new BigDecimal(7));
         return t.getTimexValue();
     }
 
-    public static String nextWeek(Calendar date) {
-        Calendar d = (date == null) ? Calendar.getInstance() : date;
-        Calendar start = TimexDateHelpers.dateOfNextDay(DayOfWeek.MONDAY, d);
+    public static String nextWeek(LocalDateTime date) {
+        LocalDateTime d = (date == null) ? LocalDateTime.now() : date;
+        LocalDateTime start = TimexDateHelpers.dateOfNextDay(DayOfWeek.MONDAY, d);
         TimexProperty t = TimexProperty.fromDate(start);
         t.setDays(new BigDecimal(7));
         return t.getTimexValue();
     }
 
-    public static String lastWeek(Calendar date) {
-        Calendar d = (date == null) ? Calendar.getInstance() : date;
-        Calendar start = TimexDateHelpers.dateOfNextDay(DayOfWeek.MONDAY, d);
-        start.add(Calendar.DATE, -7);
+    public static String lastWeek(LocalDateTime date) {
+        LocalDateTime d = (date == null) ? LocalDateTime.now() : date;
+        LocalDateTime start = TimexDateHelpers.dateOfNextDay(DayOfWeek.MONDAY, d);
+        start = start.plusDays(-7);
         TimexProperty t = TimexProperty.fromDate(start);
         t.setDays(new BigDecimal(7));
         return t.getTimexValue();
     }
 
-    public static String nextWeeksFromToday(Integer n, Calendar date) {
-        Calendar d = (date == null) ? Calendar.getInstance() : date;
+    public static String nextWeeksFromToday(Integer n, LocalDateTime date) {
+        LocalDateTime d = (date == null) ? LocalDateTime.now() : date;
         TimexProperty t = TimexProperty.fromDate(d);
         t.setDays(new BigDecimal(n * 7));
         return t.getTimexValue();

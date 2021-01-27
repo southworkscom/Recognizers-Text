@@ -9,7 +9,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.TimeZone;
 
 public class TestTimexResolver {
@@ -17,8 +18,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDateDefinite()
     {
-        Calendar today = Calendar.getInstance();
-        today.set(2017, 9, 26, 15, 30, 0);
+        LocalDateTime today = LocalDateTime.of(2017, 9, 26, 15, 30, 0);
         Resolution resolution = TimexResolver.resolve(new String[]{"2017-09-28"}, today);
         Assert.assertEquals(1, resolution.getValues().size());
 
@@ -32,8 +32,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDateSaturday()
     {
-        Calendar today = Calendar.getInstance();
-        today.set(2017, 9, 26, 15, 30, 0);
+        LocalDateTime today = LocalDateTime.of(2017, 9, 26, 15, 30, 0);
         Resolution resolution = TimexResolver.resolve(new String[] { "XXXX-WXX-6" }, today);
         Assert.assertEquals(2, resolution.getValues().size());
 
@@ -53,8 +52,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDateSunday()
     {
-        Calendar today = Calendar.getInstance();
-        today.set(2019, 4, 23, 15, 30, 0);
+        LocalDateTime today = LocalDateTime.of(2019, 4, 23, 15, 30, 0);
         Resolution resolution = TimexResolver.resolve(new String[] { "XXXX-WXX-7" }, today);
         Assert.assertEquals(2, resolution.getValues().size());
 
@@ -74,8 +72,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDateTimeWednesday4()
     {
-        Calendar today = Calendar.getInstance();
-        today.set(2017, 9, 28, 15, 30, 0);
+        LocalDateTime today = LocalDateTime.of(2017, 9, 28, 15, 30, 0);
         Resolution resolution = TimexResolver.resolve(new String[] { "XXXX-WXX-3T04", "XXXX-WXX-3T16" }, today);
         Assert.assertEquals(4, resolution.getValues().size());
 
@@ -107,8 +104,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDateTimeWednesday4am()
     {
-        Calendar today = Calendar.getInstance();
-        today.set(2017, 9, 28, 15, 30, 0);
+        LocalDateTime today = LocalDateTime.of(2017, 9, 28, 15, 30, 0);
         Resolution resolution = TimexResolver.resolve(new String[] { "XXXX-WXX-3T04" }, today);
         Assert.assertEquals(2, resolution.getValues().size());
 
@@ -128,8 +124,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDateTimeNextWednesday4am()
     {
-        Calendar today = Calendar.getInstance();
-        today.set(2017, 9, 7);
+        LocalDateTime today = LocalDateTime.of(2017, 9, 7,0,0);
         Resolution resolution = TimexResolver.resolve(new String[] { "2017-10-11T04" }, today);
         Assert.assertEquals(1, resolution.getValues().size());
 
@@ -143,7 +138,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDuration2years()
     {
-        Calendar today = Calendar.getInstance();
+        LocalDateTime today = LocalDateTime.now();
         Resolution resolution = TimexResolver.resolve(new String[] { "P2Y" }, today);
         Assert.assertEquals(1, resolution.getValues().size());
 
@@ -157,7 +152,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDuration6months()
     {
-        Calendar today = Calendar.getInstance();
+        LocalDateTime today = LocalDateTime.now();
         Resolution resolution = TimexResolver.resolve(new String[] { "P6M" }, today);
         Assert.assertEquals(1, resolution.getValues().size());
 
@@ -171,7 +166,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDuration3weeks()
     {
-        Calendar today = Calendar.getInstance();
+        LocalDateTime today = LocalDateTime.now();
         Resolution resolution = TimexResolver.resolve(new String[] { "P3W" }, today);
         Assert.assertEquals(1, resolution.getValues().size());
 
@@ -185,7 +180,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDuration5days()
     {
-        Calendar today = Calendar.getInstance();
+        LocalDateTime today = LocalDateTime.now();
         Resolution resolution = TimexResolver.resolve(new String[] { "P5D" }, today);
         Assert.assertEquals(1, resolution.getValues().size());
 
@@ -199,7 +194,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDuration8hours()
     {
-        Calendar today = Calendar.getInstance();
+        LocalDateTime today = LocalDateTime.now();
         Resolution resolution = TimexResolver.resolve(new String[] { "PT8H" }, today);
         Assert.assertEquals(1, resolution.getValues().size());
 
@@ -213,7 +208,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDuration15minutes()
     {
-        Calendar today = Calendar.getInstance();
+        LocalDateTime today = LocalDateTime.now();
         Resolution resolution = TimexResolver.resolve(new String[] { "PT15M" }, today);
         Assert.assertEquals(1, resolution.getValues().size());
 
@@ -227,7 +222,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDuration10seconds()
     {
-        Calendar today = Calendar.getInstance();
+        LocalDateTime today = LocalDateTime.now();
         Resolution resolution = TimexResolver.resolve(new String[] { "PT10S" }, today);
         Assert.assertEquals(1, resolution.getValues().size());
 
@@ -241,8 +236,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDateRangeSeptember()
     {
-        Calendar today = Calendar.getInstance();
-        today.set(2017, 9, 28);
+        LocalDateTime today = LocalDateTime.of(2017, 9, 28,0,0);
         Resolution resolution = TimexResolver.resolve(new String[] { "XXXX-09" }, today);
         Assert.assertEquals(2, resolution.getValues().size());
 
@@ -262,7 +256,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDateRangeWinter()
     {
-        Calendar today = Calendar.getInstance();
+        LocalDateTime today = LocalDateTime.now();
         Resolution resolution = TimexResolver.resolve(new String[] { "WI" }, today);
         Assert.assertEquals(1, resolution.getValues().size());
 
@@ -276,8 +270,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDateRangeLast_Week()
     {
-        Calendar today = Calendar.getInstance();
-        today.set(2019, 4, 30);
+        LocalDateTime today = LocalDateTime.of(2019, 4, 30,0,0);
         Resolution resolution = TimexResolver.resolve(new String[] { "2019-W17" }, today);
         Assert.assertEquals(1, resolution.getValues().size());
 
@@ -290,8 +283,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDateRangeLastMonth()
     {
-        Calendar today = Calendar.getInstance();
-        today.set(2019, 4, 30);
+        LocalDateTime today = LocalDateTime.of(2019, 4, 30,0,0);
         Resolution resolution = TimexResolver.resolve(new String[] { "2019-03" }, today);
         Assert.assertEquals(1, resolution.getValues().size());
 
@@ -304,8 +296,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDateRangeLastYear()
     {
-        Calendar today = Calendar.getInstance();
-        today.set(2019, 4, 30);
+        LocalDateTime today = LocalDateTime.of(2019, 4, 30,0,0);
         Resolution resolution = TimexResolver.resolve(new String[] { "2018" }, today);
         Assert.assertEquals(1, resolution.getValues().size());
 
@@ -318,8 +309,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDateRangeLastThreeWeeks()
     {
-        Calendar today = Calendar.getInstance();
-        today.set(2019, 4, 30);
+        LocalDateTime today = LocalDateTime.of(2019, 4, 30,0,0);
         Resolution resolution = TimexResolver.resolve(new String[] { "(2019-04-10,2019-05-01,P3W)" }, today);
         Assert.assertEquals(1, resolution.getValues().size());
 
@@ -332,7 +322,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverTimeRange4amto8pm()
     {
-        Calendar today = Calendar.getInstance();
+        LocalDateTime today = LocalDateTime.now();
         Resolution resolution = TimexResolver.resolve(new String[] { "(T04,T20,PT16H)" }, today);
         Assert.assertEquals(1, resolution.getValues().size());
 
@@ -346,7 +336,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverTimeRangeMorning()
     {
-        Calendar today = Calendar.getInstance();        
+        LocalDateTime today = LocalDateTime.now();
         Resolution resolution = TimexResolver.resolve(new String[] { "TMO" }, today);
         Assert.assertEquals(1, resolution.getValues().size());
 
@@ -360,7 +350,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverTimeRangeAfternoon()
     {
-        Calendar today = Calendar.getInstance();
+        LocalDateTime today = LocalDateTime.now();
         Resolution resolution = TimexResolver.resolve(new String[] { "TAF" }, today);
         Assert.assertEquals(1, resolution.getValues().size());
 
@@ -374,7 +364,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverTimeRangeEvening()
     {
-        Calendar today = Calendar.getInstance();
+        LocalDateTime today = LocalDateTime.now();
         Resolution resolution = TimexResolver.resolve(new String[] { "TEV" }, today);
         Assert.assertEquals(1, resolution.getValues().size());
 
@@ -388,7 +378,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDateTimeRangeThisMorning()
     {
-        Calendar today = Calendar.getInstance();
+        LocalDateTime today = LocalDateTime.now();
         Resolution resolution = TimexResolver.resolve(new String[] { "2017-10-07TMO" }, today);
         Assert.assertEquals(1, resolution.getValues().size());
 
@@ -402,7 +392,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDateTimeRangeTonight()
     {
-        Calendar today = Calendar.getInstance();
+        LocalDateTime today = LocalDateTime.now();
         Resolution resolution = TimexResolver.resolve(new String[] { "2018-03-18TNI" }, today);
         Assert.assertEquals(1, resolution.getValues().size());
 
@@ -416,7 +406,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDateTimeRangeNextMonday4amToNextThursday3pm()
     {
-        Calendar today = Calendar.getInstance();
+        LocalDateTime today = LocalDateTime.now();
         Resolution resolution = TimexResolver.resolve(new String[] { "(2017-10-09T04,2017-10-12T15,PT83H)" }, today);
         Assert.assertEquals(1, resolution.getValues().size());
 
@@ -430,7 +420,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverTime4am()
     {
-        Calendar today = Calendar.getInstance();
+        LocalDateTime today = LocalDateTime.now();
         Resolution resolution = TimexResolver.resolve(new String[] { "T04" }, today);
         Assert.assertEquals(1, resolution.getValues().size());
 
@@ -444,7 +434,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverTime4oclock()
     {
-        Calendar today = Calendar.getInstance();
+        LocalDateTime today = LocalDateTime.now();
         Resolution resolution = TimexResolver.resolve(new String[] { "T04", "T16" }, today);
         Assert.assertEquals(2, resolution.getValues().size());
 
@@ -464,8 +454,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDateSecondWeekInAugust()
     {
-        Calendar today = Calendar.getInstance();
-        today.set(2019, 11, 06);
+        LocalDateTime today = LocalDateTime.of(2019, 11, 06,0,0);
         Resolution resolution = TimexResolver.resolve(new String[] { "XXXX-08-W02" }, today);
         Assert.assertEquals(2, resolution.getValues().size());
 
@@ -485,8 +474,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDateTimeNov6at114525()
     {
-        Calendar today = Calendar.getInstance();
-        today.set(2017, 9, 28, 15, 30, 0);
+        LocalDateTime today = LocalDateTime.of(2017, 9, 28, 15, 30, 0);
         Resolution resolution = TimexResolver.resolve(new String[] { "2019-11-06T11:45:25" }, today);
         Assert.assertEquals(1, resolution.getValues().size());
 
@@ -500,8 +488,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDateTimeNov6at114525UTC()
     {
-        Calendar today = Calendar.getInstance();
-        today.set(2017, 9, 28, 15, 30, 0);
+        LocalDateTime today = LocalDateTime.of(2017, 9, 28, 15, 30, 0);
         Resolution resolution = TimexResolver.resolve(new String[] { "2019-11-06T11:45:25Z" }, today);
         Assert.assertEquals(1, resolution.getValues().size());
 
@@ -515,8 +502,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDateTimeTuesAt12PM()
     {
-        Calendar today = Calendar.getInstance();
-        today.set(2019, 12, 05);
+        LocalDateTime today = LocalDateTime.of(2019, 12, 05,0,0);
         Resolution resolution = TimexResolver.resolve(new String[] { "XXXX-WXX-2T12" }, today);
         Assert.assertEquals(2, resolution.getValues().size());
 
@@ -536,13 +522,12 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDateTimeTuesAt12PMUtcInput()
     {
-        Calendar today = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        today.set(2019, 12, 05);
+        LocalDateTime today = LocalDateTime.of(2019, 12, 05,0,0);
         Resolution resolution = TimexResolver.resolve(new String[] { "XXXX-WXX-2T12" }, today);
         Assert.assertEquals(2, resolution.getValues().size());
 
-        Calendar previousWeekUtc = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        previousWeekUtc.set(2019, 12, 03, 12, 0, 0);
+        LocalDateTime previousWeekUtc = LocalDateTime.of(2019, 12, 03, 12, 0, 0);
+        previousWeekUtc.atZone(ZoneOffset.UTC);
 
         Assert.assertEquals("XXXX-WXX-2T12", resolution.getValues().get(0).getTimex());
         Assert.assertEquals("datetime", resolution.getValues().get(0).getType());
@@ -553,8 +538,8 @@ public class TestTimexResolver {
         Assert.assertNull(resolution.getValues().get(0).getStart());
         Assert.assertNull(resolution.getValues().get(0).getEnd());
 
-        Calendar nextWeekUtc = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        nextWeekUtc.set(2019, 12, 10, 12, 0, 0);
+        LocalDateTime nextWeekUtc = LocalDateTime.of(2019, 12, 10, 12, 0, 0);
+        nextWeekUtc.atZone(ZoneOffset.UTC);
 
         Assert.assertEquals("XXXX-WXX-2T12", resolution.getValues().get(1).getTimex());
         Assert.assertEquals("datetime", resolution.getValues().get(1).getType());
@@ -568,8 +553,8 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDateTime2021W01() // first day of the year is a Friday - week 1
     {
-        Calendar today = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        today.set(2021, 01, 05);
+        LocalDateTime today = LocalDateTime.of(2021, 01, 05,0,0);
+        today.atZone(ZoneOffset.UTC);
         Resolution resolution = TimexResolver.resolve(new String[] { "2021-W01" }, today);
         Assert.assertEquals(1, resolution.getValues().size());
 
@@ -582,8 +567,8 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDateTime2021W02() // first day of the year is a Friday - week 2
     {
-        Calendar today = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        today.set(2021, 01, 05);
+        LocalDateTime today = LocalDateTime.of(2021, 01, 05,0,0);
+        today.atZone(ZoneOffset.UTC);
         Resolution resolution = TimexResolver.resolve(new String[] { "2021-W02" }, today);
         Assert.assertEquals(1, resolution.getValues().size());
 
@@ -596,8 +581,9 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDateTime2020W53() // has a 53-week year
     {
-        Calendar today = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        today.set(2020, 12, 30);
+        LocalDateTime today = LocalDateTime.of(2020, 12, 30,0,0);
+        today.atZone(ZoneOffset.UTC);
+
         Resolution resolution = TimexResolver.resolve(new String[] { "2020-W53" }, today);
         Assert.assertEquals(1, resolution.getValues().size());
 
@@ -610,8 +596,8 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDateTime2024W01() // first day of the year is a Monday
     {
-        Calendar today = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        today.set(2024, 01, 01);
+        LocalDateTime today = LocalDateTime.of(2024, 01, 01,0,0);
+        today.atZone(ZoneOffset.UTC);
         Resolution resolution = TimexResolver.resolve(new String[] { "2024-W01" }, today);
         Assert.assertEquals(1, resolution.getValues().size());
 
@@ -624,8 +610,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDateTimeWeekend()
     {
-        Calendar today = Calendar.getInstance();
-        today.set(2020, 1, 7);
+        LocalDateTime today = LocalDateTime.of(2020, 1, 7,0,0);
         Resolution resolution = TimexResolver.resolve(new String[] { "2020-W02-WE" }, today);
         Assert.assertEquals(1, resolution.getValues().size());
 
@@ -639,8 +624,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverMonthRangeDecember()
     {
-        Calendar today = Calendar.getInstance();
-        today.set(2020, 3, 25);
+        LocalDateTime today = LocalDateTime.of(2020, 3, 25,0,0);
         Resolution resolution = TimexResolver.resolve(new String[] { "XXXX-12" }, today);
         Assert.assertEquals(2, resolution.getValues().size());
 

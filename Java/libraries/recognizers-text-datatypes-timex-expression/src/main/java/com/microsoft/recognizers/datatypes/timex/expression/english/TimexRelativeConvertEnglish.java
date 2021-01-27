@@ -10,11 +10,11 @@ import com.microsoft.recognizers.datatypes.timex.expression.TimexInference;
 import com.microsoft.recognizers.datatypes.timex.expression.TimexProperty;
 
 import java.time.DayOfWeek;
-import java.util.Calendar;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 
 public class TimexRelativeConvertEnglish {
-    public static String convertTimexToStringRelative(TimexProperty timex, Calendar date) {
+    public static String convertTimexToStringRelative(TimexProperty timex, LocalDateTime date) {
         HashSet<String> types = timex.getTypes().size() != 0 ? timex.getTypes() : TimexInference.infer(timex);
 
         if (types.contains(Constants.TimexTypes.DATE_TIME_RANGE)) {
@@ -41,52 +41,50 @@ public class TimexRelativeConvertEnglish {
         return TimexConstantsEnglish.DAYS[index];
     }
 
-    private static String convertDate(TimexProperty timex, Calendar date) {
+    private static String convertDate(TimexProperty timex, LocalDateTime date) {
         if (timex.getYear() != null && timex.getMonth() != null && timex.getDayOfMonth() != null) {
-            Calendar timexDate = Calendar.getInstance();
-            timexDate.set(timex.getYear(), timex.getMonth(), timex.getDayOfMonth());
-
+            LocalDateTime timexDate = LocalDateTime.of(timex.getYear(), timex.getMonth(), timex.getDayOfMonth(), 0, 0);
             if (TimexDateHelpers.datePartEquals(timexDate, date)) {
                 return "today";
             }
 
-            Calendar tomorrow = TimexDateHelpers.tomorrow(date);
+            LocalDateTime tomorrow = TimexDateHelpers.tomorrow(date);
             if (TimexDateHelpers.datePartEquals(timexDate, tomorrow)) {
                 return "tomorrow";
             }
 
-            Calendar yesterday = TimexDateHelpers.yesterday(date);
+            LocalDateTime yesterday = TimexDateHelpers.yesterday(date);
             if (TimexDateHelpers.datePartEquals(timexDate, yesterday)) {
                 return "yesterday";
             }
 
             if (TimexDateHelpers.isThisWeek(timexDate, date)) {
                 return String.format("this %s",
-                        TimexRelativeConvertEnglish.getDateDay(DayOfWeek.of(timexDate.get(Calendar.DAY_OF_WEEK))));
+                        TimexRelativeConvertEnglish.getDateDay(timexDate.getDayOfWeek()));
             }
 
             if (TimexDateHelpers.isNextWeek(timexDate, date)) {
                 return String.format("next %s",
-                        TimexRelativeConvertEnglish.getDateDay(DayOfWeek.of(timexDate.get(Calendar.DAY_OF_WEEK))));
+                        TimexRelativeConvertEnglish.getDateDay(timexDate.getDayOfWeek()));
             }
 
             if (TimexDateHelpers.isLastWeek(timexDate, date)) {
                 return String.format("last %s",
-                        TimexRelativeConvertEnglish.getDateDay(DayOfWeek.of(timexDate.get(Calendar.DAY_OF_WEEK))));
+                        TimexRelativeConvertEnglish.getDateDay(timexDate.getDayOfWeek()));
             }
         }
 
         return TimexConvertEnglish.convertDate(timex);
     }
 
-    private static String convertDateTime(TimexProperty timex, Calendar date) {
+    private static String convertDateTime(TimexProperty timex, LocalDateTime date) {
         return String.format("%1$s %2$s", TimexRelativeConvertEnglish.convertDate(timex, date),
                 TimexConvertEnglish.convertTime(timex));
     }
 
-    private static String convertDateRange(TimexProperty timex, Calendar date) {
+    private static String convertDateRange(TimexProperty timex, LocalDateTime date) {
         if (timex.getYear() != null) {
-            Integer year = date.get(Calendar.YEAR);
+            Integer year = date.getYear();
             if (timex.getYear() == year) {
                 if (timex.getWeekOfYear() != null) {
                     Integer thisWeek = TimexDateHelpers.weekOfYear(date);
@@ -104,15 +102,15 @@ public class TimexRelativeConvertEnglish {
                 }
 
                 if (timex.getMonth() != null) {
-                    if (timex.getMonth() == date.get(Calendar.MONTH)) {
+                    if (timex.getMonth() == date.getMonthValue()) {
                         return "this month";
                     }
 
-                    if (timex.getMonth() == date.get(Calendar.MONTH) + 1) {
+                    if (timex.getMonth() == date.getMonthValue() + 1) {
                         return "next month";
                     }
 
-                    if (timex.getMonth() == date.get(Calendar.MONTH) - 1) {
+                    if (timex.getMonth() == date.getMonthValue() - 1) {
                         return "last month";
                     }
 
@@ -135,10 +133,9 @@ public class TimexRelativeConvertEnglish {
         return new String();
     }
 
-    private static String convertDateTimeRange(TimexProperty timex, Calendar date) {
+    private static String convertDateTimeRange(TimexProperty timex, LocalDateTime date) {
         if (timex.getYear() != null && timex.getMonth() != null && timex.getDayOfMonth() != null) {
-            Calendar timexDate = Calendar.getInstance();
-            timexDate.set(timex.getYear(), timex.getMonth(), timex.getDayOfMonth());
+            LocalDateTime timexDate = LocalDateTime.of(timex.getYear(), timex.getMonth(), timex.getDayOfMonth(), 0,0);
 
             if (timex.getPartOfDay() != null) {
                 if (TimexDateHelpers.datePartEquals(timexDate, date)) {
@@ -149,25 +146,25 @@ public class TimexRelativeConvertEnglish {
                     }
                 }
 
-                Calendar tomorrow = TimexDateHelpers.tomorrow(date);
+                LocalDateTime tomorrow = TimexDateHelpers.tomorrow(date);
                 if (TimexDateHelpers.datePartEquals(timexDate, tomorrow)) {
                     return String.format("tomorrow %s", TimexConstantsEnglish.DAY_PARTS.get(timex.getPartOfDay()));
                 }
 
-                Calendar yesterday = TimexDateHelpers.yesterday(date);
+                LocalDateTime yesterday = TimexDateHelpers.yesterday(date);
                 if (TimexDateHelpers.datePartEquals(timexDate, yesterday)) {
                     return String.format("yesterday %s", TimexConstantsEnglish.DAY_PARTS.get(timex.getPartOfDay()));
                 }
 
                 if (TimexDateHelpers.isNextWeek(timexDate, date)) {
                     return String.format("next %1$s %2$s",
-                            TimexRelativeConvertEnglish.getDateDay(DayOfWeek.of(timexDate.get(Calendar.DAY_OF_WEEK))),
+                            TimexRelativeConvertEnglish.getDateDay(timexDate.getDayOfWeek()),
                             TimexConstantsEnglish.DAY_PARTS.get(timex.getPartOfDay()));
                 }
 
                 if (TimexDateHelpers.isLastWeek(timexDate, date)) {
                     return String.format("last %1$s %2$s",
-                            TimexRelativeConvertEnglish.getDateDay(DayOfWeek.of(timexDate.get(Calendar.DAY_OF_WEEK))),
+                            TimexRelativeConvertEnglish.getDateDay(timexDate.getDayOfWeek()),
                             TimexConstantsEnglish.DAY_PARTS.get(timex.getPartOfDay()));
                 }
             }
