@@ -67,7 +67,7 @@ public class TestTimexDateHelpers {
 
         dateExpected = LocalDateTime.of(2017,5, 29,0,0);
         dateActual = LocalDateTime.of(2017, 11, 15,0,0);
-        Assert.assertTrue(TimexDateHelpers.datePartEquals(dateExpected, dateActual));
+        Assert.assertFalse(TimexDateHelpers.datePartEquals(dateExpected, dateActual));
     }
 
     @Test
@@ -121,7 +121,7 @@ public class TestTimexDateHelpers {
         dateExpected = LocalDateTime.of(2018, 1, 1,0,0);
         Assert.assertEquals(1, (int) TimexDateHelpers.weekOfYear(dateExpected));
 
-        dateExpected = LocalDateTime.of(2018, 1, 12,0,0);
+        dateExpected = LocalDateTime.of(2018, 1, 1,0,0);
         Assert.assertEquals(1, (int) TimexDateHelpers.weekOfYear(dateExpected));
 
         dateExpected = LocalDateTime.of(2018, 1, 7,0,0);
@@ -191,7 +191,7 @@ public class TestTimexDateHelpers {
         dateActual = LocalDateTime.of(2017, 3 ,9,0,0);
         Assert.assertTrue(TimexDateHelpers.datePartEquals(result.get(1), dateActual));
 
-        dateActual = LocalDateTime.of(2017,30 ,16,0,0);
+        dateActual = LocalDateTime.of(2017,3 ,16,0,0);
         Assert.assertTrue(TimexDateHelpers.datePartEquals(result.get(2), dateActual));
 
         dateActual = LocalDateTime.of(2017, 3 ,23,0,0);
