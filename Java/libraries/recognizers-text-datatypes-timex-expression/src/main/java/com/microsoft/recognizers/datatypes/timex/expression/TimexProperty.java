@@ -209,7 +209,11 @@ public class TimexProperty {
     }
 
     public Integer getHour() {
-        return hour;
+        if (this.time != null) {
+            return this.time.getHour();
+        }
+
+        return null;
     }
 
     public void setHour(Integer withHour) {
@@ -222,12 +226,14 @@ public class TimexProperty {
         } else {
             this.time = null;
         }
-
-        this.hour = withHour;
     }
 
     public Integer getMinute() {
-        return minute;
+        if (this.time != null) {
+          return this.time.getMinute();
+        }
+
+        return null;
     }
 
     public void setMinute(Integer withMinute) {
@@ -240,12 +246,14 @@ public class TimexProperty {
         } else {
             this.time = null;
         }
-
-        this.minute = withMinute;
     }
 
     public Integer getSecond() {
-        return second;
+        if (this.time != null) {
+            return this.time.getSecond();
+        }
+
+        return null;
     }
 
     public void setSecond(Integer withSecond) {
@@ -258,8 +266,6 @@ public class TimexProperty {
         } else {
             this.time = null;
         }
-
-        this.second = withSecond;
     }
 
     public String getPartOfDay() {
@@ -339,40 +345,40 @@ public class TimexProperty {
         for (Entry<String, String> item : source.entrySet()) {
             switch (item.getKey()) {
                 case "year":
-                    this.year = Integer.parseInt(item.getValue());
+                    setYear(Integer.parseInt(item.getValue()));
                     break;
                 case "month":
-                    this.month = Integer.parseInt(item.getValue());
+                    setMonth(Integer.parseInt(item.getValue()));
                     break;
                 case "dayOfMonth":
-                    this.dayOfMonth = Integer.parseInt(item.getValue());
+                    setDayOfMonth(Integer.parseInt(item.getValue()));
                     break;
                 case "dayOfWeek":
-                    this.dayOfWeek = Integer.parseInt(item.getValue());
+                    setDayOfWeek(Integer.parseInt(item.getValue()));
                     break;
                 case "season":
-                    this.season = item.getValue();
+                    setSeason(item.getValue());
                     break;
                 case "weekOfYear":
-                    this.weekOfYear = Integer.parseInt(item.getValue());
+                    setWeekOfYear(Integer.parseInt(item.getValue()));
                     break;
                 case "weekend":
-                    this.weekend = true;
+                    setWeekend(true);
                     break;
                 case "weekOfMonth":
-                    this.weekOfMonth = Integer.parseInt(item.getValue());
+                    setWeekOfMonth(Integer.parseInt(item.getValue()));
                     break;
                 case "hour":
-                    this.hour = Integer.parseInt(item.getValue());
+                    setHour(Integer.parseInt(item.getValue()));
                     break;
                 case "minute":
-                    this.minute = Integer.parseInt(item.getValue());
+                    setMinute(Integer.parseInt(item.getValue()));
                     break;
                 case "second":
-                    this.second = Integer.parseInt(item.getValue());
+                    setSecond(Integer.parseInt(item.getValue()));
                     break;
                 case "partOfDay":
-                    this.partOfDay = item.getValue();
+                    setPartOfDay(item.getValue());
                     break;
                 case "dateUnit":
                     this.assignDateDuration(source);

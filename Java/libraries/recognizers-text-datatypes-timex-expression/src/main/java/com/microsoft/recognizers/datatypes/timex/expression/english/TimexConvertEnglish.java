@@ -75,7 +75,7 @@ public class TimexConvertEnglish {
         String minute = (timex.getMinute() == 0 && timex.getSecond() == 0) ? new String()
                 : ":" + String.format("%1$2s", String.valueOf(timex.getMinute())).replace(' ', '0');
         String second = (timex.getSecond() == 0) ? new String()
-                : ":" + String.format("%1$2s", String.valueOf(timex.getMinute())).replace(' ', '0');
+                : ":" + String.format("%1$2s", String.valueOf(timex.getSecond())).replace(' ', '0');
         String period = timex.getHour() < 12 ? "AM" : "PM";
 
         return String.format("%1$s%2$s%3$s%4$s", hour, minute, second, period);
@@ -93,7 +93,7 @@ public class TimexConvertEnglish {
                 .parseInt(String.valueOf(date.charAt(date.length() - 1)))];
 
         if (timex.getYear() != null) {
-            return String.format("%1$s%2$s %3$s", date, abbreviation, month).trim();
+            return String.format("%1$s%2$s %3$s %4$s", date, abbreviation, month, timex.getYear()).trim();
         }
 
         return String.format("%1$s%2$s %3$s", date, abbreviation, month);
@@ -101,7 +101,7 @@ public class TimexConvertEnglish {
 
     private static String convertDurationPropertyToString(BigDecimal value, String property, Boolean includeSingleCount) {
         if (value.intValue() == 1) {
-            return includeSingleCount ? "1" + property : property;
+            return includeSingleCount ? "1 " + property : property;
         } else {
             return String.format("%1$s %2$ss", value, property);
         }
