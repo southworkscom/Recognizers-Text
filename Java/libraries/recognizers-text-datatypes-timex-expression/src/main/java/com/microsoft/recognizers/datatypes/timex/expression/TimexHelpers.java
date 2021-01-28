@@ -267,11 +267,20 @@ public class TimexHelpers {
     }
 
     private static TimexProperty timeAdd(TimexProperty start, TimexProperty duration) {
-        Integer hourPreSet = start.getHour() + (int)Math.round(start.getHours().doubleValue());
+        Integer hourPreSet = start.getHour();
+        Integer minutePreSet = start.getMinute();
+        Integer secondPreSet = start.getSecond();
+        if (duration.getHours() != null) {
+            hourPreSet += (int)Math.round(duration.getHours().doubleValue());
+        }
         Integer hour = hourPreSet != null ? hourPreSet : 0;
-        Integer minutePreSet = start.getMinute() + (int)Math.round(duration.getMinutes().doubleValue());
+        if (duration.getMinutes() != null) {
+            minutePreSet += (int)Math.round(duration.getMinutes().doubleValue());
+        }
         Integer minute = minutePreSet != null ? minutePreSet : 0;
-        Integer secondPreSet = start.getSecond() + (int)Math.round(duration.getSeconds().doubleValue());
+        if (duration.getSeconds() != null) {
+            secondPreSet += (int)Math.round(duration.getSeconds().doubleValue());
+        }
         Integer second = secondPreSet != null ? secondPreSet : 0;
         return new TimexProperty() {
             {
