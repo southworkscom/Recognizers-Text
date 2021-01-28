@@ -6,6 +6,7 @@ package com.microsoft.recognizers.text.datatypes.timex.expression;
 import com.microsoft.recognizers.datatypes.timex.expression.Time;
 import com.microsoft.recognizers.datatypes.timex.expression.TimexProperty;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
@@ -34,11 +35,7 @@ public class TestTimex {
     public void dataTypesTimexRoundtripTime() {
         TestTimex.roundtrip("T17:30:45");
         TestTimex.roundtrip("T05:06:07");
-        // This tests is commented as differs to C#. In Java the second is not populated, but C# yes.
-        // So there is no type for this tests
          TestTimex.roundtrip("T17:30");
-        // This tests is commented as differs to C#. In Java the minute and second are not populated, but in C# does.
-        // So there is no type for this tests
          TestTimex.roundtrip("T23");
     }
 
@@ -102,6 +99,12 @@ public class TestTimex {
     public void dataTypesTimexRoundtripDateTimeRangeStartEndDuration() {
         TestTimex.roundtrip("(2017-09-08T21:19:29,2017-09-08T21:24:29,PT5M)");
         TestTimex.roundtrip("(XXXX-WXX-3T16,XXXX-WXX-6T15,PT71H)");
+    }
+
+    @Test
+    @Ignore
+    public void dataTypesTimexToString() {
+        Assert.assertEquals("5th May", new TimexProperty("XXXX-05-05").toString());
     }
 
     @Test

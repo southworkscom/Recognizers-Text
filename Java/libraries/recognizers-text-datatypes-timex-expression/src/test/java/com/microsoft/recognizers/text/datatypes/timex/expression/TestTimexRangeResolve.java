@@ -7,6 +7,7 @@ import com.microsoft.recognizers.datatypes.timex.expression.TimexCreator;
 import com.microsoft.recognizers.datatypes.timex.expression.TimexProperty;
 import com.microsoft.recognizers.datatypes.timex.expression.TimexRangeResolver;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -17,7 +18,9 @@ public class TestTimexRangeResolve {
     @Test
     public void dataTypesRangeResolveDaterangeDefinite()
     {
-        Set<String> candidates = new HashSet<String>(Arrays.asList("2017-09-28"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("2017-09-28");
+        }};
         TimexProperty timex = new TimexProperty(){
             {
                 setYear(2017);
@@ -42,7 +45,9 @@ public class TestTimexRangeResolve {
     @Test
     public void dataTypesRangeResolveDateRangeDefiniteConstrainstAsTimex()
     {
-        Set<String> candidates = new HashSet<String>(Arrays.asList("2017-09-28"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("2017-09-28");
+        }};
         ArrayList<String> constraints = new ArrayList<String>(){{
             add("(2017-09-27,2017-09-29,P2D)");
         }};
@@ -59,7 +64,9 @@ public class TestTimexRangeResolve {
     @Test
     public void dataTypesRangeResolveDateRangeMonthAndDate()
     {
-        Set<String> candidates = new HashSet<String>(Arrays.asList("XXXX-05-29"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("XXXX-05-29");
+        }};
         TimexProperty timex = new TimexProperty(){{
             setYear(2006);
             setMonth(1);
@@ -83,7 +90,9 @@ public class TestTimexRangeResolve {
     @Test
     public void dataTypesRangeResolveDateRangeMonthAndDateConditional()
     {
-        Set<String> candidates = new HashSet<String>(Arrays.asList("XXXX-05-29"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("XXXX-05-29");
+        }};
         ArrayList<String> constraints = new ArrayList<String>() {
             {
                 add("(2006-01-01,2008-06-01,P882D)");
@@ -104,7 +113,9 @@ public class TestTimexRangeResolve {
     @Test
     public void dataTypesRangeResolveDateRangeSaturdaysInSeptember()
     {
-        Set<String> candidates = new HashSet<String>(Arrays.asList("XXXX-WXX-6"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("XXXX-WXX-6");
+        }};
         ArrayList<String> constraints = new ArrayList<String>() {
             {
                 add("2017-09");
@@ -127,7 +138,9 @@ public class TestTimexRangeResolve {
     @Test
     public void dataTypesRangeResolveDateRangeSaturdaysInSeptemberExpressedAsRange()
     {
-        Set<String> candidates = new HashSet<String>(Arrays.asList("XXXX-WXX-6"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("XXXX-WXX-6");
+        }};
         ArrayList<String> constraints = new ArrayList<String>() {
             {
                 add("(2017-09-01,2017-10-01,P30D)");
@@ -150,7 +163,9 @@ public class TestTimexRangeResolve {
     @Test
     public void dataTypesRangeResolveDateRangeYear()
     {
-        Set<String> candidates = new HashSet<String>(Arrays.asList("XXXX-05-29"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("XXXX-05-29");
+        }};
         ArrayList<String> constraints = new ArrayList<String>() {
             {
                 add("2018");
@@ -169,7 +184,9 @@ public class TestTimexRangeResolve {
     @Test
     public void dataTypesRangeResolveDateRangeExpressedAsRange()
     {
-        Set<String> candidates = new HashSet<String>(Arrays.asList("XXXX-05-29"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("XXXX-05-29");
+        }};
         ArrayList<String> constraints = new ArrayList<String>() {
             {
                 add("(2018-01-01,2019-01-01,P365D)");
@@ -188,7 +205,9 @@ public class TestTimexRangeResolve {
     @Test
     public void dataTypesRangeResolveDateRangeMultipleConstraints()
     {
-        Set<String> candidates = new HashSet<String>(Arrays.asList("XXXX-WXX-3"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("XXXX-WXX-3");
+        }};
         ArrayList<String> constraints = new ArrayList<String>() {
             {
                 add("(2017-09-01,2017-09-08,P7D)");
@@ -209,7 +228,10 @@ public class TestTimexRangeResolve {
     @Test
     public void dataTypesRangeResolveDateRangeMultipleCandidatesWithMultipleConstraints()
     {
-        Set<String> candidates = new HashSet<String>(Arrays.asList("XXXX-WXX-2","XXXX-WXX-4"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("XXXX-WXX-2");
+            add("XXXX-WXX-4");
+        }};
         ArrayList<String> constraints = new ArrayList<String>() {
             {
                 add("(2017-09-01,2017-09-08,P7D)");
@@ -232,7 +254,9 @@ public class TestTimexRangeResolve {
     @Test
     public void dataTypesRangeResolveDateRangeMultipleOverlappingConstraints()
     {
-        Set<String> candidates = new HashSet<String>(Arrays.asList("XXXX-WXX-3"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("XXXX-WXX-3");
+        }};
         ArrayList<String> constraints = new ArrayList<String>() {
             {
                 add("(2017-09-03,2017-09-07,P4D)");
@@ -253,7 +277,9 @@ public class TestTimexRangeResolve {
     @Test
     public void dataTypesRangeResolveTimeRangeTimeWithinRange()
     {
-        Set<String> candidates = new HashSet<String>(Arrays.asList("T16"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("T16");
+        }};
         TimexProperty timex = new TimexProperty() {{
             setHour(14);
             setHours(new BigDecimal(4));
@@ -276,7 +302,13 @@ public class TestTimexRangeResolve {
     @Test
     public void dataTypesRangeResolveTimeRangeMultipleTimesWithinRange()
     {
-        Set<String> candidates = new HashSet<String>(Arrays.asList("T12", "T16", "T16:30", "T17", "T18"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("T12");
+            add("T16");
+            add("T16:30");
+            add("T17");
+            add("T18");
+        }};
         TimexProperty timex = new TimexProperty() {{
             setHour(14);
             setHours(new BigDecimal(4));
@@ -310,7 +342,9 @@ public class TestTimexRangeResolve {
             }
         };
 
-        Set<String> candidatesT19 = new HashSet<String>(Arrays.asList("T19"));
+        Set<String> candidatesT19 = new HashSet<String>() {{
+            add("T19");
+        }};
         List<TimexProperty> result1 = TimexRangeResolver.evaluate(candidatesT19, constraints);
 
         Set<String> r1 = new HashSet<String>(result1.stream().map(t -> {
@@ -327,16 +361,18 @@ public class TestTimexRangeResolve {
 
         List<TimexProperty> result2 = TimexRangeResolver.evaluate(candidatesT19, constraints);
 
-        Set<String> r2 = new HashSet<String>(result1.stream().map(t -> {
+        Set<String> r2 = new HashSet<String>(result2.stream().map(t -> {
             return t.getTimexValue();
         }).collect(Collectors.toSet()));
         Assert.assertFalse(!r2.isEmpty());
 
-        Set<String> candidatesT17 = new HashSet<String>(Arrays.asList("T17"));
+        Set<String> candidatesT17 = new HashSet<String>() {{
+            add("T17");
+        }};
 
         List<TimexProperty> result3 = TimexRangeResolver.evaluate(candidatesT17, constraints);
 
-        Set<String> r3 = new HashSet<String>(result1.stream().map(t -> {
+        Set<String> r3 = new HashSet<String>(result3.stream().map(t -> {
             return t.getTimexValue();
         }).collect(Collectors.toSet()));
         Assert.assertTrue(r3.contains("T17"));
@@ -356,8 +392,10 @@ public class TestTimexRangeResolve {
             }
         };
 
-        Set<String> candidatesT191930 = new HashSet<String>(Arrays.asList("T19", "T19:30"));
-
+        Set<String> candidatesT191930 = new HashSet<String>() {{
+            add("T19");
+            add("T19:30");
+        }};
         List<TimexProperty> result1 = TimexRangeResolver.evaluate(candidatesT191930, constraints);
 
         Set<String> r1 = new HashSet<String>(result1.stream().map(t -> {
@@ -375,16 +413,20 @@ public class TestTimexRangeResolve {
 
         List<TimexProperty> result2 = TimexRangeResolver.evaluate(candidatesT191930, constraints);
 
-        Set<String> r2 = new HashSet<String>(result1.stream().map(t -> {
+        Set<String> r2 = new HashSet<String>(result2.stream().map(t -> {
             return t.getTimexValue();
         }).collect(Collectors.toSet()));
         Assert.assertFalse(!r2.isEmpty());
 
-        Set<String> candidatesT17173019 = new HashSet<String>(Arrays.asList("T17", "T17:30", "T19"));
+        Set<String> candidatesT17173019 = new HashSet<String>() {{
+            add("T17");
+            add("T17:30");
+            add("T19");
+        }};
 
         List<TimexProperty> result3 = TimexRangeResolver.evaluate(candidatesT17173019, constraints);
 
-        Set<String> r3 = new HashSet<String>(result1.stream().map(t -> {
+        Set<String> r3 = new HashSet<String>(result3.stream().map(t -> {
             return t.getTimexValue();
         }).collect(Collectors.toSet()));
         Assert.assertTrue(r3.contains("T17"));
@@ -404,8 +446,11 @@ public class TestTimexRangeResolve {
                 add(timex.getTimexValue());
             }
         };
-        Set<String> candidates = new HashSet<String>(Arrays.asList("T16", "T16", "T16"));
-
+        Set<String> candidates = new HashSet<String>() {{
+            add("T16");
+            add("T16");
+            add("T16");
+        }};
 
         List<TimexProperty> result = TimexRangeResolver.evaluate(candidates, constraints);
 
@@ -430,7 +475,9 @@ public class TestTimexRangeResolve {
                 add(timex.getTimexValue());
             }
         };
-        Set<String> candidates = new HashSet<String>(Arrays.asList("2017-09-28T18:30:01"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("2017-09-28T18:30:01");
+        }};
         List<TimexProperty> result = TimexRangeResolver.evaluate(candidates, constraints);
 
         Set<String> r = result.stream().map(t -> {
@@ -449,7 +496,9 @@ public class TestTimexRangeResolve {
             }
         };
 
-        Set<String> candidates = new HashSet<String>(Arrays.asList("2017-09-28T18:30:01"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("2017-09-28T18:30:01");
+        }};
         List<TimexProperty> result = TimexRangeResolver.evaluate(candidates, constraints);
 
         Set<String> r = result.stream().map(t -> {
@@ -473,7 +522,9 @@ public class TestTimexRangeResolve {
                 add(timex.getTimexValue());
             }
         };
-        Set<String> candidates = new HashSet<String>(Arrays.asList("XXXX-05-29T19:30"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("XXXX-05-29T19:30");
+        }};
         List<TimexProperty> result = TimexRangeResolver.evaluate(candidates, constraints);
 
         Set<String> r = result.stream().map(t -> {
@@ -493,7 +544,9 @@ public class TestTimexRangeResolve {
             }
         };
 
-        Set<String> candidates = new HashSet<String>(Arrays.asList("XXXX-05-29T19:30"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("XXXX-05-29T19:30");
+        }};
         List<TimexProperty> result = TimexRangeResolver.evaluate(candidates, constraints);
 
         Set<String> r = result.stream().map(t -> {
@@ -514,7 +567,9 @@ public class TestTimexRangeResolve {
             }
         };
 
-        Set<String> candidates = new HashSet<String>(Arrays.asList("XXXX-WXX-6T01:00:00"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("XXXX-WXX-6T01:00:00");
+        }};
         List<TimexProperty> result = TimexRangeResolver.evaluate(candidates, constraints);
 
         Set<String> r = result.stream().map(t -> {
@@ -538,7 +593,9 @@ public class TestTimexRangeResolve {
             }
         };
 
-        Set<String> candidates = new HashSet<String>(Arrays.asList("XXXX-WXX-3T01:02"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("XXXX-WXX-3T01:02");
+        }};
         List<TimexProperty> result = TimexRangeResolver.evaluate(candidates, constraints);
 
         Set<String> r = result.stream().map(t -> {
@@ -571,7 +628,10 @@ public class TestTimexRangeResolve {
             }
         };
 
-        Set<String> candidates = new HashSet<String>(Arrays.asList("XXXX-WXX-3T04\", \"XXXX-WXX-3T16"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("XXXX-WXX-3T04");
+            add("XXXX-WXX-3T16");
+        }};
         List<TimexProperty> result = TimexRangeResolver.evaluate(candidates, constraints);
 
         Set<String> r = result.stream().map(t -> {
@@ -604,7 +664,10 @@ public class TestTimexRangeResolve {
             }
         };
 
-        Set<String> candidates = new HashSet<String>(Arrays.asList("XXXX-WXX-3T04\", \"XXXX-WXX-3T16"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("XXXX-WXX-3T04");
+            add("XXXX-WXX-3T16");
+        }};
         List<TimexProperty> result = TimexRangeResolver.evaluate(candidates, constraints);
 
         Set<String> r = result.stream().map(t -> {
@@ -624,7 +687,9 @@ public class TestTimexRangeResolve {
             }
         };
 
-        Set<String> candidates = new HashSet<String>(Arrays.asList("XXXX-05-29"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("XXXX-05-29");
+        }};
         List<TimexProperty> result = TimexRangeResolver.evaluate(candidates, constraints);
 
         Set<String> r = result.stream().map(t -> {
@@ -645,7 +710,9 @@ public class TestTimexRangeResolve {
             }
         };
 
-        Set<String> candidates = new HashSet<String>(Arrays.asList("XXXX-05-29"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("XXXX-05-29");
+        }};
         List<TimexProperty> result = TimexRangeResolver.evaluate(candidates, constraints);
 
         Set<String> r = result.stream().map(t -> {
@@ -665,7 +732,9 @@ public class TestTimexRangeResolve {
             }
         };
 
-        Set<String> candidates = new HashSet<String>(Arrays.asList("PT5M"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("PT5M");
+        }};
         List<TimexProperty> result = TimexRangeResolver.evaluate(candidates, constraints);
 
         Set<String> r = result.stream().map(t -> {
@@ -684,7 +753,9 @@ public class TestTimexRangeResolve {
             }
         };
 
-        Set<String> candidates = new HashSet<String>(Arrays.asList("PT5M"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("PT5M");
+        }};
         List<TimexProperty> result = TimexRangeResolver.evaluate(candidates, constraints);
 
         Set<String> r = result.stream().map(t -> {
@@ -699,7 +770,9 @@ public class TestTimexRangeResolve {
     {
         ArrayList<String> constraints = new ArrayList<String>();
 
-        Set<String> candidates = new HashSet<String>(Arrays.asList("PT5M"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("PT5M");
+        }};
         List<TimexProperty> result = TimexRangeResolver.evaluate(candidates, constraints);
 
         Set<String> r = result.stream().map(t -> {
@@ -723,7 +796,9 @@ public class TestTimexRangeResolve {
             }
         };
 
-        Set<String> candidates = new HashSet<String>(Arrays.asList("PT5M"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("PT5M");
+        }};
         List<TimexProperty> result = TimexRangeResolver.evaluate(candidates, constraints);
 
         Set<String> r = result.stream().map(t -> {
@@ -744,7 +819,9 @@ public class TestTimexRangeResolve {
             }
         };
 
-        Set<String> candidates = new HashSet<String>(Arrays.asList("XXXX-WXX-7"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("XXXX-WXX-7");
+        }};
 
         List<TimexProperty> result = TimexRangeResolver.evaluate(candidates, constraints);
 
@@ -759,13 +836,13 @@ public class TestTimexRangeResolve {
     @Test
     public void dataTypesRangeResolveDateRangesNoTimeConstraint()
     {
-        Set<String> candidates = new HashSet<String>(Arrays.asList("XXXX-WXX-7TEV"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("XXXX-WXX-7TEV");
+        }};
         ArrayList<String> constraints = new ArrayList<String>() {
             {
                 add("(2018-06-04,2018-06-11,P7D)"); // e.g. this week
                 add("(2018-06-11,2018-06-18,P7D)"); // e.g. next week
-                add(TimexCreator.EVENING);
-
             }
         };
 
@@ -782,7 +859,9 @@ public class TestTimexRangeResolve {
     @Test
     public void dataTypesRangeResolveDateRangesOverlappingConstraint1()
     {
-        Set<String> candidates = new HashSet<String>(Arrays.asList("XXXX-WXX-7TEV"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("XXXX-WXX-7TEV");
+        }};
         ArrayList<String> constraints = new ArrayList<String>() {
             {
                 add("(2018-06-04,2018-06-11,P7D)"); // e.g. this week
@@ -805,7 +884,9 @@ public class TestTimexRangeResolve {
     @Test
     public void dataTypesRangeResolveDateRangesOverlappingConstraint2()
     {
-        Set<String> candidates = new HashSet<String>(Arrays.asList("XXXX-WXX-7TEV"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("XXXX-WXX-7TEV");
+        }};
         ArrayList<String> constraints = new ArrayList<String>() {
             {
                 add("(2018-06-04,2018-06-11,P7D)"); // e.g. this week
@@ -828,7 +909,9 @@ public class TestTimexRangeResolve {
     @Test
     public void dataTypesRangeResolveDateRangesNonOverlappingConstraint()
     {
-        Set<String> candidates = new HashSet<String>(Arrays.asList("XXXX-WXX-7TEV"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("XXXX-WXX-7TEV");
+        }};
         ArrayList<String> constraints = new ArrayList<String>() {
             {
                 add("(2018-06-04,2018-06-11,P7D)"); // e.g. this week
@@ -846,7 +929,9 @@ public class TestTimexRangeResolve {
     @Test
     public void dataTypesRangeResolveDateRangesSundayEvening()
     {
-        Set<String> candidates = new HashSet<String>(Arrays.asList("XXXX-WXX-7TEV"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("XXXX-WXX-7TEV");
+        }};
         ArrayList<String> constraints = new ArrayList<String>() {
             {
                 add("(2018-06-04,2018-06-11,P7D)"); // e.g. this week
@@ -869,7 +954,9 @@ public class TestTimexRangeResolve {
     @Test
     public void dataTypesRangeResolveTime()
     {
-        Set<String> candidates = new HashSet<String>(Arrays.asList("T09"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("T09");
+        }};
         ArrayList<String> constraints = new ArrayList<String>() {
             {
                 add("(2020-01-01,2020-01-02,P1D)");
@@ -882,7 +969,9 @@ public class TestTimexRangeResolve {
     @Test
     public void dataTypesRangeResolveTimeWithDateRangeConstraint()
     {
-        Set<String> candidates = new HashSet<String>(Arrays.asList("T09"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("T09");
+        }};
         ArrayList<String> constraints = new ArrayList<String>() {
             {
                 add("P3D");
@@ -895,7 +984,9 @@ public class TestTimexRangeResolve {
     @Test
     public void dataTypesRangeResolveTimeWithDateTimeRangeConstraint()
     {
-        Set<String> candidates = new HashSet<String>(Arrays.asList("T09"));
+        Set<String> candidates = new HashSet<String>() {{
+            add("T09");
+        }};
         ArrayList<String> constraints = new ArrayList<String>() {
             {
                 add("(2020-01-01T00:00:00,2020-01-02T00:00:00,PT24H)");
@@ -909,7 +1000,10 @@ public class TestTimexRangeResolve {
     @Test
     public void dataTypesRangeResolveDateTimeWithDateRangeConstraint()
     {
-        Set<String> candidates = new HashSet<String>(Arrays.asList("\"2020-01-01T09\", \"2020-01-02T09\""));
+        Set<String> candidates = new HashSet<String>() {{
+            add("2020-01-01T09");
+            add("2020-01-02T09");
+        }};
         ArrayList<String> constraints = new ArrayList<String>() {
             {
                 add("(2020-01-01,2020-01-02,P1D)");
@@ -919,5 +1013,4 @@ public class TestTimexRangeResolve {
         Assert.assertEquals(1, resolutions.size());
         Assert.assertEquals(1, (int) resolutions.stream().findFirst().get().getMonth());
     }
-
 }
