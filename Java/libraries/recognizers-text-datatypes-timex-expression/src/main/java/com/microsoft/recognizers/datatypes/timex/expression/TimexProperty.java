@@ -305,10 +305,10 @@ public class TimexProperty {
         };
     }
 
-//    @Override
-//    public String toString() {
-//        return TimexConvert.convertTimexToString(this);
-//    }
+    @Override
+    public String toString() {
+        return TimexConvert.convertTimexToString(this);
+    }
 
     public String toNaturalLanguage(LocalDateTime referenceDate) {
         return TimexRelativeConvert.convertTimexToStringRelative(this, referenceDate);

@@ -6,7 +6,6 @@ package com.microsoft.recognizers.text.datatypes.timex.expression;
 import com.microsoft.recognizers.datatypes.timex.expression.Time;
 import com.microsoft.recognizers.datatypes.timex.expression.TimexProperty;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
@@ -102,7 +101,6 @@ public class TestTimex {
     }
 
     @Test
-    @Ignore
     public void dataTypesTimexToString() {
         Assert.assertEquals("5th May", new TimexProperty("XXXX-05-05").toString());
     }
