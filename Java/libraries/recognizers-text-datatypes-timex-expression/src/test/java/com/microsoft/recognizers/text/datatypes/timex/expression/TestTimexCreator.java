@@ -48,7 +48,7 @@ public class TestTimexCreator {
             setMonth(d.getMonthValue());
             setDayOfMonth(d.getDayOfMonth());
         }});
-        Assert.assertEquals(expected, TimexCreator.tomorrow(d));
+        Assert.assertEquals(expected, TimexCreator.tomorrow(null));
     }
 
     @Test
@@ -70,7 +70,7 @@ public class TestTimexCreator {
                 setDayOfMonth(d.getDayOfMonth());
             }
         });
-        Assert.assertEquals(expected, TimexCreator.yesterday(d));
+        Assert.assertEquals(expected, TimexCreator.yesterday(null));
     }
 
     @Test
@@ -116,7 +116,7 @@ public class TestTimexCreator {
                 setDays(new BigDecimal(7));
             }
         });
-        Assert.assertEquals(expected, TimexCreator.weekBackFromToday(d));
+        Assert.assertEquals(expected, TimexCreator.weekBackFromToday(null));
     }
 
     @Test
@@ -133,7 +133,7 @@ public class TestTimexCreator {
         TimexProperty t = TimexProperty.fromDate(start);
         t.setDays(new BigDecimal(7));
         String expected = t.getTimexValue();
-        Assert.assertEquals(expected, TimexCreator.nextWeek(start));
+        Assert.assertEquals(expected, TimexCreator.nextWeek(null));
     }
 
     @Test
@@ -151,7 +151,7 @@ public class TestTimexCreator {
         TimexProperty t = TimexProperty.fromDate(start);
         t.setDays(new BigDecimal(7));
         String expected = t.getTimexValue();
-        Assert.assertEquals(expected, TimexCreator.lastWeek(start));
+        Assert.assertEquals(expected, TimexCreator.lastWeek(null));
     }
 
     @Test
