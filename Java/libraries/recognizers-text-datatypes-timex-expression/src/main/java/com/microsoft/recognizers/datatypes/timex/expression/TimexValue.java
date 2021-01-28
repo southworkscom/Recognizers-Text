@@ -3,6 +3,7 @@
 
 package com.microsoft.recognizers.datatypes.timex.expression;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class TimexValue {
@@ -33,31 +34,31 @@ public class TimexValue {
 
     public static String durationValue(TimexProperty timexProperty) {
         if (timexProperty.getYears() != null) {
-            return String.valueOf(31536000 * timexProperty.getYears().doubleValue());
+            return new BigDecimal(31536000 * timexProperty.getYears().doubleValue()).toPlainString();
         }
 
         if (timexProperty.getMonths() != null) {
-            return String.valueOf(2592000 * timexProperty.getYears().doubleValue());
+            return new BigDecimal(2592000 * timexProperty.getMonths().doubleValue()).toPlainString();
         }
 
         if (timexProperty.getWeeks() != null) {
-            return String.valueOf(604800 * timexProperty.getWeeks().doubleValue());
+            return new BigDecimal(604800 * timexProperty.getWeeks().doubleValue()).toPlainString();
         }
 
         if (timexProperty.getDays() != null) {
-            return String.valueOf(86400 * timexProperty.getDays().doubleValue());
+            return new BigDecimal(86400 * timexProperty.getDays().doubleValue()).toPlainString();
         }
 
         if (timexProperty.getHours() != null) {
-            return String.valueOf(3600 * timexProperty.getHours().doubleValue());
+            return new BigDecimal(3600 * timexProperty.getHours().doubleValue()).toPlainString();
         }
 
         if (timexProperty.getMinutes() != null) {
-            return String.valueOf(60 * timexProperty.getMinutes().doubleValue());
+            return new BigDecimal(60 * timexProperty.getMinutes().doubleValue()).toPlainString();
         }
 
         if (timexProperty.getSeconds() != null) {
-            return String.valueOf(timexProperty.getSeconds());
+            return timexProperty.getSeconds().toPlainString();
         }
 
         return new String();

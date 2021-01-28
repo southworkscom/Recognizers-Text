@@ -8,10 +8,9 @@ import com.microsoft.recognizers.datatypes.timex.expression.TimexResolver;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.TimeZone;
+import java.time.format.DateTimeFormatter;
 
 public class TestTimexResolver {
 
@@ -138,8 +137,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDuration2years()
     {
-        LocalDateTime today = LocalDateTime.now();
-        Resolution resolution = TimexResolver.resolve(new String[] { "P2Y" }, today);
+        Resolution resolution = TimexResolver.resolve(new String[] { "P2Y" }, null);
         Assert.assertEquals(1, resolution.getValues().size());
 
         Assert.assertEquals("P2Y", resolution.getValues().get(0).getTimex());
@@ -532,8 +530,8 @@ public class TestTimexResolver {
         Assert.assertEquals("XXXX-WXX-2T12", resolution.getValues().get(0).getTimex());
         Assert.assertEquals("datetime", resolution.getValues().get(0).getType());
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Assert.assertEquals(formatter.format(previousWeekUtc), resolution.getValues().get(0).getValue());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        Assert.assertEquals(previousWeekUtc.format(formatter), resolution.getValues().get(0).getValue());
 
         Assert.assertNull(resolution.getValues().get(0).getStart());
         Assert.assertNull(resolution.getValues().get(0).getEnd());
@@ -544,7 +542,7 @@ public class TestTimexResolver {
         Assert.assertEquals("XXXX-WXX-2T12", resolution.getValues().get(1).getTimex());
         Assert.assertEquals("datetime", resolution.getValues().get(1).getType());
 
-        Assert.assertEquals(formatter.format(nextWeekUtc), resolution.getValues().get(1).getValue());
+        Assert.assertEquals(nextWeekUtc.format(formatter), resolution.getValues().get(1).getValue());
 
         Assert.assertNull(resolution.getValues().get(1).getStart());
         Assert.assertNull(resolution.getValues().get(1).getEnd());

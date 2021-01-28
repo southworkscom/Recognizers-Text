@@ -152,8 +152,8 @@ public class TimexFormat {
         }
 
         if (timex.getMonth() != null && timex.getWeekOfMonth() != null) {
-            return String.format("XXXX-%1$s-W%2$s", TimexDateHelpers.fixedFormatNumber(timex.getMonth(), 2),
-                    timex.getWeekOfMonth().toString());
+            return String.format("XXXX-%s-W%02d", TimexDateHelpers.fixedFormatNumber(timex.getMonth(), 2),
+                    timex.getWeekOfMonth());
         }
 
         if (timex.getMonth() != null) {

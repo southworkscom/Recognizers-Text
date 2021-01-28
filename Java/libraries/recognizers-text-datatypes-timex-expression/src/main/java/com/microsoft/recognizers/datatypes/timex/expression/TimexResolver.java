@@ -16,6 +16,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public class TimexResolver {
     public static Resolution resolve(String[] timexArray, LocalDateTime date) {
+        date = date != null ? date : LocalDateTime.now();
         Resolution resolution = new Resolution();
         for (String timex : timexArray) {
             TimexProperty t = new TimexProperty(timex);
@@ -108,9 +109,9 @@ public class TimexResolver {
                 add(new Resolution.Entry() {
                     {
                         setTimex(timex.getTimexValue());
-                        setType("datetime");
+                        setType("daterange");
                         setStart(TimexValue.dateValue(range.getStart()));
-                        setStart(TimexValue.dateValue(range.getEnd()));
+                        setEnd(TimexValue.dateValue(range.getEnd()));
                     }
                 });
             }
@@ -151,7 +152,7 @@ public class TimexResolver {
 
         if (timex.getDayOfWeek() != null) {
             DayOfWeek day = timex.getDayOfWeek() == 7 ? DayOfWeek.SUNDAY : DayOfWeek.of(timex.getDayOfWeek());
-            LocalDateTime result = TimexDateHelpers.dateOfNextDay(day, date);
+            LocalDateTime result = TimexDateHelpers.dateOfLastDay(day, date);
             return TimexValue.dateValue(new TimexProperty() {
                 {
                     setYear(result.getYear());
