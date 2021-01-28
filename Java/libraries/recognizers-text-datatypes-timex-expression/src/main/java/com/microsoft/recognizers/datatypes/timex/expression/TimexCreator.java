@@ -72,7 +72,7 @@ public class TimexCreator {
 
     public static String lastWeek(LocalDateTime date) {
         LocalDateTime d = (date == null) ? LocalDateTime.now() : date;
-        LocalDateTime start = TimexDateHelpers.dateOfNextDay(DayOfWeek.MONDAY, d);
+        LocalDateTime start = TimexDateHelpers.dateOfLastDay(DayOfWeek.MONDAY, d);
         start = start.plusDays(-7);
         TimexProperty t = TimexProperty.fromDate(start);
         t.setDays(new BigDecimal(7));
