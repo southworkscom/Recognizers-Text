@@ -84,7 +84,7 @@ public class TimexRelativeConvertEnglish {
 
     private static String convertDateRange(TimexProperty timex, LocalDateTime date) {
         if (timex.getYear() != null) {
-            Integer year = date.getYear();
+            int year = date.getYear();
             if (timex.getYear() == year) {
                 if (timex.getWeekOfYear() != null) {
                     Integer thisWeek = TimexDateHelpers.weekOfYear(date);
@@ -113,20 +113,21 @@ public class TimexRelativeConvertEnglish {
                     if (timex.getMonth() == date.getMonthValue() - 1) {
                         return "last month";
                     }
+                }
 
-                    return (timex.getSeason() != null) ? String.format("this %s", TimexConstantsEnglish.SEASONS.get(timex.getSeason()))
+
+                return (timex.getSeason() != null) ? String.format("this %s", TimexConstantsEnglish.SEASONS.get(timex.getSeason()))
                             : "this year";
-                }
+            }
 
-                if (timex.getYear() == year + 1) {
-                    return (timex.getSeason() != null) ? String.format("next %s", TimexConstantsEnglish.SEASONS.get(timex.getSeason()))
-                            : "next year";
-                }
+            if (timex.getYear() == year + 1) {
+                return (timex.getSeason() != null) ? String.format("next %s", TimexConstantsEnglish.SEASONS.get(timex.getSeason()))
+                    : "next year";
+            }
 
-                if (timex.getYear() == year - 1) {
-                    return (timex.getSeason() != null) ? String.format("last %s", TimexConstantsEnglish.SEASONS.get(timex.getSeason()))
-                            : "last year";
-                }
+            if (timex.getYear() == year - 1) {
+                return (timex.getSeason() != null) ? String.format("last %s", TimexConstantsEnglish.SEASONS.get(timex.getSeason()))
+                    : "last year";
             }
         }
 
@@ -139,7 +140,7 @@ public class TimexRelativeConvertEnglish {
 
             if (timex.getPartOfDay() != null) {
                 if (TimexDateHelpers.datePartEquals(timexDate, date)) {
-                    if (timex.getPartOfDay() == "NI") {
+                    if (timex.getPartOfDay().equals("NI")) {
                         return "tonight";
                     } else {
                         return String.format("this %s", TimexConstantsEnglish.DAY_PARTS.get(timex.getPartOfDay()));
