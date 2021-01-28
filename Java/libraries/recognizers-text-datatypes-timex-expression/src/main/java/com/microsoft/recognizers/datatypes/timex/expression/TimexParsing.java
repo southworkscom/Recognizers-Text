@@ -30,7 +30,7 @@ public class TimexParsing {
     }
 
     private static void extractStartEndRange(String s, TimexProperty timexProperty) {
-        String[] parts = s.substring(1, s.length() - 2).split(",");
+        String[] parts = s.substring(1, s.length() - 1).split(",");
 
         if (parts.length == 3) {
             TimexParsing.extractDateTime(parts[0], timexProperty);

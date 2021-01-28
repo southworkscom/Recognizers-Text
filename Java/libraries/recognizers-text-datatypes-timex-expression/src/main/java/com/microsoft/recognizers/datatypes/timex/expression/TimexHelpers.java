@@ -110,14 +110,18 @@ public class TimexHelpers {
         if (start.getDayOfWeek() != null) {
             TimexProperty end = start.clone();
             if (duration.getDays() != null) {
-                end.setDayOfWeek(end.getDayOfWeek() + (int)Math.round(duration.getDays().doubleValue()));
+                Integer newDayOfWeek = end.getDayOfWeek() + (int)Math.round(duration.getDays().doubleValue());
+                end.setDayOfWeek(newDayOfWeek);
             }
 
             return end;
         }
 
         if (start.getMonth() != null && start.getDayOfMonth() != null) {
-            Double durationDays = duration.getDays().doubleValue();
+            Double durationDays = null;
+            if (duration.getDays() != null) {
+                durationDays = duration.getDays().doubleValue();
+            }
 
             if (durationDays == null && duration.getWeeks() != null) {
                 durationDays = 7 * duration.getWeeks().doubleValue();
@@ -205,7 +209,8 @@ public class TimexHelpers {
 
         if (duration.getMinutes() != null) {
             TimexProperty result = start.clone();
-            result.setMinute(result.getMinute() + (int)Math.round(duration.getMinutes().doubleValue()));
+            Integer newMinute = result.getMinute() + (int)Math.round(duration.getMinutes().doubleValue());
+            result.setMinute(newMinute);
 
             if (result.getMinute() > 59) {
                 result.setHour(result.getHour() + 1);
@@ -219,7 +224,7 @@ public class TimexHelpers {
     }
 
     public static TimexProperty timexDateTimeAdd(TimexProperty start, TimexProperty duration) {
-        return TimexHelpers.timexDateAdd(TimexHelpers.timexDateAdd(start, duration), duration);
+        return TimexHelpers.timexTimeAdd(TimexHelpers.timexDateAdd(start, duration), duration);
     }
 
     public static LocalDateTime dateFromTimex(TimexProperty timex) {
