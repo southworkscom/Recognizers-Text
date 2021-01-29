@@ -7,7 +7,6 @@ import com.microsoft.recognizers.datatypes.timex.expression.TimexCreator;
 import com.microsoft.recognizers.datatypes.timex.expression.TimexProperty;
 import com.microsoft.recognizers.datatypes.timex.expression.TimexRangeResolver;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.math.BigDecimal;

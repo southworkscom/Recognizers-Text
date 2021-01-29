@@ -230,7 +230,7 @@ public class TimexProperty {
 
     public Integer getMinute() {
         if (this.time != null) {
-          return this.time.getMinute();
+            return this.time.getMinute();
         }
 
         return null;

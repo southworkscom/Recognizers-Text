@@ -3,7 +3,6 @@
 
 package com.microsoft.recognizers.datatypes.timex.expression;
 
-
 import java.time.LocalDateTime;
 
 public class DateRange {

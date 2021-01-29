@@ -47,7 +47,7 @@ public class TimexCreator {
 
     public static String weekBackFromToday(LocalDateTime date) {
         LocalDateTime d = (date == null) ? LocalDateTime.now() : date;
-        d= d.plusDays(-7);
+        d = d.plusDays(-7);
         TimexProperty t = TimexProperty.fromDate(d);
         t.setDays(new BigDecimal(7));
         return t.getTimexValue();
@@ -55,7 +55,7 @@ public class TimexCreator {
 
     public static String thisWeek(LocalDateTime date) {
         LocalDateTime d = (date == null) ? LocalDateTime.now() : date;
-        d= d.plusDays(-7);
+        d = d.plusDays(-7);
         LocalDateTime start = TimexDateHelpers.dateOfNextDay(DayOfWeek.MONDAY, d);
         TimexProperty t = TimexProperty.fromDate(start);
         t.setDays(new BigDecimal(7));
