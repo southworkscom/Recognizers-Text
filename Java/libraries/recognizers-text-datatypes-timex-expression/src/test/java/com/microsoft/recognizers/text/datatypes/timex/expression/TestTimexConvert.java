@@ -133,7 +133,7 @@ public class TestTimexConvert {
     }
 
     @Test
-    public void dataTypesConvertPathOfTheDay() {
+    public void dataTypesConvertPartOfTheDay() {
         Assert.assertEquals("daytime", TimexConvert.convertTimexToString(new TimexProperty("TDT")));
         Assert.assertEquals("night", TimexConvert.convertTimexToString(new TimexProperty("TNI")));
         Assert.assertEquals("morning", TimexConvert.convertTimexToString(new TimexProperty("TMO")));

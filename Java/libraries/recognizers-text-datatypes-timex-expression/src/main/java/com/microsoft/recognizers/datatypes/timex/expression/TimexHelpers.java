@@ -130,7 +130,7 @@ public class TimexHelpers {
             if (durationDays != null) {
                 if (start.getYear() != null) {
                     LocalDateTime d = LocalDateTime.of(start.getYear(), start.getMonth(), start.getDayOfMonth(), 0, 0, 0);
-                    LocalDateTime d2 = d.plusDays(Math.round(durationDays));
+                    LocalDateTime d2 = d.plusDays(durationDays.longValue());
                     return new TimexProperty() {
                         {
                             setYear(d2.getYear());
@@ -140,7 +140,7 @@ public class TimexHelpers {
                     };
                 } else {
                     LocalDateTime d = LocalDateTime.of(2001, start.getMonth(), start.getDayOfMonth(), 0, 0, 0);
-                    LocalDateTime d2 = d.plusDays(Math.round(durationDays));
+                    LocalDateTime d2 = d.plusDays(durationDays.longValue());
                     return new TimexProperty() {
                         {
                             setMonth(d2.getMonthValue());
@@ -189,7 +189,7 @@ public class TimexHelpers {
 
                 if (result.getYear() != null && result.getMonth() != null && result.getDayOfMonth() != null) {
                     LocalDateTime d = LocalDateTime.of(result.getYear(), result.getMonth(), result.getDayOfMonth(), 0, 0, 0);
-                    d = d.plusDays(Math.round(days));
+                    d = d.plusDays(days.longValue());
 
                     result.setYear(d.getYear());
                     result.setMonth(d.getMonthValue());
