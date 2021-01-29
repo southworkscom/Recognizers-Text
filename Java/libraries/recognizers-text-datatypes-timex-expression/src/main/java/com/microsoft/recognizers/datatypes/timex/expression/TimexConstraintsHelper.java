@@ -36,8 +36,8 @@ public class TimexConstraintsHelper {
     }
 
     private static Boolean isOverlapping(DateRange r1, DateRange r2) {
-        return (r1.getEnd().compareTo(r2.getStart()) > 0 && r1.getStart().compareTo(r2.getStart()) <= 0) ||
-            (r1.getStart().compareTo(r2.getEnd()) < 0 && r1.getStart().compareTo(r2.getStart()) >= 0);
+        return (r1.getEnd().isAfter(r2.getStart()) && (r1.getStart().isBefore(r2.getStart()) || r1.getStart().isEqual(r2.getStart()))) ||
+            (r1.getStart().isBefore(r2.getEnd()) && (r1.getStart().isAfter(r2.getStart()) || r1.getStart().isEqual(r2.getStart())));
     }
 
     private static TimeRange collapseOverlapping(TimeRange r1, TimeRange r2) {
@@ -90,7 +90,7 @@ public class TimexConstraintsHelper {
                 DateRange r2 = ranges.get(j);
                 if (TimexConstraintsHelper.isOverlapping(r1, r2)) {
                     ranges.subList(i, 1).clear();
-                    ranges.subList(j - 1, i).clear();
+                    ranges.subList(j - 1, 1).clear();
                     ranges.add(TimexConstraintsHelper.collapseOverlapping(r1, r2));
                     return true;
                 }

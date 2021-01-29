@@ -190,11 +190,11 @@ public class TimexRangeResolver {
     private static List<String> resolveDateAgainstConstraint(TimexProperty timex, DateRange constraint) {
         if (timex.getMonth() != null && timex.getDayOfMonth() != null) {
             List<String> result = new ArrayList<String>();
-            for (int year = constraint.getStart().getYear(); year < constraint.getEnd()
+            for (int year = constraint.getStart().getYear(); year <= constraint.getEnd()
                     .getYear(); year++) {
                 TimexProperty t = timex.clone();
                 t.setYear(year);
-                result.addAll(TimexRangeResolver.resolveDefiniteAgainstConstraint(timex, constraint));
+                result.addAll(TimexRangeResolver.resolveDefiniteAgainstConstraint(t, constraint));
             }
 
             return result;

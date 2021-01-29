@@ -3,7 +3,9 @@
 
 package com.microsoft.recognizers.datatypes.timex.expression;
 
+import java.text.NumberFormat;
 import java.util.HashSet;
+import java.util.Locale;
 
 public class TimexFormat {
     public static String format(TimexProperty timex) {
@@ -52,32 +54,40 @@ public class TimexFormat {
     }
 
     private static String formatDuration(TimexProperty timex) {
+        NumberFormat nf = NumberFormat.getInstance(Locale.getDefault());
         if (timex.getYears() != null) {
-            return String.format("P%sY", timex.getYears());
+            nf.setMaximumFractionDigits(timex.getYears().scale());
+            return String.format("P%sY", nf.format(timex.getYears()));
         }
 
         if (timex.getMonths() != null) {
-            return String.format("P%sM", timex.getMonths());
+            nf.setMaximumFractionDigits(timex.getMonths().scale());
+            return String.format("P%sM", nf.format(timex.getMonths()));
         }
 
         if (timex.getWeeks() != null) {
-            return String.format("P%sW", timex.getWeeks());
+            nf.setMaximumFractionDigits(timex.getWeeks().scale());
+            return String.format("P%sW", nf.format(timex.getWeeks()));
         }
 
         if (timex.getDays() != null) {
-            return String.format("P%sD", timex.getDays());
+            nf.setMaximumFractionDigits(timex.getDays().scale());
+            return String.format("P%sD", nf.format(timex.getDays()));
         }
 
         if (timex.getHours() != null) {
-            return String.format("PT%sH", timex.getHours());
+            nf.setMaximumFractionDigits(timex.getHours().scale());
+            return String.format("PT%sH", nf.format(timex.getHours()));
         }
 
         if (timex.getMinutes() != null) {
-            return String.format("PT%sM", timex.getMinutes());
+            nf.setMaximumFractionDigits(timex.getMinutes().scale());
+            return String.format("PT%sM", nf.format(timex.getMinutes()));
         }
 
         if (timex.getSeconds() != null) {
-            return String.format("PT%sS", timex.getSeconds());
+            nf.setMaximumFractionDigits(timex.getSeconds().scale());
+            return String.format("PT%sS", nf.format(timex.getSeconds()));
         }
 
         return new String();
@@ -152,8 +162,8 @@ public class TimexFormat {
         }
 
         if (timex.getMonth() != null && timex.getWeekOfMonth() != null) {
-            return String.format("XXXX-%1$s-W%2$s", TimexDateHelpers.fixedFormatNumber(timex.getMonth(), 2),
-                    timex.getWeekOfMonth().toString());
+            return String.format("XXXX-%s-W%02d", TimexDateHelpers.fixedFormatNumber(timex.getMonth(), 2),
+                    timex.getWeekOfMonth());
         }
 
         if (timex.getMonth() != null) {

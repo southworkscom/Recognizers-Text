@@ -8,10 +8,10 @@ import com.microsoft.recognizers.datatypes.timex.expression.TimexResolver;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.TimeZone;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class TestTimexResolver {
 
@@ -138,8 +138,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDuration2years()
     {
-        LocalDateTime today = LocalDateTime.now();
-        Resolution resolution = TimexResolver.resolve(new String[] { "P2Y" }, today);
+        Resolution resolution = TimexResolver.resolve(new String[] { "P2Y" }, null);
         Assert.assertEquals(1, resolution.getValues().size());
 
         Assert.assertEquals("P2Y", resolution.getValues().get(0).getTimex());
@@ -317,6 +316,34 @@ public class TestTimexResolver {
         Assert.assertEquals("daterange", resolution.getValues().get(0).getType());
         Assert.assertEquals("2019-04-10", resolution.getValues().get(0).getStart());
         Assert.assertEquals("2019-05-01", resolution.getValues().get(0).getEnd());
+    }
+
+    @Test
+    public void dataTypesResolverDateRangeDemaicalPeriodPT()
+    {
+        Locale.setDefault(new Locale("pt", "PT"));
+        LocalDateTime today = LocalDateTime.of(2019, 4, 30, 0, 0);
+        Resolution resolution = TimexResolver.resolve(new String[] { "(2019-04-05,XXXX-04-11,P5.54701493625231D)" }, today);
+        Assert.assertEquals(1, resolution.getValues().size());
+        Assert.assertEquals("(2019-04-05,2019-04-10,P5,54701493625231D)", resolution.getValues().get(0).getTimex());
+        Assert.assertEquals("daterange", resolution.getValues().get(0).getType());
+        Assert.assertEquals("2019-04-05", resolution.getValues().get(0).getStart());
+        Assert.assertEquals("2019-04-10", resolution.getValues().get(0).getEnd());
+        Locale.setDefault(Locale.ROOT);
+    }
+
+    @Test
+    public void dataTypesResolverDateRangeDemaicalPeriodEN()
+    {
+        Locale.setDefault(new Locale("en", "US"));
+        LocalDateTime today = LocalDateTime.of(2019, 4, 30, 0, 0);
+        Resolution resolution = TimexResolver.resolve(new String[] { "(2019-04-05,XXXX-04-11,P5.54701493625231D)" }, today);
+        Assert.assertEquals(1, resolution.getValues().size());
+        Assert.assertEquals("(2019-04-05,2019-04-10,P5.54701493625231D)", resolution.getValues().get(0).getTimex());
+        Assert.assertEquals("daterange", resolution.getValues().get(0).getType());
+        Assert.assertEquals("2019-04-05", resolution.getValues().get(0).getStart());
+        Assert.assertEquals("2019-04-10", resolution.getValues().get(0).getEnd());
+        Locale.setDefault(Locale.ROOT);
     }
 
     @Test
@@ -532,8 +559,8 @@ public class TestTimexResolver {
         Assert.assertEquals("XXXX-WXX-2T12", resolution.getValues().get(0).getTimex());
         Assert.assertEquals("datetime", resolution.getValues().get(0).getType());
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Assert.assertEquals(formatter.format(previousWeekUtc), resolution.getValues().get(0).getValue());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        Assert.assertEquals(previousWeekUtc.format(formatter), resolution.getValues().get(0).getValue());
 
         Assert.assertNull(resolution.getValues().get(0).getStart());
         Assert.assertNull(resolution.getValues().get(0).getEnd());
@@ -544,7 +571,7 @@ public class TestTimexResolver {
         Assert.assertEquals("XXXX-WXX-2T12", resolution.getValues().get(1).getTimex());
         Assert.assertEquals("datetime", resolution.getValues().get(1).getType());
 
-        Assert.assertEquals(formatter.format(nextWeekUtc), resolution.getValues().get(1).getValue());
+        Assert.assertEquals(nextWeekUtc.format(formatter), resolution.getValues().get(1).getValue());
 
         Assert.assertNull(resolution.getValues().get(1).getStart());
         Assert.assertNull(resolution.getValues().get(1).getEnd());
