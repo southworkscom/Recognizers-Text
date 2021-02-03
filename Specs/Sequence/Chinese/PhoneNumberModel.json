@@ -3213,7 +3213,7 @@
   },
   {
     "Input": "我的电话号是+421 123 456 789.",
-    "NotSupported": "dotnet,javascript,python",
+    "NotSupported": "dotnet,javascript,python,java",
     "Results": [
       {
         "Text": "+421 123 456 789",
