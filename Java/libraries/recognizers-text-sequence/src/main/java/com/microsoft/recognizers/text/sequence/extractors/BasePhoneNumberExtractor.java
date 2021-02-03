@@ -76,6 +76,7 @@ public class BasePhoneNumberExtractor extends BaseSequenceExtractor {
 
     @Override
     public List<ExtractResult> extract(String text) {
+
         if (!Pattern.matches(PRE_CHECK_PHONE_NUMBER_REGEX.toString(), text)) {
             return new ArrayList<ExtractResult>();
         }

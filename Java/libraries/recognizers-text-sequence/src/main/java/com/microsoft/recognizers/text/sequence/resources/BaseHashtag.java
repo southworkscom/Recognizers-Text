@@ -11,7 +11,7 @@
 
 package com.microsoft.recognizers.text.sequence.resources;
 
-public class Base-Hashtag {
+public class BaseHashtag {
 
     public static final String HashtagRegex = "((?<=\\s|^)#([a-zA-Z0-9_]+))";
 }
