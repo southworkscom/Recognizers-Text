@@ -54,7 +54,8 @@ public class BaseEmailExtractor extends BaseSequenceExtractor {
         this.config = config;
         Map<Pattern, String> regexes = new HashMap<Pattern, String>();
         regexes.put(Pattern.compile(BaseEmail.EmailRegex), Constants.EMAIL_REGEX);
-        regexes.put(Pattern.compile(BaseEmail.EmailRegex2), Constants.EMAIL_REGEX);
+        // EmailRegex2 will break the code as it's not supported in Java, comment out for now
+        // regexes.put(Pattern.compile(BaseEmail.EmailRegex2), Constants.EMAIL_REGEX);
 
         this.regexes = regexes;
     }
