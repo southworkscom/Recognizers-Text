@@ -17,7 +17,7 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 public abstract class AbstractSequenceModel implements IModel {
-    private String modelTypeName;
+    protected String modelTypeName;
     protected IExtractor extractor;
     protected IParser parser;
 

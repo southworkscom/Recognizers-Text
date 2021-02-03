@@ -18,10 +18,9 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 public class PhoneNumberModel extends AbstractSequenceModel {
-    private String modelTypeName = Constants.MODEL_PHONE_NUMBER;
-
     public PhoneNumberModel(IParser parser, IExtractor extractor) {
         super(parser, extractor);
+        this.modelTypeName = Constants.MODEL_PHONE_NUMBER;
     }
 
     @Override
@@ -51,13 +50,5 @@ public class PhoneNumberModel extends AbstractSequenceModel {
                         }
                     });
         }).collect(Collectors.toList());
-    }
-
-    public String getModelTypeName() {
-        return modelTypeName;
-    }
-
-    public void setModelTypeName(String withModelTypeName) {
-        this.modelTypeName = withModelTypeName;
     }
 }

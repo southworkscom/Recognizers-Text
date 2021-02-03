@@ -20,7 +20,6 @@ public class BaseEmailExtractor extends BaseSequenceExtractor {
     private static final Pattern RFC_5322_VALIDATION_REGEX = Pattern.compile(BaseEmail.RFC5322Regex);
     private final BaseSequenceConfiguration config;
 
-    protected Map<Pattern, String> regexes;
     protected final String extractType = Constants.SYS_EMAIL;
 
     protected Map<Pattern, String> getRegexes() {

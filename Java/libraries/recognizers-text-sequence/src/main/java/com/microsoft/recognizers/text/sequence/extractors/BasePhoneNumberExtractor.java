@@ -29,8 +29,6 @@ public class BasePhoneNumberExtractor extends BaseSequenceExtractor {
 
     private PhoneNumberConfiguration config;
 
-    protected Map<Pattern, String> regexes;
-
     protected String extractType = Constants.SYS_PHONE_NUMBER;
 
     protected String getExtractType() {
@@ -71,7 +69,7 @@ public class BasePhoneNumberExtractor extends BaseSequenceExtractor {
             }
         };
 
-        super.regexes = regexes;
+        this.regexes = regexes;
     }
 
     @Override
@@ -88,13 +86,13 @@ public class BasePhoneNumberExtractor extends BaseSequenceExtractor {
                 Pattern.matches(SSN_FILTER_REGEX.toString(), er.getText())) {
                 ers.remove(er);
                 i--;
-                break;
+                continue;
             }
 
             if ((BasePhoneNumberExtractor.countDigits(er.getText()) == 16 && !er.getText().startsWith("+"))) {
                 ers.remove(er);
                 i--;
-                break;
+                continue;
             }
 
             if (BasePhoneNumberExtractor.countDigits(er.getText()) == 15) {
@@ -111,7 +109,7 @@ public class BasePhoneNumberExtractor extends BaseSequenceExtractor {
                 if (flag == false) {
                     ers.remove(er);
                     i--;
-                    break;
+                    continue;
                 }
             }
 
@@ -120,7 +118,7 @@ public class BasePhoneNumberExtractor extends BaseSequenceExtractor {
                 if (BasePhoneNumbers.ForbiddenSuffixMarkers.contains(ch)) {
                     ers.remove(er);
                     i--;
-                    break;
+                    continue;
                 }
             }
 
@@ -132,7 +130,7 @@ public class BasePhoneNumberExtractor extends BaseSequenceExtractor {
                     Pattern.matches(this.config.getFalsePositivePrefixRegex().toString(), front)) {
                     ers.remove(er);
                     i--;
-                    break;
+                    continue;
                 }
 
                 if (BasePhoneNumbers.BoundaryMarkers.contains(ch)) {
@@ -149,17 +147,17 @@ public class BasePhoneNumberExtractor extends BaseSequenceExtractor {
                                 i--;
                             }
 
-                            break;
+                            continue;
                         }
 
                         // check the international dialing prefix
-                        if (Pattern.matches(INTERNATIONAL_DIALING_PREFIX_REGEX.toString(), front)) {
+                        if (INTERNATIONAL_DIALING_PREFIX_REGEX.matcher(front).find()) {
                             Integer moveOffset = RegExpUtility.getMatches(INTERNATIONAL_DIALING_PREFIX_REGEX,
-                                    front).length;
+                                    front)[0].length + 1;
                             er.setStart(er.getStart() - moveOffset);
                             er.setLength(er.getLength() + moveOffset);
-                            er.setText(text.substring(er.getStart(), er.getLength()));
-                            break;
+                            er.setText(text.substring(er.getStart(), er.getStart() + er.getLength()));
+                            continue;
                         }
                     }
 
@@ -172,8 +170,8 @@ public class BasePhoneNumberExtractor extends BaseSequenceExtractor {
                     {
                         // Handle "tel:123456"
                         if (BasePhoneNumbers.ColonMarkers.contains(ch)) {
-                            if (Pattern.matches(this.config.getColonPrefixCheckRegex().toString(), front)) {
-                                break;
+                            if (this.config.getColonPrefixCheckRegex().matcher(front).find()) {
+                                continue;
                             }
                         }
 
@@ -202,7 +200,7 @@ public class BasePhoneNumberExtractor extends BaseSequenceExtractor {
     }
 
     private static Boolean checkFormattedPhoneNumber(String phoneNumberText) {
-        return Pattern.matches(BasePhoneNumbers.FormatIndicatorRegex, phoneNumberText);
+        return Pattern.compile(BasePhoneNumbers.FormatIndicatorRegex).matcher(phoneNumberText).find();
     }
 
     private static Integer countDigits(String candidateString) {

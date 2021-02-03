@@ -82,7 +82,7 @@ public abstract class BaseSequenceExtractor implements IExtractor {
                         extResult.setStart(start);
                         extResult.setLength(length);
                         extResult.setText(substr);
-                        extResult.setType(this.extractType);
+                        extResult.setType(this.getExtractType());
                         extResult.setData(matchSource.getOrDefault(srcMatch, null));
                         result.add(extResult);
                     }

@@ -22,7 +22,6 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 
 public class BaseIpExtractor extends BaseSequenceExtractor {
-    protected Map<Pattern, String> regexes;
     private IpConfiguration config;
     protected String extractType = Constants.SYS_IP;
 

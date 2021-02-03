@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 public class BaseGUIDExtractor extends BaseSequenceExtractor {
-    protected Map<Pattern, String> regexes;
     protected final String extractType = Constants.SYS_GUID;
 
     protected String getExtractType() {

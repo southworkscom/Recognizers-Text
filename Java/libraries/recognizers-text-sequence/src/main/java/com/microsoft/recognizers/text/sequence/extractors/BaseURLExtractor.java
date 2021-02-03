@@ -22,7 +22,6 @@ public class BaseURLExtractor extends BaseSequenceExtractor {
     private StringMatcher tldMatcher;
     private Pattern ambiguousTimeTerm;
 
-    protected Map<Pattern, String> regexes;
     protected final String extractType = Constants.SYS_URL;
 
     protected Map<Pattern, String> getRegexes() {
@@ -38,8 +37,8 @@ public class BaseURLExtractor extends BaseSequenceExtractor {
         Map<Pattern, String> regexes = new HashMap<Pattern, String>() {
             {
                 put(config.getUrlRegex(), Constants.URL_REGEX);
-                put(config.getUrlRegex(), Constants.URL_REGEX);
-                put(config.getUrlRegex(), Constants.URL_REGEX);
+                put(config.getIpUrlRegex(), Constants.URL_REGEX);
+                put(Pattern.compile(BaseURL.UrlRegex2), Constants.URL_REGEX);
             }
         };
 
