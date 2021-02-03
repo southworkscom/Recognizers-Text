@@ -77,42 +77,49 @@ public class SequenceRecognizer extends Recognizer<SequenceOptions> {
 
     public static List<ModelResult> recognizePhoneNumber(String query, String culture, SequenceOptions options,
             Boolean fallbackToDefaultCulture) {
+        options = options != null ? options : SequenceOptions.None;
         return SequenceRecognizer.recognizeByModel(recognizer -> ((SequenceRecognizer)recognizer).getPhoneNumberModel(culture, fallbackToDefaultCulture),
                 query, options);
     }
 
     public static List<ModelResult> recognizeIpAddress(String query, String culture, SequenceOptions options,
             Boolean fallbackToDefaultCulture) {
+        options = options != null ? options : SequenceOptions.None;
         return SequenceRecognizer.recognizeByModel(recognizer -> ((SequenceRecognizer)recognizer).getIpAddressModel(culture, fallbackToDefaultCulture),
                 query, options);
     }
 
     public static List<ModelResult> recognizeMention(String query, String culture, SequenceOptions options,
             Boolean fallbackToDefaultCulture) {
+        options = options != null ? options : SequenceOptions.None;
         return SequenceRecognizer.recognizeByModel(recognizer -> ((SequenceRecognizer)recognizer).getMentionModel(culture, fallbackToDefaultCulture),
                 query, options);
     }
 
     public static List<ModelResult> recognizeHashtag(String query, String culture, SequenceOptions options,
             Boolean fallbackToDefaultCulture) {
+        options = options != null ? options : SequenceOptions.None;
         return SequenceRecognizer.recognizeByModel(recognizer -> ((SequenceRecognizer)recognizer).getHashtagModel(culture, fallbackToDefaultCulture),
                 query, options);
     }
 
     public static List<ModelResult> recognizeEmail(String query, String culture, SequenceOptions options,
             Boolean fallbackToDefaultCulture) {
+        options = options != null ? options : SequenceOptions.None;
         return SequenceRecognizer.recognizeByModel(recognizer -> ((SequenceRecognizer)recognizer).getEmailModel(culture, fallbackToDefaultCulture), query,
                 options);
     }
 
     public static List<ModelResult> recognizeURL(String query, String culture, SequenceOptions options,
             Boolean fallbackToDefaultCulture) {
+        options = options != null ? options : SequenceOptions.None;
         return SequenceRecognizer.recognizeByModel(recognizer -> ((SequenceRecognizer)recognizer).getURLModel(culture, fallbackToDefaultCulture), query,
                 options);
     }
 
     public static List<ModelResult> recognizeGUID(String query, String culture, SequenceOptions options,
             Boolean fallbackToDefaultCulture) {
+        options = options != null ? options : SequenceOptions.None;
         return SequenceRecognizer.recognizeByModel(recognizer -> ((SequenceRecognizer)recognizer).getGUIDModel(culture, fallbackToDefaultCulture), query,
                 options);
     }
