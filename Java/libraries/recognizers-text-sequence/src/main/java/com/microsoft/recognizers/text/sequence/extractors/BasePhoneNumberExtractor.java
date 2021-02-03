@@ -127,7 +127,7 @@ public class BasePhoneNumberExtractor extends BaseSequenceExtractor {
                 String front = text.substring(0, er.getStart() - 1);
 
                 if (this.config.getFalsePositivePrefixRegex() != null &&
-                    Pattern.matches(this.config.getFalsePositivePrefixRegex().toString(), front)) {
+                    this.config.getFalsePositivePrefixRegex().matcher(front).find()) {
                     ers.remove(er);
                     i--;
                     continue;

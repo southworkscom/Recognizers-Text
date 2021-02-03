@@ -50,8 +50,8 @@ public class PhoneNumberParser extends BaseSequenceParser {
         Double score = BASE_SCORE;
 
         // Country code score or area code score
-        score += COUNTRY_CODE_REGEX.matcher(phoneNumberText).lookingAt() ? COUNTRY_CODE_AWARD
-                : AREA_CODE_REGEX.matcher(phoneNumberText).lookingAt() ? AREA_CODE_AWARD : 0;
+        score += COUNTRY_CODE_REGEX.matcher(phoneNumberText).find() ? COUNTRY_CODE_AWARD
+                : AREA_CODE_REGEX.matcher(phoneNumberText).find() ? AREA_CODE_AWARD : 0;
 
         // Formatted score
         Match[] formatMatches = RegExpUtility.getMatches(FORMAT_INDICATOR_REGEX, phoneNumberText);
@@ -84,7 +84,7 @@ public class PhoneNumberParser extends BaseSequenceParser {
         }
 
         // Special format deduction
-        score -= Arrays.stream(BasePhoneNumbers.TypicalDeductionRegexList.toArray()).anyMatch(o -> Pattern.matches((String)o, phoneNumberText)) ? TYPICAL_FORMAT_DEDUCTION_SCORE : 0;
+        score -= BasePhoneNumbers.TypicalDeductionRegexList.stream().anyMatch(o -> Pattern.compile(o).matcher(phoneNumberText).find()) ? TYPICAL_FORMAT_DEDUCTION_SCORE : 0;
 
         // Continue digit deduction
         Match[] continueDigitMatches = RegExpUtility.getMatches(Pattern.compile(CONTINUE_DIGIT_REGEX), phoneNumberText);
@@ -92,9 +92,7 @@ public class PhoneNumberParser extends BaseSequenceParser {
 
         // Special award for US phonenumber without area code, i.e. 223-4567 or 223 -
         // 4567
-        Match[] noAreaCodeUsPhoneNumberMatches = RegExpUtility.getMatches(NO_AREA_CODE_US_PHONE_NUMBER_REGEX,
-                phoneNumberText);
-        if (noAreaCodeUsPhoneNumberMatches.length > 0) {
+        if (NO_AREA_CODE_US_PHONE_NUMBER_REGEX.matcher(phoneNumberText).find()) {
             score += LENGTH_AWARD * 1.5;
         }
 
