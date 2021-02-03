@@ -40,7 +40,7 @@ public class BaseIpExtractor extends BaseSequenceExtractor {
             }
         };
 
-        this.regexes = regexes;
+        super.regexes = regexes;
     }
 
     @Override

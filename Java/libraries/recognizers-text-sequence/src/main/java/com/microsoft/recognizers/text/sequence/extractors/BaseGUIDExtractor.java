@@ -25,6 +25,6 @@ public class BaseGUIDExtractor extends BaseSequenceExtractor {
             }
         };
 
-        this.regexes = regexes;
+        super.regexes = regexes;
     }
 }

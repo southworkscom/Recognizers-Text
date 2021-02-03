@@ -57,6 +57,6 @@ public class BaseEmailExtractor extends BaseSequenceExtractor {
         // EmailRegex2 will break the code as it's not supported in Java, comment out for now
         // regexes.put(Pattern.compile(BaseEmail.EmailRegex2), Constants.EMAIL_REGEX);
 
-        this.regexes = regexes;
+        super.regexes = regexes;
     }
 }

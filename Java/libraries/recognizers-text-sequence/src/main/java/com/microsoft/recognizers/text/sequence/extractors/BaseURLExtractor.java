@@ -43,7 +43,7 @@ public class BaseURLExtractor extends BaseSequenceExtractor {
             }
         };
 
-        this.regexes = regexes;
+        super.regexes = regexes;
         this.ambiguousTimeTerm = Pattern.compile(BaseURL.AmbiguousTimeTerm);
 
         this.tldMatcher = new StringMatcher();
