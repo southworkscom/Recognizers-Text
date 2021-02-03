@@ -42,9 +42,7 @@ public class PhoneNumberModel extends AbstractSequenceModel {
             // No result.
         }
 
-        return parsedSequences.stream().filter(o -> {
-            return o.getData() != null;
-        }).map(o -> {
+        return parsedSequences.stream().map(o -> {
             return new ModelResult(o.getText(), o.getStart(), o.getStart() + o.getLength() - 1, modelTypeName,
                     new TreeMap<String, Object>() {
                         {

@@ -71,13 +71,12 @@ public class BasePhoneNumberExtractor extends BaseSequenceExtractor {
             }
         };
 
-        this.regexes = regexes;
+        super.regexes = regexes;
     }
 
     @Override
     public List<ExtractResult> extract(String text) {
-
-        if (!Pattern.matches(PRE_CHECK_PHONE_NUMBER_REGEX.toString(), text)) {
+        if (!PRE_CHECK_PHONE_NUMBER_REGEX.matcher(text).find()) {
             return new ArrayList<ExtractResult>();
         }
 
