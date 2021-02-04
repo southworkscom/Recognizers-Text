@@ -44,7 +44,7 @@ public class IpAddressModel extends AbstractSequenceModel {
                     new TreeMap<String, Object>() {
                         {
                             put(ResolutionKey.Value, o.getResolutionStr());
-                            put(ResolutionKey.Score, o.getValue());
+                            put(ResolutionKey.Type, o.getData());
                         }
                     });
         }).collect(Collectors.toList());
