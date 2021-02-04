@@ -51,26 +51,7 @@ public class BaseURLExtractor extends BaseSequenceExtractor {
 
     @Override
     public Boolean isValidMatch(Match match) {
-        Boolean isValidTld = false;
-        Boolean isIPUrl = match.getGroup("IPurl") != null ? true : false;
-
-        if (!isIPUrl) {
-            String tldString = match.getGroup("Tld").value;
-            List<MatchResult<String>> tldMatches = StreamSupport
-                    .stream(this.tldMatcher.find(tldString).spliterator(), false).collect(Collectors.toList());
-
-            if (tldMatches.stream().anyMatch(o -> {
-                return o.getStart() == 0 && o.getEnd() == tldString.length();
-            })) {
-                isValidTld = true;
-            }
-        }
-
         // For cases like "7.am" or "8.pm" which are more likely time terms.
-        if (Pattern.matches(this.ambiguousTimeTerm.toString(), match.value)) {
-            return false;
-        }
-
-        return isValidTld || isIPUrl;
+        return !this.ambiguousTimeTerm.matcher(match.value).find();
     }
 }
