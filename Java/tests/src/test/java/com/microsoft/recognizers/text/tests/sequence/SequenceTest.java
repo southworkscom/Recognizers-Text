@@ -3,11 +3,12 @@
 
 package com.microsoft.recognizers.text.tests.sequence;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 import com.microsoft.recognizers.text.ModelResult;
-import com.microsoft.recognizers.text.sequence.SequenceOptions;
+import com.microsoft.recognizers.text.ResolutionKey;
 import com.microsoft.recognizers.text.sequence.SequenceRecognizer;
 import com.microsoft.recognizers.text.tests.AbstractTest;
 import com.microsoft.recognizers.text.tests.TestCase;
@@ -25,6 +26,16 @@ public class SequenceTest extends AbstractTest {
 
     public SequenceTest(TestCase currentCase) {
         super(currentCase);
+    }
+
+    @Override
+    protected void recognizeAndAssert(TestCase currentCase) {
+
+        // parse
+        List<ModelResult> results = recognize(currentCase);
+
+        // assert
+        assertResultsWithKeys(currentCase, results, Arrays.asList(ResolutionKey.Value));
     }
 
     @Override
