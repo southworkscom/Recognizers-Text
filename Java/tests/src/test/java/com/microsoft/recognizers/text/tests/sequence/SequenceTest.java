@@ -15,7 +15,7 @@ import com.microsoft.recognizers.text.tests.TestCase;
 import org.junit.AssumptionViolatedException;
 import org.junit.runners.Parameterized;
 
-public class TestSequence_English extends AbstractTest {
+public class SequenceTest extends AbstractTest {
     private static final String recognizerType = "Sequence";
 
     @Parameterized.Parameters(name = "{0}")
@@ -23,7 +23,7 @@ public class TestSequence_English extends AbstractTest {
         return AbstractTest.enumerateTestCases(recognizerType, "Model");
     }
 
-    public TestSequence_English(TestCase currentCase) {
+    public SequenceTest(TestCase currentCase) {
         super(currentCase);
     }
 

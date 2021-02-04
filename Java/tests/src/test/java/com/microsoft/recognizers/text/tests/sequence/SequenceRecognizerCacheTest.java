@@ -19,7 +19,7 @@ import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.Map;
 
-public class TestSequenceRecognizerCache {
+public class SequenceRecognizerCacheTest {
 
     @Before
     public void initialization() {
