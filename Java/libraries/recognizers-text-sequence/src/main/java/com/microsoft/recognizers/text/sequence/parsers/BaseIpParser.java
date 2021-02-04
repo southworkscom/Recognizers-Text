@@ -5,6 +5,7 @@ package com.microsoft.recognizers.text.sequence.parsers;
 
 import com.microsoft.recognizers.text.ExtractResult;
 import com.microsoft.recognizers.text.ParseResult;
+import com.microsoft.recognizers.text.utilities.StringUtility;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -22,9 +23,9 @@ public class BaseIpParser extends BaseSequenceParser {
         String number = new String();
         for (int i = 0; i < text.length(); i++) {
             Character c = text.charAt(i);
-            if (c.equals(".") || c.equals(":")) {
+            if (c == '.' || c == ':') {
                 if (!StringUtils.isBlank(number)) {
-                    number = number == "0" ? number : number.replaceFirst("0", "");
+                    number = number == "0" ? number : StringUtility.trimStart(number, "^[0]+","");
                     number = StringUtils.isBlank(number) ? "0" : number;
                     result += number;
                 }
@@ -34,7 +35,7 @@ public class BaseIpParser extends BaseSequenceParser {
             } else {
                 number += c.toString();
                 if (i == text.length() - 1) {
-                    number = number == "0" ? number : number.replaceFirst("0", "");
+                    number = number == "0" ? number : StringUtility.trimStart(number, "^[0]+","");
                     number = StringUtils.isBlank(number) ? "0" : number;
                     result += number;
                 }
