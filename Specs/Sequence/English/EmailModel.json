@@ -113,7 +113,7 @@
   },
   {
     "Input": "j_9@[129.126.118.1] is a valid email address",
-    "NotSupportedByDesign": "javascript, python",
+    "NotSupportedByDesign": "javascript, python, java",
     "Results": [
       {
         "Text": "j_9@[129.126.118.1]",
