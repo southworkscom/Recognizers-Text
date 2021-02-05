@@ -22,7 +22,6 @@ public class BaseURLExtractor extends BaseSequenceExtractor {
     private StringMatcher tldMatcher;
     private Pattern ambiguousTimeTerm;
 
-    protected Map<Pattern, String> regexes;
     protected final String extractType = Constants.SYS_URL;
 
     protected Map<Pattern, String> getRegexes() {
@@ -38,12 +37,12 @@ public class BaseURLExtractor extends BaseSequenceExtractor {
         Map<Pattern, String> regexes = new HashMap<Pattern, String>() {
             {
                 put(config.getUrlRegex(), Constants.URL_REGEX);
-                put(config.getUrlRegex(), Constants.URL_REGEX);
-                put(config.getUrlRegex(), Constants.URL_REGEX);
+                put(config.getIpUrlRegex(), Constants.URL_REGEX);
+                put(Pattern.compile(BaseURL.UrlRegex2), Constants.URL_REGEX);
             }
         };
 
-        this.regexes = regexes;
+        super.regexes = regexes;
         this.ambiguousTimeTerm = Pattern.compile(BaseURL.AmbiguousTimeTerm);
 
         this.tldMatcher = new StringMatcher();
@@ -52,26 +51,7 @@ public class BaseURLExtractor extends BaseSequenceExtractor {
 
     @Override
     public Boolean isValidMatch(Match match) {
-        Boolean isValidTld = false;
-        Boolean isIPUrl = match.getGroup("IPurl") != null ? true : false;
-
-        if (!isIPUrl) {
-            String tldString = match.getGroup("Tld").value;
-            List<MatchResult<String>> tldMatches = StreamSupport
-                    .stream(this.tldMatcher.find(tldString).spliterator(), false).collect(Collectors.toList());
-
-            if (tldMatches.stream().anyMatch(o -> {
-                return o.getStart() == 0 && o.getEnd() == tldString.length();
-            })) {
-                isValidTld = true;
-            }
-        }
-
         // For cases like "7.am" or "8.pm" which are more likely time terms.
-        if (Pattern.matches(this.ambiguousTimeTerm.toString(), match.value)) {
-            return false;
-        }
-
-        return isValidTld || isIPUrl;
+        return !this.ambiguousTimeTerm.matcher(match.value).find();
     }
 }

@@ -25,7 +25,7 @@ import org.javatuples.Pair;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TestSequenceRecognizerInitialization {
+public class SequenceRecognizerInitializationTest {
     private final String testInput = "1 (877) 609-2233";
 
     private final String englishCulture = Culture.English;
@@ -34,7 +34,7 @@ public class TestSequenceRecognizerInitialization {
 
     private final IModel controlModel;
 
-    public TestSequenceRecognizerInitialization() {
+    public SequenceRecognizerInitializationTest() {
         SequenceOptions config = SequenceOptions.None;
 
         controlModel = new PhoneNumberModel(new PhoneNumberParser(),

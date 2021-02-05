@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 public class BaseHashTagExtractor extends BaseSequenceExtractor {
-    protected Map<Pattern, String> regexes;
     protected final String extractType = Constants.SYS_HASHTAG;
 
     protected String getExtractType() {
@@ -25,6 +24,6 @@ public class BaseHashTagExtractor extends BaseSequenceExtractor {
             }
         };
 
-        this.regexes = regexes;
+        super.regexes = regexes;
     }
 }

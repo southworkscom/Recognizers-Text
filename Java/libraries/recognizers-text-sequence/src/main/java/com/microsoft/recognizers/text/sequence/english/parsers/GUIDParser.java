@@ -29,11 +29,11 @@ public class GUIDParser extends BaseSequenceParser {
 
         Match[] elementMatch = RegExpUtility.getMatches(GUID_ELEMENT_REGEX, textGUID);
         if (elementMatch.length > 0) {
-            Integer startIndex = elementMatch[1].index;
-            String guidElement = elementMatch[1].value;
+            Integer startIndex = elementMatch[0].index;
+            String guidElement = elementMatch[0].value;
             score -= startIndex == 0 ? NO_BOUNDARY_PENALTY : 0;
-            score -= Pattern.matches(FORMAT_REGEX, guidElement) ? 0 : NO_BOUNDARY_PENALTY;
-            score -= Pattern.matches(PURE_DIGIT_REGEX, textGUID) ? PURE_DIGIT_PENALTY : 0;
+            score -= Pattern.compile(FORMAT_REGEX).matcher(guidElement).find() ? 0 : NO_FORMAT_PENALTY;
+            score -= Pattern.compile(PURE_DIGIT_REGEX).matcher(textGUID).find() ? PURE_DIGIT_PENALTY : 0;
         }
 
         return Math.max(Math.min(score, SCORE_UPPER_LIMIT), SCORE_LOWER_LIMIT)

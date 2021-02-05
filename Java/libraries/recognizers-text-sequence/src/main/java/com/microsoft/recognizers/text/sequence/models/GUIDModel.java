@@ -18,10 +18,9 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 public class GUIDModel extends AbstractSequenceModel {
-    private String modelTypeName = Constants.MODEL_GUID;
-
     public GUIDModel(IParser parser, IExtractor extractor) {
         super(parser, extractor);
+        this.modelTypeName = Constants.MODEL_GUID;
     }
 
     @Override
@@ -51,13 +50,5 @@ public class GUIDModel extends AbstractSequenceModel {
                         }
                     });
         }).collect(Collectors.toList());
-    }
-
-    public String getModelTypeName() {
-        return modelTypeName;
-    }
-
-    public void setModelTypeName(String withModelTypeName) {
-        this.modelTypeName = withModelTypeName;
     }
 }

@@ -11,6 +11,9 @@
 
 package com.microsoft.recognizers.text.sequence.resources;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class ChinesePhoneNumbers {
 
     public static final String NumberReplaceToken = "@builtin.phonenumber";

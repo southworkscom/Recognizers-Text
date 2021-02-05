@@ -3,11 +3,12 @@
 
 package com.microsoft.recognizers.text.tests.sequence;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 import com.microsoft.recognizers.text.ModelResult;
-import com.microsoft.recognizers.text.sequence.SequenceOptions;
+import com.microsoft.recognizers.text.ResolutionKey;
 import com.microsoft.recognizers.text.sequence.SequenceRecognizer;
 import com.microsoft.recognizers.text.tests.AbstractTest;
 import com.microsoft.recognizers.text.tests.TestCase;
@@ -15,7 +16,7 @@ import com.microsoft.recognizers.text.tests.TestCase;
 import org.junit.AssumptionViolatedException;
 import org.junit.runners.Parameterized;
 
-public class TestSequence_English extends AbstractTest {
+public class SequenceTest extends AbstractTest {
     private static final String recognizerType = "Sequence";
 
     @Parameterized.Parameters(name = "{0}")
@@ -23,8 +24,18 @@ public class TestSequence_English extends AbstractTest {
         return AbstractTest.enumerateTestCases(recognizerType, "Model");
     }
 
-    public TestSequence_English(TestCase currentCase) {
+    public SequenceTest(TestCase currentCase) {
         super(currentCase);
+    }
+
+    @Override
+    protected void recognizeAndAssert(TestCase currentCase) {
+
+        // parse
+        List<ModelResult> results = recognize(currentCase);
+
+        // assert
+        assertResultsWithKeys(currentCase, results, Arrays.asList(ResolutionKey.Value));
     }
 
     @Override

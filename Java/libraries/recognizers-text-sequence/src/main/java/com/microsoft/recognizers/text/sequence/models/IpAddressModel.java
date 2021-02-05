@@ -17,10 +17,9 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 public class IpAddressModel extends AbstractSequenceModel {
-    private String modelTypeName = Constants.MODEL_IP;
-
     public IpAddressModel(IParser parser, IExtractor extractor) {
         super(parser, extractor);
+        this.modelTypeName = Constants.MODEL_IP;
     }
 
     @Override
@@ -45,17 +44,9 @@ public class IpAddressModel extends AbstractSequenceModel {
                     new TreeMap<String, Object>() {
                         {
                             put(ResolutionKey.Value, o.getResolutionStr());
-                            put(ResolutionKey.Score, o.getValue());
+                            put(ResolutionKey.Type, o.getData());
                         }
                     });
         }).collect(Collectors.toList());
-    }
-
-    public String getModelTypeName() {
-        return modelTypeName;
-    }
-
-    public void setModelTypeName(String withModelTypeName) {
-        this.modelTypeName = withModelTypeName;
     }
 }

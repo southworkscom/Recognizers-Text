@@ -22,7 +22,6 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 
 public class BaseIpExtractor extends BaseSequenceExtractor {
-    protected Map<Pattern, String> regexes;
     private IpConfiguration config;
     protected String extractType = Constants.SYS_IP;
 
@@ -40,7 +39,7 @@ public class BaseIpExtractor extends BaseSequenceExtractor {
             }
         };
 
-        this.regexes = regexes;
+        super.regexes = regexes;
     }
 
     @Override
@@ -90,8 +89,7 @@ public class BaseIpExtractor extends BaseSequenceExtractor {
 
                     Function<Match, Boolean> matchFunc = match -> match.index == start && match.length == length;
 
-                    Stream<Object> matchStream = Arrays.stream(matchSource.entrySet().toArray());
-                    if (matchStream.anyMatch(o -> matchFunc.apply((Match)o))) {
+                    if (matchSource.keySet().stream().anyMatch(o -> matchFunc.apply(o))) {
                         Match srcMatch = (Match)matchSource.keySet().toArray()[0];
                         ExtractResult extResult = new ExtractResult();
 

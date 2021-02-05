@@ -11,6 +11,9 @@
 
 package com.microsoft.recognizers.text.sequence.resources;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class BaseURL {
 
     public static final String ProtocolRegex = "((https?|ftp):\\/\\/)";
