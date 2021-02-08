@@ -7,6 +7,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TimexConstantsEnglish {
+    public static final String Every = "every";
+    public static final String Now = "now";
+    public static final String Midnight = "midnight";
+    public static final String Midday = "midday";
+	
     public static final String[] DAYS = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
         "Sunday" };
 
