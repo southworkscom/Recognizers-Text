@@ -52,13 +52,13 @@ public enum TimexUnit {
 public class TimexHelpers {
 	public static final HashMap<TimexUnit, String> TimexUnitToStringMap = new HashMap<TimexUnit, String>() {
 		{
-			put(TimexUnit.Year, Constants.TimexYear);
-			put(TimexUnit.Month, Constants.TimexMonth);
-			put(TimexUnit.Week, Constants.TimexWeek);
-			put(TimexUnit.Day, Constants.TimexDay);
-			put(TimexUnit.Hour, Constants.TimexHour);
-			put(TimexUnit.Minute, Constants.TimexMinute);
-			put(TimexUnit.Second, Constants.TimexSecond);
+			put(TimexUnit.Year, Constants.TIMEX_YEAR);
+			put(TimexUnit.Month, Constants.TIMEX_MONTH);
+			put(TimexUnit.Week, Constants.TIMEX_WEEK);
+			put(TimexUnit.Day, Constants.TIMEX_DAY);
+			put(TimexUnit.Hour, Constants.TIMEX_HOUR);
+			put(TimexUnit.Minute, Constants.TIMEX_MINUTE);
+			put(TimexUnit.Second, Constants.TIMEX_SECOND);
 		}
 	};
 
@@ -239,12 +239,12 @@ public class TimexHelpers {
 
 	public static String generateCompoundDurationTimex(List<String> timexList) {
     	Boolean isTimeDurationAlreadyExist = false;
-    	StringBuilder timexBuilder = new StringBuilder(Constants.GeneralPeriodPrefix);
+    	StringBuilder timexBuilder = new StringBuilder(Constants.GENERAL_PERIOD_PREFIX);
     	
     	for (String timexComponent: timexList) {
     		// The Time Duration component occurs first time
     		if (!isTimeDurationAlreadyExist && isTimeDurationTimex(timexComponent)) {
-    			timexBuilder.append(Constants.TimeTimexPrefix.concat(getDurationTimexWithoutPrefix(timexComponent)));
+    			timexBuilder.append(Constants.TIME_TIMEX_PREFIX.concat(getDurationTimexWithoutPrefix(timexComponent)));
     			isTimeDurationAlreadyExist = true;
     		}
     		else { 
@@ -256,30 +256,30 @@ public class TimexHelpers {
     }
 
 	public static String generateDateTimex(int year, int month, int day, Boolean byWeek) {
-		String yearString = year == Constants.InvalidValue ? Constants.TimexFuzzyYear
+		String yearString = year == Constants.INVALID_VALUE ? Constants.TIMEX_FUZZY_YEAR
 				: TimexDateHelpers.fixedFormatNumber(year, 4);
-		String monthString = month == Constants.InvalidValue ? Constants.TimexFuzzyMonth
+		String monthString = month == Constants.INVALID_VALUE ? Constants.TIMEX_FUZZY_MONTH
 				: TimexDateHelpers.fixedFormatNumber(month, 2);
 		String dayString;
 
 		if (byWeek) {
 			dayString = String.valueOf(day);
-			monthString = Constants.TimexWeek + monthString;
+			monthString = Constants.TIMEX_WEEK + monthString;
 		} else {
-			dayString = day == Constants.InvalidValue ? Constants.TimexDay : TimexDateHelpers.fixedFormatNumber(day, 2);
+			dayString = day == Constants.INVALID_VALUE ? Constants.TIMEX_DAY : TimexDateHelpers.fixedFormatNumber(day, 2);
 		}
 
 		return String.join("-", yearString, monthString, dayString);
 	}
 
 	public static String generateDurationTimex(TimexUnit unit, BigDecimal value) {
-		if (value.intValue() == Constants.InvalidValue) {
+		if (value.intValue() == Constants.INVALID_VALUE) {
 			return "";
 		}
 
-		StringBuilder timexBuilder = new StringBuilder(Constants.GeneralPeriodPrefix);
+		StringBuilder timexBuilder = new StringBuilder(Constants.GENERAL_PERIOD_PREFIX);
 		if (TimeTimexUnitList.contains(unit)) {
-			timexBuilder.append(Constants.TimeTimexPrefix);
+			timexBuilder.append(Constants.TIME_TIMEX_PREFIX);
 		}
 		
 		timexBuilder.append(value.toString());
@@ -419,7 +419,7 @@ public class TimexHelpers {
 
 	private static Boolean isTimeDurationTimex(String timex)
     {
-        return timex.startsWith(Constants.GeneralPeriodPrefix.concat(Constants.TimeTimexPrefix));
+        return timex.startsWith(Constants.GENERAL_PERIOD_PREFIX.concat(Constants.TIME_TIMEX_PREFIX));
     }
 
 	private static String getDurationTimexWithoutPrefix(String timex) {

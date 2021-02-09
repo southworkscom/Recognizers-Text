@@ -6,39 +6,39 @@ package com.microsoft.recognizers.datatypes.timex.expression;
 public class Constants {
 
     // Timex
-    public static final String TimexYear = "Y";
-    public static final String TimexMonth = "M";
-    public static final String TimexMonthFull = "MON";
-    public static final String TimexWeek = "W";
-    public static final String TimexDay = "D";
-    public static final String TimexBusinessDay = "BD";
-    public static final String TimexWeekend = "WE";
-    public static final String TimexHour = "H";
-    public static final String TimexMinute = "M";
-    public static final String TimexSecond = "S";
-    public static final char TimexFuzzy = 'X';
-    public static final String TimexFuzzyYear = "XXXX";
-    public static final String TimexFuzzyMonth = "XX";
-    public static final String TimexFuzzyWeek = "WXX";
-    public static final String TimexFuzzyDay = "XX";
-    public static final String DateTimexConnector = "-";
-    public static final String TimeTimexConnector = ":";
-    public static final String GeneralPeriodPrefix = "P";
-    public static final String TimeTimexPrefix = "T";
+    public static final String TIMEX_YEAR = "Y";
+    public static final String TIMEX_MONTH = "M";
+    public static final String TIMEX_MONTH_FULL = "MON";
+    public static final String TIMEX_WEEK = "W";
+    public static final String TIMEX_DAY = "D";
+    public static final String TIMEX_BUSINESS_DAY = "BD";
+    public static final String TIMEX_WEEKEND = "WE";
+    public static final String TIMEX_HOUR = "H";
+    public static final String TIMEX_MINUTE = "M";
+    public static final String TIMEX_SECOND = "S";
+    public static final char TIMEX_FUZZY = 'X';
+    public static final String TIMEX_FUZZY_YEAR = "XXXX";
+    public static final String TIMEX_FUZZY_MONTH = "XX";
+    public static final String TIMEX_FUZZY_WEEK = "WXX";
+    public static final String TIMEX_FUZZY_DAY = "XX";
+    public static final String DATE_TIMEX_CONNECTOR = "-";
+    public static final String TIME_TIMEX_CONNECTOR = ":";
+    public static final String GENERAL_PERIOD_PREFIX = "P";
+    public static final String TIME_TIMEX_PREFIX = "T";
 
-    public static final String YearUnit = "year";
-    public static final String MonthUnit = "month";
-    public static final String WeekUnit = "week";
-    public static final String DayUnit = "day";
-    public static final String HourUnit = "hour";
-    public static final String MinuteUnit = "minute";
-    public static final String SecondUnit = "second";
-    public static final String TimeDurationUnit = "s";
+    public static final String YEAR_UNIT = "year";
+    public static final String MONTH_UNIT = "month";
+    public static final String WEEK_UNIT = "week";
+    public static final String DAY_UNIT = "day";
+    public static final String HOUR_UNIT = "hour";
+    public static final String MINUTE_UNIT = "minute";
+    public static final String SECOND_UNIT = "second";
+    public static final String TIME_DURATION_UNIT = "s";
 
     public static final String AM = "AM";
     public static final String PM = "PM";
 
-    public static final int InvalidValue = -1;
+    public static final int INVALID_VALUE = -1;
 
     public static class TimexTypes {
         public static final String PRESENT = "present";
