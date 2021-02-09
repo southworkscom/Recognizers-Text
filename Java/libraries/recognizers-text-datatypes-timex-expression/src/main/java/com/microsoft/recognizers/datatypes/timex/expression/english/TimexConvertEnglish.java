@@ -16,7 +16,7 @@ public class TimexConvertEnglish {
         HashSet<String> types = timex.getTypes().size() != 0 ? timex.getTypes() : TimexInference.infer(timex);
 
         if (types.contains(Constants.TimexTypes.PRESENT)) {
-            return TimexConstantsEnglish.Now;
+            return TimexConstantsEnglish.NOW;
         }
 
         if (types.contains(Constants.TimexTypes.DATE_TIME_RANGE)) {
@@ -55,19 +55,19 @@ public class TimexConvertEnglish {
     public static String convertTimexSetToString(TimexSet timexSet) {
         TimexProperty timex = timexSet.getTimex();
         if (timex.getTypes().contains(Constants.TimexTypes.DURATION)) {
-            return TimexConstantsEnglish.Every.concat(TimexConvertEnglish.convertTimexDurationToString(timex, false));
+            return TimexConstantsEnglish.EVERY.concat(TimexConvertEnglish.convertTimexDurationToString(timex, false));
         } else {
-            return TimexConstantsEnglish.Every.concat(TimexConvertEnglish.convertTimexToString(timex));
+            return TimexConstantsEnglish.EVERY.concat(TimexConvertEnglish.convertTimexToString(timex));
         }
     }
 
     public static String convertTime(TimexProperty timex) {
         if (timex.getHour() == 0 && timex.getMinute() == 0 && timex.getSecond() == 0) {
-            return TimexConstantsEnglish.Midnight;
+            return TimexConstantsEnglish.MIDNIGHT;
         }
 
         if (timex.getHour() == 12 && timex.getMinute() == 0 && timex.getSecond() == 0) {
-            return TimexConstantsEnglish.Midday;
+            return TimexConstantsEnglish.MIDDAY;
         }
 
         String hour = (timex.getHour() == 0) ? "12"
