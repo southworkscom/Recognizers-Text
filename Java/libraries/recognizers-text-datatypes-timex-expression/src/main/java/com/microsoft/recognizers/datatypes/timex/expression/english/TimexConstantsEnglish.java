@@ -11,7 +11,7 @@ public class TimexConstantsEnglish {
     public static final String NOW = "now";
     public static final String MIDNIGHT = "midnight";
     public static final String MIDDAY = "midday";
-	
+
     public static final String[] DAYS = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
         "Sunday" };
 

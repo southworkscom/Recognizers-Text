@@ -33,39 +33,41 @@ public class TimexValue {
     }
 
     public static String durationValue(TimexProperty timexProperty) {
-    	BigDecimal duration = new BigDecimal(0);
+        BigDecimal duration = new BigDecimal(0);
         if (timexProperty.getYears() != null) {
-        	double value = 31536000 * ((timexProperty.getYears() != null)? timexProperty.getYears().doubleValue() : 0);
+            double value = 31536000 * ((timexProperty.getYears() != null) ? timexProperty.getYears().doubleValue() : 0);
             duration.add(BigDecimal.valueOf(value));
         }
 
         if (timexProperty.getMonths() != null) {
-        	double value = 2592000 * ((timexProperty.getMonths() != null)? timexProperty.getMonths().doubleValue() : 0);
-        	duration.add(BigDecimal.valueOf(value));
+            double value = 2592000
+                    * ((timexProperty.getMonths() != null) ? timexProperty.getMonths().doubleValue() : 0);
+            duration.add(BigDecimal.valueOf(value));
         }
 
         if (timexProperty.getWeeks() != null) {
-        	double value = 604800 * ((timexProperty.getWeeks() != null)? timexProperty.getWeeks().doubleValue() : 0);
-        	duration.add(BigDecimal.valueOf(value));
+            double value = 604800 * ((timexProperty.getWeeks() != null) ? timexProperty.getWeeks().doubleValue() : 0);
+            duration.add(BigDecimal.valueOf(value));
         }
 
         if (timexProperty.getDays() != null) {
-        	double value = 86400 * ((timexProperty.getDays() != null)? timexProperty.getDays().doubleValue() : 0);
-        	duration.add(BigDecimal.valueOf(value));
+            double value = 86400 * ((timexProperty.getDays() != null) ? timexProperty.getDays().doubleValue() : 0);
+            duration.add(BigDecimal.valueOf(value));
         }
 
         if (timexProperty.getHours() != null) {
-        	double value = 3600 * ((timexProperty.getHours() != null)? timexProperty.getHours().doubleValue() : 0);
-        	duration.add(BigDecimal.valueOf(value));
+            double value = 3600 * ((timexProperty.getHours() != null) ? timexProperty.getHours().doubleValue() : 0);
+            duration.add(BigDecimal.valueOf(value));
         }
 
         if (timexProperty.getMinutes() != null) {
-        	double value = 60 * ((timexProperty.getMinutes() != null)? timexProperty.getMinutes().doubleValue() : 0);
-        	duration.add(BigDecimal.valueOf(value));
+            double value = 60 * ((timexProperty.getMinutes() != null) ? timexProperty.getMinutes().doubleValue() : 0);
+            duration.add(BigDecimal.valueOf(value));
         }
 
         if (timexProperty.getSeconds() != null) {
-        	duration.add(BigDecimal.valueOf((timexProperty.getSeconds() != null)? timexProperty.getSeconds().doubleValue() : 0));
+            duration.add(BigDecimal
+                    .valueOf((timexProperty.getSeconds() != null) ? timexProperty.getSeconds().doubleValue() : 0));
         }
 
         return duration.toPlainString();
