@@ -490,7 +490,7 @@ public class TestTimexResolver {
     }
 
     @Test
-    public void dataTypesResolverDateRangeDemaicalPeriodPT()
+    public void dataTypesResolverDateRangeDecimalPeriodPT()
     {
         Locale.setDefault(new Locale("pt", "PT"));
         LocalDateTime today = LocalDateTime.of(2019, 4, 30, 0, 0);
