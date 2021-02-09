@@ -290,12 +290,10 @@ public class TimexHelpers {
 
 		TimexProperty result = start.clone();
 		if (duration.getMinutes() != null) {
-			Integer newMinute = result.getMinute() + (int) Math.round(duration.getMinutes().doubleValue());
-			result.setMinute(newMinute);
+			result.setMinute(result.getMinute() + (int) Math.round(duration.getMinutes().doubleValue()));
 
 			if (result.getMinute() > 59) {
-				int hour = (result.getHour() != null) ? result.getHour() : 0;
-				result.setHour(hour + 1);
+				result.setHour(((result.getHour() != null) ? result.getHour() : 0) + 1);
 				result.setMinute(result.getMinute() % 60);
 			}
 		}
