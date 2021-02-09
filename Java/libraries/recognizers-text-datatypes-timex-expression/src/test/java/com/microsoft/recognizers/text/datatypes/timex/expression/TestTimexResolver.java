@@ -70,6 +70,177 @@ public class TestTimexResolver {
     }
 
     @Test
+    public void DataTypes_Resolver_Date_6th()
+    {
+        LocalDateTime today = LocalDateTime.of(2019, 4, 23, 15, 30, 0);
+        Resolution resolution = TimexResolver.resolve(new String[] { "XXXX-XX-06" }, today);
+        Assert.assertEquals(2, resolution.getValues().size());
+
+        Assert.assertEquals("XXXX-XX-06", resolution.getValues().get(0).getTimex());
+        Assert.assertEquals("date", resolution.getValues().get(0).getType());
+        Assert.assertEquals("2019-04-06", resolution.getValues().get(0).getValue());
+        Assert.assertNull(resolution.getValues().get(0).getStart());
+        Assert.assertNull(resolution.getValues().get(0).getEnd());
+
+        Assert.assertEquals("XXXX-XX-06", resolution.getValues().get(1).getTimex());
+        Assert.assertEquals("date", resolution.getValues().get(1).getType());
+        Assert.assertEquals("2019-05-06", resolution.getValues().get(1).getValue());
+        Assert.assertNull(resolution.getValues().get(1).getStart());
+        Assert.assertNull(resolution.getValues().get(1).getEnd());
+    }
+
+    @Test
+    public void DataTypes_Resolver_Date_Feb_2nd()
+    {
+        LocalDateTime today = LocalDateTime.of(2020, 10, 20, 0, 0);
+        Resolution resolution = TimexResolver.resolve(new String[] { "XXXX-02-02 " }, today);
+        Assert.assertEquals(2, resolution.getValues().size());
+
+        Assert.assertEquals("XXXX-02-02", resolution.getValues().get(0).getTimex());
+        Assert.assertEquals("date", resolution.getValues().get(0).getType());
+        Assert.assertEquals("2020-02-02", resolution.getValues().get(0).getValue());
+        Assert.assertNull(resolution.getValues().get(0).getStart());
+        Assert.assertNull(resolution.getValues().get(0).getEnd());
+
+        Assert.assertEquals("XXXX-02-02", resolution.getValues().get(1).getTimex());
+        Assert.assertEquals("date", resolution.getValues().get(1).getType());
+        Assert.assertEquals("2021-02-02", resolution.getValues().get(1).getValue());
+        Assert.assertNull(resolution.getValues().get(1).getStart());
+        Assert.assertNull(resolution.getValues().get(1).getEnd());
+    }
+
+    @Test
+    public void DataTypes_Resolver_DateTimeRange_Oct_25th_Afternoon()
+    {
+        LocalDateTime today = LocalDateTime.of(2020, 10, 20,0,0);
+        Resolution resolution = TimexResolver.resolve(new String[] { "XXXX-10-25TAF" }, today);
+        Assert.assertEquals(2, resolution.getValues().size());
+
+        Assert.assertEquals("XXXX-10-25TAF", resolution.getValues().get(0).getTimex());
+        Assert.assertEquals("datetimerange", resolution.getValues().get(0).getType());
+        Assert.assertEquals("2019-10-25 12:00:00", resolution.getValues().get(0).getStart());
+        Assert.assertEquals("2019-10-25 16:00:00", resolution.getValues().get(0).getEnd());
+        Assert.assertNull(resolution.getValues().get(0).getValue());
+
+        Assert.assertEquals("XXXX-10-25TAF", resolution.getValues().get(1).getTimex());
+        Assert.assertEquals("datetimerange", resolution.getValues().get(1).getType());
+        Assert.assertEquals("2020-10-25 12:00:00", resolution.getValues().get(1).getStart());
+        Assert.assertEquals("2020-10-25 16:00:00", resolution.getValues().get(1).getEnd());
+        Assert.assertNull(resolution.getValues().get(1).getValue());
+    }
+
+    @Test
+    public void DataTypes_Resolver_DateTimeRange_Week11_Monday()
+    {
+        LocalDateTime today = LocalDateTime.of(2020, 10, 20,0,0);
+        Resolution resolution = TimexResolver.resolve(new String[] { "XXXX-W11-1" }, today);
+        Assert.assertEquals(2, resolution.getValues().size());
+
+        Assert.assertEquals("XXXX-W11-1", resolution.getValues().get(0).getTimex());
+        Assert.assertEquals("date", resolution.getValues().get(0).getType());
+        Assert.assertNull(resolution.getValues().get(0).getStart());
+        Assert.assertNull(resolution.getValues().get(0).getEnd());
+        Assert.assertEquals("2020-03-09", resolution.getValues().get(0).getEnd());
+
+        Assert.assertEquals("XXXX-W11-1", resolution.getValues().get(1).getTimex());
+        Assert.assertEquals("date", resolution.getValues().get(1).getType());
+        Assert.assertNull(resolution.getValues().get(1).getStart());
+        Assert.assertNull(resolution.getValues().get(1).getEnd());
+        Assert.assertEquals("2021-03-15", resolution.getValues().get(1).getValue());
+    }
+
+    @Test
+    public void DataTypes_Resolver_DateTimeRange_Thanksgiving()
+    {
+        // XXXX-11-WXX-4-4 -> 4th Thursday (4th ISO weekday) in unspecified week in November in unspecified year
+        LocalDateTime today = LocalDateTime.of(2020, 10, 20, 0, 0);
+        Resolution resolution = TimexResolver.resolve(new String[] { "XXXX-11-WXX-4-4" }, today);
+        Assert.assertEquals(2, resolution.getValues().size());
+
+        Assert.assertEquals("XXXX-11-WXX-4-4", resolution.getValues().get(0).getTimex());
+        Assert.assertEquals("date", resolution.getValues().get(0).getType());
+        Assert.assertNull(resolution.getValues().get(0).getStart());
+        Assert.assertNull(resolution.getValues().get(0).getEnd());
+        Assert.assertEquals("2019-11-28", resolution.getValues().get(0).getValue());
+
+        Assert.assertEquals("XXXX-11-WXX-4-4", resolution.getValues().get(1).getTimex());
+        Assert.assertEquals("date", resolution.getValues().get(1).getType());
+        Assert.assertNull(resolution.getValues().get(1).getStart());
+        Assert.assertNull(resolution.getValues().get(1).getEnd());
+        Assert.assertEquals("2020-11-26", resolution.getValues().get(1).getValue());
+    }
+
+    @Test
+    public void DataTypes_Resolver_DateTimeRange_Monday_Morning()
+    {
+        LocalDateTime today = LocalDateTime.of(2021, 1, 22, 15, 30, 0);
+        Resolution resolution = TimexResolver.resolve(new String[] { "XXXX-WXX-1TMO" }, today);
+        Assert.assertEquals(2, resolution.getValues().size());
+
+        Assert.assertEquals("XXXX-WXX-1TMO", resolution.getValues().get(0).getTimex());
+        Assert.assertEquals("datetimerange", resolution.getValues().get(0).getType());
+        Assert.assertEquals("2021-01-18 08:00:00", resolution.getValues().get(0).getStart());
+        Assert.assertEquals("2021-01-18 12:00:00", resolution.getValues().get(0).getEnd());
+        Assert.assertNull(resolution.getValues().get(0).getValue());
+
+        Assert.assertEquals("XXXX-WXX-1TMO", resolution.getValues().get(1).getTimex());
+        Assert.assertEquals("datetimerange", resolution.getValues().get(1).getType());
+        Assert.assertEquals("2021-01-25 08:00:00", resolution.getValues().get(1).getStart());
+        Assert.assertEquals("2021-01-25 12:00:00", resolution.getValues().get(1).getEnd());
+        Assert.assertNull(resolution.getValues().get(1).getValue());
+    }
+
+    @Test
+    public void DataTypes_Resolver_DateTimeRange_April_5th_from_10am_to_11am()
+    {
+        LocalDateTime today = LocalDateTime.of(2021, 1, 22, 15, 30, 0);
+        Resolution resolution = TimexResolver.resolve(new String[] { "(XXXX-04-05T10,XXXX-04-05T11,PT1H)" }, today);
+        Assert.assertEquals(2, resolution.getValues().size());
+
+        Assert.assertEquals("(XXXX-04-05T10,XXXX-04-05T11,PT1H)", resolution.getValues().get(0).getTimex());
+        Assert.assertEquals("datetimerange", resolution.getValues().get(0).getType());
+        Assert.assertEquals("2020-04-05 10:00:00", resolution.getValues().get(0).getStart());
+        Assert.assertEquals("2020-04-05 11:00:00", resolution.getValues().get(0).getEnd());
+        Assert.assertNull(resolution.getValues().get(0).getValue());
+
+        Assert.assertEquals("(XXXX-04-05T10,XXXX-04-05T11,PT1H)", resolution.getValues().get(1).getTimex());
+        Assert.assertEquals("datetimerange", resolution.getValues().get(1).getType());
+        Assert.assertEquals("2021-04-05 10:00:00", resolution.getValues().get(1).getStart());
+        Assert.assertEquals("2021-04-05 11:00:00", resolution.getValues().get(1).getEnd());
+        Assert.assertNull(resolution.getValues().get(1).getValue());
+    }
+
+    @Test
+    public void DataTypes_Resolver_DateRange_first_week_of_April_2019()
+    {
+        LocalDateTime today = LocalDateTime.of(2021, 1, 22, 15, 30, 0);
+        Resolution resolution = TimexResolver.resolve(new String[] { "2019-04-W01" }, today);
+        Assert.assertEquals(1, resolution.getValues().size());
+
+        Assert.assertEquals("2019-04-W01", resolution.getValues().get(0).getTimex());
+        Assert.assertEquals("daterange", resolution.getValues().get(0).getType());
+        Assert.assertEquals("2019-04-01", resolution.getValues().get(0).getStart());
+        Assert.assertEquals("2019-04-08", resolution.getValues().get(0).getEnd());
+    }
+
+    @Test
+    public void DataTypes_Resolver_DateRange_first_week_of_April()
+    {
+        LocalDateTime today = LocalDateTime.of(2021, 1, 22, 0, 0);
+        Resolution resolution = TimexResolver.resolve(new String[] { "XXXX-04-W01" }, today);
+        Assert.assertEquals(2, resolution.getValues().size());
+
+        Assert.assertEquals("XXXX-04-W01", resolution.getValues().get(0).getTimex());
+        Assert.assertEquals("daterange", resolution.getValues().get(0).getType());
+        Assert.assertEquals("2020-03-30", resolution.getValues().get(0).getStart());
+        Assert.assertEquals("2020-04-06", resolution.getValues().get(0).getEnd());
+
+        Assert.assertEquals("XXXX-04-W01", resolution.getValues().get(1).getTimex());
+        Assert.assertEquals("daterange", resolution.getValues().get(1).getType());
+        Assert.assertEquals("2021-03-29", resolution.getValues().get(1).getStart());
+        Assert.assertEquals("2021-04-05", resolution.getValues().get(1).getEnd());
+    }
+    @Test
     public void dataTypesResolverDateTimeWednesday4()
     {
         LocalDateTime today = LocalDateTime.of(2017, 9, 28, 15, 30, 0);
