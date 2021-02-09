@@ -231,6 +231,20 @@ public class TestTimexResolver {
         Assert.assertNull(resolution.getValues().get(0).getStart());
         Assert.assertNull(resolution.getValues().get(0).getEnd());
     }
+    
+    @Test
+    public void dataTypesResolverDuration1hour30minutes()
+    {
+    	LocalDateTime defaultDateTime = LocalDateTime.of(1, 1, 1, 0, 0);
+        Resolution resolution = TimexResolver.resolve(new String[] { "PT1H30M" }, defaultDateTime);
+        Assert.assertEquals(1, resolution.getValues().size());
+        
+        Assert.assertEquals("PT1H30M", resolution.getValues().get(0).getTimex());
+        Assert.assertEquals("duration", resolution.getValues().get(0).getType());
+        Assert.assertEquals("5400", resolution.getValues().get(0).getValue());
+        Assert.assertNull(resolution.getValues().get(0).getStart());
+        Assert.assertNull(resolution.getValues().get(0).getEnd());
+    }
 
     @Test
     public void dataTypesResolverDateRangeSeptember()
@@ -325,7 +339,7 @@ public class TestTimexResolver {
         LocalDateTime today = LocalDateTime.of(2019, 4, 30, 0, 0);
         Resolution resolution = TimexResolver.resolve(new String[] { "(2019-04-05,XXXX-04-11,P5.54701493625231D)" }, today);
         Assert.assertEquals(1, resolution.getValues().size());
-        Assert.assertEquals("(2019-04-05,2019-04-10,P5,54701493625231D)", resolution.getValues().get(0).getTimex());
+        Assert.assertEquals("(2019-04-05,2019-04-10,P5.54701493625231D)", resolution.getValues().get(0).getTimex());
         Assert.assertEquals("daterange", resolution.getValues().get(0).getType());
         Assert.assertEquals("2019-04-05", resolution.getValues().get(0).getStart());
         Assert.assertEquals("2019-04-10", resolution.getValues().get(0).getEnd());
@@ -345,7 +359,78 @@ public class TestTimexResolver {
         Assert.assertEquals("2019-04-10", resolution.getValues().get(0).getEnd());
         Locale.setDefault(Locale.ROOT);
     }
+     
+    @Test
+    public void dataTypesResolverTimeRange_11_30_to_12_00()
+    {
+    	LocalDateTime today = LocalDateTime.now();
+        Resolution resolution = TimexResolver.resolve(new String[] { "(T11:30,T12:00,PT30M)" }, today);
+        Assert.assertEquals(1, resolution.getValues().size());
 
+        Assert.assertEquals("(T11:30,T12,PT30M)", resolution.getValues().get(0).getTimex());
+        Assert.assertEquals("timerange", resolution.getValues().get(0).getType());
+        Assert.assertEquals("11:30:00", resolution.getValues().get(0).getStart());
+        Assert.assertEquals("12:00:00", resolution.getValues().get(0).getEnd());
+        Assert.assertNull(resolution.getValues().get(0).getValue());
+    }
+    
+
+    @Test
+    public void dataTypesResolverTimeRange_11_30_to_12()
+    {
+    	LocalDateTime today = LocalDateTime.now();
+        Resolution resolution = TimexResolver.resolve(new String[] { "(T11:30,T12,PT30M)" }, today);
+        Assert.assertEquals(1, resolution.getValues().size());
+
+        Assert.assertEquals("(T11:30,T12,PT30M)", resolution.getValues().get(0).getTimex());
+        Assert.assertEquals("timerange", resolution.getValues().get(0).getType());
+        Assert.assertEquals("11:30:00", resolution.getValues().get(0).getStart());
+        Assert.assertEquals("12:00:00", resolution.getValues().get(0).getEnd());
+        Assert.assertNull(resolution.getValues().get(0).getValue());
+    }
+    
+    @Test
+    public void dataTypesResolverTimeRange_11_to_11_30()
+    {
+    	LocalDateTime today = LocalDateTime.now();
+        Resolution resolution = TimexResolver.resolve(new String[] { "(T11:00,T11:30,PT30M)" }, today);
+        Assert.assertEquals(1, resolution.getValues().size());
+
+        Assert.assertEquals("(T11,T11:30,PT30M)", resolution.getValues().get(0).getTimex());
+        Assert.assertEquals("timerange", resolution.getValues().get(0).getType());
+        Assert.assertEquals("11:00:00", resolution.getValues().get(0).getStart());
+        Assert.assertEquals("11:30:00", resolution.getValues().get(0).getEnd());
+        Assert.assertNull(resolution.getValues().get(0).getValue());
+    }
+    
+    @Test
+    public void dataTypesResolverTimeRange_23_45_to_00_30()
+    {
+    	LocalDateTime today = LocalDateTime.now();
+        Resolution resolution = TimexResolver.resolve(new String[] { "(T23:45,T00:30,PT45M)" }, today);
+        Assert.assertEquals(1, resolution.getValues().size());
+
+        Assert.assertEquals("(T23:45,T00:30,PT45M)", resolution.getValues().get(0).getTimex());
+        Assert.assertEquals("timerange", resolution.getValues().get(0).getType());
+        Assert.assertEquals("23:45:00", resolution.getValues().get(0).getStart());
+        Assert.assertEquals("00:30:00", resolution.getValues().get(0).getEnd());
+        Assert.assertNull(resolution.getValues().get(0).getValue());
+    }
+    
+    @Test
+    public void dataTypesResolverDateTimeRange_20190401_09_30_to_20190401_11()
+    {
+    	LocalDateTime today = LocalDateTime.now();
+        Resolution resolution = TimexResolver.resolve(new String[] { "(2019-04-01T09:30,2019-04-01T11,PT1H30M)" }, today);
+        Assert.assertEquals(1, resolution.getValues().size());
+
+        Assert.assertEquals("(2019-04-01T09:30,2019-04-01T11,PT1H30M)", resolution.getValues().get(0).getTimex());
+        Assert.assertEquals("datetimerange", resolution.getValues().get(0).getType());
+        Assert.assertEquals("2019-04-01 09:30:00", resolution.getValues().get(0).getStart());
+        Assert.assertEquals("2019-04-01 11:00:00", resolution.getValues().get(0).getEnd());
+        Assert.assertNull(resolution.getValues().get(0).getValue());
+    }
+  
     @Test
     public void dataTypesResolverTimeRange4amto8pm()
     {
@@ -357,6 +442,34 @@ public class TestTimexResolver {
         Assert.assertEquals("timerange", resolution.getValues().get(0).getType());
         Assert.assertEquals("04:00:00", resolution.getValues().get(0).getStart());
         Assert.assertEquals("20:00:00", resolution.getValues().get(0).getEnd());
+        Assert.assertNull(resolution.getValues().get(0).getValue());
+    }
+    
+    @Test
+    public void dataTypesResolverTimeRange_23_45_to_01_20()
+    {
+    	LocalDateTime today = LocalDateTime.now();
+        Resolution resolution = TimexResolver.resolve(new String[] { "(T23:45,T01:20,PT1H35M)" }, today);
+        Assert.assertEquals(1, resolution.getValues().size());
+
+        Assert.assertEquals("(T23:45,T01:20,PT1H35M)", resolution.getValues().get(0).getTimex());
+        Assert.assertEquals("timerange", resolution.getValues().get(0).getType());
+        Assert.assertEquals("23:45:00", resolution.getValues().get(0).getStart());
+        Assert.assertEquals("01:20:00", resolution.getValues().get(0).getEnd());
+        Assert.assertNull(resolution.getValues().get(0).getValue());
+    }
+    
+    @Test
+    public void dataTypesResolverTimeRange_15_15_to_16_20()
+    {
+    	LocalDateTime today = LocalDateTime.now();
+        Resolution resolution = TimexResolver.resolve(new String[] { "(T15:15,T16:20,PT1H5M)" }, today);
+        Assert.assertEquals(1, resolution.getValues().size());
+
+        Assert.assertEquals("(T15:15,T16:20,PT1H5M)", resolution.getValues().get(0).getTimex());
+        Assert.assertEquals("timerange", resolution.getValues().get(0).getType());
+        Assert.assertEquals("15:15:00", resolution.getValues().get(0).getStart());
+        Assert.assertEquals("16:20:00", resolution.getValues().get(0).getEnd());
         Assert.assertNull(resolution.getValues().get(0).getValue());
     }
 
@@ -371,6 +484,48 @@ public class TestTimexResolver {
         Assert.assertEquals("timerange", resolution.getValues().get(0).getType());
         Assert.assertEquals("08:00:00", resolution.getValues().get(0).getStart());
         Assert.assertEquals("12:00:00", resolution.getValues().get(0).getEnd());
+        Assert.assertNull(resolution.getValues().get(0).getValue());
+    }
+    
+    @Test
+    public void dataTypesResolverDateTimeRange_20200604_15_00_to_20200604_17_30()
+    {
+    	LocalDateTime today = LocalDateTime.now();
+        Resolution resolution = TimexResolver.resolve(new String[] { "(2020-06-04T15,2020-06-04T17:30,PT2H30M)" }, today);
+        Assert.assertEquals(1, resolution.getValues().size());
+
+        Assert.assertEquals("(2020-06-04T15,2020-06-04T17:30,PT2H30M)", resolution.getValues().get(0).getTimex());
+        Assert.assertEquals("datetimerange", resolution.getValues().get(0).getType());
+        Assert.assertEquals("2020-06-04 15:00:00", resolution.getValues().get(0).getStart());
+        Assert.assertEquals("2020-06-04 17:30:00", resolution.getValues().get(0).getEnd());
+        Assert.assertNull(resolution.getValues().get(0).getValue());
+    }
+    
+    @Test
+    public void dataTypesResolverDateTimeRange_20190325_10_to_20190325_11()
+    {
+    	LocalDateTime today = LocalDateTime.now();
+        Resolution resolution = TimexResolver.resolve(new String[] { "(2019-03-25T10,2019-03-25T11,PT1H)" }, today);
+        Assert.assertEquals(1, resolution.getValues().size());
+
+        Assert.assertEquals("(2019-03-25T10,2019-03-25T11,PT1H)", resolution.getValues().get(0).getTimex());
+        Assert.assertEquals("datetimerange", resolution.getValues().get(0).getType());
+        Assert.assertEquals("2019-03-25 10:00:00", resolution.getValues().get(0).getStart());
+        Assert.assertEquals("2019-03-25 11:00:00", resolution.getValues().get(0).getEnd());
+        Assert.assertNull(resolution.getValues().get(0).getValue());
+    }
+    
+    @Test
+    public void dataTypesResolverDateRange_20190427_20190511_2weeks()
+    {
+    	LocalDateTime today = LocalDateTime.now();
+        Resolution resolution = TimexResolver.resolve(new String[] { "(2019-04-27,2019-05-11,P2W)" }, today);
+        Assert.assertEquals(1, resolution.getValues().size());
+
+        Assert.assertEquals("(2019-04-27,2019-05-11,P2W)", resolution.getValues().get(0).getTimex());
+        Assert.assertEquals("daterange", resolution.getValues().get(0).getType());
+        Assert.assertEquals("2019-04-27", resolution.getValues().get(0).getStart());
+        Assert.assertEquals("2019-05-11", resolution.getValues().get(0).getEnd());
         Assert.assertNull(resolution.getValues().get(0).getValue());
     }
 
