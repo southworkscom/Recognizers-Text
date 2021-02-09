@@ -20,17 +20,19 @@ public class TimexRegex {
     private static Pattern[] DATE_COLLECTION_NAME_PATTERNS = {
             // date
             Pattern.compile("^(?<year>\\d\\d\\d\\d)-(?<month>\\d\\d)-(?<dayOfMonth>\\d\\d)"),
-            Pattern.compile("^(XXXX|(?<year>\d\d\d\d))-(?<month>\d\d)(-(?<dayOfMonth>\d\d))?"),
             Pattern.compile("^XXXX-WXX-(?<dayOfWeek>\\d)"),
-            Pattern.compile("^XXXX-XX-(?<dayOfMonth>\\d\\d)"),
+            Pattern.compile("^XXXX-(?<month>\\d\\d)-(?<dayOfMonth>\\d\\d)"),
 
             // daterange
-            Pattern.compile("^(?<year>\\d\\d\\d\\d)"), 
-            Pattern.compile("^(XXXX|(?<year>\d\d\d\d))-(?<month>\d\d)-W(?<weekOfMonth>\d\d)"),
-            Pattern.compile("^(XXXX|(?<year>\d\d\d\d))-(?<month>\d\d)-WXX-(?<weekOfMonth>\d{1,2})(-(?<dayOfWeek>\d))?"),
+            Pattern.compile("^(?<year>\\d\\d\\d\\d)"), Pattern.compile("^(?<year>\\d\\d\\d\\d)-(?<month>\\d\\d)"),
             Pattern.compile("^(?<season>SP|SU|FA|WI)"),
-            Pattern.compile("^(XXXX|(?<year>\d\d\d\d))-(?<season>SP|SU|FA|WI)"),
-            Pattern.compile("^(XXXX|(?<year>\d\d\d\d))-W(?<weekOfYear>\d\d)(-(?<dayOfWeek>\d)|-(?<weekend>WE))?"),
+            Pattern.compile("^(?<year>\\d\\d\\d\\d)-(?<season>SP|SU|FA|WI)"),
+            Pattern.compile("^(?<year>\\d\\d\\d\\d)-W(?<weekOfYear>\\d\\d)"),
+            Pattern.compile("^(?<year>\\d\\d\\d\\d)-W(?<weekOfYear>\\d\\d)-(?<weekend>WE)"),
+            Pattern.compile("^XXXX-(?<month>\\d\\d)"),
+            Pattern.compile("^XXXX-(?<month>\\d\\d)-W(?<weekOfMonth>\\d\\d)"),
+            Pattern.compile("^XXXX-(?<month>\\d\\d)-WXX-(?<weekOfMonth>\\d{1,2})"),
+            Pattern.compile("^XXXX-(?<month>\\d\\d)-WXX-(?<weekOfMonth>\\d)-(?<dayOfWeek>\\d)") };
 
     private static Pattern[] TIME_COLLECTION_NAME_PATTERNS = {
             // time
