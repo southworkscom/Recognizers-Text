@@ -408,7 +408,6 @@ public class TimexProperty {
                     this.assignTimeDuration(source);
                     break;
                 default:
-                    continue;
             }
         }
     }

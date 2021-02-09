@@ -119,62 +119,45 @@ public class TimexResolver {
     }
 
     private static List<Resolution.Entry> resolveDate(TimexProperty timex, LocalDateTime date) {
-        var dateValueList = GetDateValues(timex, date);
-        var result = new List<Resolution.Entry> { };
-        for(Entry<String, String> dateValue : dateValueList.entrySet())
+        return new ArrayList<Resolution.Entry>() {
             {
-                result.Add(new Resolution.Entry
-                {
-                    Timex = timex.TimexValue,
-                    Type = "date",                    
-                    Value = dateValue,
+                add(new Resolution.Entry() {
+                    {
+                        setTimex(timex.getTimexValue());
+                        setType("date");
+                        setValue(TimexResolver.lastDateValue(timex, date));
+                    }
+                });
+                add(new Resolution.Entry() {
+                    {
+                        setTimex(timex.getTimexValue());
+                        setType("date");
+                        setValue(TimexResolver.nextDateValue(timex, date));
+                    }
                 });
             }
-
-            return result;
-        }
+        };
+    }
 
     private static String lastDateValue(TimexProperty timex, LocalDateTime date) {
-        if (timex.DayOfMonth != null)
-            {
-                var year = date.Year;
-                var month = date.Month;
-                if (timex.Month != null)
-                {
-                    month = timex.Month.Value;
-                    if (date.Month <= month || (date.Month == month && date.Day <= timex.DayOfMonth))
-                    {
-                        year--;
-                    }
-                }
-                else
-                {
-                    if (date.Day <= timex.DayOfMonth)
-                    {
-                        month--;
-                        if (month < 1)
-                        {
-                            month = (month + 12) % 12;
-                            year--;
-                        }
-                    }
-                }                
+        if (timex.getMonth() != null && timex.getDayOfMonth() != null) {
             return TimexValue.dateValue(new TimexProperty() {
                 {
-                    setYear(year);
-                    setMonth(month);
+                    setYear(date.getYear() - 1);
+                    setMonth(timex.getMonth());
                     setDayOfMonth(timex.getDayOfMonth());
                 }
             });
         }
 
         if (timex.getDayOfWeek() != null) {
-            var start = GenerateWeekDate(timex, date, true);
+            DayOfWeek day = timex.getDayOfWeek() == 7 ? DayOfWeek.SUNDAY : DayOfWeek.of(timex.getDayOfWeek());
+            LocalDateTime result = TimexDateHelpers.dateOfLastDay(day, date);
             return TimexValue.dateValue(new TimexProperty() {
                 {
-                    setYear(start.getYear());
-                    setMonth(start.getMonthValue());
-                    setDayOfMonth(start.getDayOfMonth());
+                    setYear(result.getYear());
+                    setMonth(result.getMonthValue());
+                    setDayOfMonth(result.getDayOfMonth());
                 }
             });
         }
@@ -183,46 +166,24 @@ public class TimexResolver {
     }
 
     private static String nextDateValue(TimexProperty timex, LocalDateTime date) {
-        if (timex.DayOfMonth != null)
-            {
-                var year = date.Year;
-                var month = date.Month;
-                if (timex.Month != null)
-                {
-                    month = timex.Month.Value;
-                    if (date.Month > month || (date.Month == month && date.Day > timex.DayOfMonth))
-                    {
-                        year++;
-                    }
-                }
-                else
-                {
-                    if (date.Day > timex.DayOfMonth)
-                    {
-                        month++;
-                        if (month > 12)
-                        {
-                            month = month % 12;
-                            year--;
-                        }
-                    }
-                }
+        if (timex.getMonth() != null && timex.getDayOfMonth() != null) {
             return TimexValue.dateValue(new TimexProperty() {
                 {
-                    setYear(year);
-                    setMonth(month);
+                    setYear(date.getYear());
+                    setMonth(timex.getMonth());
                     setDayOfMonth(timex.getDayOfMonth());
                 }
             });
         }
 
         if (timex.getDayOfWeek() != null) {
-            var start = GenerateWeekDate(timex, date, false);
+            DayOfWeek day = timex.getDayOfWeek() == 7 ? DayOfWeek.SUNDAY : DayOfWeek.of(timex.getDayOfWeek());
+            LocalDateTime result = TimexDateHelpers.dateOfNextDay(day, date);
             return TimexValue.dateValue(new TimexProperty() {
                 {
-                    setYear(start.getYear());
-                    setMonth(start.getMonthValue());
-                    setDayOfMonth(start.getDayOfMonth());
+                    setYear(result.getYear());
+                    setMonth(result.getMonthValue());
+                    setDayOfMonth(result.getDayOfMonth());
                 }
             });
         }
@@ -336,84 +297,31 @@ public class TimexResolver {
     }
 
     // TODO: research about Pair
-    private static Pair<String, String> monthWeekDateRange(Integer year, Integer month, Integer weekOfMonth) {
-        var start = GenerateMonthWeekDateStart(year, month, weekOfMonth);
-            var end = start.AddDays(7);
-
-            return new Tuple<string, string>(
-                TimexValue.DateValue(new TimexProperty { Year = start.Year, Month = start.Month, DayOfMonth = start.Day }),
-                TimexValue.DateValue(new TimexProperty { Year = end.Year, Month = end.Month, DayOfMonth = end.Day }));
-        }
-
-        private static DateObject GenerateMonthWeekDateStart(int year, int month, int weekOfMonth)
-        {
-            var dateInWeek = new DateObject(year, month, 1 + ((weekOfMonth - 1) * 7));
-
-            // Align the date of the week according to Thursday, base on ISO 8601, https://en.wikipedia.org/wiki/ISO_8601
-            if (dateInWeek.DayOfWeek > DayOfWeek.Thursday) {
-            dateInWeek = dateInWeek.plusDays(7 - (int)dateInWeek.DayOfWeek + 1);
-        } else {
+    private static Pair<String, String> monthWeekDateRange(Integer year, Integer month, Integer weekOfYear) {
+        LocalDateTime dateInWeek = LocalDateTime.of(year, month, 1 + ((weekOfYear - 1) * 7), 0, 0);
+        if (dateInWeek.getDayOfWeek() == DayOfWeek.SUNDAY) {
+            dateInWeek = dateInWeek.plusDays(1);
+        } else if (dateInWeek.getDayOfWeek().getValue() > DayOfWeek.MONDAY.getValue()) {
             dateInWeek = dateInWeek.plusDays(1 - dateInWeek.getDayOfWeek().getValue());
         }
 
-        return dateInWeek;
-        }
-        
-        private static DateObject GenerateWeekDate(TimexProperty timex, DateObject date, bool isBefore)
-        {
-            DateObject start;
-            if (timex.WeekOfMonth == null && timex.WeekOfYear == null)
-            {
-                var day = timex.DayOfWeek == 7 ? DayOfWeek.Sunday : (DayOfWeek)timex.DayOfWeek;
-                if (isBefore)
-                {
-                    start = TimexDateHelpers.DateOfLastDay(day, date);
-                }
-                else
-                {
-                    start = TimexDateHelpers.DateOfNextDay(day, date);
-                }
-            }
-            else
-            {
-                int dayOfWeek = timex.DayOfWeek.Value - 1;
-                int year = timex.Year ?? date.Year;
-                if (timex.WeekOfYear != null)
-                {
-                    int weekOfYear = timex.WeekOfYear.Value;
-                    start = FirstDateOfWeek(year, weekOfYear, CultureInfo.InvariantCulture).AddDays(dayOfWeek);
-                    if (timex.Year == null)
-                    {
-                        if (isBefore && start > date)
-                        {
-                            start = FirstDateOfWeek(year - 1, weekOfYear, CultureInfo.InvariantCulture).AddDays(dayOfWeek);
-                        }
-                        else if (!isBefore && start < date)
-                        {
-                            start = FirstDateOfWeek(year + 1, weekOfYear, CultureInfo.InvariantCulture).AddDays(dayOfWeek);
-                        }
-                    }
-                }
-                else
-                {
-                    int month = timex.Month ?? date.Month;
-                    int weekOfMonth = timex.WeekOfMonth.Value;
-                    start = GenerateMonthWeekDateStart(year, month, weekOfMonth).AddDays(dayOfWeek);
-                    if (timex.Year == null || timex.Month == null)
-                    {
-                        if (isBefore && start > date)
-                        {
-                            start = GenerateMonthWeekDateStart(timex.Month != null ? year - 1 : year, timex.Month == null ? month - 1 : month, weekOfMonth).AddDays(dayOfWeek);
-                        }
-                        else if (!isBefore && start < date)
-                        {
-                            start = GenerateMonthWeekDateStart(timex.Month != null ? year + 1 : year, timex.Month == null ? month + 1 : month, weekOfMonth).AddDays(dayOfWeek);
-                        }
-                    }
-                }
-            }
+        LocalDateTime start = dateInWeek;
+        LocalDateTime end = start;
+        LocalDateTime end2 = end.plusDays(7);
 
-            return start;
+        return Pair.of(TimexValue.dateValue(new TimexProperty() {
+            {
+                setYear(start.getYear());
+                setMonth(start.getMonthValue());
+                setDayOfMonth(start.getDayOfMonth());
+            }
+        }), TimexValue.dateValue(new TimexProperty() {
+            {
+                setYear(end2.getYear());
+                setMonth(end2.getMonthValue());
+                setDayOfMonth(end2.getDayOfMonth());
+            }
+        }));
     }
 
     private static List<Resolution.Entry> resolveDateRange(TimexProperty timex, LocalDateTime date) {
@@ -430,25 +338,8 @@ public class TimexResolver {
                 }
             };
         } else {
-            if (timex.getMonth() != null && timex.getWeekOfMonth() != null) {
-                 var yearDateRangeList = GetMonthWeekDateRange(timex.Year ?? Constants.InvalidValue, timex.Month.Value, timex.WeekOfMonth.Value, date.Year);
-                    var result = new List<Resolution.Entry> { };
-                    for(Tuple<string, string> yearDateRange : yearDateRangeList.entrySet()) {
-                        result.Add(new Resolution.Entry
-                        {
-                            Timex = timex.TimexValue,
-                            Type = "daterange",
-                            Start = yearDateRange.Item1,
-                            End = yearDateRange.Item2,
-                        });
-                    }
-                    return result;
-                }
-            }
-
             if (timex.getYear() != null && timex.getMonth() != null) {
-                Pair<String, String> dateRange = TimexResolver.MonthDateRange(timex.getYear(), timex.getMonth());
-
+                Pair<String, String> dateRange = TimexResolver.monthDateRange(timex.getYear(), timex.getMonth());
                 return new ArrayList<Resolution.Entry>() {
                     {
                         add(new Resolution.Entry() {
@@ -464,8 +355,8 @@ public class TimexResolver {
             }
 
             if (timex.getYear() != null && timex.getWeekOfYear() != null) {
-                Pair<String, String> dateRange = TimexResolver.YearWeekDateRange(date.getYear(),
-                        timex.getWeekOfYear(), timex.getWeekend());
+                Pair<String, String> dateRange = TimexResolver.yearWeekDateRange(timex.getYear(), timex.getWeekOfYear(),
+                        timex.getWeekend());
 
                 return new ArrayList<Resolution.Entry>() {
                     {
@@ -473,8 +364,36 @@ public class TimexResolver {
                             {
                                 setTimex(timex.getTimexValue());
                                 setType("daterange");
-                                setStart(dateRange.Item1),
-                                setEnd(dateRange.Item2),
+                                setStart(dateRange.getLeft());
+                                setEnd(dateRange.getRight());
+                            }
+                        });
+                    }
+                };
+            }
+
+            if (timex.getMonth() != null && timex.getWeekOfMonth() != null) {
+                Pair<String, String> lastYearDateRange = TimexResolver.monthWeekDateRange(date.getYear() - 1,
+                        timex.getMonth(), timex.getWeekOfMonth());
+                Pair<String, String> thisYearDateRange = TimexResolver.monthWeekDateRange(date.getYear(),
+                        timex.getMonth(), timex.getWeekOfMonth());
+
+                return new ArrayList<Resolution.Entry>() {
+                    {
+                        add(new Resolution.Entry() {
+                            {
+                                setTimex(timex.getTimexValue());
+                                setType("daterange");
+                                setStart(lastYearDateRange.getLeft());
+                                setEnd(lastYearDateRange.getRight());
+                            }
+                        });
+                        add(new Resolution.Entry() {
+                            {
+                                setTimex(timex.getTimexValue());
+                                setType("daterange");
+                                setStart(thisYearDateRange.getLeft());
+                                setEnd(thisYearDateRange.getRight());
                             }
                         });
                     }
@@ -588,79 +507,37 @@ public class TimexResolver {
         return resolvedDates;
     }
 
-    private static List<String> GetDateValues(TimexProperty timex, DateObject date)
-        {
-            List<String> result = new List<String> { };
-            if (timex.Year != null && timex.Month != null && timex.DayOfMonth != null)
-            {
-                result.Add(TimexValue.DateValue(timex));
-            }
-            else
-            {
-                result.Add(LastDateValue(timex, date));
-                if (timex.Year == null)
-                {
-                    result.Add(NextDateValue(timex, date));
-                }
-            }
-
-            return result;
-        }
-
-        private static List<Tuple<string, string>> GetMonthWeekDateRange(int year, int month, int weekOfMonth, int referYear)
-        {
-            var result = new List<Tuple<string, string>> { };
-            if (year == Constants.InvalidValue)
-            {
-                result.Add(MonthWeekDateRange(referYear - 1, month, weekOfMonth));
-                result.Add(MonthWeekDateRange(referYear, month, weekOfMonth));
-            }
-            else
-            {
-                result.Add(MonthWeekDateRange(year, month, weekOfMonth));
-            }
-
-            return result;
-        }
-
     private static List<Resolution.Entry> resolveDateTimeRange(TimexProperty timex, LocalDateTime date) {
         if (timex.getPartOfDay() != null) {
-            String dateValues = GetDateValues(timex, date);
+            String dateValue = TimexValue.dateValue(timex);
             Pair<String, String> timeRange = TimexResolver.partOfDayTimeRange(timex);
-            var result = new List<Resolution.Entry> { };
-                for(Entry<String, String> dateValue : dateValues.entrySet()){
+            return new ArrayList<Resolution.Entry>() {
                 {
-                    result.Add(
-                        new Resolution.Entry
+                    add(new Resolution.Entry() {
                         {
-                            setTimex(timex.TimexValue),
-                            setType("datetimerange"),
-                            setStart(TimexHelpers.FormatResolvedDateValue(dateValue, timeRange.Item1)),
-                            setEnd(TimexHelpers.FormatResolvedDateValue(dateValue, timeRange.Item2)),
-                        });
-                }
-
-                return result;
+                            setTimex(timex.getTimexValue());
+                            setType("datetimerange");
+                            setStart(String.format("%1$s %2$s", dateValue, timeRange.getLeft()));
+                            setEnd(String.format("%1$s %2$s", dateValue, timeRange.getRight()));
+                        }
+                    });
                 }
             };
         } else {
             TimexRange range = TimexHelpers.expandDateTimeRange(timex);
-            var startDateValues = GetDateValues(range.Start, date);
-            var endDateValues = GetDateValues(range.End, date);
-            var result = new List<Resolution.Entry> { };
-            for(Entry<String, String> dateRange in startDateValues.Zip(endDateValues, (n, w) => new { start = n, end = w }).entrySet()) {
+            return new ArrayList<Resolution.Entry>() {
                 {
-                    result.Add(
-                        new Resolution.Entry
+                    add(new Resolution.Entry() {
                         {
-                            setTimex(timex.TimexValue),
-                            setType("datetimerange"),
-                            setStart(TimexHelpers.FormatResolvedDateValue(dateRange.start, TimexValue.TimeValue(range.Start, date))),
-                            setEnd(TimexHelpers.FormatResolvedDateValue(dateRange.end, TimexValue.TimeValue(range.End, date))),
-                        });
+                            setTimex(timex.getTimexValue());
+                            setType("datetimerange");
+                            setStart(String.format("%1$s %2$s", TimexValue.dateValue(range.getStart()),
+                                    TimexValue.timeValue(range.getStart(), date)));
+                            setEnd(String.format("%1$s %2$s", TimexValue.dateValue(range.getEnd()),
+                                    TimexValue.timeValue(range.getEnd(), date)));
+                        }
+                    });
                 }
-
-                return result;
             };
         }
     }

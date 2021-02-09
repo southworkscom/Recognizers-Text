@@ -45,31 +45,31 @@ public class TimexRelativeConvertEnglish {
         if (timex.getYear() != null && timex.getMonth() != null && timex.getDayOfMonth() != null) {
             LocalDateTime timexDate = LocalDateTime.of(timex.getYear(), timex.getMonth(), timex.getDayOfMonth(), 0, 0);
             if (TimexDateHelpers.datePartEquals(timexDate, date)) {
-                return TimexConstantsEnglish.Today;
+                return "today";
             }
 
             LocalDateTime tomorrow = TimexDateHelpers.tomorrow(date);
             if (TimexDateHelpers.datePartEquals(timexDate, tomorrow)) {
-                return TimexConstantsEnglish.Tomorrow;
+                return "tomorrow";
             }
 
             LocalDateTime yesterday = TimexDateHelpers.yesterday(date);
             if (TimexDateHelpers.datePartEquals(timexDate, yesterday)) {
-                return TimexConstantsEnglish.Yesterday;
+                return "yesterday";
             }
 
             if (TimexDateHelpers.isThisWeek(timexDate, date)) {
-                return String.format(TimexConstantsEnglish.This,
+                return String.format("this %s",
                         TimexRelativeConvertEnglish.getDateDay(timexDate.getDayOfWeek()));
             }
 
             if (TimexDateHelpers.isNextWeek(timexDate, date)) {
-                return String.format(TimexConstantsEnglish.Next,
+                return String.format("next %s",
                         TimexRelativeConvertEnglish.getDateDay(timexDate.getDayOfWeek()));
             }
 
             if (TimexDateHelpers.isLastWeek(timexDate, date)) {
-                return String.format(TimexConstantsEnglish.Last,
+                return String.format("last %s",
                         TimexRelativeConvertEnglish.getDateDay(timexDate.getDayOfWeek()));
             }
         }
@@ -89,45 +89,45 @@ public class TimexRelativeConvertEnglish {
                 if (timex.getWeekOfYear() != null) {
                     Integer thisWeek = TimexDateHelpers.weekOfYear(date);
                     if (thisWeek == timex.getWeekOfYear()) {
-                        return timex.getWeekend() != null ? String.format(TimexConstantsEnglish.This, TimexConstantsEnglish.Weekend) : String.format(TimexConstantsEnglish.This, Constants.WeekUnit);
+                        return timex.getWeekend() != null ? "this weekend" : "this week";
                     }
 
                     if (thisWeek == timex.getWeekOfYear() + 1) {
-                        return timex.getWeekend() != null ? String.format(TimexConstantsEnglish.Last, TimexConstantsEnglish.Weekend) : String.format(TimexConstantsEnglish.This, Constants.WeekUnit);
+                        return timex.getWeekend() != null ? "last weekend" : "last week";
                     }
 
                     if (thisWeek == timex.getWeekOfYear() - 1) {
-                        return timex.getWeekend() != null ? String.format(TimexConstantsEnglish.Next, TimexConstantsEnglish.Weekend) : String.format(TimexConstantsEnglish.This, Constants.WeekUnit);
+                        return timex.getWeekend() != null ? "next weekend" : "next week";
                     }
                 }
 
                 if (timex.getMonth() != null) {
                     if (timex.getMonth() == date.getMonthValue()) {
-                        return String.format(TimexConstantsEnglish.This, Constants.MonthUnit);
+                        return "this month";
                     }
 
                     if (timex.getMonth() == date.getMonthValue() + 1) {
-                        return String.format(TimexConstantsEnglish.Next, Constants.MonthUnit);
+                        return "next month";
                     }
 
                     if (timex.getMonth() == date.getMonthValue() - 1) {
-                        return String.format(TimexConstantsEnglish.Last, Constants.MonthUnit);
+                        return "last month";
                     }
                 }
 
 
-                return (timex.getSeason() != null) ? String.format(TimexConstantsEnglish.This, TimexConstantsEnglish.SEASONS.get(timex.getSeason()))
-                            : String.format(TimexConstantsEnglish.This, Constants.YearUnit);
+                return (timex.getSeason() != null) ? String.format("this %s", TimexConstantsEnglish.SEASONS.get(timex.getSeason()))
+                            : "this year";
             }
 
             if (timex.getYear() == year + 1) {
-                return (timex.getSeason() != null) ? String.format(TimexConstantsEnglish.Next, TimexConstantsEnglish.SEASONS.get(timex.getSeason()))
-                    : String.format(TimexConstantsEnglish.Next, Constants.YearUnit);
+                return (timex.getSeason() != null) ? String.format("next %s", TimexConstantsEnglish.SEASONS.get(timex.getSeason()))
+                    : "next year";
             }
 
             if (timex.getYear() == year - 1) {
-                return (timex.getSeason() != null) ? String.format(TimexConstantsEnglish.Last, TimexConstantsEnglish.SEASONS.get(timex.getSeason()))
-                    : String.format(TimexConstantsEnglish.Last, Constants.YearUnit);
+                return (timex.getSeason() != null) ? String.format("last %s", TimexConstantsEnglish.SEASONS.get(timex.getSeason()))
+                    : "last year";
             }
         }
 
@@ -140,31 +140,31 @@ public class TimexRelativeConvertEnglish {
 
             if (timex.getPartOfDay() != null) {
                 if (TimexDateHelpers.datePartEquals(timexDate, date)) {
-                    if (timex.getPartOfDay().equals(Constants.TimexNight)) {
-                        return TimexConstantsEnglish.Tonight;
+                    if (timex.getPartOfDay().equals("NI")) {
+                        return "tonight";
                     } else {
-                        return String.format(TimexConstantsEnglish.This, TimexConstantsEnglish.DAY_PARTS.get(timex.getPartOfDay()));
+                        return String.format("this %s", TimexConstantsEnglish.DAY_PARTS.get(timex.getPartOfDay()));
                     }
                 }
 
                 LocalDateTime tomorrow = TimexDateHelpers.tomorrow(date);
                 if (TimexDateHelpers.datePartEquals(timexDate, tomorrow)) {
-                    return String.format(TimexConstantsEnglish.Tomorrow, TimexConstantsEnglish.DAY_PARTS.get(timex.getPartOfDay()));
+                    return String.format("tomorrow %s", TimexConstantsEnglish.DAY_PARTS.get(timex.getPartOfDay()));
                 }
 
                 LocalDateTime yesterday = TimexDateHelpers.yesterday(date);
                 if (TimexDateHelpers.datePartEquals(timexDate, yesterday)) {
-                    return String.format(TimexConstantsEnglish.Yesterday, TimexConstantsEnglish.DAY_PARTS.get(timex.getPartOfDay()));
+                    return String.format("yesterday %s", TimexConstantsEnglish.DAY_PARTS.get(timex.getPartOfDay()));
                 }
 
                 if (TimexDateHelpers.isNextWeek(timexDate, date)) {
-                    return String.format(TimexConstantsEnglish.Next,
+                    return String.format("next %1$s %2$s",
                             TimexRelativeConvertEnglish.getDateDay(timexDate.getDayOfWeek()),
                             TimexConstantsEnglish.DAY_PARTS.get(timex.getPartOfDay()));
                 }
 
                 if (TimexDateHelpers.isLastWeek(timexDate, date)) {
-                    return String.format(TimexConstantsEnglish.Last,
+                    return String.format("last %1$s %2$s",
                             TimexRelativeConvertEnglish.getDateDay(timexDate.getDayOfWeek()),
                             TimexConstantsEnglish.DAY_PARTS.get(timex.getPartOfDay()));
                 }
