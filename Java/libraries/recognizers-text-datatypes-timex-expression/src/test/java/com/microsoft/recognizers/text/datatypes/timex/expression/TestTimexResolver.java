@@ -235,8 +235,7 @@ public class TestTimexResolver {
     @Test
     public void dataTypesResolverDuration1hour30minutes()
     {
-    	LocalDateTime defaultDateTime = LocalDateTime.of(1, 1, 1, 0, 0);
-        Resolution resolution = TimexResolver.resolve(new String[] { "PT1H30M" }, defaultDateTime);
+        Resolution resolution = TimexResolver.resolve(new String[] { "PT1H30M" }, null);
         Assert.assertEquals(1, resolution.getValues().size());
         
         Assert.assertEquals("PT1H30M", resolution.getValues().get(0).getTimex());
