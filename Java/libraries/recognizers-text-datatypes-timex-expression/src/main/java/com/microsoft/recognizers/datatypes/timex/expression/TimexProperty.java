@@ -404,9 +404,15 @@ public class TimexProperty {
                 case "dateUnit":
                     this.assignDateDuration(source);
                     break;
-                case "timeUnit":
-                    this.assignTimeDuration(source);
-                    break;
+                case "hourAmount":
+                	setHours(BigDecimal.valueOf(Integer.parseInt(item.getValue())));
+                	break;
+                case "minuteAmount":
+                	setMinutes(BigDecimal.valueOf(Integer.parseInt(item.getValue())));
+                	break;
+                case "secondAmount":
+                	setSeconds(BigDecimal.valueOf(Integer.parseInt(item.getValue())));
+                	break;
                 default:
             }
         }
@@ -425,21 +431,6 @@ public class TimexProperty {
                 break;
             case "D":
                 this.days = new BigDecimal(source.get("amount"));
-                break;
-            default:
-        }
-    }
-
-    private void assignTimeDuration(Map<String, String> source) {
-        switch (source.get("timeUnit")) {
-            case "H":
-                this.hours = new BigDecimal(source.get("amount"));
-                break;
-            case "M":
-                this.minutes = new BigDecimal(source.get("amount"));
-                break;
-            case "S":
-                this.seconds = new BigDecimal(source.get("amount"));
                 break;
             default:
         }
