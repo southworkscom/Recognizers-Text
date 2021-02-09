@@ -57,49 +57,49 @@ public class TimexFormat {
     }
 
     private static String formatDuration(TimexProperty timex) {
-    	List<String> timexList = new ArrayList<String>();
+        List<String> timexList = new ArrayList<String>();
         NumberFormat nf = NumberFormat.getInstance(Locale.getDefault());
-        
+
         if (timex.getYears() != null) {
             nf.setMaximumFractionDigits(timex.getYears().scale());
-            timexList.add(TimexHelpers.generateDurationTimex(TimexUnit.Year, 
-            		timex.getYears() != null? timex.getYears() : BigDecimal.valueOf(Constants.INVALID_VALUE)));
+            timexList.add(TimexHelpers.generateDurationTimex(TimexUnit.Year,
+                    timex.getYears() != null ? timex.getYears() : BigDecimal.valueOf(Constants.INVALID_VALUE)));
         }
 
         if (timex.getMonths() != null) {
             nf.setMaximumFractionDigits(timex.getMonths().scale());
-            timexList.add(TimexHelpers.generateDurationTimex(TimexUnit.Month, 
-            		timex.getMonths() != null? timex.getMonths() : BigDecimal.valueOf(Constants.INVALID_VALUE)));
+            timexList.add(TimexHelpers.generateDurationTimex(TimexUnit.Month,
+                    timex.getMonths() != null ? timex.getMonths() : BigDecimal.valueOf(Constants.INVALID_VALUE)));
         }
 
         if (timex.getWeeks() != null) {
             nf.setMaximumFractionDigits(timex.getWeeks().scale());
-            timexList.add(TimexHelpers.generateDurationTimex(TimexUnit.Week, 
-            		timex.getWeeks() != null? timex.getWeeks() : BigDecimal.valueOf(Constants.INVALID_VALUE)));
+            timexList.add(TimexHelpers.generateDurationTimex(TimexUnit.Week,
+                    timex.getWeeks() != null ? timex.getWeeks() : BigDecimal.valueOf(Constants.INVALID_VALUE)));
         }
 
         if (timex.getDays() != null) {
             nf.setMaximumFractionDigits(timex.getDays().scale());
-            timexList.add(TimexHelpers.generateDurationTimex(TimexUnit.Day, 
-            		timex.getDays() != null? timex.getDays() : BigDecimal.valueOf(Constants.INVALID_VALUE)));
+            timexList.add(TimexHelpers.generateDurationTimex(TimexUnit.Day,
+                    timex.getDays() != null ? timex.getDays() : BigDecimal.valueOf(Constants.INVALID_VALUE)));
         }
 
         if (timex.getHours() != null) {
             nf.setMaximumFractionDigits(timex.getHours().scale());
-            timexList.add(TimexHelpers.generateDurationTimex(TimexUnit.Hour, 
-            		timex.getHours() != null? timex.getHours() : BigDecimal.valueOf(Constants.INVALID_VALUE)));
+            timexList.add(TimexHelpers.generateDurationTimex(TimexUnit.Hour,
+                    timex.getHours() != null ? timex.getHours() : BigDecimal.valueOf(Constants.INVALID_VALUE)));
         }
 
         if (timex.getMinutes() != null) {
             nf.setMaximumFractionDigits(timex.getMinutes().scale());
-            timexList.add(TimexHelpers.generateDurationTimex(TimexUnit.Minute, 
-            		timex.getMinutes() != null? timex.getMinutes() : BigDecimal.valueOf(Constants.INVALID_VALUE)));
+            timexList.add(TimexHelpers.generateDurationTimex(TimexUnit.Minute,
+                    timex.getMinutes() != null ? timex.getMinutes() : BigDecimal.valueOf(Constants.INVALID_VALUE)));
         }
 
         if (timex.getSeconds() != null) {
             nf.setMaximumFractionDigits(timex.getSeconds().scale());
-            timexList.add(TimexHelpers.generateDurationTimex(TimexUnit.Second, 
-            		timex.getSeconds() != null? timex.getSeconds() : BigDecimal.valueOf(Constants.INVALID_VALUE)));
+            timexList.add(TimexHelpers.generateDurationTimex(TimexUnit.Second,
+                    timex.getSeconds() != null ? timex.getSeconds() : BigDecimal.valueOf(Constants.INVALID_VALUE)));
         }
 
         return TimexHelpers.generateCompoundDurationTimex(timexList);
@@ -121,11 +121,12 @@ public class TimexFormat {
     }
 
     private static String formatDate(TimexProperty timex) {
-    	int year = timex.getYear() != null? timex.getYear() : Constants.INVALID_VALUE;
-    	int month = timex.getMonth() != null? timex.getMonth() : Constants.INVALID_VALUE;
-    	int day = timex.getDayOfWeek() != null? timex.getDayOfWeek() : (timex.getDayOfMonth() != null)? timex.getDayOfMonth() : Constants.INVALID_VALUE; 
-    	
-    	return TimexHelpers.generateDateTimex(year, month, day, timex.getDayOfWeek() != null);
+        int year = timex.getYear() != null ? timex.getYear() : Constants.INVALID_VALUE;
+        int month = timex.getMonth() != null ? timex.getMonth() : Constants.INVALID_VALUE;
+        int day = timex.getDayOfWeek() != null ? timex.getDayOfWeek()
+                : (timex.getDayOfMonth() != null) ? timex.getDayOfMonth() : Constants.INVALID_VALUE;
+
+        return TimexHelpers.generateDateTimex(year, month, day, timex.getDayOfWeek() != null);
     }
 
     private static String formatDateRange(TimexProperty timex) {
@@ -158,25 +159,19 @@ public class TimexFormat {
         }
 
         if (timex.getMonth() != null && timex.getWeekOfMonth() != null && timex.getDayOfWeek() != null) {
-            return String.format("%1$s-%2$s-%3$s-%4$s-%5$s",
-            		Constants.TIMEX_FUZZY_YEAR,
-            		TimexDateHelpers.fixedFormatNumber(timex.getMonth(), 2),
-            		Constants.TIMEX_FUZZY_WEEK,
-                    timex.getWeekOfMonth(), 
-                    timex.getDayOfWeek());
+            return String.format("%1$s-%2$s-%3$s-%4$s-%5$s", Constants.TIMEX_FUZZY_YEAR,
+                    TimexDateHelpers.fixedFormatNumber(timex.getMonth(), 2), Constants.TIMEX_FUZZY_WEEK,
+                    timex.getWeekOfMonth(), timex.getDayOfWeek());
         }
 
         if (timex.getMonth() != null && timex.getWeekOfMonth() != null) {
-            return String.format("%1$s-%2$s-W%02d", 
-            		Constants.TIMEX_FUZZY_YEAR,
-            		TimexDateHelpers.fixedFormatNumber(timex.getMonth(), 2),
-                    timex.getWeekOfMonth());
+            return String.format("%1$s-%2$s-W%02d", Constants.TIMEX_FUZZY_YEAR,
+                    TimexDateHelpers.fixedFormatNumber(timex.getMonth(), 2), timex.getWeekOfMonth());
         }
 
         if (timex.getMonth() != null) {
-            return String.format("%1$s-%2$s",
-            		Constants.TIMEX_FUZZY_YEAR,
-            		TimexDateHelpers.fixedFormatNumber(timex.getMonth(), 2));
+            return String.format("%1$s-%2$s", Constants.TIMEX_FUZZY_YEAR,
+                    TimexDateHelpers.fixedFormatNumber(timex.getMonth(), 2));
         }
 
         return new String();
