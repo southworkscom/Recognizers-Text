@@ -178,6 +178,30 @@ public class TimexHelpers {
         return start;
     }
 
+    public static String GenerateDateTimex(int year, int monthOrWeekOfYear, int day, int weekOfMonth, bool byWeek)
+        {
+            var yearString = year == Constants.InvalidValue ? Constants.TimexFuzzyYear : TimexDateHelpers.FixedFormatNumber(year, 4);
+            var monthWeekString = monthOrWeekOfYear == Constants.InvalidValue ? Constants.TimexFuzzyMonth : TimexDateHelpers.FixedFormatNumber(monthOrWeekOfYear, 2);
+            String dayString;
+            if (byWeek)
+            {
+                dayString = day.ToString(CultureInfo.InvariantCulture);
+                if (weekOfMonth != Constants.InvalidValue)
+                {
+                    monthWeekString = monthWeekString + Constants.TimexFuzzyWeek + weekOfMonth.ToString(CultureInfo.InvariantCulture);
+                }
+                else
+                {
+                    monthWeekString = Constants.TimexWeek + monthWeekString;
+                }
+            }
+            else
+            {
+                dayString = day == Constants.InvalidValue ? Constants.TimexFuzzyDay : TimexDateHelpers.FixedFormatNumber(day, 2);
+            }
+
+            return String.format(yearString, monthOrWeekOfYear, dayString);
+        }
     public static TimexProperty timexTimeAdd(TimexProperty start, TimexProperty duration) {
         if (duration.getHours() != null) {
             TimexProperty result = start.clone();
@@ -205,6 +229,10 @@ public class TimexHelpers {
             }
 
             return result;
+        }
+        public static string FormatResolvedDateValue(string dateValue, string timeValue)
+        {
+            return String.format(dateValue, timeValue);
         }
 
         if (duration.getMinutes() != null) {
