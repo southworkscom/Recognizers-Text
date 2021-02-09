@@ -55,9 +55,9 @@ public class TimexConvertEnglish {
     public static String convertTimexSetToString(TimexSet timexSet) {
         TimexProperty timex = timexSet.getTimex();
         if (timex.getTypes().contains(Constants.TimexTypes.DURATION)) {
-            return TimexConstantsEnglish.EVERY.concat(TimexConvertEnglish.convertTimexDurationToString(timex, false));
+            return String.format("%1$s $2$s", TimexConstantsEnglish.EVERY, TimexConvertEnglish.convertTimexDurationToString(timex, false));
         } else {
-            return TimexConstantsEnglish.EVERY.concat(TimexConvertEnglish.convertTimexToString(timex));
+            return String.format("%1$s $2$s", TimexConstantsEnglish.EVERY, TimexConvertEnglish.convertTimexToString(timex));
         }
     }
 

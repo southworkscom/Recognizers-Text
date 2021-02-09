@@ -50,7 +50,7 @@ public enum TimexUnit {
 }
 
 public class TimexHelpers {
-	public static final HashMap<TimexUnit, String> TimexUnitToStringMap = new HashMap<TimexUnit, String>() {
+	public static final HashMap<TimexUnit, String> TIMEX_UNIT_TO_STRING_MAP = new HashMap<TimexUnit, String>() {
 		{
 			put(TimexUnit.Year, Constants.TIMEX_YEAR);
 			put(TimexUnit.Month, Constants.TIMEX_MONTH);
@@ -238,22 +238,21 @@ public class TimexHelpers {
 	}
 
 	public static String generateCompoundDurationTimex(List<String> timexList) {
-    	Boolean isTimeDurationAlreadyExist = false;
-    	StringBuilder timexBuilder = new StringBuilder(Constants.GENERAL_PERIOD_PREFIX);
-    	
-    	for (String timexComponent: timexList) {
-    		// The Time Duration component occurs first time
-    		if (!isTimeDurationAlreadyExist && isTimeDurationTimex(timexComponent)) {
-    			timexBuilder.append(Constants.TIME_TIMEX_PREFIX.concat(getDurationTimexWithoutPrefix(timexComponent)));
-    			isTimeDurationAlreadyExist = true;
-    		}
-    		else { 
-    			timexBuilder.append(getDurationTimexWithoutPrefix(timexComponent));
-    		}
-    	}
-    	
-    	return timexBuilder.toString();
-    }
+		Boolean isTimeDurationAlreadyExist = false;
+		StringBuilder timexBuilder = new StringBuilder(Constants.GENERAL_PERIOD_PREFIX);
+
+		for (String timexComponent : timexList) {
+			// The Time Duration component occurs first time
+			if (!isTimeDurationAlreadyExist && isTimeDurationTimex(timexComponent)) {
+				timexBuilder.append(Constants.TIME_TIMEX_PREFIX.concat(getDurationTimexWithoutPrefix(timexComponent)));
+				isTimeDurationAlreadyExist = true;
+			} else {
+				timexBuilder.append(getDurationTimexWithoutPrefix(timexComponent));
+			}
+		}
+
+		return timexBuilder.toString();
+	}
 
 	public static String generateDateTimex(int year, int month, int day, Boolean byWeek) {
 		String yearString = year == Constants.INVALID_VALUE ? Constants.TIMEX_FUZZY_YEAR
@@ -274,16 +273,16 @@ public class TimexHelpers {
 
 	public static String generateDurationTimex(TimexUnit unit, BigDecimal value) {
 		if (value.intValue() == Constants.INVALID_VALUE) {
-			return "";
+			return new String();
 		}
 
 		StringBuilder timexBuilder = new StringBuilder(Constants.GENERAL_PERIOD_PREFIX);
 		if (TimeTimexUnitList.contains(unit)) {
 			timexBuilder.append(Constants.TIME_TIMEX_PREFIX);
 		}
-		
+
 		timexBuilder.append(value.toString());
-		timexBuilder.append(TimexUnitToStringMap.get(unit));
+		timexBuilder.append(TIMEX_UNIT_TO_STRING_MAP.get(unit));
 		return timexBuilder.toString();
 	}
 
@@ -417,10 +416,9 @@ public class TimexHelpers {
 		return result;
 	}
 
-	private static Boolean isTimeDurationTimex(String timex)
-    {
-        return timex.startsWith(Constants.GENERAL_PERIOD_PREFIX.concat(Constants.TIME_TIMEX_PREFIX));
-    }
+	private static Boolean isTimeDurationTimex(String timex) {
+		return timex.startsWith(Constants.GENERAL_PERIOD_PREFIX.concat(Constants.TIME_TIMEX_PREFIX));
+	}
 
 	private static String getDurationTimexWithoutPrefix(String timex) {
 		// Remove "PT" prefix for TimeDuration, Remove "P" prefix for DateDuration

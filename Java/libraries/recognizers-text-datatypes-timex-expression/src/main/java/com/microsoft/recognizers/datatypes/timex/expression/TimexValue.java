@@ -68,6 +68,6 @@ public class TimexValue {
         	duration.add(BigDecimal.valueOf((timexProperty.getSeconds() != null)? timexProperty.getSeconds().doubleValue() : 0));
         }
 
-        return duration.toString();
+        return duration.toPlainString();
     }
 }

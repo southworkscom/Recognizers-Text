@@ -31,10 +31,7 @@ public class TimexUtility {
         List<String> unitList = new ArrayList<>(unitToTimexComponents.keySet());
         unitList.sort((x, y) -> unitValueMap.get(x) < unitValueMap.get(y) ? 1 : -1);
                 
-        unitList = new ArrayList<>();
-        for (String unitKey: unitList) {
-        	unitList.add(unitToTimexComponents.get(unitKey));
-        }
+        unitList = unitList.stream().map(t -> unitToTimexComponents.get(t)).collect(Collectors.toList());
         
         return TimexHelpers.generateCompoundDurationTimex(unitList);
     }
