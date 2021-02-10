@@ -70,7 +70,7 @@ public class TestTimexResolver {
     }
 
     @Test
-    public void DataTypes_Resolver_Date_6th()
+    public void dataTypesResolverDate6th()
     {
         LocalDateTime today = LocalDateTime.of(2019, 4, 23, 15, 30, 0);
         Resolution resolution = TimexResolver.resolve(new String[] { "XXXX-XX-06" }, today);
@@ -90,9 +90,9 @@ public class TestTimexResolver {
     }
 
     @Test
-    public void DataTypes_Resolver_Date_Feb_2nd()
+    public void dataTypesResolverDateFeb2nd()
     {
-        LocalDateTime today = LocalDateTime.of(2020, 10, 20, 0, 0);
+        LocalDateTime today = LocalDateTime.of(2020, 10, 20, 0, 0, 0);
         Resolution resolution = TimexResolver.resolve(new String[] { "XXXX-02-02 " }, today);
         Assert.assertEquals(2, resolution.getValues().size());
 
@@ -110,9 +110,9 @@ public class TestTimexResolver {
     }
 
     @Test
-    public void DataTypes_Resolver_DateTimeRange_Oct_25th_Afternoon()
+    public void dataTypesResolverDateTimeRangeOct25thAfternoon()
     {
-        LocalDateTime today = LocalDateTime.of(2020, 10, 20,0,0);
+        LocalDateTime today = LocalDateTime.of(2020, 10, 20, 0, 0, 0);
         Resolution resolution = TimexResolver.resolve(new String[] { "XXXX-10-25TAF" }, today);
         Assert.assertEquals(2, resolution.getValues().size());
 
@@ -130,9 +130,9 @@ public class TestTimexResolver {
     }
 
     @Test
-    public void DataTypes_Resolver_DateTimeRange_Week11_Monday()
+    public void dataTypesResolverDateTimeRangeWeek11Monday()
     {
-        LocalDateTime today = LocalDateTime.of(2020, 10, 20,0,0);
+        LocalDateTime today = LocalDateTime.of(2020, 10, 20, 0, 0, 0);
         Resolution resolution = TimexResolver.resolve(new String[] { "XXXX-W11-1" }, today);
         Assert.assertEquals(2, resolution.getValues().size());
 
@@ -150,10 +150,10 @@ public class TestTimexResolver {
     }
 
     @Test
-    public void DataTypes_Resolver_DateTimeRange_Thanksgiving()
+    public void dataTypesResolverDateTimeRangeThanksgiving()
     {
         // XXXX-11-WXX-4-4 -> 4th Thursday (4th ISO weekday) in unspecified week in November in unspecified year
-        LocalDateTime today = LocalDateTime.of(2020, 10, 20, 0, 0);
+        LocalDateTime today = LocalDateTime.of(2020, 10, 20, 0, 0, 0);
         Resolution resolution = TimexResolver.resolve(new String[] { "XXXX-11-WXX-4-4" }, today);
         Assert.assertEquals(2, resolution.getValues().size());
 
@@ -171,7 +171,7 @@ public class TestTimexResolver {
     }
 
     @Test
-    public void DataTypes_Resolver_DateTimeRange_Monday_Morning()
+    public void dataTypesResolverDateTimeRangeMondayMorning()
     {
         LocalDateTime today = LocalDateTime.of(2021, 1, 22, 15, 30, 0);
         Resolution resolution = TimexResolver.resolve(new String[] { "XXXX-WXX-1TMO" }, today);
@@ -191,7 +191,7 @@ public class TestTimexResolver {
     }
 
     @Test
-    public void DataTypes_Resolver_DateTimeRange_April_5th_from_10am_to_11am()
+    public void dataTypesResolverDateTimeRangeApril5thFrom10amTo11am()
     {
         LocalDateTime today = LocalDateTime.of(2021, 1, 22, 15, 30, 0);
         Resolution resolution = TimexResolver.resolve(new String[] { "(XXXX-04-05T10,XXXX-04-05T11,PT1H)" }, today);
@@ -211,7 +211,7 @@ public class TestTimexResolver {
     }
 
     @Test
-    public void DataTypes_Resolver_DateRange_first_week_of_April_2019()
+    public void dataTypesResolverDateRangeFirstWeekOfApril2019()
     {
         LocalDateTime today = LocalDateTime.of(2021, 1, 22, 15, 30, 0);
         Resolution resolution = TimexResolver.resolve(new String[] { "2019-04-W01" }, today);
@@ -224,9 +224,9 @@ public class TestTimexResolver {
     }
 
     @Test
-    public void DataTypes_Resolver_DateRange_first_week_of_April()
+    public void dataTypesResolverDateRangeFirstWeekOfApril()
     {
-        LocalDateTime today = LocalDateTime.of(2021, 1, 22, 0, 0);
+        LocalDateTime today = LocalDateTime.of(2021, 1, 22, 0, 0, 0);
         Resolution resolution = TimexResolver.resolve(new String[] { "XXXX-04-W01" }, today);
         Assert.assertEquals(2, resolution.getValues().size());
 
@@ -438,7 +438,7 @@ public class TestTimexResolver {
     }
 
     @Test
-    public void dataTypesResolverDateRangeLast_Week()
+    public void dataTypesResolverDateRangeLastWeek()
     {
         LocalDateTime today = LocalDateTime.of(2019, 4, 30,0,0);
         Resolution resolution = TimexResolver.resolve(new String[] { "2019-W17" }, today);
@@ -504,7 +504,7 @@ public class TestTimexResolver {
     }
 
     @Test
-    public void dataTypesResolverDateRangeDemaicalPeriodEN()
+    public void dataTypesResolverDateRangeDecimalPeriodEN()
     {
         Locale.setDefault(new Locale("en", "US"));
         LocalDateTime today = LocalDateTime.of(2019, 4, 30, 0, 0);
