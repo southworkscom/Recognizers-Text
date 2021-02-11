@@ -7,6 +7,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TimexConstantsEnglish {
+    public static final String Today = "today";
+    public static final String Tomorrow = "tomorrow";
+    public static final String Yesterday = "yesterday";
+    public static final String Weekend = "weekend";
+    public static final String Tonight = "tonight";
+    public static final String This = "this";
+    public static final String Last = "last";
+    public static final String Next = "next";
+
     public static final String[] DAYS = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
         "Sunday" };
 

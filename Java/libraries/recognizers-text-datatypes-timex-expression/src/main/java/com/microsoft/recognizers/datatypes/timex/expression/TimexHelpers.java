@@ -5,6 +5,7 @@ package com.microsoft.recognizers.datatypes.timex.expression;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Locale;
 
 public class TimexHelpers {
     public static TimexRange expandDateTimeRange(TimexProperty timex) {
@@ -178,6 +179,31 @@ public class TimexHelpers {
         return start;
     }
 
+    public static String generateDateTimex(Integer year, Integer monthOrWeekOfYear, Integer day, Integer weekOfMonth, boolean byWeek)
+    {
+        String yearString = year == Constants.InvalidValue ? Constants.TimexFuzzyYear : TimexDateHelpers.fixedFormatNumber(year, 4);
+        String monthWeekString = monthOrWeekOfYear == Constants.InvalidValue ? Constants.TimexFuzzyMonth : TimexDateHelpers.fixedFormatNumber(monthOrWeekOfYear, 2);
+        String dayString;
+        if (byWeek)
+        {
+            dayString = day.toString(Integer.parseInt(Locale.ROOT.getLanguage()));
+            if (weekOfMonth != Constants.InvalidValue)
+            {
+                monthWeekString = monthWeekString + String.format(Constants.TimexFuzzyWeek, weekOfMonth.toString(Integer.parseInt(Locale.ROOT.getLanguage())));
+            }
+            else
+            {
+                monthWeekString = Constants.TimexWeek + monthWeekString;
+            }
+        }
+        else
+        {
+            dayString = day == Constants.InvalidValue ? Constants.TimexFuzzyDay : TimexDateHelpers.fixedFormatNumber(day, 2);
+        }
+
+        return String.format(yearString, monthWeekString, dayString);
+    }
+
     public static TimexProperty timexTimeAdd(TimexProperty start, TimexProperty duration) {
         if (duration.getHours() != null) {
             TimexProperty result = start.clone();
@@ -264,6 +290,10 @@ public class TimexHelpers {
                 setEnd(TimexHelpers.timeFromTimex(expanded.getEnd()));
             }
         };
+    }
+    public static String formatResolvedDateValue(String dateValue, String timeValue)
+    {
+        return String.format(dateValue, timeValue);
     }
 
     private static TimexProperty timeAdd(TimexProperty start, TimexProperty duration) {
