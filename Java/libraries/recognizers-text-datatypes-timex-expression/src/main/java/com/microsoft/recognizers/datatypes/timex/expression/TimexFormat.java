@@ -111,7 +111,6 @@ public class TimexFormat {
     private static String formatDate(TimexProperty timex) {
         if (timex.getYear() != null && timex.getMonth() != null && timex.getDayOfMonth() != null) {
             return String.format("%1$s-%2$s-%3$s", TimexDateHelpers.fixedFormatNumber(timex.getYear(), 4),
-                    TimexDateHelpers.fixedFormatNumber(timex.getWeekOfYear() , 2),
                     TimexDateHelpers.fixedFormatNumber(timex.getMonth() , 2),
                     TimexDateHelpers.fixedFormatNumber(timex.getDayOfMonth(), 2));
         }

@@ -359,7 +359,7 @@ public class TimexResolver {
     }
 
     private static LocalDateTime generateMonthWeekDateStart(int year, int month, int weekOfMonth) {
-        LocalDateTime dateInWeek = generateMonthWeekDateStart(year, month, 1 + (weekOfMonth - 1) * 7);
+        LocalDateTime dateInWeek = LocalDateTime.of(year, month, 1 + (weekOfMonth - 1) * 7, 0, 0);
 
         // Align the date of the week according to Thursday, base on ISO 8601, https://en.wikipedia.org/wiki/ISO_8601
         if (dateInWeek.getDayOfWeek().getValue() > DayOfWeek.THURSDAY.getValue()) {
@@ -444,19 +444,21 @@ public class TimexResolver {
             };
         } else {
             if (timex.getMonth() != null && timex.getWeekOfMonth() != null) {
-                List<Pair<String, String>> yearDateRangeList = getMonthWeekDateRange(timex.getYear().intValue() , timex.getMonth().intValue(), timex.getWeekOfMonth(), date.getYear());
-                return new ArrayList<Resolution.Entry>() {
-                    {
-                        add(new Resolution.Entry() {
-                            {
-                                setTimex(timex.getTimexValue());
-                                setType("daterange");
-                                setStart(yearDateRangeList.get(timex.getYear()).getLeft());
-                                setEnd(yearDateRangeList.get(timex.getYear()).getRight());
-                            }
-                        });
-                    }
-                };
+                List<Pair<String, String>> yearDateRangeList = getMonthWeekDateRange(timex.getYear() != null? timex.getYear().intValue() : Constants.InvalidValue, timex.getMonth().intValue(), timex.getWeekOfMonth().intValue(), date.getYear());
+                List<Resolution.Entry> result = new ArrayList<Resolution.Entry>() { };
+                
+                for (Pair<String, String> yearDateRange : yearDateRangeList) {
+                	result.add(new Resolution.Entry() {
+                        {
+                            setTimex(timex.getTimexValue());
+                            setType("daterange");
+                            setStart(yearDateRange.getLeft());
+                            setEnd(yearDateRange.getRight());
+                        }
+                    });
+                }
+                
+                return result;
             }
 
             if (timex.getYear() != null && timex.getMonth() != null) {
@@ -477,8 +479,6 @@ public class TimexResolver {
             }
 
             if (timex.getYear() != null && timex.getWeekOfYear() != null) {
-                Pair<String, String> lastYearDateRange = TimexResolver.monthWeekDateRange(date.getYear() - 1,
-                        timex.getMonth(), timex.getWeekOfMonth());
                 Pair<String, String> dateRange = TimexResolver.yearWeekDateRange(date.getYear(), timex.getWeekOfYear(), timex.getWeekend());
 
                 return new ArrayList<Resolution.Entry>() {
