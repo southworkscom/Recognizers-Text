@@ -165,7 +165,7 @@ public class TimexFormat {
         }
 
         if (timex.getMonth() != null && timex.getWeekOfMonth() != null) {
-            return String.format("%1$s-%2$s-W%02d", Constants.TIMEX_FUZZY_YEAR,
+            return String.format("%1$s-%2$s-W%3$02d", Constants.TIMEX_FUZZY_YEAR,
                     TimexDateHelpers.fixedFormatNumber(timex.getMonth(), 2), timex.getWeekOfMonth());
         }
 

@@ -335,9 +335,8 @@ public class TimexHelpers {
 
     private static TimexProperty timeAdd(TimexProperty start, TimexProperty duration) {
         int second = start.getSecond() + (int)(duration.getSeconds() != null ? duration.getSeconds() : 0);
-        int minute = start.getMinute() + second / 60
-                + (int)(duration.getMinutes() != null ? duration.getMinutes() : 0);
-        int hour = start.getHour() + (minute / 60) + (int)(duration.getHours() != null ? duration.getHours() : 0);
+        int minute = start.getMinute() + second / 60 + (duration.getMinutes() != null ? duration.getMinutes().intValue() : 0);
+        int hour = start.getHour() + (minute / 60) + (duration.getHours() != null ? duration.getHours().intValue() : 0);
 
         return new TimexProperty() {
             {
