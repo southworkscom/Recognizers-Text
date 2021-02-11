@@ -95,11 +95,11 @@ public class TimexConvertEnglish {
             String month = TimexConstantsEnglish.MONTHS[timex.getMonth() - 1];
             if (timex.getYear() != null)
             {
-                return String.format(date, abbreviation, month, timex.getYear());
+                return String.format("%1$s%2$s %3$s %4$s", date, abbreviation, month, timex.getYear()).trim();
             }
-            return String.format(date, abbreviation, month);
+            return String.format("%1$s%2$s %3$s", date, abbreviation, month);
         }
-        return String.format(date, abbreviation);
+        return date.concat(abbreviation);
     }
 
     private static String convertDurationPropertyToString(BigDecimal value, String property, Boolean includeSingleCount) {
