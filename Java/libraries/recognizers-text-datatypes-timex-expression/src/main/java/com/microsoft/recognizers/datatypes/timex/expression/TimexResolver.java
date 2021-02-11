@@ -4,7 +4,6 @@
 package com.microsoft.recognizers.datatypes.timex.expression;
 
 import com.google.common.collect.Streams;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -16,6 +15,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 public class TimexResolver {
     public static Resolution resolve(String[] timexArray, LocalDateTime date) {
@@ -122,45 +123,41 @@ public class TimexResolver {
     }
 
     private static List<Resolution.Entry> resolveDate(TimexProperty timex, LocalDateTime date) {
-        return new ArrayList<Resolution.Entry>() {
-            {
-                add(new Resolution.Entry() {
-                    {
-                        setTimex(timex.getTimexValue());
-                        setType("date");
-                        setValue(TimexValue.dateValue(timex));
-                    }
-                });
-            }
-        };
+        List<String> dateValueList = TimexResolver.getDateValues(timex, date);
+        List<Resolution.Entry> result = new ArrayList<Resolution.Entry>();
+        for (String dateValue : dateValueList) {
+            result.add(new Resolution.Entry() {
+                {
+                    setTimex(timex.getTimexValue());
+                    setType("date");
+                    setValue(dateValue);
+                }
+            });
+        }
+
+        return result;
     }
 
     private static String lastDateValue(TimexProperty timex, LocalDateTime date) {
         if (timex.getDayOfMonth() != null) {
-            int year = date.getYear();
-            int month = date.getMonth().getValue();
-            if (timex.getMonth() != null)
-            {
+            Integer year = date.getYear();
+            Integer month = date.getMonth().getValue();
+            if (timex.getMonth() != null) {
                 month = timex.getMonth();
-                if (date.getMonthValue() <= month || (date.getMonthValue() == month && date.getDayOfWeek().getValue() <= timex.getDayOfMonth()))
-                {
+                if (date.getMonthValue() <= month || (date.getMonth().getValue() == month && date.getDayOfWeek().getValue() <= timex.getDayOfMonth())) {
                     year--;
                 }
-            }
-            else
-            {
-                if (date.getDayOfMonth() <= timex.getDayOfMonth())
-                {
+            } else {
+                if (date.getDayOfMonth() <= timex.getDayOfMonth()) {
                     month--;
-                    if (month < 1)
-                    {
+                    if (month < 1) {
                         month = (month + 12) % 12;
                         year--;
                     }
                 }
             }
-            int finalYear = year;
-            int finalMonth = month;
+            Integer finalYear = year;
+            Integer finalMonth = month;
             return TimexValue.dateValue(new TimexProperty() {
                 {
                     setYear(finalYear);
@@ -186,30 +183,25 @@ public class TimexResolver {
 
     private static String nextDateValue(TimexProperty timex, LocalDateTime date) {
         if (timex.getDayOfMonth() != null) {
-            int year = date.getYear();
-            int month = date.getMonth().getValue();
-            if (timex.getMonth() != null)
-            {
+            Integer year = date.getYear();
+            Integer month = date.getMonth().getValue();
+            if (timex.getMonth() != null) {
                 month = timex.getMonth();
-                if (date.getMonthValue() > month || (date.getMonthValue() == month && date.getDayOfMonth() > timex.getDayOfMonth()))
-                {
+                if (date.getMonthValue() > month ||
+                    (date.getMonthValue() == month && date.getDayOfMonth() > timex.getDayOfMonth())) {
                     year++;
                 }
-            }
-            else
-            {
-                if (date.getDayOfMonth() > timex.getDayOfMonth())
-                {
+            } else {
+                if (date.getDayOfMonth() > timex.getDayOfMonth()) {
                     month++;
-                    if (month > 12)
-                    {
+                    if (month > 12) {
                         month = month % 12;
                         year--;
                     }
                 }
             }
-            int finalYear = year;
-            int finalMonth = month;
+            Integer finalYear = year;
+            Integer finalMonth = month;
             return TimexValue.dateValue(new TimexProperty() {
                 {
                     setYear(finalYear);
@@ -338,7 +330,6 @@ public class TimexResolver {
         return firstWeekDay;
     }
 
-    // TODO: research about Pair
     private static Pair<String, String> monthWeekDateRange(Integer year, Integer month, Integer weekOfMonth) {
         LocalDateTime start = generateMonthWeekDateStart(year, month, weekOfMonth);
         LocalDateTime end = start.plusDays(7);
@@ -358,69 +349,53 @@ public class TimexResolver {
         }));
     }
 
-    private static LocalDateTime generateMonthWeekDateStart(int year, int month, int weekOfMonth) {
+    private static LocalDateTime generateMonthWeekDateStart(Integer year, Integer month, Integer weekOfMonth) {
         LocalDateTime dateInWeek = LocalDateTime.of(year, month, 1 + (weekOfMonth - 1) * 7, 0, 0);
 
-        // Align the date of the week according to Thursday, base on ISO 8601, https://en.wikipedia.org/wiki/ISO_8601
+        // Align the date of the week according to Thursday, base on ISO 8601,
+        // https://en.wikipedia.org/wiki/ISO_8601
         if (dateInWeek.getDayOfWeek().getValue() > DayOfWeek.THURSDAY.getValue()) {
-            dateInWeek = dateInWeek.plusDays(7 - (int) dateInWeek.getDayOfWeek().getValue() + 1);
+            dateInWeek = dateInWeek.plusDays(7 - dateInWeek.getDayOfWeek().getValue() + 1);
         } else {
             dateInWeek = dateInWeek.plusDays(1 - dateInWeek.getDayOfWeek().getValue());
         }
 
         return dateInWeek;
-
     }
 
-    private static LocalDateTime generateWeekDate(TimexProperty timex, LocalDateTime date, boolean isBefore)
-    {
+    private static LocalDateTime generateWeekDate(TimexProperty timex, LocalDateTime date, boolean isBefore) {
         LocalDateTime start;
-        if (timex.getWeekOfMonth() == null && timex.getWeekOfYear() == null)
-        {
+        if (timex.getWeekOfMonth() == null && timex.getWeekOfYear() == null) {
             DayOfWeek day = timex.getDayOfWeek() == 7 ? DayOfWeek.SUNDAY : DayOfWeek.of(timex.getDayOfWeek());
-            if (isBefore)
-            {
+            if (isBefore) {
                 start = TimexDateHelpers.dateOfLastDay(day, date);
-            }
-            else
-            {
+            } else {
                 start = TimexDateHelpers.dateOfNextDay(day, date);
             }
-        }
-        else
-        {
-            int dayOfWeek = timex.getDayOfWeek() - 1;
-            int year = timex.getYear() != null ? timex.getYear() : date.getYear();
-            if (timex.getWeekOfYear() != null)
-            {
-                int weekOfYear = timex.getWeekOfYear();
-                start = firstDateOfWeek(year, weekOfYear, Locale.ROOT).plusDays(dayOfWeek);
-                if (timex.getYear() == null)
-                {
-                    if (isBefore && start.isAfter(date))
-                    {
-                        start = firstDateOfWeek(year - 1, weekOfYear, Locale.ROOT).plusDays(dayOfWeek);
-                    }
-                    else if (!isBefore && start.isBefore(date))
-                    {
-                        start = firstDateOfWeek(year + 1, weekOfYear, Locale.ROOT).plusDays(dayOfWeek);
+        } else {
+            Integer dayOfWeek = timex.getDayOfWeek() - 1;
+            Integer year = timex.getYear() != null ? timex.getYear() : date.getYear();
+            if (timex.getWeekOfYear() != null) {
+                Integer weekOfYear = timex.getWeekOfYear();
+                start = firstDateOfWeek(year, weekOfYear, Locale.getDefault()).plusDays(dayOfWeek);
+                if (timex.getYear() == null) {
+                    if (isBefore && start.isAfter(date)) {
+                        start = firstDateOfWeek(year - 1, weekOfYear, Locale.getDefault()).plusDays(dayOfWeek);
+                    } else if (!isBefore && start.isBefore(date)) {
+                        start = firstDateOfWeek(year + 1, weekOfYear, Locale.getDefault()).plusDays(dayOfWeek);
                     }
                 }
-            }
-            else
-            {
-                int month = timex.getMonth() != null ? timex.getMonth() : date.getMonthValue();
-                int weekOfMonth = timex.getWeekOfMonth();
+            } else {
+                Integer month = timex.getMonth() != null ? timex.getMonth() : date.getMonthValue();
+                Integer weekOfMonth = timex.getWeekOfMonth();
                 start = generateMonthWeekDateStart(year, month, weekOfMonth).plusDays(dayOfWeek);
-                if (timex.getYear() == null || timex.getMonth() == null)
-                {
-                    if (isBefore && start.isAfter(date))
-                    {
-                        start = generateMonthWeekDateStart(timex.getMonth() != null ? year - 1 : year, timex.getMonth() == null ? month - 1 : month, weekOfMonth).plusDays(dayOfWeek);
-                    }
-                    else if (!isBefore && start.isBefore(date))
-                    {
-                        start = generateMonthWeekDateStart(timex.getMonth() != null ? year + 1 : year, timex.getMonth() == null ? month + 1 : month, weekOfMonth).plusDays(dayOfWeek);
+                if (timex.getYear() == null || timex.getMonth() == null) {
+                    if (isBefore && start.isAfter(date)) {
+                        start = generateMonthWeekDateStart(timex.getMonth() != null ? year - 1 : year,
+                                timex.getMonth() == null ? month - 1 : month, weekOfMonth).plusDays(dayOfWeek);
+                    } else if (!isBefore && start.isBefore(date)) {
+                        start = generateMonthWeekDateStart(timex.getMonth() != null ? year + 1 : year,
+                                timex.getMonth() == null ? month + 1 : month, weekOfMonth).plusDays(dayOfWeek);
                     }
                 }
             }
@@ -444,11 +419,12 @@ public class TimexResolver {
             };
         } else {
             if (timex.getMonth() != null && timex.getWeekOfMonth() != null) {
-                List<Pair<String, String>> yearDateRangeList = getMonthWeekDateRange(timex.getYear() != null? timex.getYear().intValue() : Constants.InvalidValue, timex.getMonth().intValue(), timex.getWeekOfMonth().intValue(), date.getYear());
-                List<Resolution.Entry> result = new ArrayList<Resolution.Entry>() { };
-                
+                List<Pair<String, String>> yearDateRangeList = getMonthWeekDateRange(
+                        timex.getYear() != null ? timex.getYear() : Constants.INVALID_VALUE,
+                        timex.getMonth(), timex.getWeekOfMonth(), date.getYear());
+                List<Resolution.Entry> result = new ArrayList<Resolution.Entry>();
                 for (Pair<String, String> yearDateRange : yearDateRangeList) {
-                	result.add(new Resolution.Entry() {
+                    result.add(new Resolution.Entry() {
                         {
                             setTimex(timex.getTimexValue());
                             setType("daterange");
@@ -457,7 +433,7 @@ public class TimexResolver {
                         }
                     });
                 }
-                
+
                 return result;
             }
 
@@ -479,7 +455,8 @@ public class TimexResolver {
             }
 
             if (timex.getYear() != null && timex.getWeekOfYear() != null) {
-                Pair<String, String> dateRange = TimexResolver.yearWeekDateRange(date.getYear(), timex.getWeekOfYear(), timex.getWeekend());
+                Pair<String, String> dateRange = TimexResolver.yearWeekDateRange(date.getYear(), timex.getWeekOfYear(),
+                        timex.getWeekend());
 
                 return new ArrayList<Resolution.Entry>() {
                     {
@@ -543,7 +520,6 @@ public class TimexResolver {
         }
     }
 
-    // TODO: research about Pair
     private static Pair<String, String> partOfDayTimeRange(TimexProperty timex) {
         switch (timex.getPartOfDay()) {
             case "MO":
@@ -602,18 +578,13 @@ public class TimexResolver {
         return resolvedDates;
     }
 
-    private static List<String> getDateValues(TimexProperty timex, LocalDateTime date)
-    {
-        ArrayList<String> result = new ArrayList<String>(){};
-        if (timex.getYear() != null && timex.getMonth() != null && timex.getDayOfMonth() != null)
-        {
+    private static List<String> getDateValues(TimexProperty timex, LocalDateTime date) {
+        ArrayList<String> result = new ArrayList<String>();
+        if (timex.getYear() != null && timex.getMonth() != null && timex.getDayOfMonth() != null) {
             result.add(TimexValue.dateValue(timex));
-        }
-        else
-        {
+        } else {
             result.add(lastDateValue(timex, date));
-            if (timex.getYear() == null)
-            {
+            if (timex.getYear() == null) {
                 result.add(nextDateValue(timex, date));
             }
         }
@@ -621,16 +592,13 @@ public class TimexResolver {
         return result;
     }
 
-    private static List<Pair<String, String>> getMonthWeekDateRange(int year, int month, int weekOfMonth, int referYear)
-    {
-        List<Pair<String, String>> result = new ArrayList<Pair<String, String>>() { };
-        if (year == Constants.InvalidValue)
-        {
+    private static List<Pair<String, String>> getMonthWeekDateRange(Integer year, Integer month, Integer weekOfMonth,
+        Integer referYear) {
+        List<Pair<String, String>> result = new ArrayList<Pair<String, String>>();
+        if (year == Constants.INVALID_VALUE) {
             result.add(monthWeekDateRange(referYear - 1, month, weekOfMonth));
             result.add(monthWeekDateRange(referYear, month, weekOfMonth));
-        }
-        else
-        {
+        } else {
             result.add(monthWeekDateRange(year, month, weekOfMonth));
         }
 
@@ -642,14 +610,15 @@ public class TimexResolver {
             List<String> dateValues = getDateValues(timex, date);
             Pair<String, String> timeRange = partOfDayTimeRange(timex);
             ArrayList<Resolution.Entry> result = new ArrayList<Resolution.Entry>();
-            for (String dateValue : dateValues){
-                result.add(new Resolution.Entry(){
-                {
-                    setTimex(timex.getTimexValue());
-                    setType("datetimerange");
-                    setStart(TimexHelpers.formatResolvedDateValue(dateValue, timeRange.getLeft()));
-                    setEnd(TimexHelpers.formatResolvedDateValue(dateValue, timeRange.getRight()));
-                }});
+            for (String dateValue : dateValues) {
+                result.add(new Resolution.Entry() {
+                    {
+                        setTimex(timex.getTimexValue());
+                        setType("datetimerange");
+                        setStart(TimexHelpers.formatResolvedDateValue(dateValue, timeRange.getLeft()));
+                        setEnd(TimexHelpers.formatResolvedDateValue(dateValue, timeRange.getRight()));
+                    }
+                });
             }
 
             return result;
@@ -658,23 +627,27 @@ public class TimexResolver {
             TimexRange range = TimexHelpers.expandDateTimeRange(timex);
             List<String> startDateValues = getDateValues(range.getStart(), date);
             List<String> endDateValues = getDateValues(range.getEnd(), date);
-            List<Resolution.Entry> result = new ArrayList<Resolution.Entry>() {};
+            List<Resolution.Entry> result = new ArrayList<Resolution.Entry>();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-            List<DateRange> dateRanges = Streams.zip(startDateValues.stream(), endDateValues.stream(), (n, w) -> new DateRange() {
+            List<DateRange> dateRanges = Streams
+                    .zip(startDateValues.stream(), endDateValues.stream(), (n, w) -> new DateRange() {
+                        {
+                            setStart(LocalDateTime.parse(n, formatter));
+                            setEnd(LocalDateTime.parse(w, formatter));
+                        }
+                    }).collect(Collectors.toList());
+            for (DateRange dateRange : dateRanges) {
                 {
-                    setStart(LocalDateTime.parse(n, formatter));
-                    setEnd(LocalDateTime.parse(w, formatter));
-                }
-            }).collect(Collectors.toList());
-            for(DateRange dateRange : dateRanges){
-                {
-                    result.add(new Resolution.Entry(){
-                    {
-                        setTimex(timex.getTimexValue());
-                        setType("datetimerange");
-                        setStart(TimexHelpers.formatResolvedDateValue(dateRange.getStart().toString(), TimexValue.timeValue(range.getStart(), date))) ;
-                        setEnd(TimexHelpers.formatResolvedDateValue(dateRange.getEnd().toString(), TimexValue.timeValue(range.getEnd(), date)));
-                    }});
+                    result.add(new Resolution.Entry() {
+                        {
+                            setTimex(timex.getTimexValue());
+                            setType("datetimerange");
+                            setStart(TimexHelpers.formatResolvedDateValue(dateRange.getStart().toString(),
+                                    TimexValue.timeValue(range.getStart(), date)));
+                            setEnd(TimexHelpers.formatResolvedDateValue(dateRange.getEnd().toString(),
+                                    TimexValue.timeValue(range.getEnd(), date)));
+                        }
+                    });
                 }
             }
 
