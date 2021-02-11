@@ -124,7 +124,7 @@ public class TimexFormat {
         int year = timex.getYear() != null ? timex.getYear() : Constants.INVALID_VALUE;
         int month = timex.getMonth() != null ? timex.getMonth() : Constants.INVALID_VALUE;
         int day = timex.getDayOfWeek() != null ? timex.getDayOfWeek()
-                : (timex.getDayOfMonth() != null) ? timex.getDayOfMonth() : Constants.INVALID_VALUE;
+                : timex.getDayOfMonth() != null ? timex.getDayOfMonth() : Constants.INVALID_VALUE;
 
         return TimexHelpers.generateDateTimex(year, month, day, timex.getDayOfWeek() != null);
     }

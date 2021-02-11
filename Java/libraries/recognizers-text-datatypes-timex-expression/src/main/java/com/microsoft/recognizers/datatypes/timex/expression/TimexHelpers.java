@@ -148,8 +148,7 @@ public class TimexHelpers {
 
             if (durationDays != null) {
                 if (start.getYear() != null) {
-                    LocalDateTime d = LocalDateTime.of(start.getYear(), start.getMonth(), start.getDayOfMonth(), 0, 0,
-                            0);
+                    LocalDateTime d = LocalDateTime.of(start.getYear(), start.getMonth(), start.getDayOfMonth(), 0, 0, 0);
                     LocalDateTime d2 = d.plusDays(durationDays.longValue());
                     return new TimexProperty() {
                         {
@@ -270,8 +269,7 @@ public class TimexHelpers {
             result.setHour(hour);
 
             if (result.getYear() != null && result.getMonth() != null && result.getDayOfMonth() != null) {
-                LocalDateTime d = LocalDateTime.of(result.getYear(), result.getMonth(), result.getDayOfMonth(), 0, 0,
-                        0);
+                LocalDateTime d = LocalDateTime.of(result.getYear(), result.getMonth(), result.getDayOfMonth(), 0, 0, 0);
                 d = d.plusDays(days.longValue());
 
                 result.setYear(d.getYear());

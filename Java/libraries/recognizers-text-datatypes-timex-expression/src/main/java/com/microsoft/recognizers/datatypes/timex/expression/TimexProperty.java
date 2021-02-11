@@ -405,13 +405,13 @@ public class TimexProperty {
                     this.assignDateDuration(source);
                     break;
                 case "hourAmount":
-                    setHours(BigDecimal.valueOf(Integer.parseInt(item.getValue())));
+                    setHours(new BigDecimal(item.getValue()));
                     break;
                 case "minuteAmount":
-                    setMinutes(BigDecimal.valueOf(Integer.parseInt(item.getValue())));
+                    setMinutes(new BigDecimal(item.getValue()));
                     break;
                 case "secondAmount":
-                    setSeconds(BigDecimal.valueOf(Integer.parseInt(item.getValue())));
+                    setSeconds(new BigDecimal(item.getValue()));
                     break;
                 default:
             }

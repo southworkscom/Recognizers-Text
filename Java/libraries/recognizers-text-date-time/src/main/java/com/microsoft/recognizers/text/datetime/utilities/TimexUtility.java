@@ -30,13 +30,11 @@ public class TimexUtility {
     public static String generateCompoundDurationTimex(Map<String, String> unitToTimexComponents, ImmutableMap<String, Long> unitValueMap) {
         List<String> unitList = new ArrayList<>(unitToTimexComponents.keySet());
         unitList.sort((x, y) -> unitValueMap.get(x) < unitValueMap.get(y) ? 1 : -1);
-                
         unitList = unitList.stream().map(t -> unitToTimexComponents.get(t)).collect(Collectors.toList());
-        
         return TimexHelpers.generateCompoundDurationTimex(unitList);
     }
 
-    private static boolean isTimeDurationTimex(String timex) {
+    private static Boolean isTimeDurationTimex(String timex) {
         return timex.startsWith(Constants.GeneralPeriodPrefix + Constants.TimeTimexPrefix);
     }
 
