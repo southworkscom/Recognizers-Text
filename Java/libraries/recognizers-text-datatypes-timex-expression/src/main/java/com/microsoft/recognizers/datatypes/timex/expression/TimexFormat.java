@@ -140,7 +140,7 @@ public class TimexFormat {
 
         if (timex.getYear() != null && timex.getMonth() != null && timex.getWeekOfMonth() != null)
         {
-            return String.format(TimexDateHelpers.fixedFormatNumber(timex.getYear(), 4), TimexDateHelpers.fixedFormatNumber(timex.getMonth(), 2), TimexDateHelpers.fixedFormatNumber(timex.getWeekOfMonth(), 2));
+            return String.format("%1$s-%2$s-W%3$s", TimexDateHelpers.fixedFormatNumber(timex.getYear(), 4), TimexDateHelpers.fixedFormatNumber(timex.getMonth(), 2), TimexDateHelpers.fixedFormatNumber(timex.getWeekOfMonth(), 2));
         }
 
         if (timex.getYear() != null && timex.getSeason() != null) {

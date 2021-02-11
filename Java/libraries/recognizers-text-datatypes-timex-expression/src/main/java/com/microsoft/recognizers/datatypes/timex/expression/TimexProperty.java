@@ -364,6 +364,12 @@ public class TimexProperty {
 
     public void assignProperties(Map<String, String> source) {
         for (Entry<String, String> item : source.entrySet()) {
+
+            if (item.getValue().equals(""))
+            {
+                continue;
+            }
+
             switch (item.getKey()) {
                 case "year":
                     setYear(Integer.parseInt(item.getValue()));
@@ -408,7 +414,6 @@ public class TimexProperty {
                     this.assignTimeDuration(source);
                     break;
                 default:
-                    continue;
             }
         }
     }
