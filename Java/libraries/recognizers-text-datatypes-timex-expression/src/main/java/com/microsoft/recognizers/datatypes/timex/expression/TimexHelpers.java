@@ -186,10 +186,10 @@ public class TimexHelpers {
         String dayString;
         if (byWeek)
         {
-            dayString = day.toString(Integer.parseInt(Locale.ROOT.getLanguage()));
+            dayString = day.toString();
             if (weekOfMonth != Constants.InvalidValue)
             {
-                monthWeekString = monthWeekString + String.format(Constants.TimexFuzzyWeek, weekOfMonth.toString(Integer.parseInt(Locale.ROOT.getLanguage())));
+                monthWeekString = monthWeekString + String.format("-%s-", Constants.TimexFuzzyWeek) + String.format(Constants.TimexFuzzyWeek, weekOfMonth.toString());
             }
             else
             {
@@ -201,7 +201,7 @@ public class TimexHelpers {
             dayString = day == Constants.InvalidValue ? Constants.TimexFuzzyDay : TimexDateHelpers.fixedFormatNumber(day, 2);
         }
 
-        return String.format(yearString, monthWeekString, dayString);
+        return String.join("-", yearString, monthWeekString, dayString);
     }
 
     public static TimexProperty timexTimeAdd(TimexProperty start, TimexProperty duration) {
@@ -293,7 +293,7 @@ public class TimexHelpers {
     }
     public static String formatResolvedDateValue(String dateValue, String timeValue)
     {
-        return String.format(dateValue, timeValue);
+        return String.format("%1$s %2$s", dateValue, timeValue);
     }
 
     private static TimexProperty timeAdd(TimexProperty start, TimexProperty duration) {
