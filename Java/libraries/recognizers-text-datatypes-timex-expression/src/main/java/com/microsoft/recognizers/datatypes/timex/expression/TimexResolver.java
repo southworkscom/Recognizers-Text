@@ -146,7 +146,7 @@ public class TimexResolver {
             Integer month = date.getMonth().getValue();
             if (timex.getMonth() != null) {
                 month = timex.getMonth();
-                if (date.getMonthValue() <= month || (date.getMonth().getValue() == month && TimexDateHelpers.getUSDateOfWeekValue(date.getDayOfWeek()) <= timex.getDayOfMonth())) {
+                if (date.getMonthValue() <= month || (date.getMonth().getValue() == month && TimexDateHelpers.getUSDayOfWeek(date.getDayOfWeek()) <= timex.getDayOfMonth())) {
                     year--;
                 }
             } else {
@@ -316,7 +316,7 @@ public class TimexResolver {
         // ISO uses FirstFourDayWeek, and Monday as first day of week, according to
         // https://en.wikipedia.org/wiki/ISO_8601
         LocalDateTime jan1 = LocalDateTime.of(year, 1, 1, 0, 0);
-        Integer daysOffset = DayOfWeek.MONDAY.getValue() - TimexDateHelpers.getUSDateOfWeekValue(jan1.getDayOfWeek());
+        Integer daysOffset = DayOfWeek.MONDAY.getValue() - TimexDateHelpers.getUSDayOfWeek(jan1.getDayOfWeek());
         LocalDateTime firstWeekDay = jan1;
         firstWeekDay = firstWeekDay.plusDays(daysOffset);
 
@@ -356,10 +356,10 @@ public class TimexResolver {
 
         // Align the date of the week according to Thursday, base on ISO 8601,
         // https://en.wikipedia.org/wiki/ISO_8601
-        if (TimexDateHelpers.getUSDateOfWeekValue(dateInWeek.getDayOfWeek()) > TimexDateHelpers.getUSDateOfWeekValue(DayOfWeek.THURSDAY)) {
-            dateInWeek = dateInWeek.plusDays(7 - TimexDateHelpers.getUSDateOfWeekValue(dateInWeek.getDayOfWeek()) + 1);
+        if (TimexDateHelpers.getUSDayOfWeek(dateInWeek.getDayOfWeek()) > TimexDateHelpers.getUSDayOfWeek(DayOfWeek.THURSDAY)) {
+            dateInWeek = dateInWeek.plusDays(7 - TimexDateHelpers.getUSDayOfWeek(dateInWeek.getDayOfWeek()) + 1);
         } else {
-            dateInWeek = dateInWeek.plusDays(1 - TimexDateHelpers.getUSDateOfWeekValue(dateInWeek.getDayOfWeek()));
+            dateInWeek = dateInWeek.plusDays(1 - TimexDateHelpers.getUSDayOfWeek(dateInWeek.getDayOfWeek()));
         }
 
         return dateInWeek;
