@@ -6,7 +6,9 @@ package com.microsoft.recognizers.datatypes.timex.expression;
 import com.google.common.collect.Streams;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalField;
 import java.time.temporal.WeekFields;
@@ -144,7 +146,7 @@ public class TimexResolver {
             Integer month = date.getMonth().getValue();
             if (timex.getMonth() != null) {
                 month = timex.getMonth();
-                if (date.getMonthValue() <= month || (date.getMonth().getValue() == month && date.getDayOfWeek().getValue() <= timex.getDayOfMonth())) {
+                if (date.getMonthValue() <= month || (date.getMonth().getValue() == month && TimexDateHelpers.getUSDateOfWeekValue(date.getDayOfWeek()) <= timex.getDayOfMonth())) {
                     year--;
                 }
             } else {
@@ -314,7 +316,7 @@ public class TimexResolver {
         // ISO uses FirstFourDayWeek, and Monday as first day of week, according to
         // https://en.wikipedia.org/wiki/ISO_8601
         LocalDateTime jan1 = LocalDateTime.of(year, 1, 1, 0, 0);
-        Integer daysOffset = DayOfWeek.MONDAY.getValue() - jan1.getDayOfWeek().getValue();
+        Integer daysOffset = DayOfWeek.MONDAY.getValue() - TimexDateHelpers.getUSDateOfWeekValue(jan1.getDayOfWeek());
         LocalDateTime firstWeekDay = jan1;
         firstWeekDay = firstWeekDay.plusDays(daysOffset);
 
@@ -354,10 +356,10 @@ public class TimexResolver {
 
         // Align the date of the week according to Thursday, base on ISO 8601,
         // https://en.wikipedia.org/wiki/ISO_8601
-        if (dateInWeek.getDayOfWeek().getValue() > DayOfWeek.THURSDAY.getValue()) {
-            dateInWeek = dateInWeek.plusDays(7 - dateInWeek.getDayOfWeek().getValue() + 1);
+        if (TimexDateHelpers.getUSDateOfWeekValue(dateInWeek.getDayOfWeek()) > TimexDateHelpers.getUSDateOfWeekValue(DayOfWeek.THURSDAY)) {
+            dateInWeek = dateInWeek.plusDays(7 - TimexDateHelpers.getUSDateOfWeekValue(dateInWeek.getDayOfWeek()) + 1);
         } else {
-            dateInWeek = dateInWeek.plusDays(1 - dateInWeek.getDayOfWeek().getValue());
+            dateInWeek = dateInWeek.plusDays(1 - TimexDateHelpers.getUSDateOfWeekValue(dateInWeek.getDayOfWeek()));
         }
 
         return dateInWeek;
@@ -628,12 +630,13 @@ public class TimexResolver {
             List<String> startDateValues = getDateValues(range.getStart(), date);
             List<String> endDateValues = getDateValues(range.getEnd(), date);
             List<Resolution.Entry> result = new ArrayList<Resolution.Entry>();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalTime defaultTime = LocalDateTime.MIN.toLocalTime();
             List<DateRange> dateRanges = Streams
                     .zip(startDateValues.stream(), endDateValues.stream(), (n, w) -> new DateRange() {
                         {
-                            setStart(LocalDateTime.parse(n, formatter));
-                            setEnd(LocalDateTime.parse(w, formatter));
+                            setStart(LocalDateTime.of(LocalDate.parse(n, formatter), defaultTime));
+                            setEnd(LocalDateTime.of(LocalDate.parse(w, formatter), defaultTime));
                         }
                     }).collect(Collectors.toList());
             for (DateRange dateRange : dateRanges) {
@@ -642,9 +645,9 @@ public class TimexResolver {
                         {
                             setTimex(timex.getTimexValue());
                             setType("datetimerange");
-                            setStart(TimexHelpers.formatResolvedDateValue(dateRange.getStart().toString(),
+                            setStart(TimexHelpers.formatResolvedDateValue(dateRange.getStart().toLocalDate().toString(),
                                     TimexValue.timeValue(range.getStart(), date)));
-                            setEnd(TimexHelpers.formatResolvedDateValue(dateRange.getEnd().toString(),
+                            setEnd(TimexHelpers.formatResolvedDateValue(dateRange.getEnd().toLocalDate().toString(),
                                     TimexValue.timeValue(range.getEnd(), date)));
                         }
                     });

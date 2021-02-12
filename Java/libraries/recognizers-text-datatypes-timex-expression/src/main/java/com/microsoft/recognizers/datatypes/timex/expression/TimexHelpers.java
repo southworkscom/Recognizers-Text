@@ -226,7 +226,7 @@ public class TimexHelpers {
             dayString = day.toString();
             if (weekOfMonth != Constants.INVALID_VALUE) {
                 monthWeekString = monthWeekString + String.format("-%s-", Constants.TIMEX_FUZZY_WEEK)
-                        + String.format(Constants.TIMEX_FUZZY_WEEK, weekOfMonth.toString());
+                        + weekOfMonth.toString();
             } else {
                 monthWeekString = Constants.TIMEX_WEEK + monthWeekString;
             }
@@ -343,10 +343,10 @@ public class TimexHelpers {
     }
 
     private static TimexProperty timeAdd(TimexProperty start, TimexProperty duration) {
-        int second = start.getSecond() + (int)(duration.getSeconds() != null ? duration.getSeconds() : 0);
-        int minute = start.getMinute() + second / 60
+        Integer second = start.getSecond() + (int)(duration.getSeconds() != null ? duration.getSeconds().intValue() : 0);
+        Integer minute = start.getMinute() + second / 60
                 + (duration.getMinutes() != null ? duration.getMinutes().intValue() : 0);
-        int hour = start.getHour() + (minute / 60) + (duration.getHours() != null ? duration.getHours().intValue() : 0);
+        Integer hour = start.getHour() + (minute / 60) + (duration.getHours() != null ? duration.getHours().intValue() : 0);
 
         return new TimexProperty() {
             {

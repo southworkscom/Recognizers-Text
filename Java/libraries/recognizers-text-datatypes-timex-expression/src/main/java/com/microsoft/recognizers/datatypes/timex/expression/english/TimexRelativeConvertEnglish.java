@@ -166,7 +166,7 @@ public class TimexRelativeConvertEnglish {
                 }
 
                 if (TimexDateHelpers.isNextWeek(timexDate, date)) {
-                    return String.format("%1$s %2$s", TimexConstantsEnglish.NEXT,
+                    return String.format("%1$s %2$s %3$s", TimexConstantsEnglish.NEXT,
                             TimexRelativeConvertEnglish.getDateDay(timexDate.getDayOfWeek()),
                             TimexConstantsEnglish.DAY_PARTS.get(timex.getPartOfDay()));
                 }

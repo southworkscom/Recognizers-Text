@@ -78,7 +78,7 @@ public class TimexRegex {
 
     private static Boolean tryExtract(Pattern regex, String timex, Map<String, String> result) {
         Matcher regexResult = regex.matcher(timex);
-        if (!regexResult.matches()) {
+        if (!regexResult.find()) {
             return false;
         }
 
