@@ -137,7 +137,7 @@ public class TestTimexResolver {
         Assert.assertEquals("date", resolution.getValues().get(0).getType());
         Assert.assertNull(resolution.getValues().get(0).getStart());
         Assert.assertNull(resolution.getValues().get(0).getEnd());
-        Assert.assertEquals("2020-03-09", resolution.getValues().get(0).getEnd());
+        Assert.assertEquals("2020-03-09", resolution.getValues().get(0).getValue());
 
         Assert.assertEquals("XXXX-W11-1", resolution.getValues().get(1).getTimex());
         Assert.assertEquals("date", resolution.getValues().get(1).getType());
