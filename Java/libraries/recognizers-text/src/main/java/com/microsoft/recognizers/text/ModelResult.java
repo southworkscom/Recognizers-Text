@@ -1,9 +1,13 @@
 package com.microsoft.recognizers.text;
 
+import com.sun.istack.internal.Nullable;
+
 import java.util.SortedMap;
 
 public class ModelResult {
 
+    public static final String ParentTextKey = "parentText";
+    public final String parentText;
     public final String text;
     public final int start;
     public final int end;
@@ -16,5 +20,15 @@ public class ModelResult {
         this.end = end;
         this.typeName = typeName;
         this.resolution = resolution;
+        this.parentText = null;
+    }
+
+    public ModelResult(String text, int start, int end, String typeName, SortedMap<String, Object> resolution, @Nullable String parentText) {
+        this.text = text;
+        this.start = start;
+        this.end = end;
+        this.typeName = typeName;
+        this.resolution = resolution;
+        this.parentText = parentText;
     }
 }
