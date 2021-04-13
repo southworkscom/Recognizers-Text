@@ -38,7 +38,7 @@ public class NumberTest extends AbstractTest {
     }
 
     @Override
-    protected void Assert(ModelResult expected, ModelResult actual) {
+    protected void Assert(ModelResult expected, ModelResult actual, TestCase currentCase) {
         Assert.assertEquals(getMessage(currentCase, "end"), expected.end, actual.end);
         List<String> testResolutionKeys = new ArrayList() {{ add("value");}};
         for (String key : testResolutionKeys) {

@@ -143,7 +143,7 @@ public abstract class AbstractTest {
         assertResultsWithKeys(currentCase, results, Collections.emptyList());
     }
 
-    public static void assertResultsWithKeys(TestCase currentCase, List<ModelResult> results, List<String> testResolutionKeys) {
+    /*public static void assertResultsWithKeys(TestCase currentCase, List<ModelResult> results, List<String> testResolutionKeys) {
 
         List<ModelResult> expectedResults = readExpectedResults(ModelResult.class, currentCase.results);
         Assert.assertEquals(getMessage(currentCase, "\"Result Count\""), expectedResults.size(), results.size());
@@ -166,7 +166,7 @@ public abstract class AbstractTest {
                         Assert.assertEquals(getMessage(currentCase, key), expected.resolution.get(key), actual.resolution.get(key));
                     }
                 });
-    }
+    }*/
 
     public void assertResultsGeneric(TestCase currentCase, List<ModelResult> results) {
         List<ModelResult> expectedResults = readExpectedResults(ModelResult.class, currentCase.results);
@@ -180,21 +180,24 @@ public abstract class AbstractTest {
 
                     Assert.assertEquals(getMessage(currentCase, "typeName"), expected.typeName, actual.typeName);
                     Assert.assertEquals(getMessage(currentCase, "text"), expected.text, actual.text);
-                    Assert.assertEquals(getMessage(currentCase, "start"), expected.start, actual.start);
 
-                    Assert(expected, actual);
+                    Assert(expected, actual, currentCase);
                 });
     }
 
-    protected void Assert(ModelResult expected, ModelResult actual) {
+    protected void Assert(ModelResult expected, ModelResult actual, TestCase currentCase) {
         if (expected.resolution.containsKey(ResolutionKey.Value)) {
             Assert.assertEquals(getMessage(currentCase, "resolution.value"),
                     expected.resolution.get(ResolutionKey.Value), actual.resolution.get(ResolutionKey.Value));
         }
 
-        /*for (String key : getKeysToTest(currentCase)) {
+        for (String key : getKeysToTest(currentCase)) {
             Assert.assertEquals(getMessage(currentCase, key), expected.resolution.get(key), actual.resolution.get(key));
-        }*/
+        }
+    }
+
+    protected List<String> getKeysToTest(TestCase currentCase) {
+        return new ArrayList<>();
     }
 
     public static Collection<TestCase> enumerateTestCases(String recognizerType, String modelName) {

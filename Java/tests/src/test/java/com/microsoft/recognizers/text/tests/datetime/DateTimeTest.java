@@ -44,7 +44,8 @@ public class DateTimeTest extends AbstractTest {
     }
 
     @Override
-    protected void Assert(ModelResult expected, ModelResult actual) {
+    protected void Assert(ModelResult expected, ModelResult actual, TestCase currentCase) {
+        Assert.assertEquals(getMessage(currentCase, "start"), expected.start, actual.start);
         Assert.assertEquals(getMessage(currentCase, "end"), expected.end, actual.end);
 
         if (actual.parentText != null) {
