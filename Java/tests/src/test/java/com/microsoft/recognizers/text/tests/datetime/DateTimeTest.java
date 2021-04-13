@@ -40,7 +40,7 @@ public class DateTimeTest extends AbstractTest {
         List<ModelResult> results = recognize(currentCase);
 
         // assert
-        assertResultsGeneric(currentCase, results);
+        assertResults(currentCase, results);
     }
 
     @Override
