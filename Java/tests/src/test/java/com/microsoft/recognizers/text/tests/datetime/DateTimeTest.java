@@ -41,9 +41,10 @@ public class DateTimeTest extends AbstractTest {
         List<ModelResult> results = recognize(currentCase);
 
         // assert
-        assertResultsDateTime(currentCase, results);
+        //assertResultsDateTime(currentCase, results);
+        assertResultsGeneric(currentCase, results);
     }
-
+/*
     public static <T extends ModelResult> void assertResultsDateTime(TestCase currentCase, List<T> results) {
 
         List<ExtendedModelResult> expectedResults = readExpectedResults(ExtendedModelResult.class, currentCase.results);
@@ -74,6 +75,29 @@ public class DateTimeTest extends AbstractTest {
                             (List<Map<String, Object>>)actual.resolution.get(ResolutionKey.ValueSet));
                     }
                 });
+    }
+*/
+    @Override
+    protected void Assert(ModelResult expected, ModelResult actual) {
+        //ExtendedModelResult expected = (ExtendedModelResult)expectedObject;
+        Assert.assertEquals(getMessage(currentCase, "end"), expected.end, actual.end);
+
+        if (actual.parentText != null) {
+            Assert.assertEquals(getMessage(currentCase, "parentText"),
+                    expected.parentText, actual.parentText);
+        }
+
+        if (expected.resolution.containsKey(ResolutionKey.ValueSet)) {
+
+            Assert.assertNotNull(getMessage(currentCase, "resolution"), actual.resolution);
+
+            Assert.assertNotNull(getMessage(currentCase,
+                    ResolutionKey.ValueSet), actual.resolution.get(ResolutionKey.ValueSet));
+
+            assertValueSet(currentCase,
+                    (List<Map<String, Object>>)expected.resolution.get(ResolutionKey.ValueSet),
+                    (List<Map<String, Object>>)actual.resolution.get(ResolutionKey.ValueSet));
+        }
     }
 
     private static void assertValueSet(TestCase currentCase, List<Map<String, Object>> expected, List<Map<String, Object>> actual) {
