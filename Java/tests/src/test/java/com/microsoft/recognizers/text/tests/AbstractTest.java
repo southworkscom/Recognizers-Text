@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.recognizers.text.*;
 import com.microsoft.recognizers.text.datetime.parsers.DateTimeParseResult;
 import com.microsoft.recognizers.text.tests.helpers.DateTimeParseResultMixIn;
-import com.microsoft.recognizers.text.tests.helpers.ExtendedModelResultMixIn;
 import com.microsoft.recognizers.text.tests.helpers.ExtractResultMixIn;
 import com.microsoft.recognizers.text.tests.helpers.ModelResultMixIn;
 import org.apache.commons.io.FileUtils;
@@ -178,22 +177,22 @@ public abstract class AbstractTest {
                 .forEach(t -> {
                     ModelResult expected = t.getValue0();
                     ModelResult actual = t.getValue1();
-/*
+
                     Assert.assertEquals(getMessage(currentCase, "typeName"), expected.typeName, actual.typeName);
                     Assert.assertEquals(getMessage(currentCase, "text"), expected.text, actual.text);
-*/
+                    Assert.assertEquals(getMessage(currentCase, "start"), expected.start, actual.start);
+
                     Assert(expected, actual);
                 });
     }
 
-    protected void Assert(ModelResult expectedObject, ModelResult actual) {
-        ModelResult expected = (ModelResult)expectedObject;
+    protected void Assert(ModelResult expected, ModelResult actual) {
         if (expected.resolution.containsKey(ResolutionKey.Value)) {
             Assert.assertEquals(getMessage(currentCase, "resolution.value"),
                     expected.resolution.get(ResolutionKey.Value), actual.resolution.get(ResolutionKey.Value));
         }
 
-        /*for (String key : testResolutionKeys) {
+        /*for (String key : getKeysToTest(currentCase)) {
             Assert.assertEquals(getMessage(currentCase, key), expected.resolution.get(key), actual.resolution.get(key));
         }*/
     }
@@ -294,7 +293,6 @@ public abstract class AbstractTest {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
         mapper.addMixIn(ModelResult.class, ModelResultMixIn.class);
-        mapper.addMixIn(ExtendedModelResult.class, ExtendedModelResultMixIn.class);
 
         try {
             String json = mapper.writeValueAsString(result);
