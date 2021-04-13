@@ -35,11 +35,10 @@ public class NumberWithUnitTest extends AbstractTest {
         List<ModelResult> results = recognize(currentCase);
 
         // assert
-        assertResults(currentCase, results);
+        assertResults(currentCase, results, getKeysToTest(currentCase));
     }
 
-    @Override
-    protected List<String> getKeysToTest(TestCase currentCase) {
+    private List<String> getKeysToTest(TestCase currentCase) {
         switch (currentCase.modelName) {
             case "CurrencyModel":
                 return Arrays.asList(ResolutionKey.Unit, ResolutionKey.Unit, ResolutionKey.IsoCurrency);

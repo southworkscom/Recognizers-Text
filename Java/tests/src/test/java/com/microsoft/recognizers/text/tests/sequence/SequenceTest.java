@@ -35,11 +35,10 @@ public class SequenceTest extends AbstractTest {
         List<ModelResult> results = recognize(currentCase);
 
         // assert
-        assertResults(currentCase, results);
+        assertResults(currentCase, results, getKeysToTest());
     }
 
-    @Override
-    protected List<String> getKeysToTest(TestCase currentCase) {
+    private List<String> getKeysToTest() {
         return Arrays.asList(ResolutionKey.Value);
     }
 

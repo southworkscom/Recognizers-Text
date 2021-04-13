@@ -7,7 +7,6 @@ import com.microsoft.recognizers.text.tests.AbstractTest;
 import com.microsoft.recognizers.text.tests.DependencyConstants;
 import com.microsoft.recognizers.text.tests.NotSupportedException;
 import com.microsoft.recognizers.text.tests.TestCase;
-import org.junit.Assert;
 import org.junit.AssumptionViolatedException;
 import org.junit.runners.Parameterized;
 
@@ -34,16 +33,7 @@ public class NumberTest extends AbstractTest {
         List<ModelResult> results = recognize(currentCase);
 
         // assert
-        assertResults(currentCase, results);
-    }
-
-    @Override
-    protected void Assert(ModelResult expected, ModelResult actual, TestCase currentCase) {
-        Assert.assertEquals(getMessage(currentCase, "end"), expected.end, actual.end);
-        List<String> testResolutionKeys = new ArrayList() {{ add("value");}};
-        for (String key : testResolutionKeys) {
-            Assert.assertEquals(getMessage(currentCase, key), expected.resolution.get(key), actual.resolution.get(key));
-        }
+        assertResults(currentCase, results, new ArrayList() {{ add("value");}});
     }
 
     @Override

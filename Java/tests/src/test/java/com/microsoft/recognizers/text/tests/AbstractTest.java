@@ -136,10 +136,10 @@ public abstract class AbstractTest {
 
     protected void recognizeAndAssert(TestCase currentCase) {
         List<ModelResult> results = recognize(currentCase);
-        assertResults(currentCase, results);
+        assertResults(currentCase, results, Collections.emptyList());
     }
 
-    public void assertResults(TestCase currentCase, List<ModelResult> results) {
+    public void assertResults(TestCase currentCase, List<ModelResult> results, List<String> testResolutionKeys) {
         List<ModelResult> expectedResults = readExpectedResults(ModelResult.class, currentCase.results);
         Assert.assertEquals(getMessage(currentCase, "\"Result Count\""), expectedResults.size(), results.size());
 
@@ -152,23 +152,19 @@ public abstract class AbstractTest {
                     Assert.assertEquals(getMessage(currentCase, "typeName"), expected.typeName, actual.typeName);
                     Assert.assertEquals(getMessage(currentCase, "text"), expected.text, actual.text);
 
-                    Assert(expected, actual, currentCase);
+                    assertModel(expected, actual, currentCase, testResolutionKeys);
                 });
     }
 
-    protected void Assert(ModelResult expected, ModelResult actual, TestCase currentCase) {
+    protected void assertModel(ModelResult expected, ModelResult actual, TestCase currentCase, List<String> testResolutionKeys) {
         if (expected.resolution.containsKey(ResolutionKey.Value)) {
             Assert.assertEquals(getMessage(currentCase, "resolution.value"),
                     expected.resolution.get(ResolutionKey.Value), actual.resolution.get(ResolutionKey.Value));
         }
 
-        for (String key : getKeysToTest(currentCase)) {
+        for (String key : testResolutionKeys) {
             Assert.assertEquals(getMessage(currentCase, key), expected.resolution.get(key), actual.resolution.get(key));
         }
-    }
-
-    protected List<String> getKeysToTest(TestCase currentCase) {
-        return new ArrayList<>();
     }
 
     public static Collection<TestCase> enumerateTestCases(String recognizerType, String modelName) {

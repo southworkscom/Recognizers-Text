@@ -11,6 +11,7 @@ import com.microsoft.recognizers.text.tests.TestCase;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
@@ -40,11 +41,11 @@ public class DateTimeTest extends AbstractTest {
         List<ModelResult> results = recognize(currentCase);
 
         // assert
-        assertResults(currentCase, results);
+        assertResults(currentCase, results, Collections.emptyList());
     }
 
     @Override
-    protected void Assert(ModelResult expected, ModelResult actual, TestCase currentCase) {
+    protected void assertModel(ModelResult expected, ModelResult actual, TestCase currentCase, List<String> testResolutionKeys) {
         Assert.assertEquals(getMessage(currentCase, "start"), expected.start, actual.start);
         Assert.assertEquals(getMessage(currentCase, "end"), expected.end, actual.end);
 
