@@ -1,6 +1,5 @@
 package com.microsoft.recognizers.text.tests.number;
 
-import com.microsoft.recognizers.text.ExtendedModelResult;
 import com.microsoft.recognizers.text.ModelResult;
 import com.microsoft.recognizers.text.number.NumberOptions;
 import com.microsoft.recognizers.text.number.NumberRecognizer;
@@ -8,16 +7,13 @@ import com.microsoft.recognizers.text.tests.AbstractTest;
 import com.microsoft.recognizers.text.tests.DependencyConstants;
 import com.microsoft.recognizers.text.tests.NotSupportedException;
 import com.microsoft.recognizers.text.tests.TestCase;
-import org.javatuples.Pair;
 import org.junit.Assert;
 import org.junit.AssumptionViolatedException;
 import org.junit.runners.Parameterized;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.IntStream;
 
 public class NumberTest extends AbstractTest {
 
@@ -38,31 +34,16 @@ public class NumberTest extends AbstractTest {
         List<ModelResult> results = recognize(currentCase);
 
         // assert
-        assertResultsNumber(currentCase, results, new ArrayList() {{ add("value");}});
+        assertResultsGeneric(currentCase, results);
     }
 
-    public static <T extends ModelResult> void assertResultsNumber(TestCase currentCase, List<T> results, List<String> testResolutionKeys) {
-
-        List<ExtendedModelResult> expectedResults = readExpectedResults(ExtendedModelResult.class, currentCase.results);
-        Assert.assertEquals(getMessage(currentCase, "\"Result Count\""), expectedResults.size(), results.size());
-
-        IntStream.range(0, expectedResults.size())
-                .mapToObj(i -> Pair.with(expectedResults.get(i), results.get(i)))
-                .forEach(t -> {
-                    ExtendedModelResult expected = t.getValue0();
-                    T actual = t.getValue1();
-
-                    Assert.assertEquals(getMessage(currentCase, "typeName"), expected.typeName, actual.typeName);
-                    Assert.assertEquals(getMessage(currentCase, "text"), expected.text, actual.text);
-
-                    // Number and NumberWithUnit are supported currently.
-                    Assert.assertEquals(getMessage(currentCase, "start"), expected.start, actual.start);
-                    Assert.assertEquals(getMessage(currentCase, "end"), expected.end, actual.end);
-
-                    for (String key : testResolutionKeys) {
-                        Assert.assertEquals(getMessage(currentCase, key), expected.resolution.get(key), actual.resolution.get(key));
-                    }
-                });
+    @Override
+    protected void Assert(ModelResult expected, ModelResult actual) {
+        Assert.assertEquals(getMessage(currentCase, "end"), expected.end, actual.end);
+        List<String> testResolutionKeys = new ArrayList() {{ add("value");}};
+        for (String key : testResolutionKeys) {
+            Assert.assertEquals(getMessage(currentCase, key), expected.resolution.get(key), actual.resolution.get(key));
+        }
     }
 
     @Override
