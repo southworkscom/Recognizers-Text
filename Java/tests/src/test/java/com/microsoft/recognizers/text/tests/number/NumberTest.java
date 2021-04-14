@@ -1,12 +1,14 @@
 package com.microsoft.recognizers.text.tests.number;
 
 import com.microsoft.recognizers.text.ModelResult;
+import com.microsoft.recognizers.text.ResolutionKey;
 import com.microsoft.recognizers.text.number.NumberOptions;
 import com.microsoft.recognizers.text.number.NumberRecognizer;
 import com.microsoft.recognizers.text.tests.AbstractTest;
 import com.microsoft.recognizers.text.tests.DependencyConstants;
 import com.microsoft.recognizers.text.tests.NotSupportedException;
 import com.microsoft.recognizers.text.tests.TestCase;
+import org.junit.Assert;
 import org.junit.AssumptionViolatedException;
 import org.junit.runners.Parameterized;
 
@@ -34,6 +36,14 @@ public class NumberTest extends AbstractTest {
 
         // assert
         assertResults(currentCase, results, new ArrayList() {{ add("value"); }});
+    }
+
+    @Override
+    protected void assertModel(ModelResult expected, ModelResult actual, TestCase currentCase, List<String> testResolutionKeys) {
+        super.assertModel(expected, actual, currentCase, testResolutionKeys);
+
+        Assert.assertEquals(getMessage(currentCase, "start"), expected.start, actual.start);
+        Assert.assertEquals(getMessage(currentCase, "end"), expected.end, actual.end);
     }
 
     @Override

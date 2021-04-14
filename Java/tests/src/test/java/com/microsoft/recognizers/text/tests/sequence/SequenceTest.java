@@ -43,16 +43,12 @@ public class SequenceTest extends AbstractTest {
     protected void assertModel(ModelResult expected, ModelResult actual, TestCase currentCase, List<String> testResolutionKeys) {
         super.assertModel(expected, actual, currentCase, testResolutionKeys);
 
-        // Number and NumberWithUnit are supported currently.
-        if (expected.start != -1) {
+        if (expected.start != 0 && expected.end != 0) {
             Assert.assertEquals(getMessage(currentCase, "start"), expected.start, actual.start);
-        }
-
-        // Number and NumberWithUnit are supported currently.
-        if (expected.end != -1) {
             Assert.assertEquals(getMessage(currentCase, "end"), expected.end, actual.end);
         }
     }
+
     private List<String> getKeysToTest() {
         return Arrays.asList(ResolutionKey.Value);
     }
