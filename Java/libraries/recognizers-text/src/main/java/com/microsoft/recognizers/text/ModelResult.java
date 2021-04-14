@@ -15,15 +15,10 @@ public class ModelResult {
     public final SortedMap<String, Object> resolution;
 
     public ModelResult(String text, int start, int end, String typeName, SortedMap<String, Object> resolution) {
-        this.text = text;
-        this.start = start;
-        this.end = end;
-        this.typeName = typeName;
-        this.resolution = resolution;
-        this.parentText = null;
+        this(text, start, end, typeName, resolution, null);
     }
 
-    public ModelResult(String text, int start, int end, String typeName, SortedMap<String, Object> resolution, @Nullable String parentText) {
+    public ModelResult(String text, int start, int end, String typeName, SortedMap<String, Object> resolution, String parentText) {
         this.text = text;
         this.start = start;
         this.end = end;
