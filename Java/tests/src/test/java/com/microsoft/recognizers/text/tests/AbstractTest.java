@@ -152,7 +152,7 @@ public abstract class AbstractTest {
                     Assert.assertEquals(getMessage(currentCase, "typeName"), expected.typeName, actual.typeName);
                     Assert.assertEquals(getMessage(currentCase, "text"), expected.text, actual.text);
 
-                    // If both properties are equal to 0, it means they doesn't exists, so it will skip the validation
+                    // If both properties are equal to 0, it means they don't exist, so it will skip the validation
                     if (expected.start != 0 && expected.end != 0) {
                         Assert.assertEquals(getMessage(currentCase, "start"), expected.start, actual.start);
                         Assert.assertEquals(getMessage(currentCase, "end"), expected.end, actual.end);
