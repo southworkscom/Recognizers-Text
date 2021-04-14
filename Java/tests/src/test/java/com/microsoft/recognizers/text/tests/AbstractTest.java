@@ -161,17 +161,6 @@ public abstract class AbstractTest {
                 });
     }
 
-    protected void assertModel(ModelResult expected, ModelResult actual, TestCase currentCase, List<String> testResolutionKeys) {
-        if (expected.resolution.containsKey(ResolutionKey.Value)) {
-            Assert.assertEquals(getMessage(currentCase, "resolution.value"),
-                    expected.resolution.get(ResolutionKey.Value), actual.resolution.get(ResolutionKey.Value));
-        }
-
-        for (String key : testResolutionKeys) {
-            Assert.assertEquals(getMessage(currentCase, key), expected.resolution.get(key), actual.resolution.get(key));
-        }
-    }
-
     public static Collection<TestCase> enumerateTestCases(String recognizerType, String modelName) {
 
         String recognizerTypePath = String.format(File.separator + recognizerType + File.separator);
@@ -313,6 +302,17 @@ public abstract class AbstractTest {
 
     public static String getMessage(TestCase testCase, String propName) {
         return "Does not match " + propName + " on Input: \"" + testCase.input + "\"";
+    }
+
+    protected void assertModel(ModelResult expected, ModelResult actual, TestCase currentCase, List<String> testResolutionKeys) {
+        if (expected.resolution.containsKey(ResolutionKey.Value)) {
+            Assert.assertEquals(getMessage(currentCase, "resolution.value"),
+                    expected.resolution.get(ResolutionKey.Value), actual.resolution.get(ResolutionKey.Value));
+        }
+
+        for (String key : testResolutionKeys) {
+            Assert.assertEquals(getMessage(currentCase, key), expected.resolution.get(key), actual.resolution.get(key));
+        }
     }
 
     private static String StringUtf8Bom(String input) {

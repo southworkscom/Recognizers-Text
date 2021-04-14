@@ -1,7 +1,5 @@
 package com.microsoft.recognizers.text;
 
-import com.sun.istack.internal.Nullable;
-
 import java.util.SortedMap;
 
 public class ModelResult {
