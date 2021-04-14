@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.recognizers.text.*;
 import com.microsoft.recognizers.text.datetime.parsers.DateTimeParseResult;
 import com.microsoft.recognizers.text.tests.helpers.DateTimeParseResultMixIn;
-import com.microsoft.recognizers.text.tests.helpers.ExtendedModelResultMixIn;
 import com.microsoft.recognizers.text.tests.helpers.ExtractResultMixIn;
 import com.microsoft.recognizers.text.tests.helpers.ModelResultMixIn;
 import org.apache.commons.io.FileUtils;
@@ -137,15 +136,10 @@ public abstract class AbstractTest {
 
     protected void recognizeAndAssert(TestCase currentCase) {
         List<ModelResult> results = recognize(currentCase);
-        assertResults(currentCase, results);
+        assertResults(currentCase, results, Collections.emptyList());
     }
 
-    public static void assertResults(TestCase currentCase, List<ModelResult> results) {
-        assertResultsWithKeys(currentCase, results, Collections.emptyList());
-    }
-
-    public static void assertResultsWithKeys(TestCase currentCase, List<ModelResult> results, List<String> testResolutionKeys) {
-
+    public void assertResults(TestCase currentCase, List<ModelResult> results, List<String> testResolutionKeys) {
         List<ModelResult> expectedResults = readExpectedResults(ModelResult.class, currentCase.results);
         Assert.assertEquals(getMessage(currentCase, "\"Result Count\""), expectedResults.size(), results.size());
 
@@ -158,15 +152,19 @@ public abstract class AbstractTest {
                     Assert.assertEquals(getMessage(currentCase, "typeName"), expected.typeName, actual.typeName);
                     Assert.assertEquals(getMessage(currentCase, "text"), expected.text, actual.text);
 
-                    if (expected.resolution.containsKey(ResolutionKey.Value)) {
-                        Assert.assertEquals(getMessage(currentCase, "resolution.value"),
-                                            expected.resolution.get(ResolutionKey.Value), actual.resolution.get(ResolutionKey.Value));
-                    }
-
-                    for (String key : testResolutionKeys) {
-                        Assert.assertEquals(getMessage(currentCase, key), expected.resolution.get(key), actual.resolution.get(key));
-                    }
+                    assertModel(expected, actual, currentCase, testResolutionKeys);
                 });
+    }
+
+    protected void assertModel(ModelResult expected, ModelResult actual, TestCase currentCase, List<String> testResolutionKeys) {
+        if (expected.resolution.containsKey(ResolutionKey.Value)) {
+            Assert.assertEquals(getMessage(currentCase, "resolution.value"),
+                    expected.resolution.get(ResolutionKey.Value), actual.resolution.get(ResolutionKey.Value));
+        }
+
+        for (String key : testResolutionKeys) {
+            Assert.assertEquals(getMessage(currentCase, key), expected.resolution.get(key), actual.resolution.get(key));
+        }
     }
 
     public static Collection<TestCase> enumerateTestCases(String recognizerType, String modelName) {
@@ -265,7 +263,6 @@ public abstract class AbstractTest {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
         mapper.addMixIn(ModelResult.class, ModelResultMixIn.class);
-        mapper.addMixIn(ExtendedModelResult.class, ExtendedModelResultMixIn.class);
 
         try {
             String json = mapper.writeValueAsString(result);
