@@ -33,7 +33,7 @@ public class NumberTest extends AbstractTest {
         List<ModelResult> results = recognize(currentCase);
 
         // assert
-        assertResults(currentCase, results, new ArrayList() {{ add("value");}});
+        assertResults(currentCase, results, new ArrayList() {{ add("value"); }});
     }
 
     @Override
