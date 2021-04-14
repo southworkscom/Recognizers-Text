@@ -39,16 +39,6 @@ public class SequenceTest extends AbstractTest {
         assertResults(currentCase, results, getKeysToTest());
     }
 
-    @Override
-    protected void assertModel(ModelResult expected, ModelResult actual, TestCase currentCase, List<String> testResolutionKeys) {
-        super.assertModel(expected, actual, currentCase, testResolutionKeys);
-
-        if (expected.start != 0 && expected.end != 0) {
-            Assert.assertEquals(getMessage(currentCase, "start"), expected.start, actual.start);
-            Assert.assertEquals(getMessage(currentCase, "end"), expected.end, actual.end);
-        }
-    }
-
     private List<String> getKeysToTest() {
         return Arrays.asList(ResolutionKey.Value);
     }
