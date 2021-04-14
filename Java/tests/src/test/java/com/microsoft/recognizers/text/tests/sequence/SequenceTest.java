@@ -13,6 +13,7 @@ import com.microsoft.recognizers.text.sequence.SequenceRecognizer;
 import com.microsoft.recognizers.text.tests.AbstractTest;
 import com.microsoft.recognizers.text.tests.TestCase;
 
+import org.junit.Assert;
 import org.junit.AssumptionViolatedException;
 import org.junit.runners.Parameterized;
 
@@ -35,7 +36,25 @@ public class SequenceTest extends AbstractTest {
         List<ModelResult> results = recognize(currentCase);
 
         // assert
-        assertResultsWithKeys(currentCase, results, Arrays.asList(ResolutionKey.Value));
+        assertResults(currentCase, results, getKeysToTest());
+    }
+
+    @Override
+    protected void assertModel(ModelResult expected, ModelResult actual, TestCase currentCase, List<String> testResolutionKeys) {
+        super.assertModel(expected, actual, currentCase, testResolutionKeys);
+
+        // Number and NumberWithUnit are supported currently.
+        if (expected.start != -1) {
+            Assert.assertEquals(getMessage(currentCase, "start"), expected.start, actual.start);
+        }
+
+        // Number and NumberWithUnit are supported currently.
+        if (expected.end != -1) {
+            Assert.assertEquals(getMessage(currentCase, "end"), expected.end, actual.end);
+        }
+    }
+    private List<String> getKeysToTest() {
+        return Arrays.asList(ResolutionKey.Value);
     }
 
     @Override

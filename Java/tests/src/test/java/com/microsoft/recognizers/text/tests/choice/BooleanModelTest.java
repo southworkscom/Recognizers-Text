@@ -34,7 +34,7 @@ public class BooleanModelTest extends AbstractTest {
         // parse
         List<ModelResult> results = recognize(currentCase);
         // assert
-        assertResultsWithKeys(currentCase, results, getKeysToTest(currentCase));
+        assertResults(currentCase, results, getKeysToTest(currentCase));
     }
 
     private List<String> getKeysToTest(TestCase currentCase) {
