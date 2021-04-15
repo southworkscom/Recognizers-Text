@@ -35,16 +35,6 @@ public class DateTimeTest extends AbstractTest {
     }
 
     @Override
-    protected void recognizeAndAssert(TestCase currentCase) {
-
-        // parse
-        List<ModelResult> results = recognize(currentCase);
-
-        // assert
-        assertResults(currentCase, results, Collections.emptyList());
-    }
-
-    @Override
     protected void assertModel(ModelResult expected,
                                ModelResult actual,
                                TestCase currentCase,
