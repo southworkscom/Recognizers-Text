@@ -13,6 +13,7 @@ import org.junit.AssumptionViolatedException;
 import org.junit.runners.Parameterized;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class NumberTest extends AbstractTest {
         List<ModelResult> results = recognize(currentCase);
 
         // assert
-        assertResults(currentCase, results, new ArrayList() {{ add("value"); }});
+        assertResults(currentCase, results, Arrays.asList(ResolutionKey.Value));
     }
 
     @Override

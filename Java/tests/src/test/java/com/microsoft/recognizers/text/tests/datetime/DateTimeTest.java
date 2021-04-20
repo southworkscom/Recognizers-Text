@@ -39,9 +39,6 @@ public class DateTimeTest extends AbstractTest {
                                ModelResult actual,
                                TestCase currentCase,
                                List<String> testResolutionKeys) {
-        Assert.assertEquals(getMessage(currentCase, "start"), expected.start, actual.start);
-        Assert.assertEquals(getMessage(currentCase, "end"), expected.end, actual.end);
-
         if (actual.parentText != null) {
             Assert.assertEquals(getMessage(currentCase, "parentText"),
                     expected.parentText, actual.parentText);

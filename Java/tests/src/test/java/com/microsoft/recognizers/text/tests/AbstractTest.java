@@ -305,11 +305,6 @@ public abstract class AbstractTest {
     }
 
     protected void assertModel(ModelResult expected, ModelResult actual, TestCase currentCase, List<String> testResolutionKeys) {
-        if (expected.resolution.containsKey(ResolutionKey.Value)) {
-            Assert.assertEquals(getMessage(currentCase, "resolution.value"),
-                    expected.resolution.get(ResolutionKey.Value), actual.resolution.get(ResolutionKey.Value));
-        }
-
         for (String key : testResolutionKeys) {
             Assert.assertEquals(getMessage(currentCase, key), expected.resolution.get(key), actual.resolution.get(key));
         }
