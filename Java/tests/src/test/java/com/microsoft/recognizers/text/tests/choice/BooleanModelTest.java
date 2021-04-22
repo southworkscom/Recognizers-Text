@@ -12,7 +12,10 @@ import com.microsoft.recognizers.text.tests.TestCase;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.IntStream;
 
+import org.javatuples.Pair;
+import org.junit.Assert;
 import org.junit.AssumptionViolatedException;
 import org.junit.runners.Parameterized;
 
@@ -62,5 +65,23 @@ public class BooleanModelTest extends AbstractTest {
         } catch (NotSupportedException nex) {
             throw new AssumptionViolatedException(nex.getMessage(), nex);
         }
+    }
+
+    @Override
+    public void assertResults(TestCase currentCase, List<ModelResult> results, List<String> testResolutionKeys) {
+        List<ModelResult> expectedResults = readExpectedResults(ModelResult.class, currentCase.results);
+        Assert.assertEquals(getMessage(currentCase, "\"Result Count\""), expectedResults.size(), results.size());
+
+        IntStream.range(0, expectedResults.size())
+                .mapToObj(i -> Pair.with(expectedResults.get(i), results.get(i)))
+                .forEach(t -> {
+                    ModelResult expected = t.getValue0();
+                    ModelResult actual = t.getValue1();
+
+                    Assert.assertEquals(getMessage(currentCase, "typeName"), expected.typeName, actual.typeName);
+                    Assert.assertEquals(getMessage(currentCase, "text"), expected.text, actual.text);
+
+                    assertModel(expected, actual, currentCase, testResolutionKeys);
+                });
     }
 }
