@@ -23,6 +23,7 @@ public class NumberWithUnitTest extends AbstractTest {
     @Parameterized.Parameters(name = "{0}")
     public static Collection<TestCase> testCases() {
         Collection<TestCase> collectionTest = AbstractTest.enumerateTestCases(recognizerType, "AgeModel");
+        collectionTest.addAll(AbstractTest.enumerateTestCases(recognizerType, "DimensionModel"));
         collectionTest.addAll(AbstractTest.enumerateTestCases(recognizerType, "TemperatureModel"));
         return collectionTest;
     }
@@ -54,6 +55,8 @@ public class NumberWithUnitTest extends AbstractTest {
                     return NumberWithUnitRecognizer.recognizeAge(currentCase.input, culture, NumberWithUnitOptions.None, false);
                 case "TemperatureModel":
                     return NumberWithUnitRecognizer.recognizeTemperature(currentCase.input, culture, NumberWithUnitOptions.None, false);
+                case "DimensionModel":
+                    return NumberWithUnitRecognizer.recognizeDimension(currentCase.input, culture, NumberWithUnitOptions.None, false);
                 default:
                     throw new NotSupportedException("Model Type/Name not supported: " + currentCase.modelName + " in " + culture);
             }
