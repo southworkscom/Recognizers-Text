@@ -8,7 +8,6 @@ import com.microsoft.recognizers.text.tests.AbstractTest;
 import com.microsoft.recognizers.text.tests.DependencyConstants;
 import com.microsoft.recognizers.text.tests.NotSupportedException;
 import com.microsoft.recognizers.text.tests.TestCase;
-import org.apache.commons.lang3.NotImplementedException;
 import org.junit.AssumptionViolatedException;
 import org.junit.runners.Parameterized;
 
