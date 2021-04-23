@@ -18,11 +18,13 @@ import java.util.List;
 
 public class NumberWithUnitTest extends AbstractTest {
 
-    private static final String recognizerType = "NumberWithUnit";
+    protected static final String recognizerType = "NumberWithUnit";
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<TestCase> testCases() {
-        return AbstractTest.enumerateTestCases(recognizerType, "Model");
+        Collection<TestCase> collectionTest = AbstractTest.enumerateTestCases(recognizerType, "AgeModel");
+        collectionTest.addAll(AbstractTest.enumerateTestCases(recognizerType, "TemperatureModel"));
+        return collectionTest;
     }
 
     public NumberWithUnitTest(TestCase currentCase) {
@@ -48,7 +50,10 @@ public class NumberWithUnitTest extends AbstractTest {
         try {
             String culture = getCultureCode(currentCase.language);
             switch (currentCase.modelName) {
-
+                case "AgeModel":
+                    return NumberWithUnitRecognizer.recognizeAge(currentCase.input, culture, NumberWithUnitOptions.None, false);
+                case "TemperatureModel":
+                    return NumberWithUnitRecognizer.recognizeTemperature(currentCase.input, culture, NumberWithUnitOptions.None, false);
                 default:
                     throw new NotSupportedException("Model Type/Name not supported: " + currentCase.modelName + " in " + culture);
             }

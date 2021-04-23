@@ -16,8 +16,6 @@ import java.util.List;
 
 public class DimensionModelTest extends NumberWithUnitTest {
 
-    private static final String recognizerType = "NumberWithUnit";
-
     @Parameterized.Parameters(name = "{0}")
     public static Collection<TestCase> testCases() {
         return AbstractTest.enumerateTestCases(recognizerType, "DimensionModel");
