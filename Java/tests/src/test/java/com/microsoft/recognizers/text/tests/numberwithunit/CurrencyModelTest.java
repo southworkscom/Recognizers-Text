@@ -5,15 +5,25 @@ import com.microsoft.recognizers.text.ResolutionKey;
 import com.microsoft.recognizers.text.numberwithunit.NumberWithUnitOptions;
 import com.microsoft.recognizers.text.numberwithunit.NumberWithUnitRecognizer;
 import com.microsoft.recognizers.text.numberwithunit.models.CurrencyModel;
+import com.microsoft.recognizers.text.tests.AbstractTest;
 import com.microsoft.recognizers.text.tests.DependencyConstants;
 import com.microsoft.recognizers.text.tests.NotSupportedException;
 import com.microsoft.recognizers.text.tests.TestCase;
 import org.junit.AssumptionViolatedException;
+import org.junit.runners.Parameterized;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class CurrencyModelTest extends NumberWithUnitTest {
+
+    private static final String recognizerType = "NumberWithUnit";
+
+    @Parameterized.Parameters(name = "{0}")
+    public static Collection<TestCase> testCases() {
+        return AbstractTest.enumerateTestCases(recognizerType, "CurrencyModel");
+    }
 
     public CurrencyModelTest(TestCase currentCase) {super(currentCase);}
 
