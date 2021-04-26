@@ -37,7 +37,11 @@ public class BooleanModelTest extends AbstractTest {
         // parse
         List<ModelResult> results = recognize(currentCase);
         // assert
-        assertResults(currentCase, results, Arrays.asList(ResolutionKey.Value, ResolutionKey.Score));
+        assertResults(currentCase, results, getKeysToTest(currentCase));
+    }
+
+    private List<String> getKeysToTest(TestCase currentCase) {
+        return Arrays.asList(ResolutionKey.Value, ResolutionKey.Score);
     }
 
     @Override
@@ -65,23 +69,5 @@ public class BooleanModelTest extends AbstractTest {
         } catch (NotSupportedException nex) {
             throw new AssumptionViolatedException(nex.getMessage(), nex);
         }
-    }
-
-    @Override
-    public void assertResults(TestCase currentCase, List<ModelResult> results, List<String> testResolutionKeys) {
-        List<ModelResult> expectedResults = readExpectedResults(ModelResult.class, currentCase.results);
-        Assert.assertEquals(getMessage(currentCase, "\"Result Count\""), expectedResults.size(), results.size());
-
-        IntStream.range(0, expectedResults.size())
-                .mapToObj(i -> Pair.with(expectedResults.get(i), results.get(i)))
-                .forEach(t -> {
-                    ModelResult expected = t.getValue0();
-                    ModelResult actual = t.getValue1();
-
-                    Assert.assertEquals(getMessage(currentCase, "typeName"), expected.typeName, actual.typeName);
-                    Assert.assertEquals(getMessage(currentCase, "text"), expected.text, actual.text);
-
-                    assertModel(expected, actual, currentCase, testResolutionKeys);
-                });
     }
 }
