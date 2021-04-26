@@ -4,24 +4,14 @@ import com.microsoft.recognizers.text.ModelResult;
 import com.microsoft.recognizers.text.ResolutionKey;
 import com.microsoft.recognizers.text.numberwithunit.NumberWithUnitOptions;
 import com.microsoft.recognizers.text.numberwithunit.NumberWithUnitRecognizer;
-import com.microsoft.recognizers.text.tests.AbstractTest;
 import com.microsoft.recognizers.text.tests.DependencyConstants;
 import com.microsoft.recognizers.text.tests.TestCase;
 import org.junit.AssumptionViolatedException;
-import org.junit.runners.Parameterized;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 public class DimensionModelTest extends NumberWithUnitTest {
-
-    private static final String recognizerType = "NumberWithUnit";
-
-    @Parameterized.Parameters(name = "{0}")
-    public static Collection<TestCase> testCases() {
-        return AbstractTest.enumerateTestCases(recognizerType, "DimensionModel");
-    }
 
     public DimensionModelTest(TestCase currentCase) { super(currentCase); }
 
@@ -36,7 +26,7 @@ public class DimensionModelTest extends NumberWithUnitTest {
 
     @Override
     protected List<String> getKeysToTest(TestCase currentCase) {
-        return Arrays.asList(ResolutionKey.Value, ResolutionKey.Unit);
+        return Arrays.asList(ResolutionKey.Value, ResolutionKey.SubType, ResolutionKey.Unit);
     }
 
     @Override

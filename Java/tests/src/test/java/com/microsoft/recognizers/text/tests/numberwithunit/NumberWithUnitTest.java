@@ -8,7 +8,6 @@ import com.microsoft.recognizers.text.tests.AbstractTest;
 import com.microsoft.recognizers.text.tests.DependencyConstants;
 import com.microsoft.recognizers.text.tests.NotSupportedException;
 import com.microsoft.recognizers.text.tests.TestCase;
-import org.apache.commons.lang3.NotImplementedException;
 import org.junit.AssumptionViolatedException;
 import org.junit.runners.Parameterized;
 
@@ -45,10 +44,14 @@ public class NumberWithUnitTest extends AbstractTest {
 
     @Override
     protected List<ModelResult> recognize(TestCase currentCase) {
+
         try {
             String culture = getCultureCode(currentCase.language);
             switch (currentCase.modelName) {
-
+                case "AgeModel":
+                    return NumberWithUnitRecognizer.recognizeAge(currentCase.input, culture, NumberWithUnitOptions.None, false);
+                case "TemperatureModel":
+                    return NumberWithUnitRecognizer.recognizeTemperature(currentCase.input, culture, NumberWithUnitOptions.None, false);
                 default:
                     throw new NotSupportedException("Model Type/Name not supported: " + currentCase.modelName + " in " + culture);
             }
