@@ -38,8 +38,13 @@ public class NumberWithUnitTest extends AbstractTest {
         assertResults(currentCase, results, getKeysToTest(currentCase));
     }
 
-    protected List<String> getKeysToTest(TestCase currentCase) {
-        return Arrays.asList(ResolutionKey.Value, ResolutionKey.Unit);
+    private List<String> getKeysToTest(TestCase currentCase) {
+        switch (currentCase.modelName) {
+            case "CurrencyModel":
+                return Arrays.asList(ResolutionKey.Value, ResolutionKey.Unit, ResolutionKey.IsoCurrency);
+            default:
+                return Arrays.asList(ResolutionKey.Value, ResolutionKey.Unit);
+        }
     }
 
     @Override
@@ -50,6 +55,10 @@ public class NumberWithUnitTest extends AbstractTest {
             switch (currentCase.modelName) {
                 case "AgeModel":
                     return NumberWithUnitRecognizer.recognizeAge(currentCase.input, culture, NumberWithUnitOptions.None, false);
+                case "CurrencyModel":
+                    return NumberWithUnitRecognizer.recognizeCurrency(currentCase.input, culture, NumberWithUnitOptions.None, false);
+                case "DimensionModel":
+                    return NumberWithUnitRecognizer.recognizeDimension(currentCase.input, culture, NumberWithUnitOptions.None, false);
                 case "TemperatureModel":
                     return NumberWithUnitRecognizer.recognizeTemperature(currentCase.input, culture, NumberWithUnitOptions.None, false);
                 default:
