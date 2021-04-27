@@ -151,7 +151,6 @@ public abstract class AbstractTest {
 
                     Assert.assertEquals(getMessage(currentCase, "typeName"), expected.typeName, actual.typeName);
                     Assert.assertEquals(getMessage(currentCase, "text"), expected.text, actual.text);
-                    
                     assertModel(expected, actual, currentCase, testResolutionKeys);
                 });
     }

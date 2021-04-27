@@ -12,10 +12,7 @@ import com.microsoft.recognizers.text.tests.TestCase;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.IntStream;
 
-import org.javatuples.Pair;
-import org.junit.Assert;
 import org.junit.AssumptionViolatedException;
 import org.junit.runners.Parameterized;
 
@@ -37,11 +34,7 @@ public class BooleanModelTest extends AbstractTest {
         // parse
         List<ModelResult> results = recognize(currentCase);
         // assert
-        assertResults(currentCase, results, getKeysToTest(currentCase));
-    }
-
-    private List<String> getKeysToTest(TestCase currentCase) {
-        return Arrays.asList(ResolutionKey.Value, ResolutionKey.Score);
+        assertResults(currentCase, results, Arrays.asList(ResolutionKey.Value, ResolutionKey.Score));
     }
 
     @Override
