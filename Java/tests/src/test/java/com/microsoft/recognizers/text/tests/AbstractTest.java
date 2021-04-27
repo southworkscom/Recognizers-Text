@@ -152,14 +152,11 @@ public abstract class AbstractTest {
                     Assert.assertEquals(getMessage(currentCase, "typeName"), expected.typeName, actual.typeName);
                     Assert.assertEquals(getMessage(currentCase, "text"), expected.text, actual.text);
 
-                    // If both properties are equal to 0, it means they don't exist, so it will skip the validation
-                    if (expected.start != 0 && expected.end != 0) {
-                        Assert.assertEquals(getMessage(currentCase, "start"), expected.start, actual.start);
-                        Assert.assertEquals(getMessage(currentCase, "end"), expected.end, actual.end);
-                    }
-                    assertModel(expected, actual, currentCase, testResolutionKeys);
+                    assertModel(expected, actual);
+                    assertResolutionKeys(expected, actual, currentCase, testResolutionKeys);
                 });
     }
+    protected void assertModel(ModelResult expected, ModelResult actual){ }
 
     public static Collection<TestCase> enumerateTestCases(String recognizerType, String modelName) {
 
@@ -304,7 +301,7 @@ public abstract class AbstractTest {
         return "Does not match " + propName + " on Input: \"" + testCase.input + "\"";
     }
 
-    protected void assertModel(ModelResult expected, ModelResult actual, TestCase currentCase, List<String> testResolutionKeys) {
+    private void assertResolutionKeys(ModelResult expected, ModelResult actual, TestCase currentCase, List<String> testResolutionKeys) {
         for (String key : testResolutionKeys) {
             Assert.assertEquals(getMessage(currentCase, key), expected.resolution.get(key), actual.resolution.get(key));
         }

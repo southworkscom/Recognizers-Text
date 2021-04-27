@@ -8,6 +8,7 @@ import com.microsoft.recognizers.text.tests.AbstractTest;
 import com.microsoft.recognizers.text.tests.DependencyConstants;
 import com.microsoft.recognizers.text.tests.NotSupportedException;
 import com.microsoft.recognizers.text.tests.TestCase;
+import org.junit.Assert;
 import org.junit.AssumptionViolatedException;
 import org.junit.runners.Parameterized;
 
@@ -45,6 +46,11 @@ public class NumberWithUnitTest extends AbstractTest {
             default:
                 return Arrays.asList(ResolutionKey.Value, ResolutionKey.Unit);
         }
+    }
+    @Override
+    protected void assertModel(ModelResult expected, ModelResult actual){
+        Assert.assertEquals(getMessage(currentCase, "start"), expected.start, actual.start);
+        Assert.assertEquals(getMessage(currentCase, "end"), expected.end, actual.end);
     }
 
     @Override
