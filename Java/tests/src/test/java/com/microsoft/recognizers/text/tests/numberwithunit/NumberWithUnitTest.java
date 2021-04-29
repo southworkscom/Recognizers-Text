@@ -31,7 +31,6 @@ public class NumberWithUnitTest extends AbstractTest {
 
     @Override
     protected void recognizeAndAssert(TestCase currentCase) {
-
         // parse
         List<ModelResult> results = recognize(currentCase);
 
@@ -48,14 +47,17 @@ public class NumberWithUnitTest extends AbstractTest {
         }
     }
     @Override
-    protected void assertModel(ModelResult expected, ModelResult actual){
-        Assert.assertEquals(getMessage(currentCase, "start"), expected.start, actual.start);
-        Assert.assertEquals(getMessage(currentCase, "end"), expected.end, actual.end);
+    protected void assertModel(ModelResult expected, ModelResult actual) {
+        if (expected.start != null) {
+            Assert.assertEquals(getMessage(currentCase, "start"), expected.start, actual.start);
+        }
+        if (expected.end != null) {
+            Assert.assertEquals(getMessage(currentCase, "end"), expected.end, actual.end);
+        }
     }
 
     @Override
     protected List<ModelResult> recognize(TestCase currentCase) {
-
         try {
             String culture = getCultureCode(currentCase.language);
             switch (currentCase.modelName) {
