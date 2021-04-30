@@ -151,11 +151,12 @@ public abstract class AbstractTest {
 
                     Assert.assertEquals(getMessage(currentCase, "typeName"), expected.typeName, actual.typeName);
                     Assert.assertEquals(getMessage(currentCase, "text"), expected.text, actual.text);
-
                     assertModel(expected, actual);
                     assertResolutionKeys(expected, actual, currentCase, testResolutionKeys);
                 });
     }
+
+    // The default behavior is to do not validate other properties as they were validated in the assertResults method
     protected void assertModel(ModelResult expected, ModelResult actual){ }
 
     public static Collection<TestCase> enumerateTestCases(String recognizerType, String modelName) {
