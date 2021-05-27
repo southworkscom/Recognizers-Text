@@ -3,6 +3,7 @@ package com.microsoft.recognizers.text.numberwithunit.chinese.extractors;
 import com.microsoft.recognizers.text.CultureInfo;
 import com.microsoft.recognizers.text.ExtractResult;
 import com.microsoft.recognizers.text.IExtractor;
+import com.microsoft.recognizers.text.number.NumberOptions;
 import com.microsoft.recognizers.text.number.chinese.ChineseNumberExtractorMode;
 import com.microsoft.recognizers.text.number.chinese.extractors.NumberExtractor;
 import com.microsoft.recognizers.text.numberwithunit.extractors.INumberWithUnitExtractorConfiguration;
@@ -26,7 +27,7 @@ public abstract class ChineseNumberWithUnitExtractorConfiguration implements INu
     protected ChineseNumberWithUnitExtractorConfiguration(CultureInfo cultureInfo) {
         this.cultureInfo = cultureInfo;
 
-        this.unitNumExtractor = new NumberExtractor(ChineseNumberExtractorMode.ExtractAll);
+        this.unitNumExtractor = new NumberExtractor(ChineseNumberExtractorMode.ExtractAll, NumberOptions.None);
         this.compoundUnitConnectorRegex =
                 Pattern.compile(ChineseNumericWithUnit.CompoundUnitConnectorRegex, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CHARACTER_CLASS);
 
