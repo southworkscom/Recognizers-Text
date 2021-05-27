@@ -34,8 +34,8 @@ public class NumberTest extends AbstractTest {
         // parse
         List<ModelResult> results = recognize(currentCase);
 
-            // assert
-            assertResults(currentCase, results, Arrays.asList(ResolutionKey.Value));
+        // assert
+        assertResults(currentCase, results, Arrays.asList(ResolutionKey.Value));
     }
 
     private List<String> getKeysToTest(TestCase currentCase) {
@@ -66,19 +66,17 @@ public class NumberTest extends AbstractTest {
                 case "NumberModel":
                     return NumberRecognizer.recognizeNumber(currentCase.input, culture, NumberOptions.None, false);
                 case "NumberModelExperimentalMode":
-                    return NumberRecognizer.recognizeNumber(currentCase.input, culture, NumberOptions.None, false);
+                    return NumberRecognizer.recognizeNumber(currentCase.input, culture, NumberOptions.ExperimentalMode, false);
                 case "NumberModelPercentMode":
                     return NumberRecognizer.recognizeNumber(currentCase.input, culture, NumberOptions.PercentageMode, false);
                 case "NumberRangeModel":
                     return NumberRecognizer.recognizeNumberRange(currentCase.input, culture, NumberOptions.None, false);
                 case "NumberRangeModelExperimentalMode":
-                    return NumberRecognizer.recognizeNumberRange(currentCase.input, culture, NumberOptions.None, false);
+                    return NumberRecognizer.recognizeNumberRange(currentCase.input, culture, NumberOptions.ExperimentalMode, false);
                 case "OrdinalModel":
-                    return NumberRecognizer.recognizeOrdinal(currentCase.input, culture, NumberOptions.None, false);
                 case "OrdinalModelSuppressExtendedTypes":
                     return NumberRecognizer.recognizeOrdinal(currentCase.input, culture, NumberOptions.None, false);
                 case "PercentModel":
-                    return NumberRecognizer.recognizePercentage(currentCase.input, culture, NumberOptions.None, false);
                 case "PercentModelPercentMode":
                     return NumberRecognizer.recognizePercentage(currentCase.input, culture, NumberOptions.PercentageMode, false);
                 default:
