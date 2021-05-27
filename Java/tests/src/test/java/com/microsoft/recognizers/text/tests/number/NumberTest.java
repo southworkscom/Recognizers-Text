@@ -12,7 +12,6 @@ import org.junit.Assert;
 import org.junit.AssumptionViolatedException;
 import org.junit.runners.Parameterized;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -35,8 +34,27 @@ public class NumberTest extends AbstractTest {
         // parse
         List<ModelResult> results = recognize(currentCase);
 
-        // assert
-        assertResults(currentCase, results, Arrays.asList(ResolutionKey.Value));
+            // assert
+            assertResults(currentCase, results, Arrays.asList(ResolutionKey.Value));
+    }
+
+    private List<String> getKeysToTest(TestCase currentCase) {
+        switch (currentCase.modelName) {
+            case "OrdinalModel":
+                return Arrays.asList(ResolutionKey.Value, ResolutionKey.Unit, ResolutionKey.Offset, ResolutionKey.RelativeTo);
+            default:
+                return Arrays.asList(ResolutionKey.Value, ResolutionKey.Unit);
+        }
+    }
+
+    @Override
+    protected void assertModel(ModelResult expected, ModelResult actual) {
+        if (expected.start != null) {
+            Assert.assertEquals(getMessage(currentCase, "start"), expected.start, actual.start);
+        }
+        if (expected.end != null) {
+            Assert.assertEquals(getMessage(currentCase, "end"), expected.end, actual.end);
+        }
     }
 
     @Override
@@ -47,16 +65,22 @@ public class NumberTest extends AbstractTest {
             switch (currentCase.modelName) {
                 case "NumberModel":
                     return NumberRecognizer.recognizeNumber(currentCase.input, culture, NumberOptions.None, false);
+                case "NumberModelExperimentalMode":
+                    return NumberRecognizer.recognizeNumber(currentCase.input, culture, NumberOptions.None, false);
                 case "NumberModelPercentMode":
                     return NumberRecognizer.recognizeNumber(currentCase.input, culture, NumberOptions.PercentageMode, false);
+                case "NumberRangeModel":
+                    return NumberRecognizer.recognizeNumberRange(currentCase.input, culture, NumberOptions.None, false);
+                case "NumberRangeModelExperimentalMode":
+                    return NumberRecognizer.recognizeNumberRange(currentCase.input, culture, NumberOptions.None, false);
                 case "OrdinalModel":
+                    return NumberRecognizer.recognizeOrdinal(currentCase.input, culture, NumberOptions.None, false);
+                case "OrdinalModelSuppressExtendedTypes":
                     return NumberRecognizer.recognizeOrdinal(currentCase.input, culture, NumberOptions.None, false);
                 case "PercentModel":
                     return NumberRecognizer.recognizePercentage(currentCase.input, culture, NumberOptions.None, false);
                 case "PercentModelPercentMode":
                     return NumberRecognizer.recognizePercentage(currentCase.input, culture, NumberOptions.PercentageMode, false);
-                case "NumberRangeModel":
-                    return NumberRecognizer.recognizeNumberRange(currentCase.input, culture, NumberOptions.None, false);
                 default:
                     throw new NotSupportedException("Model Type/Name not supported: " + currentCase.modelName + " in " + culture);
             }
