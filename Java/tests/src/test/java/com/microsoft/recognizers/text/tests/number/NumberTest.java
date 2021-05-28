@@ -35,15 +35,15 @@ public class NumberTest extends AbstractTest {
         List<ModelResult> results = recognize(currentCase);
 
         // assert
-        assertResults(currentCase, results, Arrays.asList(ResolutionKey.Value));
+        assertResults(currentCase, results, getKeysToTest(currentCase));
     }
 
     private List<String> getKeysToTest(TestCase currentCase) {
         switch (currentCase.modelName) {
             case "OrdinalModel":
-                return Arrays.asList(ResolutionKey.Value, ResolutionKey.Unit, ResolutionKey.Offset, ResolutionKey.RelativeTo);
+                return Arrays.asList(ResolutionKey.Value, ResolutionKey.Offset, ResolutionKey.RelativeTo);
             default:
-                return Arrays.asList(ResolutionKey.Value, ResolutionKey.Unit);
+                return Arrays.asList(ResolutionKey.Value);
         }
     }
 
