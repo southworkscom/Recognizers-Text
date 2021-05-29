@@ -105,6 +105,7 @@ public abstract class BaseNumberExtractor implements IExtractor {
                                 getExtractType(),
                                 matchSource.containsKey(srcMatch) ? matchSource.get(srcMatch) : null);
 
+                        // Add Metadata information for Ordinal
                         if (getExtractType().contains(Constants.MODEL_ORDINAL)) {
                             er.setMetadata(new Metadata());
                         }

@@ -38,6 +38,10 @@ public class NumberExtractor extends BaseNumberExtractor {
         this(ChineseNumberExtractorMode.Default, NumberOptions.None);
     }
 
+    public NumberExtractor(ChineseNumberExtractorMode mode) {
+        this(mode, NumberOptions.None);
+    }
+
     public NumberExtractor(ChineseNumberExtractorMode mode, NumberOptions options) {
         this.options = options;
         HashMap<Pattern, String> builder = new HashMap<>();

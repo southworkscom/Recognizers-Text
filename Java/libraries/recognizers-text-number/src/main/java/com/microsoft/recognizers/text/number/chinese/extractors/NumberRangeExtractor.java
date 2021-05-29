@@ -36,12 +36,20 @@ public class NumberRangeExtractor extends BaseNumberRangeExtractor {
     }
 
     public NumberRangeExtractor() {
-        this(NumberOptions.None);
+        this(ChineseNumberExtractorMode.Default, NumberOptions.None);
     }
 
     public NumberRangeExtractor(NumberOptions options) {
+        this(ChineseNumberExtractorMode.Default, options);
+    }
 
-        super(new NumberExtractor(ChineseNumberExtractorMode.Default, options), new OrdinalExtractor(), new BaseCJKNumberParser(new ChineseNumberParserConfiguration()));
+    public NumberRangeExtractor(ChineseNumberExtractorMode mode) {
+        this(mode, NumberOptions.None);
+    }
+
+    public NumberRangeExtractor(ChineseNumberExtractorMode mode, NumberOptions options) {
+
+        super(new NumberExtractor(mode, options), new OrdinalExtractor(), new BaseCJKNumberParser(new ChineseNumberParserConfiguration()));
 
         this.options = options;
 

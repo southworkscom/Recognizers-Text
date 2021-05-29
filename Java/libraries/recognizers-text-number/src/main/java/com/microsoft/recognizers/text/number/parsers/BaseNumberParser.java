@@ -3,6 +3,7 @@ package com.microsoft.recognizers.text.number.parsers;
 import com.microsoft.recognizers.text.CultureInfo;
 import com.microsoft.recognizers.text.ExtractResult;
 import com.microsoft.recognizers.text.IParser;
+import com.microsoft.recognizers.text.Metadata;
 import com.microsoft.recognizers.text.ParseResult;
 import com.microsoft.recognizers.text.number.Constants;
 import com.microsoft.recognizers.text.utilities.QueryProcessor;
@@ -141,7 +142,8 @@ public class BaseNumberParser implements IParser {
 
         ParseResult result = new ParseResult(extractResult.getStart(), extractResult.getLength(), extractResult.getText(),
                 extractResult.getType(),null,null,null);
-        result.setMetadata(extractResult.getMetadata());
+        Metadata metadata = extractResult.getMetadata() != null ? extractResult.getMetadata() : new Metadata();
+        result.setMetadata(metadata);
 
         //[1] 24
         //[2] 12 32/33
