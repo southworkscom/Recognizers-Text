@@ -77,6 +77,7 @@ public class NumberTest extends AbstractTest {
                 case "OrdinalModelSuppressExtendedTypes":
                     return NumberRecognizer.recognizeOrdinal(currentCase.input, culture, NumberOptions.None, false);
                 case "PercentModel":
+                    return NumberRecognizer.recognizePercentage(currentCase.input, culture, NumberOptions.None, false);
                 case "PercentModelPercentMode":
                     return NumberRecognizer.recognizePercentage(currentCase.input, culture, NumberOptions.PercentageMode, false);
                 default:
