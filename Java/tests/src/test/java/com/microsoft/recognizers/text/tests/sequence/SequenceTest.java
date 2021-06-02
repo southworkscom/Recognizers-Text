@@ -38,6 +38,7 @@ public class SequenceTest extends AbstractTest {
         // assert
         assertResults(currentCase, results, getKeysToTest(currentCase));
     }
+
     private List<String> getKeysToTest(TestCase currentCase) {
         switch (currentCase.modelName) {
             case "GUIDModel":
@@ -56,6 +57,19 @@ public class SequenceTest extends AbstractTest {
         }
         if (expected.end != null) {
             Assert.assertEquals(getMessage(currentCase, "end"), expected.end, actual.end);
+        }
+    }
+
+    @Override
+    protected void assertResolutionKeys(ModelResult expected, ModelResult actual, TestCase currentCase, List<String> testResolutionKeys) {
+        for (String key : testResolutionKeys) {
+            if (key.equalsIgnoreCase("score")) {
+                Assert.assertEquals(getMessage(currentCase, key),
+                        String.valueOf(Float.parseFloat((String) expected.resolution.get(key))),
+                        String.valueOf(actual.resolution.get(key)));
+            } else {
+                Assert.assertEquals(getMessage(currentCase, key), expected.resolution.get(key), actual.resolution.get(key));
+            }
         }
     }
 
