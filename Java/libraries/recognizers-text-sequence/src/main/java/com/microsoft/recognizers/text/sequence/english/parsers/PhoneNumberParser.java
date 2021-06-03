@@ -10,6 +10,9 @@ import com.microsoft.recognizers.text.sequence.resources.BasePhoneNumbers;
 import com.microsoft.recognizers.text.utilities.Match;
 import com.microsoft.recognizers.text.utilities.RegExpUtility;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
@@ -46,7 +49,7 @@ public class PhoneNumberParser extends BaseSequenceParser {
     private static final Pattern NO_AREA_CODE_US_PHONE_NUMBER_REGEX = Pattern
             .compile(BasePhoneNumbers.NoAreaCodeUSPhoneNumberRegex);
 
-    public static Double scorePhoneNumber(String phoneNumberText) {
+    public static BigDecimal scorePhoneNumber(String phoneNumberText) {
         Double score = BASE_SCORE;
 
         // Country code score or area code score
@@ -96,8 +99,10 @@ public class PhoneNumberParser extends BaseSequenceParser {
             score += LENGTH_AWARD * 1.5;
         }
 
-        return Math.max(Math.min(score, SCORE_UPPER_LIMIT), SCORE_LOWER_LIMIT)
+        Double result = Math.max(Math.min(score, SCORE_UPPER_LIMIT), SCORE_LOWER_LIMIT)
                 / (SCORE_UPPER_LIMIT - SCORE_LOWER_LIMIT);
+
+        return new BigDecimal(result).round(new MathContext(2)).stripTrailingZeros();
     }
 
     @Override
