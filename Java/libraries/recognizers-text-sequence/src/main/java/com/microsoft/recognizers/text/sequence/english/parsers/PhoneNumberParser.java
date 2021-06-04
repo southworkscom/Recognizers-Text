@@ -12,7 +12,6 @@ import com.microsoft.recognizers.text.utilities.RegExpUtility;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
@@ -37,7 +36,9 @@ public class PhoneNumberParser extends BaseSequenceParser {
 
     // @TODO move regexes to base resource files
     private static String COMPLETE_BRACKET_REGEX = "\\(.*\\)";
-    private static String SINGLE_BRACKER_REGEX = "\\(|\\)";
+    private static String LEFT_BRACKET_REGEX = "^.*\\(.*$";
+    private static String RIGHT_BRACKET_REGEX = "^.*\\).*$";
+
     private static String TAIL_SAME_DIGIT_REGEX = "([\\d])\\1{2,10}$";
     private static String PURE_DIGIT_REGEX = "^\\d*$";
     private static String CONTINUE_DIGIT_REGEX = "\\d{5}\\d*";
@@ -63,7 +64,9 @@ public class PhoneNumberParser extends BaseSequenceParser {
             score += Math.min(formatIndicatorCount, MAX_FORMAT_INDICATOR_NUM) * FORMATTED_AWARD;
             Boolean anyMatch = Arrays.stream(formatMatches).anyMatch(match -> match.value.length() > 1);
             score -= anyMatch ? CONTINUE_FORMAT_INDICATOR_DEDUCTION_SCORE : 0;
-            if (Pattern.matches(SINGLE_BRACKER_REGEX, phoneNumberText) && !Pattern.matches(COMPLETE_BRACKET_REGEX, phoneNumberText)) {
+            if ((Pattern.matches(LEFT_BRACKET_REGEX, phoneNumberText) && !Pattern.matches(RIGHT_BRACKET_REGEX, phoneNumberText)) ||
+                (!Pattern.matches(LEFT_BRACKET_REGEX, phoneNumberText) && Pattern.matches(RIGHT_BRACKET_REGEX, phoneNumberText)) &&
+                    !Pattern.matches(COMPLETE_BRACKET_REGEX, phoneNumberText)) {
                 score -= WRONG_FORMAT_DEDUCTION_SCORE;
             }
         }
