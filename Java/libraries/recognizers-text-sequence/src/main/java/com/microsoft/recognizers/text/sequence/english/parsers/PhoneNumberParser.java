@@ -36,7 +36,7 @@ public class PhoneNumberParser extends BaseSequenceParser {
 
     // @TODO move regexes to base resource files
     private static String COMPLETE_BRACKET_REGEX = "\\(.*\\)";
-    private static String SINGLE_BRACKER_REGEX = "\\(|\\)";
+    private static String SINGLE_BRACKET_REGEX = "\\(|\\)";
     private static String TAIL_SAME_DIGIT_REGEX = "([\\d])\\1{2,10}$";
     private static String PURE_DIGIT_REGEX = "^\\d*$";
     private static String CONTINUE_DIGIT_REGEX = "\\d{5}\\d*";
@@ -62,7 +62,7 @@ public class PhoneNumberParser extends BaseSequenceParser {
             score += Math.min(formatIndicatorCount, MAX_FORMAT_INDICATOR_NUM) * FORMATTED_AWARD;
             Boolean anyMatch = Arrays.stream(formatMatches).anyMatch(match -> match.value.length() > 1);
             score -= anyMatch ? CONTINUE_FORMAT_INDICATOR_DEDUCTION_SCORE : 0;
-            if (Pattern.compile(SINGLE_BRACKER_REGEX).matcher(phoneNumberText).find() && !Pattern.compile(COMPLETE_BRACKET_REGEX).matcher(phoneNumberText).find()) {
+            if (Pattern.compile(SINGLE_BRACKET_REGEX).matcher(phoneNumberText).find() && !Pattern.compile(COMPLETE_BRACKET_REGEX).matcher(phoneNumberText).find()) {
                 score -= WRONG_FORMAT_DEDUCTION_SCORE;
             }
         }
