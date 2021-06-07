@@ -304,7 +304,7 @@ public abstract class AbstractTest {
 
     private void assertResolutionKeys(ModelResult expected, ModelResult actual, TestCase currentCase, List<String> testResolutionKeys) {
         for (String key : testResolutionKeys) {
-            Assert.assertEquals(getMessage(currentCase, key), expected.resolution.get(key), actual.resolution.get(key));
+            Assert.assertEquals(getMessage(currentCase, key), String.valueOf(expected.resolution.get(key)), String.valueOf(actual.resolution.get(key)));
         }
     }
 
