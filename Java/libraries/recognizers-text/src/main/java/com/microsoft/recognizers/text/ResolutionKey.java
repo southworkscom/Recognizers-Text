@@ -15,4 +15,5 @@ public class ResolutionKey {
     public static final String Start = "start";
     public static final String End = "end";
     public static final String Mod = "mod";
+    public static final String SourceEntity = "sourceEntity";
 }
