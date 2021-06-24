@@ -10,10 +10,7 @@ import com.microsoft.recognizers.text.tests.NotSupportedException;
 import com.microsoft.recognizers.text.tests.TestCase;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.IntStream;
 
 import org.javatuples.Pair;
@@ -35,55 +32,33 @@ public class DateTimeTest extends AbstractTest {
     }
 
     @Override
-    protected void assertModel(ModelResult expected,
-                               ModelResult actual,
-                               TestCase currentCase,
-                               List<String> testResolutionKeys) {
-        if (actual.parentText != null) {
-            Assert.assertEquals(getMessage(currentCase, "parentText"),
-                    expected.parentText, actual.parentText);
-        }
+    protected void recognizeAndAssert(TestCase currentCase) {
 
-        if (expected.resolution.containsKey(ResolutionKey.ValueSet)) {
+        // parse
+        List<ModelResult> results = recognize(currentCase);
 
-            Assert.assertNotNull(getMessage(currentCase, "resolution"), actual.resolution);
-
-            Assert.assertNotNull(getMessage(currentCase,
-                    ResolutionKey.ValueSet), actual.resolution.get(ResolutionKey.ValueSet));
-
-            assertValueSet(currentCase,
-                    (List<Map<String, Object>>)expected.resolution.get(ResolutionKey.ValueSet),
-                    (List<Map<String, Object>>)actual.resolution.get(ResolutionKey.ValueSet));
+        // assert
+        assertResults(currentCase, results, getKeysToTest(currentCase));
+    }
+    private List<String> getKeysToTest(TestCase currentCase) {
+        switch (currentCase.modelName) {
+            case "DateTimeModelCalendarMode":
+                return Arrays.asList(ResolutionKey.Timex, ResolutionKey.Type, ResolutionKey.Start, ResolutionKey.End);
+            case "DateTimeModelSplitDateAndTime":
+                return Arrays.asList(ResolutionKey.Timex, ResolutionKey.Mod,ResolutionKey.Type, ResolutionKey.Start, ResolutionKey.End);
+            default:
+                return Arrays.asList(ResolutionKey.Timex, ResolutionKey.Type, ResolutionKey.Value);
         }
     }
 
-    private static void assertValueSet(TestCase currentCase, List<Map<String, Object>> expected, List<Map<String, Object>> actual) {
-
-        Assert.assertEquals(getMessage(currentCase, "\"Result Count\""), expected.size(), actual.size());
-
-        expected.sort((a, b) -> {
-            String timexA = (String)a.getOrDefault("timex", "");
-            String timexB = (String)b.getOrDefault("timex", "");
-            return timexA.compareTo(timexB);
-        });
-
-        actual.sort((a, b) -> {
-            String timexA = (String)a.getOrDefault("timex", "");
-            String timexB = (String)b.getOrDefault("timex", "");
-            return timexA.compareTo(timexB);
-        });
-
-        IntStream.range(0, expected.size())
-                .mapToObj(i -> Pair.with(expected.get(i), actual.get(i)))
-                .forEach(t -> {
-                    Map<String, Object> expectedMap = t.getValue0();
-                    Map<String, Object> actualMap = t.getValue1();
-
-                    expectedMap.keySet().forEach(key -> {
-                        Assert.assertTrue(getMessage(currentCase, key), actualMap.containsKey(key));
-                        Assert.assertEquals(getMessage(currentCase, key), expectedMap.get(key), actualMap.get(key));
-                    });
-                });
+    @Override
+    protected void assertModel(ModelResult expected, ModelResult actual) {
+        if (expected.start != null) {
+            Assert.assertEquals(getMessage(currentCase, "start"), expected.start, actual.start);
+        }
+        if (expected.end != null) {
+            Assert.assertEquals(getMessage(currentCase, "end"), expected.end, actual.end);
+        }
     }
 
     @Override
@@ -93,7 +68,28 @@ public class DateTimeTest extends AbstractTest {
             String culture = getCultureCode(currentCase.language);
             LocalDateTime reference = currentCase.getReferenceDateTime();
             switch (currentCase.modelName) {
+                case "DateExtractor":
+                case "DateParser":
+                case "DatePeriodExtractor":
+                case "DateTimeExtractor":
                 case "DateTimeModel":
+                case "DateTimeParser":
+                case "DateTimePeriodExtractor":
+                case "DateTimePeriodParser":
+                case "DurationExtractor":
+                case "DurationParser":
+                case "HolidayExtractor":
+                case "HolidayParser":
+                case "MergedExtractor":
+                case "MergedParser":
+                case "SetExtractor":
+                case "SetParser":
+                case "TimeExtractor":
+                case "TimeParser":
+                case "TimePeriodExtractor":
+                case "TimePeriodParser":
+                case "TimeZoneExtractor":
+                case "TimeZoneParser":
                     return DateTimeRecognizer.recognizeDateTime(currentCase.input, culture, DateTimeOptions.None, false, reference);
                 case "DateTimeModelCalendarMode":
                     return DateTimeRecognizer.recognizeDateTime(currentCase.input, culture, DateTimeOptions.CalendarMode, false, reference);
@@ -105,6 +101,8 @@ public class DateTimeTest extends AbstractTest {
                     return DateTimeRecognizer.recognizeDateTime(currentCase.input, culture, DateTimeOptions.SplitDateAndTime, false, reference);
                 case "DateTimeModelComplexCalendar":
                     return DateTimeRecognizer.recognizeDateTime(currentCase.input, culture, DateTimeOptions.ComplexCalendar, false, reference);
+                case "MergedExtractorSkipFromTo":
+                    return DateTimeRecognizer.recognizeDateTime(currentCase.input, culture, DateTimeOptions.SkipFromToMerge, false, reference);
                 default:
                     throw new NotSupportedException("Model Type/Name not supported: " + currentCase.modelName + " in " + culture);
             }
