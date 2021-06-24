@@ -10,10 +10,12 @@ import com.microsoft.recognizers.text.tests.NotSupportedException;
 import com.microsoft.recognizers.text.tests.TestCase;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 import java.util.stream.IntStream;
 
-import org.javatuples.Pair;
 import org.junit.Assert;
 import org.junit.AssumptionViolatedException;
 import org.junit.runners.Parameterized;
@@ -43,14 +45,11 @@ public class DateTimeTest extends AbstractTest {
 
     private List<String> getKeysToTest(TestCase currentCase) {
         switch (currentCase.modelName) {
-            case "DateTimeModel":
-                return Arrays.asList(ResolutionKey.Timex, ResolutionKey.Type, ResolutionKey.Value, ResolutionKey.Start, ResolutionKey.End);
-            case "DateTimeModelCalendarMode":
-                return Arrays.asList(ResolutionKey.Timex, ResolutionKey.Type, ResolutionKey.Value, ResolutionKey.Start, ResolutionKey.End, ResolutionKey.Mod, ResolutionKey.SourceEntity);
+            case "DateTimeModelExtendedTypes":
             case "DateTimeModelSplitDateAndTime":
                 return Arrays.asList(ResolutionKey.Timex, ResolutionKey.Type, ResolutionKey.Value, ResolutionKey.Start, ResolutionKey.End, ResolutionKey.Mod);
             default:
-                return Arrays.asList(ResolutionKey.Timex, ResolutionKey.Type, ResolutionKey.Value);
+                return Arrays.asList(ResolutionKey.Timex, ResolutionKey.Type, ResolutionKey.Value, ResolutionKey.Start, ResolutionKey.End, ResolutionKey.Mod, ResolutionKey.SourceEntity);
         }
     }
 
