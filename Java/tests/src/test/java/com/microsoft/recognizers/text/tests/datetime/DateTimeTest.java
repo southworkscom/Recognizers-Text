@@ -40,14 +40,38 @@ public class DateTimeTest extends AbstractTest {
         // assert
         assertResults(currentCase, results, getKeysToTest(currentCase));
     }
+
     private List<String> getKeysToTest(TestCase currentCase) {
         switch (currentCase.modelName) {
+            case "DateTimeModel":
+                return Arrays.asList(ResolutionKey.Timex, ResolutionKey.Type, ResolutionKey.Value, ResolutionKey.Start, ResolutionKey.End);
             case "DateTimeModelCalendarMode":
-                return Arrays.asList(ResolutionKey.Timex, ResolutionKey.Type, ResolutionKey.Start, ResolutionKey.End);
+                return Arrays.asList(ResolutionKey.Timex, ResolutionKey.Type, ResolutionKey.Value, ResolutionKey.Start, ResolutionKey.End, ResolutionKey.Mod, ResolutionKey.SourceEntity);
             case "DateTimeModelSplitDateAndTime":
-                return Arrays.asList(ResolutionKey.Timex, ResolutionKey.Mod,ResolutionKey.Type, ResolutionKey.Start, ResolutionKey.End);
+                return Arrays.asList(ResolutionKey.Timex, ResolutionKey.Type, ResolutionKey.Value, ResolutionKey.Start, ResolutionKey.End, ResolutionKey.Mod);
             default:
                 return Arrays.asList(ResolutionKey.Timex, ResolutionKey.Type, ResolutionKey.Value);
+        }
+    }
+
+    @Override
+    protected void assertResolutionKeys(ModelResult expected, ModelResult actual, TestCase currentCase, List<String> testResolutionKeys) {
+        if (expected.resolution.get(ResolutionKey.ValueSet) instanceof List) {
+            List<HashMap<String, String>> expectedValueSet = (List<HashMap<String, String>>) expected.resolution.get(ResolutionKey.ValueSet);
+            List<HashMap<String, String>> actualValueSet = (List<HashMap<String, String>>) actual.resolution.get(ResolutionKey.ValueSet);
+
+            IntStream.range(0, expectedValueSet.size())
+                .forEach(idx -> {
+                    HashMap<String, String> expectedValues = expectedValueSet.get(idx);
+                    HashMap<String, String> actualValues = actualValueSet.get(idx);
+                    for (String key: testResolutionKeys) {
+                        Assert.assertEquals(
+                            getMessage(currentCase, key),
+                            expectedValues.get(key),
+                            actualValues.get(key));
+                    }
+                }
+            );
         }
     }
 
@@ -68,28 +92,7 @@ public class DateTimeTest extends AbstractTest {
             String culture = getCultureCode(currentCase.language);
             LocalDateTime reference = currentCase.getReferenceDateTime();
             switch (currentCase.modelName) {
-                case "DateExtractor":
-                case "DateParser":
-                case "DatePeriodExtractor":
-                case "DateTimeExtractor":
                 case "DateTimeModel":
-                case "DateTimeParser":
-                case "DateTimePeriodExtractor":
-                case "DateTimePeriodParser":
-                case "DurationExtractor":
-                case "DurationParser":
-                case "HolidayExtractor":
-                case "HolidayParser":
-                case "MergedExtractor":
-                case "MergedParser":
-                case "SetExtractor":
-                case "SetParser":
-                case "TimeExtractor":
-                case "TimeParser":
-                case "TimePeriodExtractor":
-                case "TimePeriodParser":
-                case "TimeZoneExtractor":
-                case "TimeZoneParser":
                     return DateTimeRecognizer.recognizeDateTime(currentCase.input, culture, DateTimeOptions.None, false, reference);
                 case "DateTimeModelCalendarMode":
                     return DateTimeRecognizer.recognizeDateTime(currentCase.input, culture, DateTimeOptions.CalendarMode, false, reference);
@@ -101,8 +104,6 @@ public class DateTimeTest extends AbstractTest {
                     return DateTimeRecognizer.recognizeDateTime(currentCase.input, culture, DateTimeOptions.SplitDateAndTime, false, reference);
                 case "DateTimeModelComplexCalendar":
                     return DateTimeRecognizer.recognizeDateTime(currentCase.input, culture, DateTimeOptions.ComplexCalendar, false, reference);
-                case "MergedExtractorSkipFromTo":
-                    return DateTimeRecognizer.recognizeDateTime(currentCase.input, culture, DateTimeOptions.SkipFromToMerge, false, reference);
                 default:
                     throw new NotSupportedException("Model Type/Name not supported: " + currentCase.modelName + " in " + culture);
             }
