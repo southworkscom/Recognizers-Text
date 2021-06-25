@@ -4,6 +4,7 @@ import com.microsoft.recognizers.text.ModelResult;
 import com.microsoft.recognizers.text.ResolutionKey;
 import com.microsoft.recognizers.text.datetime.DateTimeOptions;
 import com.microsoft.recognizers.text.datetime.DateTimeRecognizer;
+import com.microsoft.recognizers.text.datetime.DateTimeResolutionKey;
 import com.microsoft.recognizers.text.tests.AbstractTest;
 import com.microsoft.recognizers.text.tests.DependencyConstants;
 import com.microsoft.recognizers.text.tests.NotSupportedException;
@@ -47,9 +48,9 @@ public class DateTimeTest extends AbstractTest {
         switch (currentCase.modelName) {
             case "DateTimeModelExtendedTypes":
             case "DateTimeModelSplitDateAndTime":
-                return Arrays.asList(ResolutionKey.Timex, ResolutionKey.Type, ResolutionKey.Value, ResolutionKey.Start, ResolutionKey.End, ResolutionKey.Mod);
+                return Arrays.asList(DateTimeResolutionKey.Timex, ResolutionKey.Type, ResolutionKey.Value, DateTimeResolutionKey.START, DateTimeResolutionKey.END, DateTimeResolutionKey.Mod);
             default:
-                return Arrays.asList(ResolutionKey.Timex, ResolutionKey.Type, ResolutionKey.Value, ResolutionKey.Start, ResolutionKey.End, ResolutionKey.Mod, ResolutionKey.SourceEntity);
+                return Arrays.asList(DateTimeResolutionKey.Timex, ResolutionKey.Type, ResolutionKey.Value, DateTimeResolutionKey.START, DateTimeResolutionKey.END, DateTimeResolutionKey.Mod, DateTimeResolutionKey.SourceEntity);
         }
     }
 
@@ -61,6 +62,8 @@ public class DateTimeTest extends AbstractTest {
 
             IntStream.range(0, expectedValueSet.size())
                 .forEach(idx -> {
+                    // Here we assign the index of the expected and actual lists of values
+                    // Inside the 2 new variables
                     HashMap<String, String> expectedValues = expectedValueSet.get(idx);
                     HashMap<String, String> actualValues = actualValueSet.get(idx);
                     for (String key: testResolutionKeys) {
