@@ -7,7 +7,6 @@ import com.microsoft.recognizers.text.Metadata;
 import com.microsoft.recognizers.text.ParseResult;
 import com.microsoft.recognizers.text.number.Constants;
 import com.microsoft.recognizers.text.utilities.QueryProcessor;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +19,8 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class BaseNumberParser implements IParser {
 

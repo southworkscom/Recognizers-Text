@@ -74,8 +74,7 @@ public class BaseNumberRangeParser implements IParser {
         if (type.contains(NumberRangeConstants.TWONUMCLOSED)) {
             leftBracket = NumberRangeConstants.LEFT_CLOSED;
             rightBracket = NumberRangeConstants.RIGHT_CLOSED;
-        }
-        else if (type.contains(NumberRangeConstants.TWONUMTILL) || type.contains(NumberRangeConstants.TWONUMBETWEEN)) {
+        } else if (type.contains(NumberRangeConstants.TWONUMTILL) || type.contains(NumberRangeConstants.TWONUMBETWEEN)) {
             // 20~30: [20,30)
             // between 20 and 30: [20,30)
             leftBracket = NumberRangeConstants.LEFT_CLOSED;

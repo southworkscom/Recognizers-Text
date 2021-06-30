@@ -6,11 +6,12 @@ import com.microsoft.recognizers.text.number.Constants;
 import com.microsoft.recognizers.text.utilities.Match;
 import com.microsoft.recognizers.text.utilities.RegExpUtility;
 import com.microsoft.recognizers.text.utilities.StringUtility;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class BaseCJKNumberParser extends BaseNumberParser {
 

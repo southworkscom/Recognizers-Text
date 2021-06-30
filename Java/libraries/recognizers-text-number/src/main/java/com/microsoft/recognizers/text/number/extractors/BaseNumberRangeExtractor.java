@@ -110,7 +110,7 @@ public abstract class BaseNumberRangeExtractor implements IExtractor {
         // In ExperimentalMode, cases like "from 3 to 5" and "between 10 and 15" are set to closed at both start and end
         if ((getOptions().ordinal() & NumberOptions.ExperimentalMode.ordinal()) != 0) {
             for (ExtractResult result: results) {
-                String data = (String) result.getData();
+                String data = (String)result.getData();
                 if (data == NumberRangeConstants.TWONUMBETWEEN ||
                     data == NumberRangeConstants.TWONUMTILL) {
                     result.setData(NumberRangeConstants.TWONUMCLOSED);
