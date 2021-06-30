@@ -635,17 +635,13 @@ public class BaseMergedDateTimeParser implements IDateTimeParser {
             LinkedHashMap<String, Object> resolutionDicDuplicated = resolutionDic
                     .entrySet()
                     .stream()
-                    .collect(Collectors.toMap(
-                        e -> {
-                            if (e.getKey() == keyName) {
-                                return keyName + "Am";
-                            }
-                            return e.getKey();
-                        },
+                    .collect(Collectors.toMap(e ->
+                        e.getKey() == keyName ? keyName + "Am" : e.getKey(),
                         Map.Entry<String, Object>::getValue,
                         (existing, replacement) -> existing,
                         LinkedHashMap::new
                     ));
+
             resolutionDic.clear();
             resolutionDicDuplicated.entrySet().stream().forEach(e -> {
                 resolutionDic.put(e.getKey(), e.getValue());
