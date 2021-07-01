@@ -8,7 +8,6 @@ import com.microsoft.recognizers.text.tests.AbstractTest;
 import com.microsoft.recognizers.text.tests.DependencyConstants;
 import com.microsoft.recognizers.text.tests.NotSupportedException;
 import com.microsoft.recognizers.text.tests.TestCase;
-import org.junit.Assert;
 import org.junit.AssumptionViolatedException;
 import org.junit.runners.Parameterized;
 
@@ -31,6 +30,7 @@ public class NumberWithUnitTest extends AbstractTest {
 
     @Override
     protected void recognizeAndAssert(TestCase currentCase) {
+
         // parse
         List<ModelResult> results = recognize(currentCase);
 
@@ -49,6 +49,7 @@ public class NumberWithUnitTest extends AbstractTest {
 
     @Override
     protected List<ModelResult> recognize(TestCase currentCase) {
+
         try {
             String culture = getCultureCode(currentCase.language);
             switch (currentCase.modelName) {
