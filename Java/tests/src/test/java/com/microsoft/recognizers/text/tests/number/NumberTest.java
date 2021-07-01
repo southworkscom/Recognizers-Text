@@ -48,16 +48,6 @@ public class NumberTest extends AbstractTest {
     }
 
     @Override
-    protected void assertModel(ModelResult expected, ModelResult actual) {
-        if (expected.start != null) {
-            Assert.assertEquals(getMessage(currentCase, "start"), expected.start, actual.start);
-        }
-        if (expected.end != null) {
-            Assert.assertEquals(getMessage(currentCase, "end"), expected.end, actual.end);
-        }
-    }
-
-    @Override
     public List<ModelResult> recognize(TestCase currentCase) {
 
         try {

@@ -148,19 +148,25 @@ public abstract class AbstractTest {
                 .forEach(t -> {
                     ModelResult expected = t.getValue0();
                     ModelResult actual = t.getValue1();
-
-                    Assert.assertEquals(getMessage(currentCase, "typeName"), expected.typeName, actual.typeName);
-                    Assert.assertEquals(getMessage(currentCase, "text"), expected.text, actual.text);
+                    // Validate common properties of models
                     assertModel(expected, actual);
+                    // Validate Resolution keys
                     assertResolutionKeys(expected, actual, currentCase, testResolutionKeys);
                 });
     }
 
-    // The default behavior is to do not validate other properties as they were validated in the assertResults method
-    protected void assertModel(ModelResult expected, ModelResult actual){ }
+    protected void assertModel(ModelResult expected, ModelResult actual){
+        Assert.assertEquals(getMessage(currentCase, "typeName"), expected.typeName, actual.typeName);
+        Assert.assertEquals(getMessage(currentCase, "text"), expected.text, actual.text);
+        if (expected.start != null) {
+            Assert.assertEquals(getMessage(currentCase, "start"), expected.start, actual.start);
+        }
+        if (expected.end != null) {
+            Assert.assertEquals(getMessage(currentCase, "end"), expected.end, actual.end);
+        }
+    }
 
     public static Collection<TestCase> enumerateTestCases(String recognizerType, String modelName) {
-
         String recognizerTypePath = String.format(File.separator + recognizerType + File.separator);
 
         // Deserializer

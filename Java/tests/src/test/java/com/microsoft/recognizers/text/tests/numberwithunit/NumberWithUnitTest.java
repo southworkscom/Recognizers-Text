@@ -46,15 +46,6 @@ public class NumberWithUnitTest extends AbstractTest {
                 return Arrays.asList(ResolutionKey.Value, ResolutionKey.Unit);
         }
     }
-    @Override
-    protected void assertModel(ModelResult expected, ModelResult actual) {
-        if (expected.start != null) {
-            Assert.assertEquals(getMessage(currentCase, "start"), expected.start, actual.start);
-        }
-        if (expected.end != null) {
-            Assert.assertEquals(getMessage(currentCase, "end"), expected.end, actual.end);
-        }
-    }
 
     @Override
     protected List<ModelResult> recognize(TestCase currentCase) {
